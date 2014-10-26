@@ -1,10 +1,9 @@
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 public class IntegerToRoman {
 	public String intToRoman(int num) {
-		Map<Integer, String> number2roman = new LinkedHashMap<Integer, String>();
+		LinkedHashMap<Integer, String> number2roman = new LinkedHashMap<Integer, String>();
 		number2roman.put(1000, "M");
 		number2roman.put(900, "CM");
 		number2roman.put(500, "D");
