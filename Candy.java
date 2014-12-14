@@ -1,11 +1,12 @@
 public class Candy {
+	int result = 0;
+	int level = 0;
+	int startIndex = 0;
+
 	public int candy(int[] ratings) {
-		int result = 0;
-		int level = 0;
-		int startIndex = 0;
 		for (int i = 0; i < ratings.length; i++) {
 			if (i == 0 || ratings[i] == ratings[i - 1]) {
-				result -= level * (i - startIndex - 1);
+				lowerLevel(i);
 				level = 0;
 				startIndex = i;
 			} else if (ratings[i] < ratings[i - 1]) {
@@ -15,16 +16,20 @@ public class Candy {
 					result += i - startIndex;
 				}
 			} else {
-				if (i > startIndex + 1) {
-					result -= level * (i - startIndex - 1);
-					level = 0;
-				}
+				lowerLevel(i);
 				level++;
 				startIndex = i;
 			}
 			result += level + 1;
 		}
-		result -= level * (ratings.length - startIndex - 1);
+		lowerLevel(ratings.length);
 		return result;
+	}
+
+	void lowerLevel(int currentIndex) {
+		if (currentIndex > startIndex + 1) {
+			result -= level * (currentIndex - startIndex - 1);
+			level = 0;
+		}
 	}
 }
