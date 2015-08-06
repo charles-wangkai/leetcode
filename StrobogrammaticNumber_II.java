@@ -1,17 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StrobogrammaticNumber_II {
 	public List<String> findStrobogrammatic(int n) {
-		return searchStrobogrammatic(n)
-				.stream()
-				.filter(oneResult -> oneResult.equals("0")
-						|| !oneResult.startsWith("0"))
-				.collect(Collectors.toList());
+		return searchStrobogrammatic(n, false);
 	}
 
-	public List<String> searchStrobogrammatic(int n) {
+	public List<String> searchStrobogrammatic(int n, boolean allowLeadingZero) {
 		List<String> result = new ArrayList<String>();
 		if (n == 0) {
 			result.add("");
@@ -20,9 +15,11 @@ public class StrobogrammaticNumber_II {
 			result.add("1");
 			result.add("8");
 		} else {
-			List<String> subResult = searchStrobogrammatic(n - 2);
+			List<String> subResult = searchStrobogrammatic(n - 2, true);
 			for (String oneSubResult : subResult) {
-				result.add("0" + oneSubResult + "0");
+				if (allowLeadingZero) {
+					result.add("0" + oneSubResult + "0");
+				}
 				result.add("1" + oneSubResult + "1");
 				result.add("8" + oneSubResult + "8");
 				result.add("6" + oneSubResult + "9");
