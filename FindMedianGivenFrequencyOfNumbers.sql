@@ -11,8 +11,7 @@ FROM (
     WHERE lte_num >= (SELECT SUM(Frequency) / 2 FROM Numbers)
     ORDER BY t.Number
     LIMIT 1
-) lt
-JOIN (
+) lt, (
     SELECT *
     FROM (
         SELECT n1.Number, SUM(n2.Frequency) AS gte_num
@@ -25,4 +24,3 @@ JOIN (
     ORDER BY t.Number DESC
     LIMIT 1
 ) gt
-ON 1 = 1
