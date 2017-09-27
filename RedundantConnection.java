@@ -1,7 +1,5 @@
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class RedundantConnection {
 	public int[] findRedundantConnection(int[][] edges) {
@@ -13,7 +11,6 @@ public class RedundantConnection {
 	}
 
 	boolean isTree(int[][] edges, int redundantIndex) {
-		Set<Integer> children = new HashSet<Integer>();
 		Map<Integer, Integer> node2root = new HashMap<Integer, Integer>();
 		for (int i = 0; i < edges.length; i++) {
 			if (i == redundantIndex) {
@@ -21,11 +18,6 @@ public class RedundantConnection {
 			}
 
 			int[] edge = edges[i];
-
-			if (children.contains(edge[1])) {
-				return false;
-			}
-			children.add(edge[1]);
 
 			if (!node2root.containsKey(edge[0])) {
 				node2root.put(edge[0], edge[0]);
