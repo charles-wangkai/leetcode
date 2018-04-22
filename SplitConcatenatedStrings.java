@@ -1,4 +1,4 @@
-public class SplitAssembledStrings {
+public class SplitConcatenatedStrings {
 	public String splitLoopedString(String[] strs) {
 		String result = null;
 		for (int i = 0; i < strs.length; i++) {
