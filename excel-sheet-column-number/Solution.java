@@ -1,4 +1,4 @@
-public class ExcelSheetColumnNumber {
+public class Solution {
 	public int titleToNumber(String s) {
 		int number = 0;
 		for (int i = 0; i < s.length(); i++) {

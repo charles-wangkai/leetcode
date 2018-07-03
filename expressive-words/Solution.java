@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExpressiveWords {
+public class Solution {
 	public int expressiveWords(String S, String[] words) {
 		List<Group> sGroups = buildGroups(S);
 		return (int) Arrays.stream(words).filter(word -> isStretchy(sGroups, buildGroups(word))).count();

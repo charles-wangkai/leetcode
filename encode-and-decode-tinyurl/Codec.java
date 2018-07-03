@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EncodeAndDecodeTinyURL {
+public class Codec {
 	static final String DOMAIN = "http://my_short_url.com/";
 
 	List<String> longUrls = new ArrayList<String>();

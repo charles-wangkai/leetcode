@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class EncodeAndDecodeStrings {
+public class Codec {
 	private static final char FLAG_DATA = 'D';
 	private static final char FLAG_SEPARATOR = 'S';
 

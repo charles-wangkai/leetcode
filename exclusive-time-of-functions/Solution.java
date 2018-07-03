@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Stack;
 
-public class ExclusiveTimeOfFunctions {
+public class Solution {
 	public int[] exclusiveTime(int n, List<String> logs) {
 		int[] times = new int[n];
 

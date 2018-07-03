@@ -14,7 +14,7 @@ class Employee {
 	public List<Integer> subordinates;
 };
 
-public class EmployeeImportance {
+public class Solution {
 	public int getImportance(List<Employee> employees, int id) {
 		Map<Integer, Employee> id2employee = employees.stream()
 				.collect(Collectors.toMap(employee -> employee.id, Function.identity()));

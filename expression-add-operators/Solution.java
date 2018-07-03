@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpressionAddOperators {
+public class Solution {
 	public List<String> addOperators(String num, int target) {
 		return buildNumbersList(num).stream().map(numbers -> search(numbers, 0, target, true))
 				.collect(ArrayList<String>::new, List::addAll, List::addAll);

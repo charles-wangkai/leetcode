@@ -18,7 +18,7 @@ class Interval {
 	}
 }
 
-public class EmployeeFreeTime {
+public class Solution {
 	public List<Interval> employeeFreeTime(List<List<Interval>> schedule) {
 		List<Terminal> terminals = new ArrayList<Terminal>();
 		for (List<Interval> intervals : schedule) {

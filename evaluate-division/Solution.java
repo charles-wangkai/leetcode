@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EvaluateDivision {
+public class Solution {
 	public double[] calcEquation(String[][] equations, double[] values, String[][] queries) {
 		List<String> variables = new ArrayList<String>();
 		Map<String, Integer> variable2index = new HashMap<String, Integer>();

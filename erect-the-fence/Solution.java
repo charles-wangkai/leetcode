@@ -20,7 +20,7 @@ class Point {
 	}
 }
 
-public class ErectTheFence {
+public class Solution {
 	public List<Point> outerTrees(Point[] points) {
 		Point p0 = points[0];
 		for (int i = 1; i < points.length; i++) {

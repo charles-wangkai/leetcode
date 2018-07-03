@@ -1,4 +1,4 @@
-public class EliminationGame {
+public class Solution {
 	public int lastRemaining(int n) {
 		return search(n, true);
 	}

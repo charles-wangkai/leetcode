@@ -12,7 +12,7 @@ class TreeNode {
 	}
 }
 
-public class EqualTreePartition {
+public class Solution {
 	public boolean checkEqualTree(TreeNode root) {
 		Map<Integer, Integer> sum2count = new HashMap<Integer, Integer>();
 

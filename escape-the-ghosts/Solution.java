@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class EscapeTheGhosts {
+public class Solution {
 	public boolean escapeGhosts(int[][] ghosts, int[] target) {
 		return Arrays.stream(ghosts)
 				.allMatch(ghost -> computeDistance(ghost, target) > computeDistance(new int[] { 0, 0 }, target));

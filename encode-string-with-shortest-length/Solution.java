@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class EncodeStringWithShortestLength {
+public class Solution {
 	Map<String, String> cache = new HashMap<String, String>();
 
 	public String encode(String s) {
