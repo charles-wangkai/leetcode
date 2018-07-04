@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class P_2KeysKeyboard {
+public class Solution {
 	public int minSteps(int n) {
 		int[] steps = new int[n + 1];
 		Arrays.fill(steps, Integer.MAX_VALUE);

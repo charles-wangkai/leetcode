@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class P_3SumSmaller {
+public class Solution {
 	public int threeSumSmaller(int[] nums, int target) {
 		Arrays.sort(nums);
 		int count = 0;

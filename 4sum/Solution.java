@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class P_4Sum {
+public class Solution {
 	public List<List<Integer>> fourSum(int[] num, int target) {
 		Map<Integer, List<Integer[]>> sum2indices = new HashMap<Integer, List<Integer[]>>();
 		for (int i = 0; i < num.length; i++) {

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class P_24Game {
+public class Solution {
 	static final Operation[] OPERATIONS = {
 			(x, y) -> new Rational(x.numerator * y.denominator + y.numerator * x.denominator,
 					x.denominator * y.denominator),

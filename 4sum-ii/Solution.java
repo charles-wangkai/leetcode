@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class P_4Sum_II {
+public class Solution {
 	public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
 		Map<Integer, Integer> sum2count1 = buildSum2count(A, B);
 		Map<Integer, Integer> sum2count2 = buildSum2count(C, D);

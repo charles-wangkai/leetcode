@@ -1,4 +1,4 @@
-public class P_4KeysKeyboard {
+public class Solution {
 	public int maxA(int N) {
 		int[] maxNums = new int[N + 1];
 		maxNums[1] = 1;

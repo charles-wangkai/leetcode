@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class P_3SumClosest {
+public class Solution {
 	public int threeSumClosest(int[] num, int target) {
 		Arrays.sort(num);
 		Integer closest = null;

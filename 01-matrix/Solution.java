@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class P_01Matrix {
+public class Solution {
 	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
 	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 

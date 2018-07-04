@@ -1,4 +1,4 @@
-public class P_1BitAnd2BitCharacters {
+public class Solution {
 	public boolean isOneBitCharacter(int[] bits) {
 		int index = 0;
 		while (true) {

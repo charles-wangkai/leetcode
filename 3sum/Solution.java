@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class P_3Sum {
+public class Solution {
 	public List<List<Integer>> threeSum(int[] num) {
 		Map<Integer, Integer> number2count = new HashMap<Integer, Integer>();
 		for (int oneNum : num) {

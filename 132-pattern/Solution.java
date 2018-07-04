@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-public class P_132Pattern {
+public class Solution {
 	public boolean find132pattern(int[] nums) {
 		Stack<Range> stack = new Stack<Range>();
 		for (int num : nums) {
