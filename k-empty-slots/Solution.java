@@ -1,7 +1,7 @@
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-public class KEmptySlots {
+public class Solution {
 	public int kEmptySlots(int[] flowers, int k) {
 		NavigableSet<Integer> slots = new TreeSet<Integer>();
 		for (int i = 0; i < flowers.length; i++) {

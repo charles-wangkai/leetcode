@@ -1,6 +1,6 @@
 import java.util.PriorityQueue;
 
-public class KthSmallestPrimeFraction {
+public class Solution {
 	public int[] kthSmallestPrimeFraction(int[] A, int K) {
 		PriorityQueue<FractionIndices> pq = new PriorityQueue<FractionIndices>((fi1, fi2) -> Integer.compare(
 				A[fi1.numeratorIndex] * A[fi2.denominatorIndex], A[fi2.numeratorIndex] * A[fi1.denominatorIndex]));

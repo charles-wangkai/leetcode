@@ -9,7 +9,7 @@ class TreeNode {
 	}
 }
 
-public class KthSmallestElementInABST {
+public class Solution {
 	static int result;
 	static int sequence;
 

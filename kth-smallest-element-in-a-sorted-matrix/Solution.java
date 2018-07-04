@@ -1,6 +1,6 @@
 import java.util.PriorityQueue;
 
-public class KthSmallestElementInASortedMatrix {
+public class Solution {
 	public int kthSmallest(int[][] matrix, int k) {
 		int row = matrix.length;
 		int col = matrix[0].length;

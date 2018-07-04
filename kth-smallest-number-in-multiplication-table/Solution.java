@@ -1,4 +1,4 @@
-public class KthSmallestNumberInMultiplicationTable {
+public class Solution {
 	public int findKthNumber(int m, int n, int k) {
 		int lower = 1;
 		int upper = m * n;

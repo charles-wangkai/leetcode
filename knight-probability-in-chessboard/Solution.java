@@ -2,7 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class KnightProbabilityInChessboard {
+public class Solution {
 	static int[] R_OFFSETS = { -2, -1, 1, 2, 2, 1, -1, -2 };
 	static int[] C_OFFSETS = { 1, 2, 2, 1, -1, -2, -2, -1 };
 

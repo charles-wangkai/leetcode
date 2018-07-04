@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class KDiffPairsInAnArray {
+public class Solution {
 	public int findPairs(int[] nums, int k) {
 		Map<Integer, Integer> num2count = new HashMap<Integer, Integer>();
 		for (int num : nums) {

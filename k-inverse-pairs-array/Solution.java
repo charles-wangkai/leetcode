@@ -1,4 +1,4 @@
-public class KInversePairsArray {
+public class Solution {
 	final int MODULUS = 1000000007;
 
 	public int kInversePairs(int n, int k) {

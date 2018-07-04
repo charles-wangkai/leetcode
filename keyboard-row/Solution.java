@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class KeyboardRow {
+public class Solution {
 	static final Map<Character, Integer> ch2row;
 	static {
 		ch2row = new HashMap<Character, Integer>();

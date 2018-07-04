@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KillProcess {
+public class Solution {
 	public List<Integer> killProcess(List<Integer> pid, List<Integer> ppid, int kill) {
 		Map<Integer, List<Integer>> ppid2pids = new HashMap<Integer, List<Integer>>();
 		for (int i = 0; i < pid.size(); i++) {

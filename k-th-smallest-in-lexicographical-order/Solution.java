@@ -1,4 +1,4 @@
-public class KthSmallestInLexicographicalOrder {
+public class Solution {
 	public int findKthNumber(int n, int k) {
 		int result = 1;
 		k--;

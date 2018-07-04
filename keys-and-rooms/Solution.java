@@ -2,7 +2,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public class KeysAndRooms {
+public class Solution {
 	public boolean canVisitAllRooms(List<List<Integer>> rooms) {
 		int N = rooms.size();
 		boolean[] visited = new boolean[N];

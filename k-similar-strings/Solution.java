@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-public class KSimilarStrings {
+public class Solution {
 	public int kSimilarity(String A, String B) {
 		State state = new State(A, B);
 		Map<State, Integer> stateToStep = new HashMap<>();
