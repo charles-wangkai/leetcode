@@ -1,4 +1,4 @@
-public class HIndex_II {
+public class Solution {
 	public int hIndex(int[] citations) {
 		int result = -1;
 		int lower = 0;

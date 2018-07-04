@@ -1,4 +1,4 @@
-public class HouseRobber {
+public class Solution {
 	public int rob(int[] num) {
 		int prev3 = 0;
 		int prev2 = 0;

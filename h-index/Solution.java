@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class HIndex {
+public class Solution {
 	public int hIndex(int[] citations) {
 		Arrays.sort(citations);
 

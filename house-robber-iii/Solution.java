@@ -12,7 +12,7 @@ class TreeNode {
 	}
 }
 
-public class HouseRobber_III {
+public class Solution {
 	Map<TreeNode, Integer> node2chosenMaxMoney = new HashMap<TreeNode, Integer>();
 	Map<TreeNode, Integer> node2notChosenMaxMoney = new HashMap<TreeNode, Integer>();
 

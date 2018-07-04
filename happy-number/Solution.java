@@ -1,7 +1,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class HappyNumber {
+public class Solution {
 	public boolean isHappy(int n) {
 		Set<Integer> history = new HashSet<Integer>();
 		while (!history.contains(n)) {

@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Heaters {
+public class Solution {
 	public int findRadius(int[] houses, int[] heaters) {
 		Arrays.sort(houses);
 		Arrays.sort(heaters);

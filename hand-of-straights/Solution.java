@@ -1,7 +1,7 @@
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class HandOfStraights {
+public class Solution {
 	public boolean isNStraightHand(int[] hand, int W) {
 		if (hand.length % W != 0) {
 			return false;
