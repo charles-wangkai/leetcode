@@ -1,4 +1,4 @@
-public class OneEditDistance {
+public class Solution {
 	public boolean isOneEditDistance(String s, String t) {
 		int index = 0;
 		while (index < s.length() && index < t.length()

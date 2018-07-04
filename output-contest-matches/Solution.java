@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OutputContestMatches {
+public class Solution {
 	public String findContestMatch(int n) {
 		List<Integer> ranks = Arrays.asList(1);
 		for (int i = 1; i < n; i *= 2) {

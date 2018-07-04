@@ -8,7 +8,7 @@ class ListNode {
 	}
 }
 
-public class OddEvenLinkedList {
+public class Solution {
 	public ListNode oddEvenList(ListNode head) {
 		ListNode tempHead = new ListNode(0);
 		tempHead.next = head;

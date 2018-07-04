@@ -1,7 +1,7 @@
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class OptimalDivision {
+public class Solution {
 	public String optimalDivision(int[] nums) {
 		if (nums.length == 1) {
 			return String.valueOf(nums[0]);

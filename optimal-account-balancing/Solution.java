@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OptimalAccountBalancing {
+public class Solution {
 	int minTransactionNum;
 
 	public int minTransfers(int[][] transactions) {

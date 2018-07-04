@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class OpenTheLock {
+public class Solution {
 	static final String INITIAL_WHEEL = "0000";
 
 	public int openLock(String[] deadends, String target) {

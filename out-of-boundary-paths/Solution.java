@@ -1,4 +1,4 @@
-public class OutOfBoundaryPaths {
+public class Solution {
 	static final int MODULUS = 1000000007;
 	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
 	static final int[] C_OFFSETS = { 0, 1, 0, -1 };

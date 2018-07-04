@@ -1,4 +1,4 @@
-public class OnesAndZeroes {
+public class Solution {
 	public int findMaxForm(String[] strs, int m, int n) {
 		int[][] counts = new int[m + 1][n + 1];
 		for (String str : strs) {
