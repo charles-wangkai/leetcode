@@ -1,4 +1,4 @@
-public class WordSearch {
+public class Solution {
 	static final int[] OFFSET_R = { -1, 0, 1, 0 };
 	static final int[] OFFSET_C = { 0, 1, 0, -1 };
 

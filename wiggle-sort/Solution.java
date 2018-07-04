@@ -1,4 +1,4 @@
-public class WiggleSort {
+public class Solution {
 	public void wiggleSort(int[] nums) {
 		boolean greaterOrEqual = true;
 		for (int i = 1; i < nums.length; i++) {

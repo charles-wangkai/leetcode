@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class WildcardMatching {
+public class Solution {
 	Map<Pair, Boolean> history = new HashMap<Pair, Boolean>();
 	int maxStarIndex = -1;
 

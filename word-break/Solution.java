@@ -1,6 +1,6 @@
 import java.util.Set;
 
-public class WordBreak {
+public class Solution {
 	public boolean wordBreak(String s, Set<String> dict) {
 		boolean[] separables = new boolean[s.length() + 1];
 		separables[0] = true;

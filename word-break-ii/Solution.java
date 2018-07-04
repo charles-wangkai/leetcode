@@ -3,7 +3,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-public class WordBreak_II {
+public class Solution {
 	public List<String> wordBreak(String s, Set<String> dict) {
 		@SuppressWarnings("unchecked")
 		List<String>[] lastWords = new List[s.length()];

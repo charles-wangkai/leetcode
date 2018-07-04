@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WordAbbreviation {
+public class Solution {
 	public List<String> wordsAbbreviation(List<String> dict) {
 		List<String> result = new ArrayList<String>();
 		for (int i = 0; i < dict.size(); i++) {

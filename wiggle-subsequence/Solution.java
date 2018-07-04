@@ -1,4 +1,4 @@
-public class WiggleSubsequence {
+public class Solution {
 	public int wiggleMaxLength(int[] nums) {
 		if (nums.length < 2) {
 			return nums.length;

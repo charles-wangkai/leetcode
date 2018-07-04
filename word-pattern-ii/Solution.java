@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class WordPattern_II {
+public class Solution {
 	public boolean wordPatternMatch(String pattern, String str) {
 		if (pattern.length() > str.length()) {
 			return false;

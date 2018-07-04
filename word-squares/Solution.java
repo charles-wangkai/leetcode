@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class WordSquares {
+public class Solution {
 	public List<List<String>> wordSquares(String[] words) {
 		int size = words[0].length();
 

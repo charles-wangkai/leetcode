@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class WallsAndGates {
+public class Solution {
 	static final int INF = 2147483647;
 	static final int[] OFFSET_R = { -1, 0, 1, 0 };
 	static final int[] OFFSET_C = { 0, 1, 0, -1 };

@@ -7,11 +7,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class WordLadder_II {
+public class Solution {
 	final int STARTING_STEP = 1;
 
-	public List<List<String>> findLadders(String start, String end,
-			Set<String> dict) {
+	public int ladderLength(String start, String end, Set<String> dict) {
 		Map<String, Word> wordMap = new HashMap<String, Word>();
 		for (String value : dict) {
 			wordMap.put(value, new Word(value));
@@ -50,11 +49,7 @@ public class WordLadder_II {
 			}
 		}
 
-		List<List<String>> ladders = new ArrayList<List<String>>();
-		if (found) {
-			search(ladders, wordMap, end, new LinkedList<String>());
-		}
-		return ladders;
+		return found ? wordMap.get(end).step : 0;
 	}
 
 	List<String> findCandidates(String value) {

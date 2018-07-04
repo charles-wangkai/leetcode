@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class WiggleSort_II {
+public class Solution {
 	Random random = new Random();
 
 	public void wiggleSort(int[] nums) {
