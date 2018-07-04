@@ -1,4 +1,4 @@
-public class JumpGame_II {
+public class Solution {
 	public int jump(int[] A) {
 		int step = 0;
 		int maxIndex = 0;

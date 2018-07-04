@@ -1,4 +1,4 @@
-public class JudgeRouteCircle {
+public class Solution {
 	public boolean judgeCircle(String moves) {
 		int r = 0;
 		int c = 0;

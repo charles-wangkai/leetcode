@@ -1,4 +1,4 @@
-public class JumpGame {
+public class Solution {
 	public boolean canJump(int[] A) {
 		int maxIndex = 0;
 		for (int i = 0;; i++) {
