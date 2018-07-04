@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZigZagConversion {
+public class Solution {
 	public String convert(String s, int nRows) {
 		if (nRows == 1) {
 			return s;

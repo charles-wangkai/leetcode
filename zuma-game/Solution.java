@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class ZumaGame {
+public class Solution {
 	public int findMinStep(String board, String hand) {
 		Map<Character, Integer> handBall2count = buildHandBall2count(hand);
 		return search(board, handBall2count);
