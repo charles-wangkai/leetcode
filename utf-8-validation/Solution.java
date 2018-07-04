@@ -1,4 +1,4 @@
-public class UTF8Validation {
+public class Solution {
 	public boolean validUtf8(int[] data) {
 		int followNum = 0;
 		for (int part : data) {

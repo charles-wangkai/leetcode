@@ -3,10 +3,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class UniqueWordAbbreviation {
+public class ValidWordAbbr {
 	Map<String, Set<String>> abbreviation2words = new HashMap<String, Set<String>>();
 
-	public UniqueWordAbbreviation(String[] dictionary) {
+	public ValidWordAbbr(String[] dictionary) {
 		for (String word : dictionary) {
 			String abbreviation = generateAbbreviation(word);
 			if (!abbreviation2words.containsKey(abbreviation)) {

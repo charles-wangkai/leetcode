@@ -1,4 +1,4 @@
-public class UniqueBinarySearchTrees {
+public class Solution {
 	public int numTrees(int n) {
 		int[] treeNums = new int[n + 1];
 		treeNums[0] = 1;

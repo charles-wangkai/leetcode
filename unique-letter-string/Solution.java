@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UniqueLetterString {
+public class Solution {
 	static final int MODULUS = 1000000007;
 
 	public int uniqueLetterString(String S) {

@@ -1,6 +1,6 @@
 import java.util.PriorityQueue;
 
-public class UglyNumber_II {
+public class Solution {
 	static final int[] FACTORS = { 2, 3, 5 };
 
 	public int nthUglyNumber(int n) {

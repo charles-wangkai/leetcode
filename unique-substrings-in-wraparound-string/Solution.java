@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class UniqueSubstringsInWraparoundString {
+public class Solution {
 	public int findSubstringInWraproundString(String p) {
 		int[] maxLengths = new int[26];
 		int startIndex = 0;

@@ -14,7 +14,7 @@ class TreeNode {
 	}
 }
 
-public class UniqueBinarySearchTrees_II {
+public class Solution {
 	public List<TreeNode> generateTrees(int n) {
 		int[] values = new int[n];
 		for (int i = 0; i < values.length; i++) {
