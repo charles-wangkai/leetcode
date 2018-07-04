@@ -1,4 +1,4 @@
-public class ValidNumber {
+public class Solution {
 	public boolean isNumber(String s) {
 		s = s.trim();
 

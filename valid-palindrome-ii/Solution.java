@@ -1,4 +1,4 @@
-public class ValidPalindrome_II {
+public class Solution {
 	public boolean validPalindrome(String s) {
 		int lower = 0;
 		int upper = s.length() - 1;

@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class ValidWordSquare {
+public class Solution {
 	public boolean validWordSquare(List<String> words) {
 		int row = words.size();
 		int col = words.stream().mapToInt(String::length).max().getAsInt();

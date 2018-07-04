@@ -1,6 +1,6 @@
 import java.util.regex.Pattern;
 
-public class ValidateIPAddress {
+public class Solution {
 	static final String IPV4_PART = "([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
 	static final String IPV4_REGEX = String.format("%s(\\.%s){3}", IPV4_PART, IPV4_PART);
 

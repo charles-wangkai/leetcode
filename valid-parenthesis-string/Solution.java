@@ -3,7 +3,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ValidParenthesisString {
+public class Solution {
 	public boolean checkValidString(String s) {
 		Set<Integer> numbers = new HashSet<Integer>();
 		numbers.add(0);

@@ -1,6 +1,6 @@
 import java.util.Stack;
 
-public class VerifyPreorderSerializationOfABinaryTree {
+public class Solution {
 	static final String NULL = "#";
 
 	public boolean isValidSerialization(String preorder) {

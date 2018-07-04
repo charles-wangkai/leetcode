@@ -1,4 +1,4 @@
-public class VerifyPreorderSequenceInBinarySearchTree {
+public class Solution {
 	public boolean verifyPreorder(int[] preorder) {
 		int lower = Integer.MIN_VALUE;
 		int stackSize = 0;

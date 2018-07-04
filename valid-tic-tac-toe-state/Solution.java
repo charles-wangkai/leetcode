@@ -1,6 +1,6 @@
 import java.util.stream.IntStream;
 
-public class ValidTicTacToeState {
+public class Solution {
 	static final int[] R_STARTS = { 0, 1, 2, 0, 0, 0, 0, 0 };
 	static final int[] C_STARTS = { 0, 0, 0, 0, 1, 2, 0, 2 };
 	static final int[] R_OFFSETS = { 0, 0, 0, 1, 1, 1, 1, 1 };

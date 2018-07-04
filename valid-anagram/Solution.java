@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class ValidAnagram {
+public class Solution {
 	public boolean isAnagram(String s, String t) {
 		return toKey(s).equals(toKey(t));
 	}

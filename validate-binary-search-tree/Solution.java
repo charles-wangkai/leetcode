@@ -9,7 +9,7 @@ class TreeNode {
 	}
 }
 
-public class ValidateBinarySearchTree {
+public class Solution {
 	public boolean isValidBST(TreeNode root) {
 		return isValidBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}

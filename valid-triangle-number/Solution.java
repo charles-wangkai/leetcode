@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class ValidTriangleNumber {
+public class Solution {
 	public int triangleNumber(int[] nums) {
 		Arrays.sort(nums);
 

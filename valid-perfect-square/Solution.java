@@ -1,4 +1,4 @@
-public class ValidPerfectSquare {
+public class Solution {
 	public boolean isPerfectSquare(int num) {
 		int lower = 1;
 		int upper = 1 << 16;

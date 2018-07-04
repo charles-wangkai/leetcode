@@ -1,4 +1,4 @@
-public class ValidWordAbbreviation {
+public class Solution {
 	public boolean validWordAbbreviation(String word, String abbr) {
 		int wordIndex = 0;
 		int abbrIndex = 0;
