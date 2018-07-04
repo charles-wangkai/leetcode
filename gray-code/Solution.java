@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class GrayCode {
+public class Solution {
 	public List<Integer> grayCode(int n) {
 		List<Integer> sequence = new ArrayList<Integer>();
 		search(sequence, new int[n], 0);

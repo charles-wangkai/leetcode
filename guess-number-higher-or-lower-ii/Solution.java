@@ -1,4 +1,4 @@
-public class GuessNumberHigherOrLower_II {
+public class Solution {
 	private Integer[][] maxMoneys;
 
 	public int getMoneyAmount(int n) {

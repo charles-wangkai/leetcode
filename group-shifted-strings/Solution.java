@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupShiftedStrings {
+public class Solution {
 	public List<List<String>> groupStrings(String[] strings) {
 		Map<String, List<String>> key2group = new HashMap<String, List<String>>();
 		for (String str : strings) {

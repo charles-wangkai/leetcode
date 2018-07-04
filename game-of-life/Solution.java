@@ -1,4 +1,4 @@
-public class GameOfLife {
+public class Solution {
 	static final int[] OFFSET_R = { -1, -1, 0, 1, 1, 1, 0, -1 };
 	static final int[] OFFSET_C = { 0, 1, 1, 1, 0, -1, -1, -1 };
 

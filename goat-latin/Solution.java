@@ -1,7 +1,7 @@
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GoatLatin {
+public class Solution {
 	public String toGoatLatin(String S) {
 		String[] words = S.split(" ");
 		return IntStream.range(0, words.length).mapToObj(i -> convert(words[i], i)).collect(Collectors.joining(" "));

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GroupAnagrams {
+public class Solution {
 	public List<String> anagrams(String[] strs) {
 		Map<String, List<String>> key2words = new HashMap<String, List<String>>();
 		for (String str : strs) {

@@ -1,4 +1,4 @@
-public class GasStation {
+public class Solution {
 	public int canCompleteCircuit(int[] gas, int[] cost) {
 		int total = 0;
 		int current = 0;

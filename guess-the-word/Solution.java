@@ -11,7 +11,7 @@ interface Master {
 	public int guess(String word);
 }
 
-public class GuessTheWord {
+public class Solution {
 	public void findSecretWord(String[] wordlist, Master master) {
 		List<String> candidates = Arrays.stream(wordlist).collect(Collectors.toList());
 		while (true) {

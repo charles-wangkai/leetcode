@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenerateParentheses {
+public class Solution {
 	public List<String> generateParenthesis(int n) {
 		List<String> result = new ArrayList<String>();
 		search(result, new char[n + n], 0, n, n);
