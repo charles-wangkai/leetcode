@@ -96,9 +96,9 @@ class Directory extends Component {
 	}
 }
 
-/**
- * Your FileSystem object will be instantiated and called as such: FileSystem
- * obj = new FileSystem(); List<String> param_1 = obj.ls(path); obj.mkdir(path);
- * obj.addContentToFile(filePath,content); String param_4 =
- * obj.readContentFromFile(filePath);
- */
+// Your FileSystem object will be instantiated and called as such:
+// FileSystem obj = new FileSystem();
+// List<String> param_1 = obj.ls(path);
+// obj.mkdir(path);
+// obj.addContentToFile(filePath,content);
+// String param_4 = obj.readContentFromFile(filePath);

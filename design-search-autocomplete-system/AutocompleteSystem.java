@@ -67,8 +67,6 @@ class SentenceAndTime {
 	}
 }
 
-/**
- * Your AutocompleteSystem object will be instantiated and called as such:
- * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
- * List<String> param_1 = obj.input(c);
- */
+// Your AutocompleteSystem object will be instantiated and called as such:
+// AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+// List<String> param_1 = obj.input(c);

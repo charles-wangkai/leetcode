@@ -15,8 +15,8 @@ public class RandomizedSet {
 	}
 
 	/**
-	 * Inserts a value to the set. Returns true if the set did not already
-	 * contain the specified element.
+	 * Inserts a value to the set. Returns true if the set did not already contain
+	 * the specified element.
 	 */
 	public boolean insert(int val) {
 		if (element2index.containsKey(val)) {
@@ -29,8 +29,8 @@ public class RandomizedSet {
 	}
 
 	/**
-	 * Removes a value from the set. Returns true if the set contained the
-	 * specified element.
+	 * Removes a value from the set. Returns true if the set contained the specified
+	 * element.
 	 */
 	public boolean remove(int val) {
 		if (element2index.containsKey(val)) {
@@ -61,8 +61,8 @@ public class RandomizedSet {
 	}
 }
 
-/**
- * Your RandomizedSet object will be instantiated and called as such:
- * RandomizedSet obj = new RandomizedSet(); boolean param_1 = obj.insert(val);
- * boolean param_2 = obj.remove(val); int param_3 = obj.getRandom();
- */
+// Your RandomizedSet object will be instantiated and called as such:
+// RandomizedSet obj = new RandomizedSet();
+// boolean param_1 = obj.insert(val);
+// boolean param_2 = obj.remove(val);
+// int param_3 = obj.getRandom();

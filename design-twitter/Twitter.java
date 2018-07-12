@@ -23,14 +23,13 @@ public class Twitter {
 	}
 
 	/**
-	 * Retrieve the 10 most recent tweet ids in the user's news feed. Each item
-	 * in the news feed must be posted by users who the user followed or by the
-	 * user herself. Tweets must be ordered from most recent to least recent.
+	 * Retrieve the 10 most recent tweet ids in the user's news feed. Each item in
+	 * the news feed must be posted by users who the user followed or by the user
+	 * herself. Tweets must be ordered from most recent to least recent.
 	 */
 	public List<Integer> getNewsFeed(int userId) {
-		return tweets.stream()
-				.filter(tweet -> tweet.userId == userId || (follower2followees.containsKey(userId)
-						&& follower2followees.get(userId).contains(tweet.userId)))
+		return tweets.stream().filter(tweet -> tweet.userId == userId
+				|| (follower2followees.containsKey(userId) && follower2followees.get(userId).contains(tweet.userId)))
 				.limit(10).map(tweet -> tweet.tweetId).collect(Collectors.toList());
 	}
 
@@ -46,8 +45,8 @@ public class Twitter {
 	}
 
 	/**
-	 * Follower unfollows a followee. If the operation is invalid, it should be
-	 * a no-op.
+	 * Follower unfollows a followee. If the operation is invalid, it should be a
+	 * no-op.
 	 */
 	public void unfollow(int followerId, int followeeId) {
 		if (!follower2followees.containsKey(followerId)) {
@@ -71,9 +70,9 @@ class Tweet {
 	}
 }
 
-/**
- * Your Twitter object will be instantiated and called as such: Twitter obj =
- * new Twitter(); obj.postTweet(userId,tweetId); List<Integer> param_2 =
- * obj.getNewsFeed(userId); obj.follow(followerId,followeeId);
- * obj.unfollow(followerId,followeeId);
- */
+// Your Twitter object will be instantiated and called as such:
+// Twitter obj = new Twitter();
+// obj.postTweet(userId,tweetId);
+// List<Integer> param_2 = obj.getNewsFeed(userId);
+// obj.follow(followerId,followeeId);
+// obj.unfollow(followerId,followeeId);

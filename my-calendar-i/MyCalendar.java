@@ -33,7 +33,6 @@ class Event {
 	}
 }
 
-/**
- * Your MyCalendar object will be instantiated and called as such: MyCalendar
- * obj = new MyCalendar(); boolean param_1 = obj.book(start,end);
- */
+// Your MyCalendar object will be instantiated and called as such:
+// MyCalendar obj = new MyCalendar();
+// boolean param_1 = obj.book(start,end);

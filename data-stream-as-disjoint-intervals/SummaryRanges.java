@@ -59,8 +59,7 @@ public class SummaryRanges {
 	}
 }
 
-/**
- * Your SummaryRanges object will be instantiated and called as such:
- * SummaryRanges obj = new SummaryRanges(); obj.addNum(val); List
- * <Interval> param_2 = obj.getIntervals();
- */
+// Your SummaryRanges object will be instantiated and called as such:
+// SummaryRanges obj = new SummaryRanges();
+// obj.addNum(val);
+// List <Interval> param_2 = obj.getIntervals();

@@ -48,8 +48,7 @@ public class LogSystem {
 	}
 }
 
-/**
- * Your LogSystem object will be instantiated and called as such: LogSystem obj
- * = new LogSystem(); obj.put(id,timestamp); List<Integer> param_2 =
- * obj.retrieve(s,e,gra);
- */
+// Your LogSystem object will be instantiated and called as such:
+// LogSystem obj = new LogSystem();
+// obj.put(id,timestamp);
+// List<Integer> param_2 = obj.retrieve(s,e,gra);

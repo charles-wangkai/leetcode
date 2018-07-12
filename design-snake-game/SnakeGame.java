@@ -42,8 +42,8 @@ public class SnakeGame {
 	 * 
 	 * @param direction
 	 *            - 'U' = Up, 'L' = Left, 'R' = Right, 'D' = Down
-	 * @return The game's score after the move. Return -1 if game over. Game
-	 *         over when snake crosses the screen boundary or bites its body.
+	 * @return The game's score after the move. Return -1 if game over. Game over
+	 *         when snake crosses the screen boundary or bites its body.
 	 */
 	public int move(String direction) {
 		go(direction);
@@ -110,7 +110,6 @@ class Point {
 	}
 }
 
-/**
- * Your SnakeGame object will be instantiated and called as such: SnakeGame obj
- * = new SnakeGame(width, height, food); int param_1 = obj.move(direction);
- */
+// Your SnakeGame object will be instantiated and called as such:
+// SnakeGame obj = new SnakeGame(width, height, food);
+// int param_1 = obj.move(direction);
