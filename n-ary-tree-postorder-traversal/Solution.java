@@ -24,17 +24,21 @@ public class Solution {
 		}
 
 		List<Integer> result = new ArrayList<>();
-		search(result, root, new Stack<>());
-		return result;
-	}
+		Stack<Object> stack = new Stack<>();
+		stack.push(root);
+		while (!stack.empty()) {
+			Object top = stack.pop();
 
-	void search(List<Integer> result, Node node, Stack<Integer> stack) {
-		stack.push(node.val);
-
-		for (Node child : node.children) {
-			search(result, child, stack);
+			if (top instanceof Node) {
+				Node node = (Node) top;
+				stack.push(node.val);
+				for (int i = node.children.size() - 1; i >= 0; i--) {
+					stack.push(node.children.get(i));
+				}
+			} else {
+				result.add((Integer) top);
+			}
 		}
-
-		result.add(stack.pop());
+		return result;
 	}
 }
