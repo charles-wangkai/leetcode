@@ -1,22 +1,22 @@
 public class Solution {
-    public int[] searchRange(int[] A, int target) {
-        int leftIndex = search(A, target, true);
+    public int[] searchRange(int[] nums, int target) {
+        int leftIndex = search(nums, target, true);
         if (leftIndex < 0) {
             return new int[] { -1, -1 };
         }
-        int rightIndex = search(A, target, false);
+        int rightIndex = search(nums, target, false);
         return new int[] { leftIndex, rightIndex };
     }
 
-    int search(int[] A, int target, boolean leftOrRight) {
+    int search(int[] nums, int target, boolean leftOrRight) {
         int lower = 0;
-        int upper = A.length - 1;
+        int upper = nums.length - 1;
         int index = -1;
         while (lower <= upper) {
             int middle = (lower + upper) / 2;
-            if (A[middle] > target) {
+            if (nums[middle] > target) {
                 upper = middle - 1;
-            } else if (A[middle] < target) {
+            } else if (nums[middle] < target) {
                 lower = middle + 1;
             } else {
                 index = middle;
