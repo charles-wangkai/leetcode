@@ -1,9 +1,7 @@
+import java.util.Arrays;
+
 public class Solution {
 	public int singleNumber(int[] A) {
-		int result = 0;
-		for (int number : A) {
-			result ^= number;
-		}
-		return result;
+		return Arrays.stream(A).reduce((x, y) -> x ^ y).getAsInt();
 	}
 }
