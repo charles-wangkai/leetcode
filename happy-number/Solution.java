@@ -3,21 +3,16 @@ import java.util.Set;
 
 public class Solution {
 	public boolean isHappy(int n) {
-		Set<Integer> history = new HashSet<Integer>();
-		while (!history.contains(n)) {
-			history.add(n);
+		Set<Integer> seen = new HashSet<>();
+		while (!seen.contains(n)) {
+			seen.add(n);
 			n = computeNext(n);
 		}
+
 		return n == 1;
 	}
 
-	int computeNext(int number) {
-		int next = 0;
-		while (number != 0) {
-			int digit = number % 10;
-			next += digit * digit;
-			number /= 10;
-		}
-		return next;
+	int computeNext(int n) {
+		return String.valueOf(n).chars().map(ch -> (ch - '0') * (ch - '0')).sum();
 	}
 }
