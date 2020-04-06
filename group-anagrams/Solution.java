@@ -1,32 +1,25 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Solution {
-	public List<String> anagrams(String[] strs) {
-		Map<String, List<String>> key2words = new HashMap<String, List<String>>();
+	public List<List<String>> groupAnagrams(String[] strs) {
+		Map<String, List<String>> keyToWords = new HashMap<>();
 		for (String str : strs) {
 			String key = generateKey(str);
-			if (!key2words.containsKey(key)) {
-				key2words.put(key, new ArrayList<String>());
+			if (!keyToWords.containsKey(key)) {
+				keyToWords.put(key, new ArrayList<>());
 			}
-			key2words.get(key).add(str);
+
+			keyToWords.get(key).add(str);
 		}
 
-		List<String> result = new ArrayList<String>();
-		for (List<String> words : key2words.values()) {
-			if (words.size() > 1) {
-				result.addAll(words);
-			}
-		}
-		return result;
+		return new ArrayList<>(keyToWords.values());
 	}
 
 	String generateKey(String word) {
-		char[] letters = word.toCharArray();
-		Arrays.sort(letters);
-		return new String(letters);
+		return word.chars().sorted().mapToObj(ch -> String.valueOf((char) ch)).collect(Collectors.joining());
 	}
 }
