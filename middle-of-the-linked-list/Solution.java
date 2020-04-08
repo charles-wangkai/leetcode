@@ -14,10 +14,8 @@ public class Solution {
 		ListNode slow = head;
 
 		while (true) {
-			if (fast.next == null) {
+			if (fast == null || fast.next == null) {
 				return slow;
-			} else if (fast.next.next == null) {
-				return slow.next;
 			}
 
 			fast = fast.next.next;
