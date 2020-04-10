@@ -1,28 +1,37 @@
 import java.util.Stack;
 
-public class Solution {
-	Stack<Integer> numbers = new Stack<Integer>();
-	Stack<Integer> mins = new Stack<Integer>();
+class MinStack {
+	private Stack<Integer> values = new Stack<>();
+	private Stack<Integer> mins = new Stack<>();
 
 	public void push(int x) {
-		numbers.push(x);
+		values.push(x);
+
 		if (mins.empty() || x <= mins.peek()) {
 			mins.push(x);
 		}
 	}
 
 	public void pop() {
-		int number = numbers.pop();
-		if (mins.peek() == number) {
+		int value = values.pop();
+
+		if (mins.peek() == value) {
 			mins.pop();
 		}
 	}
 
 	public int top() {
-		return numbers.peek();
+		return values.peek();
 	}
 
 	public int getMin() {
 		return mins.peek();
 	}
 }
+
+// Your MinStack object will be instantiated and called as such:
+// MinStack obj = new MinStack();
+// obj.push(x);
+// obj.pop();
+// int param_3 = obj.top();
+// int param_4 = obj.getMin();
