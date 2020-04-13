@@ -5,8 +5,8 @@ public class Solution {
 	public int findMaxLength(int[] nums) {
 		int maxLength = 0;
 
-		Map<Integer, Integer> delta2firstIndex = new HashMap<Integer, Integer>();
-		delta2firstIndex.put(0, -1);
+		Map<Integer, Integer> deltaToFirstIndex = new HashMap<>();
+		deltaToFirstIndex.put(0, -1);
 
 		int delta = 0;
 		for (int i = 0; i < nums.length; i++) {
@@ -16,10 +16,10 @@ public class Solution {
 				delta--;
 			}
 
-			if (delta2firstIndex.containsKey(delta)) {
-				maxLength = Math.max(maxLength, i - delta2firstIndex.get(delta));
+			if (deltaToFirstIndex.containsKey(delta)) {
+				maxLength = Math.max(maxLength, i - deltaToFirstIndex.get(delta));
 			} else {
-				delta2firstIndex.put(delta, i);
+				deltaToFirstIndex.put(delta, i);
 			}
 		}
 
