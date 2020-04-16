@@ -5,22 +5,23 @@ import java.util.stream.Stream;
 
 public class Solution {
 	public boolean checkValidString(String s) {
-		Set<Integer> numbers = new HashSet<Integer>();
-		numbers.add(0);
+		Set<Integer> depths = new HashSet<Integer>();
+		depths.add(0);
 		for (char ch : s.toCharArray()) {
 			if (ch == '(') {
-				numbers = shift(numbers, 1);
+				depths = shift(depths, 1);
 			} else if (ch == ')') {
-				numbers = shift(numbers, -1);
+				depths = shift(depths, -1);
 			} else if (ch == '*') {
-				numbers = union(numbers, union(shift(numbers, 1), shift(numbers, -1)));
+				depths = union(depths, union(shift(depths, 1), shift(depths, -1)));
 			}
 		}
-		return numbers.contains(0);
+
+		return depths.contains(0);
 	}
 
-	Set<Integer> shift(Set<Integer> numbers, int delta) {
-		return numbers.stream().map(number -> number + delta).filter(x -> x >= 0).collect(Collectors.toSet());
+	Set<Integer> shift(Set<Integer> depths, int delta) {
+		return depths.stream().map(number -> number + delta).filter(x -> x >= 0).collect(Collectors.toSet());
 	}
 
 	Set<Integer> union(Set<Integer> s1, Set<Integer> s2) {
