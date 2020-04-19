@@ -13,13 +13,14 @@ public class Solution {
                     lower = middle + 1;
                 }
             } else {
-                if (target >= A[middle] && target <= A[upper]) {
+                if (target > A[middle] && target <= A[upper]) {
                     lower = middle + 1;
                 } else {
                     upper = middle - 1;
                 }
             }
         }
+
         return -1;
     }
 }
