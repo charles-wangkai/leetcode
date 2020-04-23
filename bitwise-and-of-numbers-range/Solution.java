@@ -11,6 +11,7 @@ public class Solution {
 			n >>= 1;
 			base <<= 1;
 		}
+
 		return result;
 	}
 }
