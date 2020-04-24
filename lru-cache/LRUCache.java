@@ -2,10 +2,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LRUCache {
-	int capacity;
-	Map<Integer, Integer> cache = new HashMap<Integer, Integer>();
-	LinkList<Integer> keyList = new LinkList<Integer>();
-	Map<Integer, Node<Integer>> key2node = new HashMap<Integer, Node<Integer>>();
+	private int capacity;
+	private Map<Integer, Integer> cache = new HashMap<>();
+	private LinkList<Integer> keys = new LinkList<>();
+	private Map<Integer, Node<Integer>> keyToNode = new HashMap<>();
 
 	public LRUCache(int capacity) {
 		this.capacity = capacity;
@@ -15,24 +15,28 @@ public class LRUCache {
 		if (!cache.containsKey(key)) {
 			return -1;
 		}
-		keyList.moveToHead(key2node.get(key));
+
+		keys.moveToHead(keyToNode.get(key));
+
 		return cache.get(key);
 	}
 
-	public void set(int key, int value) {
+	public void put(int key, int value) {
 		if (cache.containsKey(key)) {
-			keyList.moveToHead(key2node.get(key));
+			keys.moveToHead(keyToNode.get(key));
 		} else {
 			if (cache.size() == capacity) {
-				Node<Integer> tail = keyList.tail;
-				keyList.remove(tail);
-				key2node.remove(tail.value);
+				Node<Integer> tail = keys.tail;
+				keys.remove(tail);
+				keyToNode.remove(tail.value);
 				cache.remove(tail.value);
 			}
-			Node<Integer> node = new Node<Integer>(key);
-			keyList.insertToHead(node);
-			key2node.put(key, node);
+
+			Node<Integer> node = new Node<>(key);
+			keys.insertToHead(node);
+			keyToNode.put(key, node);
 		}
+
 		cache.put(key, value);
 	}
 }
@@ -62,6 +66,7 @@ class LinkList<T> {
 					head.prev = null;
 				}
 			}
+
 			if (node == tail) {
 				tail = node.prev;
 				if (tail != null) {
@@ -74,11 +79,13 @@ class LinkList<T> {
 	void insertToHead(Node<T> node) {
 		node.next = head;
 		node.prev = null;
+		
 		if (head == null) {
 			tail = node;
 		} else {
 			head.prev = node;
 		}
+
 		head = node;
 	}
 
