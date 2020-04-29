@@ -10,21 +10,24 @@ class TreeNode {
 }
 
 public class Solution {
-	int result = Integer.MIN_VALUE;
+	int maxSum;
 
 	public int maxPathSum(TreeNode root) {
+		maxSum = Integer.MIN_VALUE;
 		search(root);
-		return result;
+
+		return maxSum;
 	}
 
 	int search(TreeNode node) {
 		if (node == null) {
 			return 0;
 		}
+
 		int leftMaxPathSum = search(node.left);
 		int rightMaxPathSum = search(node.right);
-		result = Math.max(result, node.val + leftMaxPathSum + rightMaxPathSum);
-		return Math
-				.max(0, node.val + Math.max(leftMaxPathSum, rightMaxPathSum));
+		maxSum = Math.max(maxSum, node.val + leftMaxPathSum + rightMaxPathSum);
+
+		return Math.max(0, node.val + Math.max(leftMaxPathSum, rightMaxPathSum));
 	}
 }
