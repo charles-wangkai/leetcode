@@ -19,6 +19,7 @@ public class Solution extends VersionControl {
 				lower = middle + 1;
 			}
 		}
+
 		return minBadVersion;
 	}
 }
