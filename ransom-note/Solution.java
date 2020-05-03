@@ -3,26 +3,19 @@ import java.util.Map;
 
 public class Solution {
 	public boolean canConstruct(String ransomNote, String magazine) {
-		Map<Character, Integer> ransomLetter2count = buildLetter2count(ransomNote);
-		Map<Character, Integer> magazineLetter2count = buildLetter2count(magazine);
+		Map<Character, Integer> ransomLetterToCount = buildLetterToCount(ransomNote);
+		Map<Character, Integer> magazineLetterToCount = buildLetterToCount(magazine);
 
-		for (char ransomLetter : ransomLetter2count.keySet()) {
-			if (!magazineLetter2count.containsKey(ransomLetter)
-					|| magazineLetter2count.get(ransomLetter) < ransomLetter2count.get(ransomLetter)) {
-				return false;
-			}
-		}
-		return true;
+		return ransomLetterToCount.keySet().stream()
+				.allMatch(letter -> magazineLetterToCount.getOrDefault(letter, 0) >= ransomLetterToCount.get(letter));
 	}
 
-	Map<Character, Integer> buildLetter2count(String s) {
-		Map<Character, Integer> letter2count = new HashMap<Character, Integer>();
+	Map<Character, Integer> buildLetterToCount(String s) {
+		Map<Character, Integer> letterToCount = new HashMap<>();
 		for (char letter : s.toCharArray()) {
-			if (!letter2count.containsKey(letter)) {
-				letter2count.put(letter, 0);
-			}
-			letter2count.put(letter, letter2count.get(letter) + 1);
+			letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
 		}
-		return letter2count;
+
+		return letterToCount;
 	}
 }
