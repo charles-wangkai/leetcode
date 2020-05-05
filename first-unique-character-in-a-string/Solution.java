@@ -3,21 +3,18 @@ import java.util.Map;
 
 public class Solution {
 	public int firstUniqChar(String s) {
-		Map<Character, Integer> ch2count = new HashMap<Character, Integer>();
-		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
-			if (!ch2count.containsKey(ch)) {
-				ch2count.put(ch, 0);
-			}
-			ch2count.put(ch, ch2count.get(ch) + 1);
+		Map<Character, Integer> letterToCount = new HashMap<>();
+		for (char letter : s.toCharArray()) {
+			letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
 		}
 
 		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
-			if (ch2count.containsKey(ch) && ch2count.get(ch) == 1) {
+			char letter = s.charAt(i);
+			if (letterToCount.get(letter) == 1) {
 				return i;
 			}
 		}
+
 		return -1;
 	}
 }
