@@ -1,17 +1,19 @@
 public class Solution {
-	public int majorityElement(int[] num) {
-		int majority = 0;
+	public int majorityElement(int[] nums) {
+		int majority = -1;
 		int count = 0;
-		for (int oneNum : num) {
+		for (int num : nums) {
 			if (count == 0) {
-				majority = oneNum;
+				majority = num;
 			}
-			if (oneNum == majority) {
-				count++;
+
+			if (num == majority) {
+				++count;
 			} else {
-				count--;
+				--count;
 			}
 		}
+
 		return majority;
 	}
 }
