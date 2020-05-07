@@ -33,9 +33,9 @@ public class Solution {
 		Location leftSubResult = search(node.left, target, depth + 1);
 		if (leftSubResult != null) {
 			return leftSubResult;
-		} else {
-			return search(node.right, target, depth + 1);
 		}
+
+		return search(node.right, target, depth + 1);
 	}
 }
 
