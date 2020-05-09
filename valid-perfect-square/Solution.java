@@ -5,6 +5,7 @@ public class Solution {
 		while (lower <= upper) {
 			int middle = (lower + upper) / 2;
 			long square = (long) middle * middle;
+
 			if (num == square) {
 				return true;
 			} else if (num < square) {
@@ -13,6 +14,7 @@ public class Solution {
 				lower = middle + 1;
 			}
 		}
+
 		return false;
 	}
 }
