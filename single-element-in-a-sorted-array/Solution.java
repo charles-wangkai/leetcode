@@ -20,6 +20,7 @@ public class Solution {
 				return nums[middle];
 			}
 		}
+
 		return nums[lower];
 	}
 }
