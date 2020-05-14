@@ -2,12 +2,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 class TrieNode {
-	// Initialize your data structure here.
-	private Map<Character, TrieNode> children;
-
-	public TrieNode() {
-		children = new HashMap<Character, TrieNode>();
-	}
+	private Map<Character, TrieNode> children = new HashMap<>();
 
 	public boolean hasChild(Character ch) {
 		return children.containsKey(ch);
@@ -21,6 +16,7 @@ class TrieNode {
 		if (!hasChild(ch)) {
 			children.put(ch, new TrieNode());
 		}
+
 		return getChild(ch);
 	}
 }
@@ -35,22 +31,24 @@ public class Trie {
 	// Inserts a word into the trie.
 	public void insert(String word) {
 		TrieNode node = root;
-		for (int i = 0; i < word.length(); i++) {
-			node = node.putChild(word.charAt(i));
+		for (char ch : word.toCharArray()) {
+			node = node.putChild(ch);
 		}
+
 		node.putChild(null);
 	}
 
 	// Returns if the word is in the trie.
 	public boolean search(String word) {
 		TrieNode node = root;
-		for (int i = 0; i < word.length(); i++) {
-			char ch = word.charAt(i);
+		for (char ch : word.toCharArray()) {
 			if (!node.hasChild(ch)) {
 				return false;
 			}
+
 			node = node.getChild(ch);
 		}
+
 		return node.hasChild(null);
 	}
 
@@ -58,13 +56,14 @@ public class Trie {
 	// that starts with the given prefix.
 	public boolean startsWith(String prefix) {
 		TrieNode node = root;
-		for (int i = 0; i < prefix.length(); i++) {
-			char ch = prefix.charAt(i);
+		for (char ch : prefix.toCharArray()) {
 			if (!node.hasChild(ch)) {
 				return false;
 			}
+
 			node = node.getChild(ch);
 		}
+
 		return true;
 	}
 }
