@@ -7,8 +7,7 @@ public class Solution {
 			return maxSum;
 		}
 
-		int minSum = computeMinSum(A);
-		return Math.max(maxSum, Arrays.stream(A).sum() - minSum);
+		return Math.max(maxSum, Arrays.stream(A).sum() - computeMinSum(A));
 	}
 
 	int computeMaxSum(int[] a) {
@@ -19,6 +18,7 @@ public class Solution {
 			maxSum = Math.max(maxSum, sum);
 			sum = Math.max(0, sum);
 		}
+
 		return maxSum;
 	}
 
