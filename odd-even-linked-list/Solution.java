@@ -20,16 +20,18 @@ public class Solution {
 		ListNode node = tempHead;
 		boolean oddOrEven = true;
 		while (node.next != null) {
-			if (!oddOrEven) {
+			if (oddOrEven) {
+				node = node.next;
+			} else {
 				evenTail.next = node.next;
 				node.next = node.next.next;
 				evenTail.next.next = null;
 				evenTail = evenTail.next;
-			} else {
-				node = node.next;
 			}
+
 			oddOrEven = !oddOrEven;
 		}
+
 		node.next = evenHead.next;
 
 		return tempHead.next;
