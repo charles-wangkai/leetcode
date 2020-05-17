@@ -4,34 +4,31 @@ import java.util.List;
 
 public class Solution {
 	public List<Integer> findAnagrams(String s, String p) {
-		List<Integer> indices = new ArrayList<Integer>();
+		List<Integer> indices = new ArrayList<>();
 
 		if (s.length() >= p.length()) {
-			int[] letter2count = buildLetter2count(p);
-			int[] currentKey = buildLetter2count(s.substring(0, p.length() - 1));
-			for (int i = p.length() - 1; i < s.length(); i++) {
-				currentKey[convertToIndex(s.charAt(i))]++;
+			int[] letterToCount = buildLetterToCount(p);
+			int[] currentKey = buildLetterToCount(s.substring(0, p.length() - 1));
+			for (int i = p.length() - 1; i < s.length(); ++i) {
+				++currentKey[s.charAt(i) - 'a'];
 
-				if (Arrays.equals(currentKey, letter2count)) {
+				if (Arrays.equals(currentKey, letterToCount)) {
 					indices.add(i - p.length() + 1);
 				}
 
-				currentKey[convertToIndex(s.charAt(i - p.length() + 1))]--;
+				--currentKey[s.charAt(i - p.length() + 1) - 'a'];
 			}
 		}
 
 		return indices;
 	}
 
-	int[] buildLetter2count(String str) {
-		int[] letter2count = new int[26];
-		for (int i = 0; i < str.length(); i++) {
-			letter2count[convertToIndex(str.charAt(i))]++;
+	int[] buildLetterToCount(String str) {
+		int[] letterToCount = new int[26];
+		for (char ch : str.toCharArray()) {
+			letterToCount[ch - 'a']++;
 		}
-		return letter2count;
-	}
 
-	int convertToIndex(char ch) {
-		return ch - 'a';
+		return letterToCount;
 	}
 }
