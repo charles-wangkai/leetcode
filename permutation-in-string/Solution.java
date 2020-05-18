@@ -7,29 +7,28 @@ public class Solution {
 			return false;
 		}
 
-		Map<Character, Integer> letter2count = new HashMap<Character, Integer>();
-		s1.chars().forEach(ch -> updateLetter2count(letter2count, (char) ch, -1));
+		Map<Character, Integer> letterToCount = new HashMap<>();
+		s1.chars().forEach(ch -> updateLetterToCount(letterToCount, (char) ch, -1));
 
 		for (int i = 0; i < s1.length() - 1; i++) {
-			updateLetter2count(letter2count, s2.charAt(i), 1);
+			updateLetterToCount(letterToCount, s2.charAt(i), 1);
 		}
 
 		for (int i = s1.length() - 1; i < s2.length(); i++) {
-			updateLetter2count(letter2count, s2.charAt(i), 1);
+			updateLetterToCount(letterToCount, s2.charAt(i), 1);
 
-			if (letter2count.isEmpty()) {
+			if (letterToCount.isEmpty()) {
 				return true;
 			}
 
-			updateLetter2count(letter2count, s2.charAt(i - s1.length() + 1), -1);
+			updateLetterToCount(letterToCount, s2.charAt(i - s1.length() + 1), -1);
 		}
+
 		return false;
 	}
 
-	void updateLetter2count(Map<Character, Integer> letter2count, char letter, int delta) {
-		letter2count.put(letter, letter2count.getOrDefault(letter, 0) + delta);
-		if (letter2count.get(letter) == 0) {
-			letter2count.remove(letter);
-		}
+	void updateLetterToCount(Map<Character, Integer> letterToCount, char letter, int delta) {
+		letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + delta);
+		letterToCount.remove(letter, 0);
 	}
 }
