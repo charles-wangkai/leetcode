@@ -16,7 +16,7 @@ public class StockSpanner {
 		int result = index - elements.peek().index;
 
 		elements.push(new Element(index, price));
-		index++;
+		++index;
 
 		return result;
 	}
