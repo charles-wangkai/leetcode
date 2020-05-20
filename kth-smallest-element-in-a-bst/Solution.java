@@ -10,13 +10,14 @@ class TreeNode {
 }
 
 public class Solution {
-	static int result;
-	static int sequence;
+	int kthMin;
+	int sequence;
 
 	public int kthSmallest(TreeNode root, int k) {
 		sequence = 0;
 		search(root, k);
-		return result;
+
+		return kthMin;
 	}
 
 	void search(TreeNode node, int k) {
@@ -25,10 +26,12 @@ public class Solution {
 		}
 
 		search(node.left, k);
-		sequence++;
+
+		++sequence;
 		if (sequence == k) {
-			result = node.val;
+			kthMin = node.val;
 		}
+
 		search(node.right, k);
 	}
 }
