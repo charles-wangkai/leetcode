@@ -1,40 +1,26 @@
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class Solution {
 	public String frequencySort(String s) {
-		Map<Character, Integer> letter2count = new HashMap<Character, Integer>();
+		Map<Character, Integer> letterToCount = new HashMap<>();
 		for (char letter : s.toCharArray()) {
-			if (!letter2count.containsKey(letter)) {
-				letter2count.put(letter, 0);
-			}
-			letter2count.put(letter, letter2count.get(letter) + 1);
+			letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
 		}
 
-		SortedMap<Integer, List<Character>> count2letters = new TreeMap<Integer, List<Character>>(
-				Comparator.reverseOrder());
-		for (char letter : letter2count.keySet()) {
-			int count = letter2count.get(letter);
+		List<Character> sortedLetters = letterToCount.keySet().stream()
+				.sorted((l1, l2) -> -Integer.compare(letterToCount.get(l1), letterToCount.get(l2)))
+				.collect(Collectors.toList());
 
-			if (!count2letters.containsKey(count)) {
-				count2letters.put(count, new ArrayList<Character>());
-			}
-			count2letters.get(count).add(letter);
-		}
-
-		StringBuilder sb = new StringBuilder();
-		for (int count : count2letters.keySet()) {
-			for (char letter : count2letters.get(count)) {
-				for (int i = 0; i < count; i++) {
-					sb.append(letter);
-				}
+		StringBuilder result = new StringBuilder();
+		for (char letter : sortedLetters) {
+			for (int i = 0; i < letterToCount.get(letter); ++i) {
+				result.append(letter);
 			}
 		}
-		return sb.toString();
+
+		return result.toString();
 	}
 }
