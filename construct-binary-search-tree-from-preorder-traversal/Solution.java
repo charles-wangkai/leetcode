@@ -21,7 +21,7 @@ public class Solution {
 
 		int endIndex = 1;
 		while (endIndex < preorder.length && preorder[endIndex] < preorder[0]) {
-			endIndex++;
+			++endIndex;
 		}
 
 		node.left = bstFromPreorder(Arrays.copyOfRange(preorder, 1, endIndex));
