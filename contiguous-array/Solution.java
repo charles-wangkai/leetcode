@@ -9,11 +9,11 @@ public class Solution {
 		deltaToFirstIndex.put(0, -1);
 
 		int delta = 0;
-		for (int i = 0; i < nums.length; i++) {
+		for (int i = 0; i < nums.length; ++i) {
 			if (nums[i] == 0) {
-				delta++;
+				++delta;
 			} else {
-				delta--;
+				--delta;
 			}
 
 			if (deltaToFirstIndex.containsKey(delta)) {
