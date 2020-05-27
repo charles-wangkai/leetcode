@@ -5,7 +5,7 @@ public class Solution {
 	public boolean possibleBipartition(int N, int[][] dislikes) {
 		@SuppressWarnings("unchecked")
 		List<Integer>[] adjacentLists = new List[N];
-		for (int i = 0; i < adjacentLists.length; i++) {
+		for (int i = 0; i < adjacentLists.length; ++i) {
 			adjacentLists[i] = new ArrayList<>();
 		}
 
@@ -25,6 +25,7 @@ public class Solution {
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -40,6 +41,7 @@ public class Solution {
 				return false;
 			}
 		}
+
 		return true;
 	}
 }
