@@ -1,47 +1,47 @@
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Solution {
 	public boolean canFinish(int numCourses, int[][] prerequisites) {
-		Course[] courses = new Course[numCourses];
-		for (int i = 0; i < courses.length; i++) {
-			courses[i] = new Course();
+		@SuppressWarnings("unchecked")
+		Set<Integer>[] fromSets = new Set[numCourses];
+		for (int i = 0; i < fromSets.length; ++i) {
+			fromSets[i] = new HashSet<>();
+		}
+
+		@SuppressWarnings("unchecked")
+		Set<Integer>[] toSets = new Set[numCourses];
+		for (int i = 0; i < toSets.length; ++i) {
+			toSets[i] = new HashSet<>();
 		}
 
 		for (int[] prerequisite : prerequisites) {
 			int to = prerequisite[0];
 			int from = prerequisite[1];
-			courses[from].tos.add(to);
-			courses[to].froms.add(from);
+
+			fromSets[to].add(from);
+			toSets[from].add(to);
 		}
 
-		boolean[] takens = new boolean[courses.length];
-		for (int i = 0; i < courses.length; i++) {
-			if (!takens[i] && courses[i].froms.isEmpty()) {
-				take(courses, takens, i);
+		boolean[] takens = new boolean[numCourses];
+		for (int i = 0; i < numCourses; ++i) {
+			if (!takens[i] && fromSets[i].isEmpty()) {
+				take(fromSets, toSets, takens, i);
 			}
 		}
 
-		for (Course course : courses) {
-			if (!course.froms.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return Arrays.stream(fromSets).allMatch(Set::isEmpty);
 	}
 
-	void take(Course[] courses, boolean[] takens, int index) {
+	void take(Set<Integer>[] fromSets, Set<Integer>[] toSets, boolean[] takens, int index) {
 		takens[index] = true;
-		for (int to : courses[index].tos) {
-			courses[to].froms.remove(index);
-			if (!takens[to] && courses[to].froms.isEmpty()) {
-				take(courses, takens, to);
+		for (int to : toSets[index]) {
+			fromSets[to].remove(index);
+
+			if (!takens[to] && fromSets[to].isEmpty()) {
+				take(fromSets, toSets, takens, to);
 			}
 		}
 	}
-}
-
-class Course {
-	Set<Integer> froms = new HashSet<Integer>();
-	Set<Integer> tos = new HashSet<Integer>();
 }
