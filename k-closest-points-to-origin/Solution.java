@@ -2,9 +2,9 @@ import java.util.Arrays;
 
 public class Solution {
 	public int[][] kClosest(int[][] points, int K) {
-		return Arrays.stream(points).sorted(
-				(point1, point2) -> Integer.compare(computeDistanceSquare(point1), computeDistanceSquare(point2)))
-				.limit(K).toArray(int[][]::new);
+		return Arrays.stream(points)
+				.sorted((p1, p2) -> Integer.compare(computeDistanceSquare(p1), computeDistanceSquare(p2))).limit(K)
+				.toArray(int[][]::new);
 	}
 
 	int computeDistanceSquare(int[] point) {
