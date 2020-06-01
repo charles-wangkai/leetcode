@@ -4,12 +4,21 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public TreeNode invertTree(TreeNode root) {
 		if (root != null) {
 			TreeNode temp = root.left;
@@ -19,6 +28,7 @@ public class Solution {
 			invertTree(root.left);
 			invertTree(root.right);
 		}
+
 		return root;
 	}
 }
