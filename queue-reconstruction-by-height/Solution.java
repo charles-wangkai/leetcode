@@ -1,14 +1,14 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Solution {
 	public int[][] reconstructQueue(int[][] people) {
-		Arrays.sort(people, (p1, p2) -> p1[0] != p2[0] ? (p1[0] - p2[0]) : (p1[1] - p2[1]));
+		Arrays.sort(people,
+				(p1, p2) -> (p1[0] != p2[0]) ? Integer.compare(p1[0], p2[0]) : Integer.compare(p1[1], p2[1]));
 
-		List<Integer> indices = IntStream.range(0, people.length).collect(ArrayList<Integer>::new, List<Integer>::add,
-				List<Integer>::addAll);
+		List<Integer> indices = IntStream.range(0, people.length).boxed().collect(Collectors.toList());
 
 		int[][] queue = new int[people.length][];
 		int prevHeight = -1;
@@ -16,7 +16,7 @@ public class Solution {
 		for (int[] person : people) {
 			if (person[0] == prevHeight) {
 				queue[indices.remove(person[1] - count)] = person;
-				count++;
+				++count;
 			} else {
 				queue[indices.remove(person[1])] = person;
 				count = 1;
@@ -24,6 +24,7 @@ public class Solution {
 
 			prevHeight = person[0];
 		}
+
 		return queue;
 	}
 }
