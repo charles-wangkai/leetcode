@@ -14,6 +14,7 @@ public class Solution {
 				}
 			}
 		}
+
 		return ways[amount][coins.length - 1];
 	}
 }
