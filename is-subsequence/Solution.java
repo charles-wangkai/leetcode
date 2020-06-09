@@ -4,12 +4,13 @@ public class Solution {
 		for (char sLetter : s.toCharArray()) {
 			int index = t.indexOf(sLetter, tFromIndex);
 
-			if (index < 0) {
+			if (index == -1) {
 				return false;
 			}
 
 			tFromIndex = index + 1;
 		}
+
 		return true;
 	}
 }
