@@ -7,25 +7,22 @@ import java.util.Random;
 public class RandomizedSet {
 	static private Random random = new Random();
 
-	private List<Integer> elements = new ArrayList<Integer>();
-	private Map<Integer, Integer> element2index = new HashMap<Integer, Integer>();
-
-	/** Initialize your data structure here. */
-	public RandomizedSet() {
-	}
+	private List<Integer> values = new ArrayList<>();
+	private Map<Integer, Integer> valueToIndex = new HashMap<>();
 
 	/**
 	 * Inserts a value to the set. Returns true if the set did not already contain
 	 * the specified element.
 	 */
 	public boolean insert(int val) {
-		if (element2index.containsKey(val)) {
+		if (valueToIndex.containsKey(val)) {
 			return false;
-		} else {
-			elements.add(val);
-			element2index.put(val, elements.size() - 1);
-			return true;
 		}
+
+		values.add(val);
+		valueToIndex.put(val, values.size() - 1);
+
+		return true;
 	}
 
 	/**
@@ -33,31 +30,32 @@ public class RandomizedSet {
 	 * element.
 	 */
 	public boolean remove(int val) {
-		if (element2index.containsKey(val)) {
-			swap(val, elements.get(elements.size() - 1));
-			elements.remove(elements.size() - 1);
-			element2index.remove(val);
-			return true;
-		} else {
+		if (!valueToIndex.containsKey(val)) {
 			return false;
 		}
+
+		swap(val, values.get(values.size() - 1));
+		values.remove(values.size() - 1);
+		valueToIndex.remove(val);
+
+		return true;
 	}
 
-	private void swap(int element1, int element2) {
-		int index1 = element2index.get(element1);
-		int index2 = element2index.get(element2);
+	private void swap(int value1, int value2) {
+		int index1 = valueToIndex.get(value1);
+		int index2 = valueToIndex.get(value2);
 
-		int temp = elements.get(index1);
-		elements.set(index1, elements.get(index2));
-		elements.set(index2, temp);
+		int temp = values.get(index1);
+		values.set(index1, values.get(index2));
+		values.set(index2, temp);
 
-		element2index.put(element1, index2);
-		element2index.put(element2, index1);
+		valueToIndex.put(value1, index2);
+		valueToIndex.put(value2, index1);
 	}
 
 	/** Get a random element from the set. */
 	public int getRandom() {
-		return elements.get(random.nextInt(elements.size()));
+		return values.get(random.nextInt(values.size()));
 	}
 }
 
