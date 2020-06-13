@@ -11,8 +11,8 @@ public class Solution {
 		for (int i = 0; i < elements.length; i++) {
 			elements[i] = new Element(1, -1);
 
-			for (int j = 0; j < i; j++) {
-				if (nums[i] % nums[j] == 0 && elements[j].size >= elements[i].size) {
+			for (int j = 0; j < i; ++j) {
+				if (nums[i] % nums[j] == 0 && elements[j].size + 1 > elements[i].size) {
 					elements[i] = new Element(elements[j].size + 1, j);
 				}
 			}
@@ -22,10 +22,11 @@ public class Solution {
 			}
 		}
 
-		List<Integer> result = new ArrayList<Integer>();
-		for (int i = lastIndex; i >= 0; i = elements[i].prevIndex) {
+		List<Integer> result = new ArrayList<>();
+		for (int i = lastIndex; i != -1; i = elements[i].prevIndex) {
 			result.add(nums[i]);
 		}
+
 		return result;
 	}
 }
