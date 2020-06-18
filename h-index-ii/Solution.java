@@ -6,17 +6,18 @@ public class Solution {
 		while (lower <= upper) {
 			int middle = (lower + upper) / 2;
 
-			if (isValid(citations, middle)) {
-				lower = middle + 1;
+			if (check(citations, middle)) {
 				result = middle;
+				lower = middle + 1;
 			} else {
 				upper = middle - 1;
 			}
 		}
+
 		return result;
 	}
 
-	boolean isValid(int[] citations, int h) {
-		return (h == 0 || citations[citations.length - h] >= h);
+	boolean check(int[] citations, int h) {
+		return h == 0 || citations[citations.length - h] >= h;
 	}
 }
