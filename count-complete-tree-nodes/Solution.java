@@ -4,14 +4,21 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
 public class Solution {
-	static final int SHIFT_NUM_LIMIT = 30;
-
 	public int countNodes(TreeNode root) {
 		if (root == null) {
 			return 0;
@@ -19,42 +26,46 @@ public class Solution {
 
 		int height = findHeight(root);
 
-		int lower = 0;
+		int result = -1;
+		int lower = 1 << (height - 1);
 		int upper = (1 << height) - 1;
-		int nodeNum = upper;
-		if (findHeight(root, height, upper) == height) {
-			nodeNum += upper + 1;
-		} else {
-			while (lower + 1 != upper) {
-				int middle = (lower + upper) / 2;
-				if (findHeight(root, height, middle) == height) {
-					lower = middle;
-				} else {
-					upper = middle;
-				}
+		while (lower <= upper) {
+			int middle = lower + (upper - lower) / 2;
+			if (check(root, height, middle)) {
+				result = middle;
+				lower = middle + 1;
+			} else {
+				upper = middle - 1;
 			}
-			nodeNum += lower + 1;
 		}
-		return nodeNum;
+
+		return result;
 	}
 
 	int findHeight(TreeNode root) {
-		return findHeight(root, SHIFT_NUM_LIMIT, 0);
+		int result = 0;
+		while (root != null) {
+			++result;
+			root = root.left;
+		}
+
+		return result;
 	}
 
-	int findHeight(TreeNode root, int shiftNum, int code) {
-		int height = -1;
-		while (root != null) {
-			int half = (1 << shiftNum) >> 1;
-			if (code >= half) {
-				root = root.right;
-				code -= half;
+	boolean check(TreeNode root, int height, int value) {
+		TreeNode node = root;
+		for (int i = 0; i < height - 1; ++i) {
+			if ((value & (1 << (height - 2 - i))) == 0) {
+				node = node.left;
 			} else {
-				root = root.left;
+				node = node.right;
 			}
-			shiftNum--;
-			height++;
+
+			if (node == null) {
+				return false;
+			}
 		}
-		return height;
+
+		return true;
 	}
 }
