@@ -2,52 +2,54 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Solution {
-	Map<Integer, Integer> number2result = new HashMap<Integer, Integer>();
+	Map<Integer, Integer> cache = new HashMap<>();
 
 	public int numSquares(int n) {
 		return search(n, computeResultLimit(n));
 	}
 
-	int computeResultLimit(int number) {
+	int computeResultLimit(int n) {
 		int resultLimit = 0;
-		while (number != 0) {
-			int root = (int) Math.round(Math.sqrt(number));
-			if ((long) root * root > number) {
-				root--;
+		while (n != 0) {
+			int root = (int) Math.round(Math.sqrt(n));
+			if (root * root > n) {
+				--root;
 			}
-			number -= root * root;
-			resultLimit++;
+			n -= root * root;
+			++resultLimit;
 		}
+
 		return resultLimit;
 	}
 
-	Integer search(int number, int resultLimit) {
-		if (number == 0) {
+	Integer search(int n, int resultLimit) {
+		if (n == 0) {
 			return 0;
 		}
 		if (resultLimit == 0) {
 			return null;
 		}
 
-		if (number2result.containsKey(number)) {
-			int result = number2result.get(number);
+		if (cache.containsKey(n)) {
+			int result = cache.get(n);
+
 			return (resultLimit >= result) ? result : null;
 		}
 
 		Integer result = null;
-		for (int i = 1; (long) i * i <= number; i++) {
-			Integer subResult = search(number - i * i, resultLimit - 1);
+		for (int i = 1; i * i <= n; ++i) {
+			Integer subResult = search(n - i * i, resultLimit - 1);
 
-			if (subResult != null) {
-				result = Math.min(result == null ? Integer.MAX_VALUE : result,
-						subResult + 1);
-				resultLimit = Math.min(resultLimit, result - 1);
+			if (subResult != null && (result == null || subResult + 1 < result)) {
+				result = subResult + 1;
+				resultLimit = subResult;
 			}
 		}
 
 		if (result != null) {
-			number2result.put(number, result);
+			cache.put(n, result);
 		}
+
 		return result;
 	}
 }
