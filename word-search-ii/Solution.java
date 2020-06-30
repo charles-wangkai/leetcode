@@ -1,112 +1,90 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class TrieNode {
-	// Initialize your data structure here.
-	private Map<Character, TrieNode> children;
+class Solution {
+	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
+	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 
-	public TrieNode() {
-		children = new HashMap<Character, TrieNode>();
+	public List<String> findWords(char[][] board, String[] words) {
+		int row = board.length;
+		if (row == 0) {
+			return Collections.emptyList();
+		}
+		int col = board[0].length;
+		if (col == 0) {
+			return Collections.emptyList();
+		}
+
+		Trie trie = new Trie();
+		for (String word : words) {
+			insert(trie, word);
+		}
+
+		Set<String> foundWords = new HashSet<>();
+		boolean[][] visited = new boolean[row][col];
+		for (int r = 0; r < row; ++r) {
+			for (int c = 0; c < col; ++c) {
+				search(board, foundWords, trie, visited, r, c, new StringBuilder());
+			}
+		}
+
+		return new ArrayList<>(foundWords);
 	}
+
+	void search(char[][] board, Set<String> foundWords, Trie node, boolean[][] visited, int r, int c,
+			StringBuilder current) {
+		int row = board.length;
+		int col = board[0].length;
+
+		if (!(r >= 0 && r < row && c >= 0 && c < col) || visited[r][c] || !node.hasChild(board[r][c])) {
+			return;
+		}
+
+		Trie child = node.getChild(board[r][c]);
+		current.append(board[r][c]);
+
+		if (child.hasChild(null)) {
+			foundWords.add(current.toString());
+		}
+
+		visited[r][c] = true;
+		for (int i = 0; i < R_OFFSETS.length; ++i) {
+			search(board, foundWords, child, visited, r + R_OFFSETS[i], c + C_OFFSETS[i], current);
+		}
+		visited[r][c] = false;
+
+		current.deleteCharAt(current.length() - 1);
+	}
+
+	void insert(Trie node, String word) {
+		for (int i = 0; i < word.length(); ++i) {
+			node.addChild(word.charAt(i));
+			node = node.getChild(word.charAt(i));
+		}
+
+		node.addChild(null);
+	}
+}
+
+class Trie {
+	private Map<Character, Trie> children = new HashMap<>();
 
 	public boolean hasChild(Character ch) {
 		return children.containsKey(ch);
 	}
 
-	public TrieNode getChild(Character ch) {
+	public Trie getChild(Character ch) {
 		return children.get(ch);
 	}
 
-	public TrieNode putChild(Character ch) {
+	public void addChild(Character ch) {
 		if (!hasChild(ch)) {
-			children.put(ch, new TrieNode());
+			children.put(ch, new Trie());
 		}
-		return getChild(ch);
-	}
-}
-
-class Trie {
-	private TrieNode root;
-
-	public Trie() {
-		root = new TrieNode();
-	}
-
-	public TrieNode getRoot() {
-		return root;
-	}
-
-	// Inserts a word into the trie.
-	public void insert(String word) {
-		TrieNode node = root;
-		for (int i = 0; i < word.length(); i++) {
-			node = node.putChild(word.charAt(i));
-		}
-		node.putChild(null);
-	}
-}
-
-public class Solution {
-	static final int[] OFFSET_R = { -1, 0, 1, 0 };
-	static final int[] OFFSET_C = { 0, 1, 0, -1 };
-
-	public List<String> findWords(char[][] board, String[] words) {
-		List<String> result = new ArrayList<String>();
-
-		int row = board.length;
-		if (row == 0) {
-			return result;
-		}
-		int col = board[0].length;
-		if (col == 0) {
-			return result;
-		}
-
-		Trie trie = new Trie();
-		for (String word : words) {
-			trie.insert(word);
-		}
-
-		Set<String> foundWords = new HashSet<String>();
-		boolean[][] used = new boolean[row][col];
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				search(board, foundWords, trie.getRoot(), used, i, j,
-						new StringBuilder());
-			}
-		}
-
-		result.addAll(foundWords);
-		return result;
-	}
-
-	void search(char[][] board, Set<String> foundWords, TrieNode node,
-			boolean[][] used, int r, int c, StringBuilder sb) {
-		int row = board.length;
-		int col = board[0].length;
-		if (!(r >= 0 && r < row && c >= 0 && c < col) || used[r][c]
-				|| !node.hasChild(board[r][c])) {
-			return;
-		}
-
-		TrieNode childNode = node.getChild(board[r][c]);
-		sb.append(board[r][c]);
-
-		if (childNode.hasChild(null)) {
-			foundWords.add(sb.toString());
-		}
-
-		used[r][c] = true;
-		for (int i = 0; i < OFFSET_R.length; i++) {
-			search(board, foundWords, childNode, used, r + OFFSET_R[i], c
-					+ OFFSET_C[i], sb);
-		}
-		used[r][c] = false;
-
-		sb.deleteCharAt(sb.length() - 1);
 	}
 }
