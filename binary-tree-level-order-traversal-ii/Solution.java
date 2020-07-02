@@ -1,22 +1,34 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-// Definition for binary tree
+// Definition for a binary tree node.
 class TreeNode {
 	int val;
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public List<List<Integer>> levelOrderBottom(TreeNode root) {
-		List<List<Integer>> levels = new ArrayList<List<Integer>>();
+		List<List<Integer>> levels = new ArrayList<>();
 		search(levels, root, 0);
-		reverse(levels);
+
+		Collections.reverse(levels);
+
 		return levels;
 	}
 
@@ -24,19 +36,13 @@ public class Solution {
 		if (node == null) {
 			return;
 		}
+
 		if (depth == levels.size()) {
-			levels.add(new ArrayList<Integer>());
+			levels.add(new ArrayList<>());
 		}
 		levels.get(depth).add(node.val);
+
 		search(levels, node.left, depth + 1);
 		search(levels, node.right, depth + 1);
-	}
-
-	void reverse(List<List<Integer>> levels) {
-		for (int i = 0, j = levels.size() - 1; i < j; i++, j--) {
-			List<Integer> temp = levels.get(i);
-			levels.set(i, levels.get(j));
-			levels.set(j, temp);
-		}
 	}
 }
