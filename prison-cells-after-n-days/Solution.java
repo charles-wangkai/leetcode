@@ -3,12 +3,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
-public class Solution {
+class Solution {
 	public int[] prisonAfterNDays(int[] cells, int N) {
 		Map<Integer, Integer> codeToIndex = new HashMap<>();
 		List<Integer> codes = new ArrayList<>();
-		for (int i = 0;; i++) {
+		for (int i = 0;; ++i) {
 			int code = encode(cells);
 
 			if (codeToIndex.containsKey(code)) {
@@ -26,11 +27,8 @@ public class Solution {
 	}
 
 	int[] change(int[] cells) {
-		int[] result = new int[cells.length];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = (i != 0 && i != result.length - 1 && cells[i - 1] == cells[i + 1]) ? 1 : 0;
-		}
-		return result;
+		return IntStream.range(0, cells.length)
+				.map(i -> (i != 0 && i != cells.length - 1 && cells[i - 1] == cells[i + 1]) ? 1 : 0).toArray();
 	}
 
 	int findIndex(int beginIndex, int cycleLength, int N) {
@@ -47,10 +45,11 @@ public class Solution {
 
 	int[] decode(int code) {
 		int[] result = new int[8];
-		for (int i = result.length - 1; i >= 0; i--) {
+		for (int i = result.length - 1; i >= 0; --i) {
 			result[i] = code % 2;
 			code /= 2;
 		}
+
 		return result;
 	}
 }
