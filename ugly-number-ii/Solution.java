@@ -1,31 +1,30 @@
 import java.util.PriorityQueue;
 
-public class Solution {
+class Solution {
 	static final int[] FACTORS = { 2, 3, 5 };
 
 	public int nthUglyNumber(int n) {
-		PriorityQueue<Number_MaxFactor> pq = new PriorityQueue<Number_MaxFactor>(
-				(nm1, nm2) -> (int) Math.signum(nm1.number - nm2.number));
-		pq.offer(new Number_MaxFactor(1, 1));
-		for (int i = 0; i < n - 1; i++) {
-			Number_MaxFactor head = pq.poll();
+		PriorityQueue<Element> pq = new PriorityQueue<>((e1, e2) -> Long.compare(e1.number, e2.number));
+		pq.offer(new Element(1, 0));
 
-			for (int factor : FACTORS) {
-				if (factor >= head.maxFactor) {
-					pq.offer(new Number_MaxFactor(head.number * factor, factor));
-				}
+		for (int i = 0; i < n - 1; i++) {
+			Element head = pq.poll();
+
+			for (int j = head.maxFactorIndex; j < FACTORS.length; ++j) {
+				pq.offer(new Element(head.number * FACTORS[j], j));
 			}
 		}
+
 		return (int) pq.poll().number;
 	}
 }
 
-class Number_MaxFactor {
+class Element {
 	long number;
-	int maxFactor;
+	int maxFactorIndex;
 
-	Number_MaxFactor(long number, int maxFactor) {
+	Element(long number, int maxFactorIndex) {
 		this.number = number;
-		this.maxFactor = maxFactor;
+		this.maxFactorIndex = maxFactorIndex;
 	}
 }
