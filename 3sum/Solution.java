@@ -1,49 +1,36 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class Solution {
-	public List<List<Integer>> threeSum(int[] num) {
-		Map<Integer, Integer> number2count = new HashMap<Integer, Integer>();
-		for (int oneNum : num) {
-			increaseCount(number2count, oneNum);
+class Solution {
+	public List<List<Integer>> threeSum(int[] nums) {
+		Map<Integer, Integer> valueToCount = new HashMap<>();
+		for (int value : nums) {
+			valueToCount.put(value, valueToCount.getOrDefault(value, 0) + 1);
 		}
 
-		Set<List<Integer>> solutionSet = new HashSet<List<Integer>>();
-		for (int a : number2count.keySet()) {
-			decreaseCount(number2count, a);
-			for (int b : number2count.keySet()) {
-				if (number2count.get(b) == 0) {
-					continue;
+		List<List<Integer>> result = new ArrayList<>();
+		for (int a : valueToCount.keySet()) {
+			valueToCount.put(a, valueToCount.get(a) - 1);
+
+			for (int b : valueToCount.keySet()) {
+				if (b >= a && valueToCount.get(b) != 0) {
+					valueToCount.put(b, valueToCount.get(b) - 1);
+
+					int c = -a - b;
+					if (c >= b && valueToCount.getOrDefault(c, 0) != 0) {
+						result.add(Arrays.asList(a, b, c));
+					}
+
+					valueToCount.put(b, valueToCount.get(b) + 1);
 				}
-				decreaseCount(number2count, b);
-				int c = -a - b;
-				if (number2count.containsKey(c) && number2count.get(c) > 0) {
-					List<Integer> solution = Arrays.asList(a, b, c);
-					Collections.sort(solution);
-					solutionSet.add(solution);
-				}
-				increaseCount(number2count, b);
 			}
-			increaseCount(number2count, a);
+
+			valueToCount.put(a, valueToCount.get(a) + 1);
 		}
 
-		return new ArrayList<List<Integer>>(solutionSet);
-	}
-
-	void increaseCount(Map<Integer, Integer> number2count, int number) {
-		if (!number2count.containsKey(number)) {
-			number2count.put(number, 0);
-		}
-		number2count.put(number, number2count.get(number) + 1);
-	}
-
-	void decreaseCount(Map<Integer, Integer> number2count, int number) {
-		number2count.put(number, number2count.get(number) - 1);
+		return result;
 	}
 }
