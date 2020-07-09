@@ -7,14 +7,23 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public int widthOfBinaryTree(TreeNode root) {
-		List<List<Integer>> positionLists = new ArrayList<List<Integer>>();
+		List<List<Integer>> positionLists = new ArrayList<>();
 
 		search(positionLists, root, 0, 0);
 
@@ -29,7 +38,7 @@ public class Solution {
 		}
 
 		if (positionLists.size() == depth) {
-			positionLists.add(new ArrayList<Integer>());
+			positionLists.add(new ArrayList<>());
 		}
 		positionLists.get(depth).add(position);
 
