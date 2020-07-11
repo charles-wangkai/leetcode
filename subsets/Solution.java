@@ -1,25 +1,20 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Solution {
-	public List<List<Integer>> subsets(int[] S) {
-		Arrays.sort(S);
+	public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> result = new ArrayList<>();
+		for (int code = 0; code < 1 << nums.length; ++code) {
+			List<Integer> subset = new ArrayList<>();
+			for (int i = 0; i < nums.length; ++i) {
+				if ((code & (1 << i)) != 0) {
+					subset.add(nums[i]);
+				}
+			}
 
-		List<List<Integer>> result = new ArrayList<List<Integer>>();
-		search(result, S, 0, new ArrayList<Integer>());
-		return result;
-	}
-
-	void search(List<List<Integer>> result, int[] S, int index,
-			List<Integer> subset) {
-		if (index == S.length) {
-			result.add(new ArrayList<Integer>(subset));
-			return;
+			result.add(subset);
 		}
-		search(result, S, index + 1, subset);
-		subset.add(S[index]);
-		search(result, S, index + 1, subset);
-		subset.remove(subset.size() - 1);
+
+		return result;
 	}
 }
