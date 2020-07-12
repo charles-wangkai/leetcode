@@ -4,10 +4,11 @@ public class Solution {
 		for (int i = 0; i < 32; i++) {
 			reversed <<= 1;
 			if ((n & 1) != 0) {
-				reversed++;
+				++reversed;
 			}
 			n >>= 1;
 		}
+
 		return reversed;
 	}
 }
