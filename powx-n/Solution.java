@@ -1,17 +1,21 @@
-public class Solution {
-	public double pow(double x, int n) {
+class Solution {
+	public double myPow(double x, int n) {
+		long exponent = n;
 		if (n < 0) {
 			x = 1 / x;
-			n = -n;
+			exponent *= -1;
 		}
+
 		double result = 1;
-		while (n != 0) {
-			if (n % 2 != 0) {
+		while (exponent != 0) {
+			if ((exponent & 1) != 0) {
 				result *= x;
 			}
+
 			x *= x;
-			n /= 2;
+			exponent >>= 1;
 		}
+
 		return result;
 	}
 }
