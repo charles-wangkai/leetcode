@@ -1,55 +1,43 @@
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Queue;
 
-public class Solution {
+class Solution {
 	public int[] findOrder(int numCourses, int[][] prerequisites) {
-		Course[] courses = new Course[numCourses];
-		for (int i = 0; i < courses.length; i++) {
-			courses[i] = new Course();
+		int[] indegrees = new int[numCourses];
+
+		@SuppressWarnings("unchecked")
+		List<Integer>[] adjList = new List[numCourses];
+		for (int i = 0; i < adjList.length; ++i) {
+			adjList[i] = new ArrayList<>();
 		}
 
 		for (int[] prerequisite : prerequisites) {
-			int to = prerequisite[0];
-			int from = prerequisite[1];
-			courses[from].tos.add(to);
-			courses[to].froms.add(from);
+			adjList[prerequisite[1]].add(prerequisite[0]);
+			++indegrees[prerequisite[0]];
 		}
 
-		List<Integer> orderList = new ArrayList<Integer>();
-		boolean[] takens = new boolean[courses.length];
-		for (int i = 0; i < courses.length; i++) {
-			if (!takens[i] && courses[i].froms.isEmpty()) {
-				take(courses, takens, orderList, i);
+		Queue<Integer> availableCourses = new LinkedList<>();
+		for (int i = 0; i < indegrees.length; ++i) {
+			if (indegrees[i] == 0) {
+				availableCourses.offer(i);
 			}
 		}
 
-		if (orderList.size() < numCourses) {
-			return new int[0];
-		}
+		List<Integer> result = new ArrayList<>();
+		while (!availableCourses.isEmpty()) {
+			int taken = availableCourses.poll();
+			result.add(taken);
 
-		int[] ordering = new int[numCourses];
-		for (int i = 0; i < ordering.length; i++) {
-			ordering[i] = orderList.get(i);
-		}
-		return ordering;
-	}
-
-	void take(Course[] courses, boolean[] takens, List<Integer> orderList,
-			int index) {
-		takens[index] = true;
-		orderList.add(index);
-		for (int to : courses[index].tos) {
-			courses[to].froms.remove(index);
-			if (!takens[to] && courses[to].froms.isEmpty()) {
-				take(courses, takens, orderList, to);
+			for (int adj : adjList[taken]) {
+				--indegrees[adj];
+				if (indegrees[adj] == 0) {
+					availableCourses.offer(adj);
+				}
 			}
 		}
-	}
-}
 
-class Course {
-	Set<Integer> froms = new HashSet<Integer>();
-	Set<Integer> tos = new HashSet<Integer>();
+		return (result.size() == numCourses) ? result.stream().mapToInt(x -> x).toArray() : new int[0];
+	}
 }
