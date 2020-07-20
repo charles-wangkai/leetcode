@@ -3,22 +3,33 @@ class ListNode {
 	int val;
 	ListNode next;
 
-	ListNode(int x) {
-		val = x;
+	ListNode() {
+	}
+
+	ListNode(int val) {
+		this.val = val;
+	}
+
+	ListNode(int val, ListNode next) {
+		this.val = val;
+		this.next = next;
 	}
 }
 
-public class Solution {
+class Solution {
 	public ListNode removeElements(ListNode head, int val) {
-		ListNode tempHead = new ListNode(0);
+		ListNode tempHead = new ListNode();
 		tempHead.next = head;
-		for (ListNode p = tempHead; p.next != null;) {
+
+		ListNode p = tempHead;
+		while (p.next != null) {
 			if (p.next.val == val) {
 				p.next = p.next.next;
 			} else {
 				p = p.next;
 			}
 		}
+
 		return tempHead.next;
 	}
 }
