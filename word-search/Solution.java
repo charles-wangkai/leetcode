@@ -1,54 +1,46 @@
-public class Solution {
-	static final int[] OFFSET_R = { -1, 0, 1, 0 };
-	static final int[] OFFSET_C = { 0, 1, 0, -1 };
+class Solution {
+	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
+	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 
 	public boolean exist(char[][] board, String word) {
-		if (word.isEmpty()) {
-			return true;
-		}
 		int row = board.length;
-		if (row == 0) {
-			return false;
-		}
 		int col = board[0].length;
-		if (col == 0) {
-			return false;
-		}
 
 		boolean[][] used = new boolean[row][col];
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
-				if (exist(board, word, used, i, j, 0)) {
+		for (int r = 0; r < row; ++r) {
+			for (int c = 0; c < col; ++c) {
+				if (check(board, word, used, r, c, 0)) {
 					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 
-	boolean exist(char[][] board, String word, boolean[][] used, int r, int c,
-			int index) {
+	boolean check(char[][] board, String word, boolean[][] used, int r, int c, int index) {
+		int row = board.length;
+		int col = board[0].length;
+
 		if (index == word.length()) {
 			return true;
 		}
 
-		int row = board.length;
-		int col = board[0].length;
-		if (!(r >= 0 && r < row && c >= 0 && c < col) || used[r][c]
-				|| board[r][c] != word.charAt(index)) {
+		if (!(r >= 0 && r < row && c >= 0 && c < col) || used[r][c] || board[r][c] != word.charAt(index)) {
 			return false;
 		}
 
 		boolean result = false;
 		used[r][c] = true;
-		for (int i = 0; i < OFFSET_R.length; i++) {
-			if (exist(board, word, used, r + OFFSET_R[i], c + OFFSET_C[i],
-					index + 1)) {
+		for (int i = 0; i < R_OFFSETS.length; ++i) {
+			if (check(board, word, used, r + R_OFFSETS[i], c + C_OFFSETS[i], index + 1)) {
 				result = true;
+
 				break;
 			}
 		}
 		used[r][c] = false;
+
 		return result;
 	}
 }
