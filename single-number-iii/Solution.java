@@ -1,26 +1,19 @@
-public class Solution {
+import java.util.Arrays;
+
+class Solution {
 	public int[] singleNumber(int[] nums) {
-		int xor = 0;
-		for (int num : nums) {
-			xor ^= num;
-		}
+		int xor = Arrays.stream(nums).reduce((x, y) -> x ^ y).getAsInt();
 
 		int diffPos = 0;
 		while ((xor & (1 << diffPos)) == 0) {
-			diffPos++;
+			++diffPos;
 		}
 
-		return new int[] { singleNumberForOne(nums, diffPos, false),
-				singleNumberForOne(nums, diffPos, true) };
+		return new int[] { singleNumberForOne(nums, diffPos, false), singleNumberForOne(nums, diffPos, true) };
 	}
 
 	int singleNumberForOne(int[] nums, int pos, boolean setBit) {
-		int xor = 0;
-		for (int num : nums) {
-			if (((num & (1 << pos)) != 0) == setBit) {
-				xor ^= num;
-			}
-		}
-		return xor;
+		return Arrays.stream(nums).filter(num -> ((num & (1 << pos)) != 0) == setBit).reduce((x, y) -> x ^ y)
+				.getAsInt();
 	}
 }
