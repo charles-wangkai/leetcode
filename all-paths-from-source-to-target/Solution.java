@@ -1,22 +1,23 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
 	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-		List<List<Integer>> result = new ArrayList<List<Integer>>();
-		search(result, graph, 0, new ArrayList<Integer>());
-		return result;
+		List<List<Integer>> paths = new ArrayList<>();
+		search(paths, graph, 0, new ArrayList<>());
+
+		return paths;
 	}
 
-	void search(List<List<Integer>> result, int[][] graph, int index, List<Integer> path) {
-		path.add(index);
+	void search(List<List<Integer>> paths, int[][] graph, int node, List<Integer> path) {
+		path.add(node);
 
-		if (index == graph.length - 1) {
-			result.add(new ArrayList<Integer>(path));
+		if (node == graph.length - 1) {
+			paths.add(new ArrayList<>(path));
 		}
 
-		for (int adj : graph[index]) {
-			search(result, graph, adj, path);
+		for (int adj : graph[node]) {
+			search(paths, graph, adj, path);
 		}
 
 		path.remove(path.size() - 1);
