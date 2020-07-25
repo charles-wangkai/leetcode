@@ -1,14 +1,14 @@
-public class Solution {
-	public int findMin(int[] num) {
-		return search(num, 0, num.length - 1);
+class Solution {
+	public int findMin(int[] nums) {
+		return search(nums, 0, nums.length - 1);
 	}
 
-	int search(int[] num, int lower, int upper) {
-		if (lower == upper || num[lower] < num[upper]) {
-			return num[lower];
+	int search(int[] nums, int lower, int upper) {
+		if (lower == upper || nums[lower] < nums[upper]) {
+			return nums[lower];
 		}
+
 		int middle = (lower + upper) / 2;
-		return Math.min(search(num, lower, middle),
-				search(num, middle + 1, upper));
+		return Math.min(search(nums, lower, middle), search(nums, middle + 1, upper));
 	}
 }
