@@ -1,43 +1,42 @@
-// Definition for binary tree
+import java.util.stream.IntStream;
+
+// Definition for a binary tree node.
 class TreeNode {
 	int val;
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public TreeNode buildTree(int[] inorder, int[] postorder) {
-		return buildTree(inorder, 0, inorder.length - 1, postorder, 0,
-				postorder.length - 1);
+		return buildTree(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
 	}
 
-	TreeNode buildTree(int[] inorder, int beginIn, int endIn, int[] postorder,
-			int beginPost, int endPost) {
-		if (beginIn > endIn) {
+	TreeNode buildTree(int[] inorder, int inBegin, int inEnd, int[] postorder, int postBegin, int postEnd) {
+		if (inBegin > inEnd) {
 			return null;
 		}
-		int rootValue = postorder[endPost];
-		int rootIn = findValue(inorder, beginIn, endIn, rootValue);
-		int leftLen = rootIn - beginIn;
-		int rightLen = endIn - rootIn;
-		TreeNode root = new TreeNode(rootValue);
-		root.left = buildTree(inorder, beginIn, rootIn - 1, postorder,
-				beginPost, beginPost + leftLen - 1);
-		root.right = buildTree(inorder, rootIn + 1, endIn, postorder, endPost
-				- rightLen, endPost - 1);
-		return root;
-	}
 
-	int findValue(int[] a, int begin, int end, int target) {
-		for (int i = begin; i <= end; i++) {
-			if (a[i] == target) {
-				return i;
-			}
-		}
-		return -1;
+		int rootValue = postorder[postEnd];
+		int inRoot = IntStream.rangeClosed(inBegin, inEnd).filter(i -> inorder[i] == rootValue).findAny().getAsInt();
+		int leftLength = inRoot - inBegin;
+		int rightLength = inEnd - inRoot;
+
+		return new TreeNode(rootValue,
+				buildTree(inorder, inBegin, inRoot - 1, postorder, postBegin, postBegin + leftLength - 1),
+				buildTree(inorder, inRoot + 1, inEnd, postorder, postEnd - rightLength, postEnd - 1));
 	}
 }
