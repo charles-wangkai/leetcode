@@ -1,50 +1,46 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-public class Solution {
-	public List<String> wordBreak(String s, Set<String> dict) {
+class Solution {
+	public List<String> wordBreak(String s, List<String> wordDict) {
 		@SuppressWarnings("unchecked")
-		List<String>[] lastWords = new List[s.length()];
-		for (int i = 0; i < lastWords.length; i++) {
-			lastWords[i] = new ArrayList<String>();
+		List<String>[] lastWordLists = new List[s.length()];
+		for (int i = 0; i < lastWordLists.length; ++i) {
+			lastWordLists[i] = new ArrayList<>();
 		}
 
-		for (int i = 0; i < s.length(); i++) {
-			for (int j = 0; j <= i; j++) {
-				String lastWord = s.substring(j, i + 1);
-				if ((j == 0 || !lastWords[j - 1].isEmpty())
-						&& dict.contains(lastWord)) {
-					lastWords[i].add(lastWord);
+		for (int i = 0; i < s.length(); ++i) {
+			String prefix = s.substring(0, i + 1);
+
+			for (String word : wordDict) {
+				if (prefix.endsWith(word)
+						&& (word.length() == prefix.length() || !lastWordLists[i - word.length()].isEmpty())) {
+					lastWordLists[i].add(word);
 				}
 			}
 		}
 
-		List<String> result = new ArrayList<String>();
-		search(result, s, s.length() - 1, dict, lastWords,
-				new LinkedList<String>());
-		return result;
+		List<String> sentences = new ArrayList<>();
+		search(sentences, lastWordLists, s.length(), new ArrayList<>());
+
+		return sentences;
 	}
 
-	void search(List<String> result, String s, int endIndex, Set<String> dict,
-			List<String>[] lastWords, LinkedList<String> words) {
-		if (endIndex < 0) {
-			StringBuilder sb = new StringBuilder();
-			for (String word : words) {
-				if (sb.length() != 0) {
-					sb.append(" ");
-				}
-				sb.append(word);
-			}
-			result.add(sb.toString());
+	void search(List<String> sentences, List<String>[] lastWordLists, int length, List<String> words) {
+		if (length == 0) {
+			List<String> sentence = new ArrayList<>(words);
+			Collections.reverse(sentence);
+
+			sentences.add(String.join(" ", sentence));
+
 			return;
 		}
-		for (String lastWord : lastWords[endIndex]) {
-			words.addFirst(lastWord);
-			search(result, s, endIndex - lastWord.length(), dict, lastWords,
-					words);
-			words.removeFirst();
+
+		for (String word : lastWordLists[length - 1]) {
+			words.add(word);
+			search(sentences, lastWordLists, length - word.length(), words);
+			words.remove(words.size() - 1);
 		}
 	}
 }
