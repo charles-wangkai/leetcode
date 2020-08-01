@@ -1,10 +1,7 @@
-public class Solution {
+class Solution {
 	public boolean detectCapitalUse(String word) {
-		return word.equals(word.toUpperCase()) || isLowerCase(word)
-				|| (Character.isUpperCase(word.charAt(0)) && isLowerCase(word.substring(1)));
-	}
-
-	boolean isLowerCase(String s) {
-		return s.equals(s.toLowerCase());
+		return word.chars().allMatch(Character::isUpperCase) || word.chars().allMatch(Character::isLowerCase)
+				|| (Character.isUpperCase(word.charAt(0))
+						&& word.substring(1).chars().allMatch(Character::isLowerCase));
 	}
 }
