@@ -1,27 +1,24 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Logger {
-	private final int MIN_ALLOWED_INTERVAL = 10;
+class Logger {
+	private static final int MIN_ALLOWED_INTERVAL = 10;
 
-	private Map<String, Integer> message2lastTimestamp;
-
-	/** Initialize your data structure here. */
-	public Logger() {
-		message2lastTimestamp = new HashMap<String, Integer>();
-	}
+	private Map<String, Integer> messageToLastTimestamp = new HashMap<>();
 
 	/**
 	 * Returns true if the message should be printed in the given timestamp,
-	 * otherwise returns false. The timestamp is in seconds granularity.
+	 * otherwise returns false. If this method returns false, the message will not
+	 * be printed. The timestamp is in seconds granularity.
 	 */
 	public boolean shouldPrintMessage(int timestamp, String message) {
-		if (message2lastTimestamp.containsKey(message)
-				&& timestamp - message2lastTimestamp.get(message) < MIN_ALLOWED_INTERVAL) {
+		if (messageToLastTimestamp.containsKey(message)
+				&& timestamp - messageToLastTimestamp.get(message) < MIN_ALLOWED_INTERVAL) {
 			return false;
 		}
 
-		message2lastTimestamp.put(message, timestamp);
+		messageToLastTimestamp.put(message, timestamp);
+
 		return true;
 	}
 }
