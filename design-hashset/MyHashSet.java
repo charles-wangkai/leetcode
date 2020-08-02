@@ -1,11 +1,7 @@
-public class MyHashSet {
-	private static final int SIZE = 1000001;
+class MyHashSet {
+	private static final int SIZE = 1_000_001;
 
 	private boolean[] used = new boolean[SIZE];
-
-	/** Initialize your data structure here. */
-	public MyHashSet() {
-	}
 
 	public void add(int key) {
 		used[key] = true;
@@ -15,7 +11,7 @@ public class MyHashSet {
 		used[key] = false;
 	}
 
-	/** Returns true if this set did not already contain the specified element */
+	/** Returns true if this set contains the specified element */
 	public boolean contains(int key) {
 		return used[key];
 	}
