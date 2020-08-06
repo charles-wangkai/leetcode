@@ -1,24 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
 	public List<Integer> findDuplicates(int[] nums) {
-		int n = nums.length;
-		for (int num : nums) {
-			int original = num;
-			while (original < 1) {
-				original += n;
-			}
+		List<Integer> result = new ArrayList<>();
+		for (int i = 0; i < nums.length; ++i) {
+			int original = Math.abs(nums[i]);
 
-			nums[original - 1] -= n;
-		}
-
-		List<Integer> result = new ArrayList<Integer>();
-		for (int i = 0; i < nums.length; i++) {
-			if (nums[i] < 1 - n) {
-				result.add(i + 1);
+			if (nums[original - 1] < 0) {
+				result.add(original);
+			} else {
+				nums[original - 1] *= -1;
 			}
 		}
+
 		return result;
 	}
 }
