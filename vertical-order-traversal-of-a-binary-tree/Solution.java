@@ -8,31 +8,40 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	List<Element> elements;
 
 	public List<List<Integer>> verticalTraversal(TreeNode root) {
 		elements = new ArrayList<>();
 		search(elements, 0, 0, root);
 
-		Collections.sort(elements, (element1, element2) -> {
-			if (element1.x != element2.x) {
-				return Integer.compare(element1.x, element2.x);
-			} else if (element1.y != element2.y) {
-				return Integer.compare(element2.y, element1.y);
+		Collections.sort(elements, (e1, e2) -> {
+			if (e1.x != e2.x) {
+				return Integer.compare(e1.x, e2.x);
+			} else if (e1.y != e2.y) {
+				return -Integer.compare(e1.y, e2.y);
 			} else {
-				return Integer.compare(element1.val, element2.val);
+				return Integer.compare(e1.val, e2.val);
 			}
 		});
 
 		List<List<Integer>> result = new ArrayList<>();
 		List<Integer> report = null;
-		for (int i = 0; i <= elements.size(); i++) {
+		for (int i = 0; i <= elements.size(); ++i) {
 			if (i != 0 && i != elements.size() && elements.get(i).x == elements.get(i - 1).x) {
 				report.add(elements.get(i).val);
 			} else {
@@ -46,6 +55,7 @@ public class Solution {
 				}
 			}
 		}
+
 		return result;
 	}
 
