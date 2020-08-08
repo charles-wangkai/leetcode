@@ -1,35 +1,46 @@
+import java.util.HashMap;
+import java.util.Map;
+
 // Definition for a binary tree node.
 class TreeNode {
 	int val;
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public int pathSum(TreeNode root, int sum) {
-		if (root == null) {
-			return 0;
-		}
+		Map<Integer, Integer> sumToCount = new HashMap<>();
+		sumToCount.put(0, 1);
 
-		return search(root, sum, 0) + pathSum(root.left, sum) + pathSum(root.right, sum);
+		return search(sum, sumToCount, 0, root);
 	}
 
-	int search(TreeNode node, int sum, int current) {
+	int search(int sum, Map<Integer, Integer> sumToCount, int prev, TreeNode node) {
 		if (node == null) {
 			return 0;
 		}
 
-		int result = 0;
-		int next = current + node.val;
-		if (next == sum) {
-			result++;
-		}
-		result += search(node.left, sum, next);
-		result += search(node.right, sum, next);
+		int current = prev + node.val;
+		int result = sumToCount.getOrDefault(current - sum, 0);
+
+		sumToCount.put(current, sumToCount.getOrDefault(current, 0) + 1);
+		result += search(sum, sumToCount, current, node.left) + search(sum, sumToCount, current, node.right);
+		sumToCount.put(current, sumToCount.get(current) - 1);
+
 		return result;
 	}
 }
