@@ -1,7 +1,8 @@
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class CombinationIterator {
+class CombinationIterator {
 	String characters;
 	int[] indices;
 
@@ -11,19 +12,19 @@ public class CombinationIterator {
 	}
 
 	public String next() {
-		String result = Arrays.stream(indices).mapToObj(characters::charAt)
-				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
+		String result = Arrays.stream(indices).mapToObj(i -> String.valueOf(characters.charAt(i)))
+				.collect(Collectors.joining());
 
 		if (indices[0] == characters.length() - indices.length) {
 			indices = null;
 		} else {
 			int pos = indices.length - 1;
 			while (indices[pos] == characters.length() - (indices.length - pos)) {
-				pos--;
+				--pos;
 			}
 
-			indices[pos]++;
-			for (int i = pos + 1; i < indices.length; i++) {
+			++indices[pos];
+			for (int i = pos + 1; i < indices.length; ++i) {
 				indices[i] = indices[i - 1] + 1;
 			}
 		}
