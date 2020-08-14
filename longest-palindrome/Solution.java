@@ -1,25 +1,14 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
+class Solution {
 	public int longestPalindrome(String s) {
-		Map<Character, Integer> letter2count = new HashMap<Character, Integer>();
+		Map<Character, Integer> letterToCount = new HashMap<>();
 		for (char letter : s.toCharArray()) {
-			if (!letter2count.containsKey(letter)) {
-				letter2count.put(letter, 0);
-			}
-			letter2count.put(letter, letter2count.get(letter) + 1);
+			letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
 		}
 
-		boolean odd = false;
-		int length = 0;
-		for (int count : letter2count.values()) {
-			length += count / 2 * 2;
-			if (!odd && count % 2 == 1) {
-				length++;
-				odd = true;
-			}
-		}
-		return length;
+		return letterToCount.values().stream().mapToInt(count -> count / 2 * 2).sum()
+				+ (letterToCount.values().stream().anyMatch(count -> count % 2 != 0) ? 1 : 0);
 	}
 }
