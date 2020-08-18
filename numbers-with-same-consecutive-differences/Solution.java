@@ -1,18 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
 	public int[] numsSameConsecDiff(int N, int K) {
-		List<Integer> result = new ArrayList<>();
-		for (int digit = 0; digit <= 9; digit++) {
-			search(N, K, result, String.valueOf(digit));
+		List<Integer> solutions = new ArrayList<>();
+		for (int digit = 0; digit <= 9; ++digit) {
+			search(N, K, solutions, String.valueOf(digit));
 		}
-		return result.stream().mapToInt(x -> x).toArray();
+
+		return solutions.stream().mapToInt(x -> x).toArray();
 	}
 
-	void search(int N, int K, List<Integer> result, String current) {
+	void search(int N, int K, List<Integer> solutions, String current) {
 		if (current.length() == N) {
-			result.add(Integer.parseInt(current));
+			solutions.add(Integer.parseInt(current));
 
 			return;
 		}
@@ -23,11 +24,11 @@ public class Solution {
 
 		int lastDigit = current.charAt(current.length() - 1) - '0';
 		if (lastDigit + K <= 9) {
-			search(N, K, result, current + (lastDigit + K));
+			search(N, K, solutions, current + (lastDigit + K));
 		}
 
 		if (K != 0 && lastDigit - K >= 0) {
-			search(N, K, result, current + (lastDigit - K));
+			search(N, K, solutions, current + (lastDigit - K));
 		}
 	}
 }
