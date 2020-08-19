@@ -1,9 +1,10 @@
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
+class Solution {
 	public String toGoatLatin(String S) {
 		String[] words = S.split(" ");
+
 		return IntStream.range(0, words.length).mapToObj(i -> convert(words[i], i)).collect(Collectors.joining(" "));
 	}
 
@@ -18,9 +19,11 @@ public class Solution {
 		}
 
 		result.append("ma");
-		for (int i = 0; i < index + 1; i++) {
+
+		for (int i = 0; i < index + 1; ++i) {
 			result.append("a");
 		}
+
 		return result.toString();
 	}
 
