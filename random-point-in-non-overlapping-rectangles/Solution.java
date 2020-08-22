@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 
-public class Solution {
+class Solution {
 	private Random random = new Random();
 	private int[][] rects;
 	private int[] limits;
@@ -12,7 +12,7 @@ public class Solution {
 
 		int limit = 0;
 		limits = new int[rects.length];
-		for (int i = 0; i < limits.length; i++) {
+		for (int i = 0; i < limits.length; ++i) {
 			int width = getWidth(rects[i]);
 			int height = getHeight(rects[i]);
 
@@ -34,11 +34,9 @@ public class Solution {
 		int[] rect = rects[rectIndex];
 		int width = getWidth(rect);
 		int height = getHeight(rect);
-		int sequenceInRect = width * height - limits[rectIndex] + number - 1;
+		int sequenceInRect = number - (limits[rectIndex] - width * height) - 1;
 
-		int xOffset = sequenceInRect % width;
-		int yOffset = sequenceInRect / width;
-		return new int[] { rect[0] + xOffset, rect[1] + yOffset };
+		return new int[] { rect[0] + sequenceInRect % width, rect[1] + sequenceInRect / width };
 	}
 
 	private int getWidth(int[] rect) {
