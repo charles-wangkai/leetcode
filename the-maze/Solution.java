@@ -1,4 +1,4 @@
-public class Solution {
+class Solution {
 	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
 	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 
@@ -20,7 +20,7 @@ public class Solution {
 
 		visited[r][c] = true;
 
-		for (int i = 0; i < R_OFFSETS.length; i++) {
+		for (int i = 0; i < R_OFFSETS.length; ++i) {
 			int nextR = r;
 			int nextC = c;
 
@@ -33,6 +33,7 @@ public class Solution {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
