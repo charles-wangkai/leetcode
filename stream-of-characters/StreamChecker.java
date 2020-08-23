@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StreamChecker {
+class StreamChecker {
 	private TrieNode trie = new TrieNode();
 	private List<Character> queries = new ArrayList<>();
 
@@ -17,7 +17,7 @@ public class StreamChecker {
 		queries.add(letter);
 
 		TrieNode node = trie;
-		for (int i = queries.size() - 1; i >= 0; i--) {
+		for (int i = queries.size() - 1; i >= 0; --i) {
 			char query = queries.get(i);
 
 			if (!node.letterToChild.containsKey(query)) {
@@ -29,6 +29,7 @@ public class StreamChecker {
 				return true;
 			}
 		}
+
 		return false;
 	}
 }
