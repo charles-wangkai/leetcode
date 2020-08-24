@@ -4,12 +4,21 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	enum Direction {
 		LEFT, RIGHT
 	};
@@ -23,11 +32,10 @@ public class Solution {
 			return 0;
 		}
 
-		if (node.left == null && node.right == null) {
-			return direction == Direction.LEFT ? node.val : 0;
+		if (node.left == null && node.right == null && direction == Direction.LEFT) {
+			return node.val;
 		}
 
-		return (node.left == null ? 0 : search(node.left, Direction.LEFT))
-				+ (node.right == null ? 0 : search(node.right, Direction.RIGHT));
+		return search(node.left, Direction.LEFT) + search(node.right, Direction.RIGHT);
 	}
 }
