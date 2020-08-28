@@ -5,7 +5,7 @@ class SolBase {
 	}
 }
 
-public class Solution extends SolBase {
+class Solution extends SolBase {
 	public int rand10() {
 		while (true) {
 			int r = (rand7() - 1) * 7 + (rand7() - 1);
