@@ -20,7 +20,7 @@ interface Robot {
 	public void clean();
 }
 
-public class Solution {
+class Solution {
 	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
 	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 
@@ -37,7 +37,7 @@ public class Solution {
 		robot.clean();
 		cleaned.add(point);
 
-		for (int i = 0; i < R_OFFSETS.length; i++) {
+		for (int i = 0; i < R_OFFSETS.length; ++i) {
 			if (robot.move()) {
 				int nextR = r + R_OFFSETS[direction];
 				int nextC = c + C_OFFSETS[direction];
@@ -74,6 +74,7 @@ class Point {
 	@Override
 	public boolean equals(Object obj) {
 		Point other = (Point) obj;
+
 		return r == other.r && c == other.c;
 	}
 }
