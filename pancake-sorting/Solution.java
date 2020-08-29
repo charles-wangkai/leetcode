@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
 	public List<Integer> pancakeSort(int[] A) {
 		List<Integer> result = new ArrayList<>();
-		for (int i = A.length; i >= 1; i--) {
+		for (int i = A.length; i >= 1; --i) {
 			int index = findIndex(A, i);
 
 			if (index != i - 1) {
@@ -15,11 +15,12 @@ public class Solution {
 				pancakeFlip(A, i);
 			}
 		}
+
 		return result;
 	}
 
 	int findIndex(int[] A, int target) {
-		for (int i = 0;; i++) {
+		for (int i = 0;; ++i) {
 			if (A[i] == target) {
 				return i;
 			}
@@ -27,7 +28,7 @@ public class Solution {
 	}
 
 	void pancakeFlip(int[] A, int k) {
-		for (int i = 0, j = k - 1; i < j; i++, j--) {
+		for (int i = 0, j = k - 1; i < j; ++i, --j) {
 			int temp = A[i];
 			A[i] = A[j];
 			A[j] = temp;
