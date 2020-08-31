@@ -1,15 +1,24 @@
-//Definition for a binary tree node.
+// Definition for a binary tree node.
 class TreeNode {
 	int val;
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public TreeNode deleteNode(TreeNode root, int key) {
 		if (root == null) {
 			return null;
@@ -22,30 +31,25 @@ public class Solution {
 					mostRightInLeft = mostRightInLeft.right;
 				}
 
-				TreeNode newRoot = new TreeNode(mostRightInLeft.val);
-				newRoot.left = deleteNode(root.left, mostRightInLeft.val);
-				newRoot.right = root.right;
-				return newRoot;
+				return new TreeNode(mostRightInLeft.val, deleteNode(root.left, mostRightInLeft.val), root.right);
 			} else if (root.right != null) {
 				TreeNode mostLeftInRight = root.right;
 				while (mostLeftInRight.left != null) {
 					mostLeftInRight = mostLeftInRight.left;
 				}
 
-				TreeNode newRoot = new TreeNode(mostLeftInRight.val);
-				newRoot.left = root.left;
-				newRoot.right = deleteNode(root.right, mostLeftInRight.val);
-				return newRoot;
+				return new TreeNode(mostLeftInRight.val, root.left, deleteNode(root.right, mostLeftInRight.val));
 			} else {
 				return null;
 			}
-		} else {
-			if (root.val < key) {
-				root.right = deleteNode(root.right, key);
-			} else {
-				root.left = deleteNode(root.left, key);
-			}
-			return root;
 		}
+
+		if (key < root.val) {
+			root.left = deleteNode(root.left, key);
+		} else {
+			root.right = deleteNode(root.right, key);
+		}
+
+		return root;
 	}
 }
