@@ -1,4 +1,4 @@
-public class Solution {
+class Solution {
 	static int maxTotalMinute;
 	static String maxTime;
 
@@ -28,16 +28,16 @@ public class Solution {
 			return;
 		}
 
-		for (int i = index; i < digits.length; i++) {
+		for (int i = index; i < digits.length; ++i) {
 			swap(digits, index, i);
 			search(digits, index + 1);
 			swap(digits, index, i);
 		}
 	}
 
-	static void swap(int[] digits, int index1, int index2) {
-		int temp = digits[index1];
-		digits[index1] = digits[index2];
-		digits[index2] = temp;
+	static void swap(int[] a, int index1, int index2) {
+		int temp = a[index1];
+		a[index1] = a[index2];
+		a[index2] = temp;
 	}
 }
