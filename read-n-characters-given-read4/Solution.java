@@ -7,23 +7,23 @@ class Reader4 {
 
 public class Solution extends Reader4 {
 	/**
-	 * @param buf
-	 *            Destination buffer
-	 * @param n
-	 *            Maximum number of characters to read
-	 * @return The number of characters read
+	 * @param buf Destination buffer
+	 * @param n   Number of characters to read
+	 * @return The number of actual characters read
 	 */
 	public int read(char[] buf, int n) {
 		int length = 0;
 		char[] temp = new char[4];
-		int readNum = 4;
-		while (length < n && readNum == 4) {
-			readNum = read4(temp);
-			for (int i = 0; i < readNum && length < n; i++) {
+		while (true) {
+			int readNum = read4(temp);
+			for (int i = 0; i < readNum && length != n; ++i) {
 				buf[length] = temp[i];
-				length++;
+				++length;
+			}
+
+			if (length == n || readNum < 4) {
+				return length;
 			}
 		}
-		return length;
 	}
 }
