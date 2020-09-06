@@ -7,12 +7,21 @@ class TreeNode {
 	TreeNode left;
 	TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
+	TreeNode() {
+	}
+
+	TreeNode(int val) {
+		this.val = val;
+	}
+
+	TreeNode(int val, TreeNode left, TreeNode right) {
+		this.val = val;
+		this.left = left;
+		this.right = right;
 	}
 }
 
-public class Solution {
+class Solution {
 	public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
 		List<Integer> values1 = new ArrayList<>();
 		search(values1, root1);
@@ -40,10 +49,10 @@ public class Solution {
 		while (index1 != values1.size() || index2 != values2.size()) {
 			if (index2 == values2.size() || (index1 != values1.size() && values1.get(index1) <= values2.get(index2))) {
 				result.add(values1.get(index1));
-				index1++;
+				++index1;
 			} else {
 				result.add(values2.get(index2));
-				index2++;
+				++index2;
 			}
 		}
 
