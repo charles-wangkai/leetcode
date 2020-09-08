@@ -1,14 +1,14 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MovingAverage {
+class MovingAverage {
 	Queue<Integer> numbers;
 	int sum;
 	int size;
 
 	/** Initialize your data structure here. */
 	public MovingAverage(int size) {
-		numbers = new LinkedList<Integer>();
+		numbers = new LinkedList<>();
 		sum = 0;
 		this.size = size;
 	}
@@ -17,7 +17,7 @@ public class MovingAverage {
 		numbers.offer(val);
 		sum += val;
 
-		if (numbers.size() > size) {
+		if (numbers.size() == size + 1) {
 			sum -= numbers.poll();
 		}
 
