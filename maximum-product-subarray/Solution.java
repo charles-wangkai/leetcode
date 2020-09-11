@@ -1,53 +1,49 @@
-public class Solution {
-	long product;
-	long frontNegative;
-	long backNegative;
-	int size;
-
-	public int maxProduct(int[] A) {
+class Solution {
+	public int maxProduct(int[] nums) {
 		int result = Integer.MIN_VALUE;
+		long product = 0;
+		long frontNegative = 1;
+		long backNegative = 0;
+		int size = 0;
 
-		reset();
-		for (int i = 0; i <= A.length; i++) {
-			if (i < A.length) {
-				result = Math.max(result, A[i]);
+		for (int i = 0; i <= nums.length; ++i) {
+			if (i < nums.length) {
+				result = Math.max(result, nums[i]);
 			}
-			if (i == A.length || A[i] == 0) {
+
+			if (i == nums.length || nums[i] == 0) {
 				if (product > 0) {
 					result = Math.max(result, (int) product);
-				} else if (product < 0 && size > 1) {
-					result = Math.max(result, (int) (product / Math.max(
-							frontNegative, backNegative)));
+				} else if (product < 0 && size >= 2) {
+					result = Math.max(result, (int) (product / Math.max(frontNegative, backNegative)));
 				}
-				reset();
+
+				product = 0;
+				frontNegative = 1;
+				backNegative = 0;
+				size = 0;
 			} else {
 				if (product == 0) {
 					product = 1;
 				}
-				product *= A[i];
-				if (A[i] > 0) {
+				product *= nums[i];
+				if (nums[i] > 0) {
 					if (frontNegative > 0) {
-						frontNegative *= A[i];
+						frontNegative *= nums[i];
 					}
 					if (backNegative < 0) {
-						backNegative *= A[i];
+						backNegative *= nums[i];
 					}
 				} else {
 					if (frontNegative > 0) {
-						frontNegative *= A[i];
+						frontNegative *= nums[i];
 					}
-					backNegative = A[i];
+					backNegative = nums[i];
 				}
-				size++;
+				++size;
 			}
 		}
-		return result;
-	}
 
-	void reset() {
-		product = 0;
-		frontNegative = 1;
-		backNegative = 0;
-		size = 0;
+		return result;
 	}
 }
