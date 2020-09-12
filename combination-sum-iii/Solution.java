@@ -1,26 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
 	public List<List<Integer>> combinationSum3(int k, int n) {
-		List<List<Integer>> result = new ArrayList<List<Integer>>();
-		search(result, 1, k, n, new ArrayList<Integer>());
-		return result;
+		List<List<Integer>> sets = new ArrayList<>();
+		search(sets, 1, k, n, new ArrayList<>());
+
+		return sets;
 	}
 
-	void search(List<List<Integer>> result, int number, int remainK,
-			int remainN, List<Integer> set) {
-		if (number == 10) {
+	void search(List<List<Integer>> sets, int current, int remainK, int remainN, List<Integer> set) {
+		if (current == 10) {
 			if (remainK == 0 && remainN == 0) {
-				result.add(new ArrayList<Integer>(set));
+				sets.add(new ArrayList<>(set));
 			}
+
 			return;
 		}
 
-		search(result, number + 1, remainK, remainN, set);
+		search(sets, current + 1, remainK, remainN, set);
 
-		set.add(number);
-		search(result, number + 1, remainK - 1, remainN - number, set);
+		set.add(current);
+		search(sets, current + 1, remainK - 1, remainN - current, set);
 		set.remove(set.size() - 1);
 	}
 }
