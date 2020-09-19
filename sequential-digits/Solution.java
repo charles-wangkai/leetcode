@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
+class Solution {
 	static final String DIGITS = "123456789";
 	static final int[] SEQUENTIALS = IntStream.range(0, DIGITS.length())
 			.flatMap(
