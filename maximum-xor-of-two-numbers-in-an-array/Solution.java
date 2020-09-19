@@ -1,26 +1,27 @@
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class Solution {
+class Solution {
 	public int findMaximumXOR(int[] nums) {
 		int max = 0;
 		int mask = 0;
-		for (int i = 30; i >= 0; i--) {
+		for (int i = 30; i >= 0; --i) {
 			mask |= 1 << i;
 
-			Set<Integer> prefixes = new HashSet<Integer>();
-			for (int num : nums) {
-				prefixes.add(num & mask);
-			}
+			int mask_ = mask;
+			Set<Integer> prefixes = Arrays.stream(nums).map(num -> num & mask_).boxed().collect(Collectors.toSet());
 
-			int temp = max | (1 << i);
+			int xor = max | (1 << i);
 			for (int prefix : prefixes) {
-				if (prefixes.contains(prefix ^ temp)) {
-					max = temp;
+				if (prefixes.contains(prefix ^ xor)) {
+					max = xor;
+
 					break;
 				}
 			}
 		}
+
 		return max;
 	}
 }
