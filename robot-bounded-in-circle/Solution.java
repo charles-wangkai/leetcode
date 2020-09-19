@@ -16,6 +16,7 @@ public class Solution {
 				direction = (direction + 1) % X_OFFSETS.length;
 			}
 		}
+
 		return direction != 0 || (x == 0 && y == 0);
 	}
 }
