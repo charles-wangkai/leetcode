@@ -1,4 +1,4 @@
-public class Solution {
+class Solution {
 	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
 	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
 
@@ -11,10 +11,10 @@ public class Solution {
 		int step = -1;
 		int startR = -1;
 		int startC = -1;
-		for (int r = 0; r < row; r++) {
-			for (int c = 0; c < col; c++) {
+		for (int r = 0; r < row; ++r) {
+			for (int c = 0; c < col; ++c) {
 				if (grid[r][c] != -1) {
-					step++;
+					++step;
 
 					if (grid[r][c] == 1) {
 						startR = r;
@@ -26,13 +26,14 @@ public class Solution {
 
 		pathNum = 0;
 		search(grid, step, startR, startC);
+
 		return pathNum;
 	}
 
 	void search(int[][] grid, int step, int r, int c) {
 		if (step == 0) {
 			if (grid[r][c] == 2) {
-				pathNum++;
+				++pathNum;
 			}
 
 			return;
@@ -46,7 +47,7 @@ public class Solution {
 		int col = grid[0].length;
 
 		grid[r][c] = -1;
-		for (int i = 0; i < R_OFFSETS.length; i++) {
+		for (int i = 0; i < R_OFFSETS.length; ++i) {
 			int nextR = r + R_OFFSETS[i];
 			int nextC = c + C_OFFSETS[i];
 
