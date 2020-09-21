@@ -1,4 +1,4 @@
-public class Solution {
+class Solution {
 	public boolean carPooling(int[][] trips, int capacity) {
 		int[] deltas = new int[1001];
 		for (int[] trip : trips) {
@@ -7,13 +7,14 @@ public class Solution {
 		}
 
 		int passengerNum = 0;
-		for (int i = 0; i < deltas.length; i++) {
+		for (int i = 0; i < deltas.length; ++i) {
 			passengerNum += deltas[i];
 
 			if (passengerNum > capacity) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 }
