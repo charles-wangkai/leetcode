@@ -6,13 +6,17 @@ class Node {
 	public Node() {
 	}
 
+	public Node(int _val) {
+		val = _val;
+	}
+
 	public Node(int _val, Node _next) {
 		val = _val;
 		next = _next;
 	}
 }
 
-public class Solution {
+class Solution {
 	public Node insert(Node head, int insertVal) {
 		if (head == null) {
 			Node node = new Node();
