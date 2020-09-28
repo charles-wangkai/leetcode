@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-public class Solution {
+class Solution {
 	public int numSubarrayProductLessThanK(int[] nums, int k) {
 		if (k <= 1) {
 			return 0;
@@ -11,15 +11,16 @@ public class Solution {
 		long product = 1;
 		int endIndex = -1;
 		int result = 0;
-		for (int beginIndex = 0; beginIndex < nums.length; beginIndex++) {
+		for (int beginIndex = 0; beginIndex < nums.length; ++beginIndex) {
 			while (product < k) {
-				endIndex++;
+				++endIndex;
 				product *= nums[endIndex];
 			}
 
 			result += endIndex - beginIndex;
 			product /= nums[beginIndex];
 		}
+
 		return result;
 	}
 }
