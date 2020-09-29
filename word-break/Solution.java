@@ -1,17 +1,20 @@
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public boolean wordBreak(String s, Set<String> dict) {
+class Solution {
+	public boolean wordBreak(String s, List<String> wordDict) {
+		Set<String> words = new HashSet<>(wordDict);
+
 		boolean[] separables = new boolean[s.length() + 1];
 		separables[0] = true;
-		for (int i = 0; i < s.length(); i++) {
-			for (int j = 0; j <= i; j++) {
-				if (separables[j] && dict.contains(s.substring(j, i + 1))) {
-					separables[i + 1] = true;
-					break;
-				}
-			}
+		for (int i = 0; i < s.length(); ++i) {
+			int i_ = i;
+			separables[i + 1] = IntStream.rangeClosed(0, i)
+					.anyMatch(j -> separables[j] && words.contains(s.substring(j, i_ + 1)));
 		}
+
 		return separables[s.length()];
 	}
 }
