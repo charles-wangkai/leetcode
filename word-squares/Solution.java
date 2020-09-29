@@ -2,46 +2,47 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
+class Solution {
 	public List<List<String>> wordSquares(String[] words) {
 		int size = words[0].length();
 
-		Map<String, List<String>> prefix2words = new HashMap<String, List<String>>();
+		Map<String, List<String>> prefixToWords = new HashMap<>();
 		for (String word : words) {
-			for (int i = 0; i < word.length(); i++) {
+			for (int i = 0; i < word.length(); ++i) {
 				String prefix = word.substring(0, i);
-				if (!prefix2words.containsKey(prefix)) {
-					prefix2words.put(prefix, new ArrayList<String>());
+				if (!prefixToWords.containsKey(prefix)) {
+					prefixToWords.put(prefix, new ArrayList<>());
 				}
-				prefix2words.get(prefix).add(word);
+				prefixToWords.get(prefix).add(word);
 			}
 		}
 
-		List<List<String>> result = new ArrayList<List<String>>();
-		search(result, prefix2words, size, new ArrayList<String>());
-		return result;
+		List<List<String>> squares = new ArrayList<>();
+		search(squares, prefixToWords, size, new ArrayList<String>());
+
+		return squares;
 	}
 
-	void search(List<List<String>> result, Map<String, List<String>> prefix2words, int size, List<String> square) {
+	void search(List<List<String>> squares, Map<String, List<String>> prefixToWords, int size, List<String> square) {
 		int index = square.size();
 
 		if (index == size) {
-			result.add(new ArrayList<String>(square));
+			squares.add(new ArrayList<>(square));
+
 			return;
 		}
 
-		StringBuilder prefixSb = new StringBuilder();
-		for (int i = 0; i < index; i++) {
-			prefixSb.append(square.get(i).charAt(index));
-		}
-		String prefix = prefixSb.toString();
+		String prefix = IntStream.range(0, index).mapToObj(i -> String.valueOf(square.get(i).charAt(index)))
+				.collect(Collectors.joining());
 
-		if (prefix2words.containsKey(prefix)) {
-			for (String word : prefix2words.get(prefix)) {
+		if (prefixToWords.containsKey(prefix)) {
+			for (String word : prefixToWords.get(prefix)) {
 				square.add(word);
 
-				search(result, prefix2words, size, square);
+				search(squares, prefixToWords, size, square);
 
 				square.remove(square.size() - 1);
 			}
