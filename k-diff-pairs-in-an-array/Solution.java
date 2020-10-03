@@ -1,19 +1,18 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int findPairs(int[] nums, int k) {
-		Map<Integer, Integer> num2count = new HashMap<Integer, Integer>();
-		for (int num : nums) {
-			num2count.put(num, num2count.getOrDefault(num, 0) + 1);
-		}
+class Solution {
+  public int findPairs(int[] nums, int k) {
+    Map<Integer, Integer> numToCount = new HashMap<>();
+    for (int num : nums) {
+      numToCount.put(num, numToCount.getOrDefault(num, 0) + 1);
+    }
 
-		if (k < 0) {
-			return 0;
-		} else if (k == 0) {
-			return (int) num2count.values().stream().filter(count -> count > 1).count();
-		} else {
-			return (int) num2count.keySet().stream().filter(num -> num2count.containsKey(num + k)).count();
-		}
-	}
+    if (k == 0) {
+      return (int) numToCount.values().stream().filter(count -> count != 1).count();
+    } else {
+      return (int)
+          numToCount.keySet().stream().filter(num -> numToCount.containsKey(num + k)).count();
+    }
+  }
 }
