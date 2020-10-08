@@ -1,28 +1,28 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-public class Solution {
-	Map<Integer, Boolean> number2duplicated = new HashMap<Integer, Boolean>();
+class TwoSum {
+  Map<Integer, Integer> numberToCount = new HashMap<>();
 
-	public void add(int number) {
-		if (!number2duplicated.containsKey(number)) {
-			number2duplicated.put(number, false);
-		} else if (!number2duplicated.get(number)) {
-			number2duplicated.put(number, true);
-		}
-	}
+  /** Add the number to an internal data structure.. */
+  public void add(int number) {
+    numberToCount.put(number, numberToCount.getOrDefault(number, 0) + 1);
+  }
 
-	public boolean find(int value) {
-		for (Entry<Integer, Boolean> entry : number2duplicated.entrySet()) {
-			int number = entry.getKey();
-			boolean duplicated = entry.getValue();
-			int other = value - number;
-			if ((other == number && duplicated)
-					|| (other != number && number2duplicated.containsKey(other))) {
-				return true;
-			}
-		}
-		return false;
-	}
+  /** Find if there exists any pair of numbers which sum is equal to the value. */
+  public boolean find(int value) {
+    return numberToCount.keySet().stream()
+        .anyMatch(
+            number -> {
+              int other = value - number;
+
+              return (other == number && numberToCount.get(other) >= 2)
+                  || (other != number && numberToCount.containsKey(other));
+            });
+  }
 }
+
+// Your TwoSum object will be instantiated and called as such:
+// TwoSum obj = new TwoSum();
+// obj.add(number);
+// boolean param_2 = obj.find(value);
