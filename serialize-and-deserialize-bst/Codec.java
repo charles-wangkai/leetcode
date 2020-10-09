@@ -5,65 +5,69 @@ import java.util.stream.Collectors;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode(int x) {
+    val = x;
+  }
 }
 
 public class Codec {
-	private static final String DELIMITER = ",";
+  private static final String DELIMITER = ",";
 
-	// Encodes a tree to a single string.
-	public String serialize(TreeNode root) {
-		if (root == null) {
-			return "";
-		}
+  // Encodes a tree to a single string.
+  public String serialize(TreeNode root) {
+    if (root == null) {
+      return "";
+    }
 
-		return concat(String.valueOf(root.val), concat(serialize(root.left), serialize(root.right)));
-	}
+    return concat(String.valueOf(root.val), concat(serialize(root.left), serialize(root.right)));
+  }
 
-	// Decodes your encoded data to tree.
-	public TreeNode deserialize(String data) {
-		if (data.isEmpty()) {
-			return null;
-		}
+  // Decodes your encoded data to tree.
+  public TreeNode deserialize(String data) {
+    if (data.isEmpty()) {
+      return null;
+    }
 
-		int[] values = Arrays.stream(data.split(DELIMITER)).mapToInt(Integer::parseInt).toArray();
+    int[] values = Arrays.stream(data.split(DELIMITER)).mapToInt(Integer::parseInt).toArray();
 
-		int rootValue = values[0];
-		List<Integer> leftValues = new ArrayList<Integer>();
-		List<Integer> rightValues = new ArrayList<Integer>();
-		for (int i = 1; i < values.length; i++) {
-			if (values[i] < rootValue) {
-				leftValues.add(values[i]);
-			} else {
-				rightValues.add(values[i]);
-			}
-		}
+    int rootValue = values[0];
+    List<Integer> leftValues = new ArrayList<>();
+    List<Integer> rightValues = new ArrayList<>();
+    for (int i = 1; i < values.length; ++i) {
+      if (values[i] < rootValue) {
+        leftValues.add(values[i]);
+      } else {
+        rightValues.add(values[i]);
+      }
+    }
 
-		TreeNode root = new TreeNode(rootValue);
-		root.left = deserialize(convertToString(leftValues));
-		root.right = deserialize(convertToString(rightValues));
-		return root;
-	}
+    TreeNode root = new TreeNode(rootValue);
+    root.left = deserialize(convertToString(leftValues));
+    root.right = deserialize(convertToString(rightValues));
 
-	private String concat(String s1, String s2) {
-		if (s1.isEmpty() || s2.isEmpty()) {
-			return s1 + s2;
-		} else {
-			return s1 + DELIMITER + s2;
-		}
-	}
+    return root;
+  }
 
-	private String convertToString(List<Integer> values) {
-		return String.join(DELIMITER, values.stream().map(Object::toString).collect(Collectors.toList()));
-	}
+  private String concat(String s1, String s2) {
+    if (s1.isEmpty() || s2.isEmpty()) {
+      return s1 + s2;
+    } else {
+      return s1 + DELIMITER + s2;
+    }
+  }
+
+  private String convertToString(List<Integer> values) {
+    return values.stream().map(String::valueOf).collect(Collectors.joining(DELIMITER));
+  }
 }
 
 // Your Codec object will be instantiated and called as such:
-// Codec codec = new Codec();
-// codec.deserialize(codec.serialize(root));
+// Codec ser = new Codec();
+// Codec deser = new Codec();
+// String tree = ser.serialize(root);
+// TreeNode ans = deser.deserialize(tree);
+// return ans;
