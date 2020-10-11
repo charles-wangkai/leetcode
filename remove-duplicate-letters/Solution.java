@@ -1,71 +1,66 @@
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public String removeDuplicateLetters(String s) {
-		List<LetterAndIndices> lis = IntStream.range(0, 26)
-				.mapToObj(i -> new LetterAndIndices((char) (i + 'a'), new LinkedList<Integer>(), -1))
-				.collect(Collectors.toList());
+class Solution {
+  public String removeDuplicateLetters(String s) {
+    List<LetterState> letterStates =
+        IntStream.range(0, 26)
+            .mapToObj(i -> new LetterState((char) (i + 'a')))
+            .collect(Collectors.toList());
 
-		for (int i = 0; i < s.length(); i++) {
-			lis.get(s.charAt(i) - 'a').appendIndex(i);
-		}
+    for (int i = 0; i < s.length(); ++i) {
+      letterStates.get(s.charAt(i) - 'a').appendIndex(i);
+    }
 
-		lis.removeIf(li -> li.indices.isEmpty());
+    letterStates.removeIf(li -> li.indices.isEmpty());
 
-		StringBuilder sb = new StringBuilder();
-		while (!lis.isEmpty()) {
-			int minLastIndex = lis.stream().mapToInt(li -> li.lastIndex).min().getAsInt();
+    StringBuilder result = new StringBuilder();
+    while (!letterStates.isEmpty()) {
+      int minLastIndex = letterStates.stream().mapToInt(li -> li.lastIndex).min().getAsInt();
 
-			char selectedLetter = 0;
-			int selectedIndex = -1;
-			for (LetterAndIndices li : lis) {
-				if (li.indices.get(0) <= minLastIndex) {
-					selectedLetter = li.letter;
-					selectedIndex = li.indices.get(0);
-					break;
-				}
-			}
+      char selectedLetter = 0;
+      int selectedIndex = -1;
+      for (LetterState letterState : letterStates) {
+        if (letterState.indices.peek() <= minLastIndex) {
+          selectedLetter = letterState.letter;
+          selectedIndex = letterState.indices.peek();
 
-			final char selectedLetterTemp = selectedLetter;
-			lis.removeIf(li -> li.letter == selectedLetterTemp);
+          break;
+        }
+      }
 
-			final int selectedIndexTemp = selectedIndex;
-			lis.forEach(li -> {
-				Iterator<Integer> it = li.indices.iterator();
-				while (it.hasNext()) {
-					int index = it.next();
+      char selectedLetter_ = selectedLetter;
+      letterStates.removeIf(li -> li.letter == selectedLetter_);
 
-					if (index > selectedIndexTemp) {
-						break;
-					}
+      int selectedIndex_ = selectedIndex;
+      letterStates.forEach(
+          letterState -> {
+            while (letterState.indices.peek() <= selectedIndex_) {
+              letterState.indices.poll();
+            }
+          });
 
-					it.remove();
-				}
-			});
+      result.append(selectedLetter);
+    }
 
-			sb.append(selectedLetter);
-		}
-		return sb.toString();
-	}
+    return result.toString();
+  }
 }
 
-class LetterAndIndices {
-	char letter;
-	List<Integer> indices;
-	int lastIndex;
+class LetterState {
+  char letter;
+  Queue<Integer> indices = new LinkedList<>();
+  int lastIndex = -1;
 
-	LetterAndIndices(char letter, List<Integer> indices, int lastIndex) {
-		this.letter = letter;
-		this.indices = indices;
-		this.lastIndex = lastIndex;
-	}
+  LetterState(char letter) {
+    this.letter = letter;
+  }
 
-	void appendIndex(int index) {
-		indices.add(index);
-		lastIndex = index;
-	}
+  void appendIndex(int index) {
+    indices.offer(index);
+    lastIndex = index;
+  }
 }
