@@ -7,7 +7,6 @@ class Fancy {
   int length = 0;
   int base = 0;
   int[] diffs = new int[LIMIT];
-  int[] factors = new int[LIMIT];
   int[] prefixProducts = new int[LIMIT + 1];
 
   public Fancy() {
@@ -17,7 +16,6 @@ class Fancy {
   public void append(int val) {
     ++length;
     diffs[length - 1] = subtractMod(val, base);
-    factors[length - 1] = 1;
     prefixProducts[length] = prefixProducts[length - 1];
   }
 
@@ -28,7 +26,6 @@ class Fancy {
   public void multAll(int m) {
     base = multiplyMod(base, m);
 
-    factors[length - 1] = multiplyMod(factors[length - 1], m);
     prefixProducts[length] = multiplyMod(prefixProducts[length], m);
   }
 
