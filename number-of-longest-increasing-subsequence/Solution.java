@@ -1,36 +1,37 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int findNumberOfLIS(int[] nums) {
-		int maxLength = 0;
-		LengthAndCount[] lcs = new LengthAndCount[nums.length];
-		for (int i = 0; i < lcs.length; i++) {
-			lcs[i] = new LengthAndCount(1, 1);
-			for (int j = 0; j < i; j++) {
-				if (nums[i] > nums[j]) {
-					int length = lcs[j].length + 1;
-					if (length > lcs[i].length) {
-						lcs[i] = new LengthAndCount(length, lcs[j].count);
-					} else if (length == lcs[i].length) {
-						lcs[i].count += lcs[j].count;
-					}
-				}
-			}
+class Solution {
+  public int findNumberOfLIS(int[] nums) {
+    Element[] elements = new Element[nums.length];
+    for (int i = 0; i < elements.length; ++i) {
+      elements[i] = new Element(1, 1);
+      for (int j = 0; j < i; ++j) {
+        if (nums[i] > nums[j]) {
+          int length = elements[j].length + 1;
+          if (length > elements[i].length) {
+            elements[i] = new Element(length, elements[j].count);
+          } else if (length == elements[i].length) {
+            elements[i].count += elements[j].count;
+          }
+        }
+      }
+    }
 
-			maxLength = Math.max(maxLength, lcs[i].length);
-		}
+    int maxLength = Arrays.stream(elements).mapToInt(element -> element.length).max().orElse(0);
 
-		final int finalMaxLength = maxLength;
-		return Arrays.stream(lcs).filter(lc -> lc.length == finalMaxLength).mapToInt(lc -> lc.count).sum();
-	}
+    return Arrays.stream(elements)
+        .filter(element -> element.length == maxLength)
+        .mapToInt(element -> element.count)
+        .sum();
+  }
 }
 
-class LengthAndCount {
-	int length;
-	int count;
+class Element {
+  int length;
+  int count;
 
-	LengthAndCount(int length, int count) {
-		this.length = length;
-		this.count = count;
-	}
+  Element(int length, int count) {
+    this.length = length;
+    this.count = count;
+  }
 }
