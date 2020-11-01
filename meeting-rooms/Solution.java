@@ -1,30 +1,14 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
-// Definition for an interval.
-class Interval {
-	int start;
-	int end;
+class Solution {
+  public boolean canAttendMeetings(int[][] intervals) {
+    int[][] sortedIntervals =
+        Arrays.stream(intervals)
+            .sorted((i1, i2) -> Integer.compare(i1[0], i2[0]))
+            .toArray(int[][]::new);
 
-	Interval() {
-		start = 0;
-		end = 0;
-	}
-
-	Interval(int s, int e) {
-		start = s;
-		end = e;
-	}
-}
-
-public class Solution {
-	public boolean canAttendMeetings(Interval[] intervals) {
-		Arrays.sort(intervals, (interval1, interval2) -> interval1.start
-				- interval2.start);
-		for (int i = 0; i < intervals.length - 1; i++) {
-			if (intervals[i].end > intervals[i + 1].start) {
-				return false;
-			}
-		}
-		return true;
-	}
+    return IntStream.range(0, sortedIntervals.length - 1)
+        .allMatch(i -> sortedIntervals[i][1] <= sortedIntervals[i + 1][0]);
+  }
 }
