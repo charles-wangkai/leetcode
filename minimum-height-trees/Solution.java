@@ -5,47 +5,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class Solution {
-	public List<Integer> findMinHeightTrees(int n, int[][] edges) {
-		@SuppressWarnings("unchecked")
-		Set<Integer>[] adjacentsArray = new HashSet[n];
-		for (int i = 0; i < adjacentsArray.length; i++) {
-			adjacentsArray[i] = new HashSet<Integer>();
-		}
-		for (int[] edge : edges) {
-			adjacentsArray[edge[0]].add(edge[1]);
-			adjacentsArray[edge[1]].add(edge[0]);
-		}
+class Solution {
+  public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+    @SuppressWarnings("unchecked")
+    Set<Integer>[] adjSets = new Set[n];
+    for (int i = 0; i < adjSets.length; ++i) {
+      adjSets[i] = new HashSet<>();
+    }
+    for (int[] edge : edges) {
+      adjSets[edge[0]].add(edge[1]);
+      adjSets[edge[1]].add(edge[0]);
+    }
 
-		Map<Integer, Set<Integer>> degree2nodes = new HashMap<Integer, Set<Integer>>();
-		for (int i = 0; i < adjacentsArray.length; i++) {
-			addInMap(degree2nodes, adjacentsArray[i].size(), i);
-		}
+    Map<Integer, Set<Integer>> degreeToNodes = new HashMap<>();
+    for (int i = 0; i < adjSets.length; ++i) {
+      addInMap(degreeToNodes, adjSets[i].size(), i);
+    }
 
-		int remainNum = n;
-		while (remainNum > 2) {
-			Set<Integer> removedNodes = degree2nodes.remove(1);
-			for (int removedNode : removedNodes) {
-				for (int adjacent : adjacentsArray[removedNode]) {
-					int degree = adjacentsArray[adjacent].size();
-					degree2nodes.get(degree).remove(adjacent);
-					addInMap(degree2nodes, degree - 1, adjacent);
+    int remainNum = n;
+    while (remainNum > 2) {
+      Set<Integer> removedNodes = degreeToNodes.remove(1);
+      for (int removedNode : removedNodes) {
+        for (int adj : adjSets[removedNode]) {
+          int degree = adjSets[adj].size();
+          degreeToNodes.get(degree).remove(adj);
+          addInMap(degreeToNodes, degree - 1, adj);
 
-					adjacentsArray[adjacent].remove(removedNode);
-				}
-				adjacentsArray[removedNode].clear();
-			}
+          adjSets[adj].remove(removedNode);
+        }
+      }
 
-			remainNum -= removedNodes.size();
-		}
+      remainNum -= removedNodes.size();
+    }
 
-		return new ArrayList<Integer>(degree2nodes.get(remainNum == 1 ? 0 : 1));
-	}
+    return new ArrayList<>(degreeToNodes.get(remainNum == 1 ? 0 : 1));
+  }
 
-	void addInMap(Map<Integer, Set<Integer>> map, int key, int value) {
-		if (!map.containsKey(key)) {
-			map.put(key, new HashSet<Integer>());
-		}
-		map.get(key).add(value);
-	}
+  void addInMap(Map<Integer, Set<Integer>> degreeToNodes, int degree, int node) {
+    if (!degreeToNodes.containsKey(degree)) {
+      degreeToNodes.put(degree, new HashSet<>());
+    }
+
+    degreeToNodes.get(degree).add(node);
+  }
 }
