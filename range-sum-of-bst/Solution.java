@@ -1,30 +1,39 @@
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	public int rangeSumBST(TreeNode root, int L, int R) {
-		return search(root, Integer.MIN_VALUE, Integer.MAX_VALUE, L, R);
-	}
+class Solution {
+  public int rangeSumBST(TreeNode root, int low, int high) {
+    return search(root, Integer.MIN_VALUE, Integer.MAX_VALUE, low, high);
+  }
 
-	int search(TreeNode node, int lower, int upper, int L, int R) {
-		if (node == null || upper < L || lower > R) {
-			return 0;
-		}
+  int search(TreeNode node, int lower, int upper, int low, int high) {
+    if (node == null || upper < low || lower > high) {
+      return 0;
+    }
 
-		int result = 0;
-		if (node.val >= L && node.val <= R) {
-			result += node.val;
-		}
-		result += search(node.left, lower, node.val - 1, L, R);
-		result += search(node.right, node.val + 1, upper, L, R);
-		return result;
-	}
+    int result = 0;
+    if (node.val >= low && node.val <= high) {
+      result += node.val;
+    }
+    result += search(node.left, lower, node.val - 1, low, high);
+    result += search(node.right, node.val + 1, upper, low, high);
+
+    return result;
+  }
 }
