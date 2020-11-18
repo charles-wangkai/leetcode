@@ -1,47 +1,27 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 
-// Definition for an interval.
-class Interval {
-	int start;
-	int end;
+class Solution {
+  public int[][] merge(int[][] intervals) {
+    int[][] sortedIntervals =
+        Arrays.stream(intervals)
+            .sorted((i1, i2) -> Integer.compare(i1[0], i2[0]))
+            .toArray(int[][]::new);
 
-	Interval() {
-		start = 0;
-		end = 0;
-	}
+    List<int[]> merged = new ArrayList<int[]>();
+    for (int[] interval : sortedIntervals) {
+      if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
+        merged.add(interval);
+      } else {
+        int[] last = merged.get(merged.size() - 1);
+        if (last[1] < interval[1]) {
+          merged.remove(merged.size() - 1);
+          merged.add(new int[] {last[0], interval[1]});
+        }
+      }
+    }
 
-	Interval(int s, int e) {
-		start = s;
-		end = e;
-	}
-}
-
-public class Solution {
-	public List<Interval> merge(List<Interval> intervals) {
-		Comparator<Interval> intervalComparator = new Comparator<Interval>() {
-			@Override
-			public int compare(Interval interval1, Interval interval2) {
-				return interval1.start - interval2.start;
-			}
-		};
-		Collections.sort(intervals, intervalComparator);
-
-		List<Interval> merged = new ArrayList<Interval>();
-		for (Interval interval : intervals) {
-			if (merged.isEmpty()
-					|| merged.get(merged.size() - 1).end < interval.start) {
-				merged.add(interval);
-			} else {
-				Interval last = merged.get(merged.size() - 1);
-				if (last.end < interval.end) {
-					merged.remove(merged.size() - 1);
-					merged.add(new Interval(last.start, interval.end));
-				}
-			}
-		}
-		return merged;
-	}
+    return merged.stream().toArray(int[][]::new);
+  }
 }
