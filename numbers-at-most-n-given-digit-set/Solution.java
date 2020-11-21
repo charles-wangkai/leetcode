@@ -1,40 +1,38 @@
-public class Solution {
-	public int atMostNGivenDigitSet(String[] D, int N) {
-		String strN = String.valueOf(N);
+import java.util.stream.IntStream;
 
-		int result = 0;
+class Solution {
+  public int atMostNGivenDigitSet(String[] digits, int n) {
+    String strN = String.valueOf(n);
 
-		for (int length = 1; length < strN.length(); length++) {
-			result += pow(D.length, length);
-		}
+    int result = 0;
 
-		boolean digitInSet = true;
-		for (int i = 0; i < strN.length() && digitInSet; i++) {
-			char digit = strN.charAt(i);
+    for (int length = 1; length < strN.length(); ++length) {
+      result += pow(digits.length, length);
+    }
 
-			digitInSet = false;
-			for (String d : D) {
-				char buildingDigit = d.charAt(0);
+    boolean digitInSet = true;
+    for (int i = 0; i < strN.length() && digitInSet; ++i) {
+      char digit = strN.charAt(i);
 
-				if (buildingDigit < digit) {
-					result += pow(D.length, strN.length() - i - 1);
-				} else if (buildingDigit == digit) {
-					digitInSet = true;
-				}
-			}
-		}
-		if (digitInSet) {
-			result++;
-		}
+      digitInSet = false;
+      for (String d : digits) {
+        char buildingDigit = d.charAt(0);
 
-		return result;
-	}
+        if (buildingDigit < digit) {
+          result += pow(digits.length, strN.length() - i - 1);
+        } else if (buildingDigit == digit) {
+          digitInSet = true;
+        }
+      }
+    }
+    if (digitInSet) {
+      ++result;
+    }
 
-	static int pow(int base, int exponent) {
-		int result = 1;
-		for (int i = 0; i < exponent; i++) {
-			result *= base;
-		}
-		return result;
-	}
+    return result;
+  }
+
+  static int pow(int base, int exponent) {
+    return IntStream.range(0, exponent).map(i -> base).reduce(1, (x, y) -> x * y);
+  }
 }
