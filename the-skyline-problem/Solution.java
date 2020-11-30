@@ -1,57 +1,55 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
-public class Solution {
-	public List<int[]> getSkyline(int[][] buildings) {
-		List<Corner> corners = new ArrayList<Corner>();
-		for (int[] building : buildings) {
-			corners.add(new Corner(building[0], building[2], true));
-			corners.add(new Corner(building[1], building[2], false));
-		}
+class Solution {
+  public List<List<Integer>> getSkyline(int[][] buildings) {
+    Corner[] corners =
+        Arrays.stream(buildings)
+            .flatMap(
+                building ->
+                    Stream.of(
+                        new Corner(building[0], building[2], true),
+                        new Corner(building[1], building[2], false)))
+            .sorted((c1, c2) -> Integer.compare(c1.x, c2.x))
+            .toArray(Corner[]::new);
 
-		Collections.sort(corners, (corner1, corner2) -> corner1.x - corner2.x);
+    SortedMap<Integer, Integer> heightToCount = new TreeMap<>();
+    heightToCount.put(0, 1);
+    List<List<Integer>> skyline = new ArrayList<>();
+    for (Corner corner : corners) {
+      if (corner.leftOrRight) {
+        heightToCount.put(corner.y, heightToCount.getOrDefault(corner.y, 0) + 1);
+      } else {
+        heightToCount.put(corner.y, heightToCount.get(corner.y) - 1);
+        heightToCount.remove(corner.y, 0);
+      }
 
-		SortedMap<Integer, Integer> height2count = new TreeMap<Integer, Integer>();
-		height2count.put(0, 1);
-		LinkedList<int[]> skyline = new LinkedList<int[]>();
-		for (Corner corner : corners) {
-			if (corner.leftOrRight) {
-				if (!height2count.containsKey(corner.y)) {
-					height2count.put(corner.y, 0);
-				}
-				height2count.put(corner.y, height2count.get(corner.y) + 1);
-			} else {
-				height2count.put(corner.y, height2count.get(corner.y) - 1);
-				if (height2count.get(corner.y) == 0) {
-					height2count.remove(corner.y);
-				}
-			}
+      if (!skyline.isEmpty() && corner.x == skyline.get(skyline.size() - 1).get(0)) {
+        skyline.remove(skyline.size() - 1);
+      }
 
-			if (!skyline.isEmpty() && corner.x == skyline.getLast()[0]) {
-				skyline.removeLast();
-			}
-			int next_height = height2count.lastKey();
-			if (skyline.isEmpty() || next_height != skyline.getLast()[1]) {
-				skyline.add(new int[] { corner.x, next_height });
-			}
-		}
+      int nextHeight = heightToCount.lastKey();
+      if (skyline.isEmpty() || nextHeight != skyline.get(skyline.size() - 1).get(1)) {
+        skyline.add(Arrays.asList(corner.x, nextHeight));
+      }
+    }
 
-		return skyline;
-	}
+    return skyline;
+  }
 }
 
 class Corner {
-	int x;
-	int y;
-	boolean leftOrRight;
+  int x;
+  int y;
+  boolean leftOrRight;
 
-	Corner(int x, int y, boolean leftOrRight) {
-		this.x = x;
-		this.y = y;
-		this.leftOrRight = leftOrRight;
-	}
+  Corner(int x, int y, boolean leftOrRight) {
+    this.x = x;
+    this.y = y;
+    this.leftOrRight = leftOrRight;
+  }
 }
