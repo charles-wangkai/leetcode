@@ -1,38 +1,50 @@
 import java.util.Random;
 
+// Definition for singly-linked list.
 class ListNode {
-	int val;
-	ListNode next;
+  int val;
+  ListNode next;
+
+  ListNode() {}
+
+  ListNode(int val) {
+    this.val = val;
+  }
+
+  ListNode(int val, ListNode next) {
+    this.val = val;
+    this.next = next;
+  }
 }
 
-public class Solution {
-	private Random random = new Random();
-	private ListNode head;
+class Solution {
+  private Random random = new Random();
+  private ListNode head;
 
-	/**
-	 * @param head
-	 *            The linked list's head. Note that the head is guanranteed to be
-	 *            not null, so it contains at least one node.
-	 */
-	public Solution(ListNode head) {
-		this.head = head;
-	}
+  /**
+   * @param head The linked list's head. Note that the head is guanranteed to be not null, so it
+   *     contains at least one node.
+   */
+  public Solution(ListNode head) {
+    this.head = head;
+  }
 
-	/** Returns a random node's value. */
-	public int getRandom() {
-		int chosen = 0;
-		int size = 0;
-		ListNode node = head;
-		while (node != null) {
-			size++;
-			if (random.nextInt(size) == 0) {
-				chosen = node.val;
-			}
+  /** Returns a random node's value. */
+  public int getRandom() {
+    int chosen = 0;
+    int size = 0;
+    ListNode node = head;
+    while (node != null) {
+      ++size;
+      if (random.nextInt(size) == 0) {
+        chosen = node.val;
+      }
 
-			node = node.next;
-		}
-		return chosen;
-	}
+      node = node.next;
+    }
+
+    return chosen;
+  }
 }
 
 // Your Solution object will be instantiated and called as such:
