@@ -1,23 +1,30 @@
-public class Solution {
-	public int maxCoins(int[] nums) {
-		int[] numbers = new int[nums.length + 2];
-		numbers[0] = 1;
-		for (int i = 1; i < numbers.length - 1; i++) {
-			numbers[i] = nums[i - 1];
-		}
-		numbers[numbers.length - 1] = 1;
+import java.util.stream.IntStream;
 
-		int[][] results = new int[numbers.length - 1][numbers.length];
-		for (int length = 3; length <= numbers.length; length++) {
-			for (int beginIndex = 0, endIndex = beginIndex + length
-					- 1; endIndex < numbers.length; beginIndex++, endIndex++) {
-				for (int middleIndex = beginIndex + 1; middleIndex < endIndex; middleIndex++) {
-					results[beginIndex][endIndex] = Math.max(results[beginIndex][endIndex],
-							results[beginIndex][middleIndex] + results[middleIndex][endIndex]
-									+ numbers[beginIndex] * numbers[middleIndex] * numbers[endIndex]);
-				}
-			}
-		}
-		return results[0][numbers.length - 1];
-	}
+class Solution {
+  public int maxCoins(int[] nums) {
+    int[] a =
+        IntStream.range(0, nums.length + 2)
+            .map(i -> (i == 0 || i == nums.length + 1) ? 1 : nums[i - 1])
+            .toArray();
+
+    int n = a.length;
+
+    int[][] dp = new int[n - 1][n];
+    for (int length = 3; length <= n; length++) {
+      for (int beginIndex = 0; beginIndex + length - 1 < n; ++beginIndex) {
+        int endIndex = beginIndex + length - 1;
+
+        for (int middleIndex = beginIndex + 1; middleIndex < endIndex; ++middleIndex) {
+          dp[beginIndex][endIndex] =
+              Math.max(
+                  dp[beginIndex][endIndex],
+                  dp[beginIndex][middleIndex]
+                      + dp[middleIndex][endIndex]
+                      + a[beginIndex] * a[middleIndex] * a[endIndex]);
+        }
+      }
+    }
+
+    return dp[0][n - 1];
+  }
 }
