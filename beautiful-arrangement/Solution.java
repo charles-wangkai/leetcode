@@ -1,35 +1,30 @@
-public class Solution {
-	int result;
+import java.util.stream.IntStream;
 
-	public int countArrangement(int N) {
-		int[] arrangement = new int[N];
-		for (int i = 0; i < arrangement.length; i++) {
-			arrangement[i] = i + 1;
-		}
+class Solution {
+  public int countArrangement(int N) {
+    return search(IntStream.rangeClosed(1, N).toArray(), 0);
+  }
 
-		result = 0;
-		search(arrangement, 0);
-		return result;
-	}
+  int search(int[] arrangement, int index) {
+    if (index == arrangement.length) {
+      return 1;
+    }
 
-	void search(int[] arrangement, int index) {
-		if (index == arrangement.length) {
-			result++;
-			return;
-		}
+    int result = 0;
+    for (int i = index; i < arrangement.length; ++i) {
+      if (arrangement[i] % (index + 1) == 0 || (index + 1) % arrangement[i] == 0) {
+        swap(arrangement, index, i);
+        result += search(arrangement, index + 1);
+        swap(arrangement, index, i);
+      }
+    }
 
-		for (int i = index; i < arrangement.length; i++) {
-			if (arrangement[i] % (index + 1) == 0 || (index + 1) % arrangement[i] == 0) {
-				swap(arrangement, index, i);
-				search(arrangement, index + 1);
-				swap(arrangement, index, i);
-			}
-		}
-	}
+    return result;
+  }
 
-	void swap(int[] a, int index1, int index2) {
-		int temp = a[index1];
-		a[index1] = a[index2];
-		a[index2] = temp;
-	}
+  void swap(int[] a, int index1, int index2) {
+    int temp = a[index1];
+    a[index1] = a[index2];
+    a[index2] = temp;
+  }
 }
