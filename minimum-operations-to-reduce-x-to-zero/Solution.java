@@ -11,7 +11,7 @@ class Solution {
       rightSumToLength.put(rightSum, nums.length - i);
     }
 
-    int result = rightSumToLength.getOrDefault(x, nums.length + 1);
+    int result = rightSumToLength.getOrDefault(x, Integer.MAX_VALUE);
     int leftSum = 0;
     for (int i = 0; i < nums.length; ++i) {
       leftSum += nums[i];
@@ -20,6 +20,6 @@ class Solution {
       }
     }
 
-    return (result == nums.length + 1) ? -1 : result;
+    return (result > nums.length) ? -1 : result;
   }
 }
