@@ -1,9 +1,9 @@
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 class Solution {
   public int minimumDeviation(int[] nums) {
-    PriorityQueue<Element> pq =
-        new PriorityQueue<>((e1, e2) -> Integer.compare(e1.current, e2.current));
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(e -> e.current));
     int max = -1;
     for (int num : nums) {
       int limit = (num % 2 == 0) ? num : (num * 2);
