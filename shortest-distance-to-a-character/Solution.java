@@ -1,32 +1,32 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int[] shortestToChar(String S, char C) {
-		int[] result = new int[S.length()];
-		Arrays.fill(result, Integer.MAX_VALUE);
+class Solution {
+  public int[] shortestToChar(String s, char c) {
+    int[] result = new int[s.length()];
+    Arrays.fill(result, Integer.MAX_VALUE);
 
-		int leftIndex = -1;
-		for (int i = 0; i < S.length(); i++) {
-			if (S.charAt(i) == C) {
-				leftIndex = i;
-			}
+    int leftIndex = -1;
+    for (int i = 0; i < s.length(); ++i) {
+      if (s.charAt(i) == c) {
+        leftIndex = i;
+      }
 
-			if (leftIndex >= 0) {
-				result[i] = Math.min(result[i], i - leftIndex);
-			}
-		}
+      if (leftIndex != -1) {
+        result[i] = Math.min(result[i], i - leftIndex);
+      }
+    }
 
-		int rightIndex = S.length();
-		for (int i = S.length() - 1; i >= 0; i--) {
-			if (S.charAt(i) == C) {
-				rightIndex = i;
-			}
+    int rightIndex = -1;
+    for (int i = s.length() - 1; i >= 0; --i) {
+      if (s.charAt(i) == c) {
+        rightIndex = i;
+      }
 
-			if (rightIndex < S.length()) {
-				result[i] = Math.min(result[i], rightIndex - i);
-			}
-		}
+      if (rightIndex != -1) {
+        result[i] = Math.min(result[i], rightIndex - i);
+      }
+    }
 
-		return result;
-	}
+    return result;
+  }
 }
