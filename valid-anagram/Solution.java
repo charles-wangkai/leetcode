@@ -1,13 +1,14 @@
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
-public class Solution {
-	public boolean isAnagram(String s, String t) {
-		return toKey(s).equals(toKey(t));
-	}
+class Solution {
+  public boolean isAnagram(String s, String t) {
+    return toKey(s).equals(toKey(t));
+  }
 
-	String toKey(String str) {
-		char[] letters = str.toCharArray();
-		Arrays.sort(letters);
-		return new String(letters);
-	}
+  String toKey(String str) {
+    return str.chars()
+        .sorted()
+        .mapToObj(ch -> String.valueOf((char) ch))
+        .collect(Collectors.joining());
+  }
 }
