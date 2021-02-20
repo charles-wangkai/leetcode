@@ -1,35 +1,44 @@
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+class Solution {
+  static final Element[] ELEMENTS = {
+    new Element("M", 1000),
+    new Element("CM", 900),
+    new Element("D", 500),
+    new Element("CD", 400),
+    new Element("C", 100),
+    new Element("XC", 90),
+    new Element("L", 50),
+    new Element("XL", 40),
+    new Element("X", 10),
+    new Element("IX", 9),
+    new Element("V", 5),
+    new Element("IV", 4),
+    new Element("I", 1)
+  };
 
-public class Solution {
-	public int romanToInt(String s) {
-		LinkedHashMap<String, Integer> roman2number = new LinkedHashMap<String, Integer>();
-		roman2number.put("M", 1000);
-		roman2number.put("CM", 900);
-		roman2number.put("D", 500);
-		roman2number.put("CD", 400);
-		roman2number.put("C", 100);
-		roman2number.put("XC", 90);
-		roman2number.put("L", 50);
-		roman2number.put("XL", 40);
-		roman2number.put("X", 10);
-		roman2number.put("IX", 9);
-		roman2number.put("V", 5);
-		roman2number.put("IV", 4);
-		roman2number.put("I", 1);
+  public int romanToInt(String s) {
+    int result = 0;
+    int index = 0;
+    while (index != s.length()) {
+      for (Element element : ELEMENTS) {
+        if (s.startsWith(element.roman, index)) {
+          result += element.value;
+          index += element.roman.length();
 
-		int result = 0;
-		for (int index = 0; index < s.length();) {
-			for (Entry<String, Integer> entry : roman2number.entrySet()) {
-				String roman = entry.getKey();
-				int number = entry.getValue();
-				if (s.startsWith(roman, index)) {
-					result += number;
-					index += roman.length();
-					break;
-				}
-			}
-		}
-		return result;
-	}
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+}
+
+class Element {
+  String roman;
+  int value;
+
+  Element(String roman, int value) {
+    this.roman = roman;
+    this.value = value;
+  }
 }
