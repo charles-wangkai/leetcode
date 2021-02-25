@@ -1,24 +1,13 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int findUnsortedSubarray(int[] nums) {
-		int[] sorted = Arrays.copyOf(nums, nums.length);
-		Arrays.sort(sorted);
+class Solution {
+  public int findUnsortedSubarray(int[] nums) {
+    int[] sorted = Arrays.stream(nums).sorted().toArray();
+    int[] diffIndices = IntStream.range(0, nums.length).filter(i -> sorted[i] != nums[i]).toArray();
 
-		int beginIndex = 0;
-		while (beginIndex < nums.length && nums[beginIndex] == sorted[beginIndex]) {
-			beginIndex++;
-		}
-
-		if (beginIndex == nums.length) {
-			return 0;
-		}
-
-		int endIndex = nums.length - 1;
-		while (endIndex >= 0 && nums[endIndex] == sorted[endIndex]) {
-			endIndex--;
-		}
-
-		return endIndex - beginIndex + 1;
-	}
+    return (diffIndices.length == 0)
+        ? 0
+        : (diffIndices[diffIndices.length - 1] - diffIndices[0] + 1);
+  }
 }
