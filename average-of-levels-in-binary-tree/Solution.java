@@ -1,44 +1,47 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	public List<Double> averageOfLevels(TreeNode root) {
-		List<Long> sums = new ArrayList<Long>();
-		List<Integer> counts = new ArrayList<Integer>();
+class Solution {
+  public List<Double> averageOfLevels(TreeNode root) {
+    List<List<Integer>> values = new ArrayList<>();
+    search(root, values, 0);
 
-		search(root, sums, counts, 0);
+    return values.stream()
+        .map(line -> line.stream().mapToInt(x -> x).average().getAsDouble())
+        .collect(Collectors.toList());
+  }
 
-		return IntStream.range(0, sums.size()).mapToObj(i -> (double) sums.get(i) / counts.get(i))
-				.collect(Collectors.toList());
-	}
+  void search(TreeNode node, List<List<Integer>> values, int index) {
+    if (node == null) {
+      return;
+    }
 
-	void search(TreeNode node, List<Long> sums, List<Integer> counts, int index) {
-		if (node == null) {
-			return;
-		}
+    if (index == values.size()) {
+      values.add(new ArrayList<>());
+    }
+    values.get(index).add(node.val);
 
-		if (index == sums.size()) {
-			sums.add(0L);
-			counts.add(0);
-		}
-
-		sums.set(index, sums.get(index) + node.val);
-		counts.set(index, counts.get(index) + 1);
-
-		search(node.left, sums, counts, index + 1);
-		search(node.right, sums, counts, index + 1);
-	}
+    search(node.left, values, index + 1);
+    search(node.right, values, index + 1);
+  }
 }
