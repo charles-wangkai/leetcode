@@ -1,35 +1,43 @@
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+class Solution {
+  static final Element[] ELEMENTS = {
+    new Element(1000, "M"),
+    new Element(900, "CM"),
+    new Element(500, "D"),
+    new Element(400, "CD"),
+    new Element(100, "C"),
+    new Element(90, "XC"),
+    new Element(50, "L"),
+    new Element(40, "XL"),
+    new Element(10, "X"),
+    new Element(9, "IX"),
+    new Element(5, "V"),
+    new Element(4, "IV"),
+    new Element(1, "I")
+  };
 
-public class Solution {
-	public String intToRoman(int num) {
-		LinkedHashMap<Integer, String> number2roman = new LinkedHashMap<Integer, String>();
-		number2roman.put(1000, "M");
-		number2roman.put(900, "CM");
-		number2roman.put(500, "D");
-		number2roman.put(400, "CD");
-		number2roman.put(100, "C");
-		number2roman.put(90, "XC");
-		number2roman.put(50, "L");
-		number2roman.put(40, "XL");
-		number2roman.put(10, "X");
-		number2roman.put(9, "IX");
-		number2roman.put(5, "V");
-		number2roman.put(4, "IV");
-		number2roman.put(1, "I");
+  public String intToRoman(int num) {
+    StringBuilder result = new StringBuilder();
+    while (num != 0) {
+      for (Element element : ELEMENTS) {
+        if (element.value <= num) {
+          result.append(element.roman);
+          num -= element.value;
 
-		String result = "";
-		while (num != 0) {
-			for (Entry<Integer, String> entry : number2roman.entrySet()) {
-				int number = entry.getKey();
-				String roman = entry.getValue();
-				if (number <= num) {
-					result += roman;
-					num -= number;
-					break;
-				}
-			}
-		}
-		return result;
-	}
+          break;
+        }
+      }
+    }
+
+    return result.toString();
+  }
+}
+
+class Element {
+  int value;
+  String roman;
+
+  Element(int value, String roman) {
+    this.value = value;
+    this.roman = roman;
+  }
 }
