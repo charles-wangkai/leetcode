@@ -1,51 +1,39 @@
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	static final int MODULUS = 1000000007;
+class Solution {
+  static final int MODULUS = 1_000_000_007;
 
-	public int numFactoredBinaryTrees(int[] A) {
-		Arrays.sort(A);
+  public int numFactoredBinaryTrees(int[] arr) {
+    Arrays.sort(arr);
 
-		Map<Integer, Integer> number2index = new HashMap<Integer, Integer>();
-		for (int i = 0; i < A.length; i++) {
-			number2index.put(A[i], i);
-		}
+    Map<Integer, Integer> valueToIndex =
+        IntStream.range(0, arr.length).boxed().collect(Collectors.toMap(i -> arr[i], i -> i));
 
-		int[] ways = new int[A.length];
-		Arrays.fill(ways, 1);
+    int[] ways = new int[arr.length];
+    Arrays.fill(ways, 1);
 
-		for (int i = 0; i < A.length; i++) {
-			for (int j = 0; j < i; j++) {
-				if (A[i] % A[j] == 0) {
-					int other = A[i] / A[j];
-					if (other >= A[j] && number2index.containsKey(other)) {
-						int otherIndex = number2index.get(other);
+    for (int i = 0; i < arr.length; ++i) {
+      for (int j = 0; j < i; j++) {
+        if (arr[i] % arr[j] == 0) {
+          int other = arr[i] / arr[j];
+          if (valueToIndex.containsKey(other)) {
+            ways[i] = addMod(ways[i], multiplyMod(ways[j], ways[valueToIndex.get(other)]));
+          }
+        }
+      }
+    }
 
-						int addition = multiplyMod(ways[j], ways[otherIndex]);
-						if (otherIndex != j) {
-							addition = multiplyMod(addition, 2);
-						}
+    return Arrays.stream(ways).reduce(this::addMod).getAsInt();
+  }
 
-						ways[i] = addMod(ways[i], addition);
-					}
-				}
-			}
-		}
+  int addMod(int x, int y) {
+    return (x + y) % MODULUS;
+  }
 
-		int result = 0;
-		for (int i = 0; i < ways.length; i++) {
-			result = addMod(result, ways[i]);
-		}
-		return result;
-	}
-
-	int addMod(int x, int y) {
-		return (x + y) % MODULUS;
-	}
-
-	int multiplyMod(int x, int y) {
-		return (int) ((long) x * y % MODULUS);
-	}
+  int multiplyMod(int x, int y) {
+    return (int) ((long) x * y % MODULUS);
+  }
 }
