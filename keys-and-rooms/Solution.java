@@ -1,28 +1,27 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-		int N = rooms.size();
-		boolean[] visited = new boolean[N];
-		visited[0] = true;
-		Queue<Integer> queue = new LinkedList<Integer>();
-		queue.offer(0);
-		int remain = N - 1;
+class Solution {
+  public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+    int N = rooms.size();
+    boolean[] visited = new boolean[N];
+    visited[0] = true;
+    Queue<Integer> queue = new ArrayDeque<>();
+    queue.offer(0);
 
-		while (remain > 0 && !queue.isEmpty()) {
-			int room = queue.poll();
+    while (!queue.isEmpty()) {
+      int room = queue.poll();
 
-			for (int nextRoom : rooms.get(room)) {
-				if (!visited[nextRoom]) {
-					visited[nextRoom] = true;
-					queue.offer(nextRoom);
-					remain--;
-				}
-			}
-		}
+      for (int nextRoom : rooms.get(room)) {
+        if (!visited[nextRoom]) {
+          visited[nextRoom] = true;
+          queue.offer(nextRoom);
+        }
+      }
+    }
 
-		return remain == 0;
-	}
+    return IntStream.range(0, N).allMatch(i -> visited[i]);
+  }
 }
