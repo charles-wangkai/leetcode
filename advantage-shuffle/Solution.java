@@ -1,25 +1,32 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Comparator;
 import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int[] advantageCount(int[] A, int[] B) {
-		List<Integer> targetIndices = IntStream.range(0, B.length).boxed()
-				.sorted((index1, index2) -> Integer.compare(B[index1], B[index2])).collect(Collectors.toList());
+class Solution {
+  public int[] advantageCount(int[] A, int[] B) {
+    int[] targetIndices =
+        IntStream.range(0, B.length)
+            .boxed()
+            .sorted(Comparator.comparing(i -> B[i]))
+            .mapToInt(x -> x)
+            .toArray();
 
-		Queue<Integer> remains = new LinkedList<>(Arrays.stream(A).sorted().boxed().collect(Collectors.toList()));
-		Queue<Integer> fillers = new LinkedList<>();
-		int[] result = new int[A.length];
-		for (int targetIndex : targetIndices) {
-			while (!remains.isEmpty() && remains.peek() <= B[targetIndex]) {
-				fillers.offer(remains.poll());
-			}
+    Queue<Integer> rest =
+        new ArrayDeque<>(Arrays.stream(A).sorted().boxed().collect(Collectors.toList()));
+    Queue<Integer> extras = new ArrayDeque<>();
 
-			result[targetIndex] = remains.isEmpty() ? fillers.poll() : remains.poll();
-		}
-		return result;
-	}
+    int[] result = new int[A.length];
+    for (int targetIndex : targetIndices) {
+      while (!rest.isEmpty() && rest.peek() <= B[targetIndex]) {
+        extras.offer(rest.poll());
+      }
+
+      result[targetIndex] = rest.isEmpty() ? extras.poll() : rest.poll();
+    }
+
+    return result;
+  }
 }
