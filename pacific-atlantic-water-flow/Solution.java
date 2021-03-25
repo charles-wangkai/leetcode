@@ -1,73 +1,80 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	static int[] R_ADJACENTS = { -1, 0, 1, 0 };
-	static int[] C_ADJACENTS = { 0, 1, 0, -1 };
+class Solution {
+  static int[] R_OFFSETS = {-1, 0, 1, 0};
+  static int[] C_OFFSETS = {0, 1, 0, -1};
 
-	public List<int[]> pacificAtlantic(int[][] matrix) {
-		List<int[]> result = new ArrayList<int[]>();
+  public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+    int row = matrix.length;
+    if (row == 0) {
+      return List.of();
+    }
+    int col = matrix[0].length;
+    if (col == 0) {
+      return List.of();
+    }
 
-		int row = matrix.length;
-		if (row == 0) {
-			return result;
-		}
-		int col = matrix[0].length;
-		if (col == 0) {
-			return result;
-		}
+    boolean[][] pacific = bfs(matrix, 0, 0);
+    boolean[][] atlantic = bfs(matrix, row - 1, col - 1);
 
-		boolean[][] pacific = bfs(matrix, 0, 0, new int[] { 0, 1 }, new int[] { 1, 0 });
-		boolean[][] atlantic = bfs(matrix, row - 1, col - 1, new int[] { -1, 0 }, new int[] { 0, -1 });
+    return IntStream.range(0, row)
+        .boxed()
+        .flatMap(
+            r ->
+                IntStream.range(0, col)
+                    .filter(c -> pacific[r][c] && atlantic[r][c])
+                    .mapToObj(c -> List.of(r, c)))
+        .collect(Collectors.toList());
+  }
 
-		for (int r = 0; r < row; r++) {
-			for (int c = 0; c < col; c++) {
-				if (pacific[r][c] && atlantic[r][c]) {
-					result.add(new int[] { r, c });
-				}
-			}
-		}
+  boolean[][] bfs(int[][] matrix, int edgeR, int edgeC) {
+    int row = matrix.length;
+    int col = matrix[0].length;
 
-		return result;
-	}
+    boolean[][] reaches = new boolean[row][col];
+    Queue<Point> queue = new ArrayDeque<>();
+    for (int r = 0; r < row; ++r) {
+      for (int c = 0; c < col; ++c) {
+        if (r == edgeR || c == edgeC) {
+          reaches[r][c] = true;
+          queue.offer(new Point(r, c));
+        }
+      }
+    }
 
-	boolean[][] bfs(int[][] matrix, int cornerR, int cornerC, int[] offsetRs, int[] offsetCs) {
-		int row = matrix.length;
-		int col = matrix[0].length;
+    while (!queue.isEmpty()) {
+      Point head = queue.poll();
 
-		boolean[][] reaches = new boolean[row][col];
-		Queue<int[]> queue = new LinkedList<int[]>();
+      for (int i = 0; i < R_OFFSETS.length; ++i) {
+        int adjR = head.r + R_OFFSETS[i];
+        int adjC = head.c + C_OFFSETS[i];
 
-		reaches[cornerR][cornerC] = true;
-		queue.offer(new int[] { cornerR, cornerC });
+        if (adjR >= 0
+            && adjR < row
+            && adjC >= 0
+            && adjC < col
+            && !reaches[adjR][adjC]
+            && matrix[adjR][adjC] >= matrix[head.r][head.c]) {
+          reaches[adjR][adjC] = true;
+          queue.offer(new Point(adjR, adjC));
+        }
+      }
+    }
 
-		for (int i = 0; i < offsetRs.length; i++) {
-			for (int r = cornerR + offsetRs[i], c = cornerC + offsetCs[i]; r >= 0 && r < row && c >= 0
-					&& c < col; r += offsetRs[i], c += offsetCs[i]) {
-				reaches[r][c] = true;
-				queue.offer(new int[] { r, c });
-			}
-		}
+    return reaches;
+  }
+}
 
-		while (!queue.isEmpty()) {
-			int[] head = queue.poll();
-			int r = head[0];
-			int c = head[1];
+class Point {
+  int r;
+  int c;
 
-			for (int i = 0; i < R_ADJACENTS.length; i++) {
-				int nextR = r + R_ADJACENTS[i];
-				int nextC = c + C_ADJACENTS[i];
-
-				if (nextR >= 0 && nextR < row && nextC >= 0 && nextC < col && !reaches[nextR][nextC]
-						&& matrix[nextR][nextC] >= matrix[r][c]) {
-					reaches[nextR][nextC] = true;
-					queue.offer(new int[] { nextR, nextC });
-				}
-			}
-		}
-
-		return reaches;
-	}
+  Point(int r, int c) {
+    this.r = r;
+    this.c = c;
+  }
 }
