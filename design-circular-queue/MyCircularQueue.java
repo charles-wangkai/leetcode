@@ -1,64 +1,49 @@
-public class MyCircularQueue {
-	private int[] data;
-	private int beginIndex;
-	private int itemNum;
+class MyCircularQueue {
+  private int[] data;
+  private int beginIndex = 0;
+  private int itemNum = 0;
 
-	/** Initialize your data structure here. Set the size of the queue to be k. */
-	public MyCircularQueue(int k) {
-		data = new int[k];
-		beginIndex = 0;
-		itemNum = 0;
-	}
+  public MyCircularQueue(int k) {
+    data = new int[k];
+  }
 
-	/**
-	 * Insert an element into the circular queue. Return true if the operation is
-	 * successful.
-	 */
-	public boolean enQueue(int value) {
-		if (isFull()) {
-			return false;
-		}
+  public boolean enQueue(int value) {
+    if (isFull()) {
+      return false;
+    }
 
-		data[(beginIndex + itemNum) % data.length] = value;
-		itemNum++;
+    data[(beginIndex + itemNum) % data.length] = value;
+    ++itemNum;
 
-		return true;
-	}
+    return true;
+  }
 
-	/**
-	 * Delete an element from the circular queue. Return true if the operation is
-	 * successful.
-	 */
-	public boolean deQueue() {
-		if (isEmpty()) {
-			return false;
-		}
+  public boolean deQueue() {
+    if (isEmpty()) {
+      return false;
+    }
 
-		beginIndex = (beginIndex + 1) % data.length;
-		itemNum--;
+    beginIndex = (beginIndex + 1) % data.length;
+    --itemNum;
 
-		return true;
-	}
+    return true;
+  }
 
-	/** Get the front item from the queue. */
-	public int Front() {
-		return isEmpty() ? -1 : data[beginIndex];
-	}
+  public int Front() {
+    return isEmpty() ? -1 : data[beginIndex];
+  }
 
-	/** Get the last item from the queue. */
-	public int Rear() {
-		return isEmpty() ? -1 : data[(beginIndex + itemNum - 1) % data.length];
-	}
+  public int Rear() {
+    return isEmpty() ? -1 : data[(beginIndex + itemNum - 1) % data.length];
+  }
 
-	/** Checks whether the circular queue is empty or not. */
-	public boolean isEmpty() {
-		return itemNum == 0;
-	}
+  public boolean isEmpty() {
+    return itemNum == 0;
+  }
 
-	/** Checks whether the circular queue is full or not. */
-	public boolean isFull() {
-		return itemNum == data.length;
-	}
+  public boolean isFull() {
+    return itemNum == data.length;
+  }
 }
 
 // Your MyCircularQueue object will be instantiated and called as such:
