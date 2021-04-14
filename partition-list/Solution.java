@@ -1,48 +1,56 @@
 // Definition for singly-linked list.
 class ListNode {
-	int val;
-	ListNode next;
+  int val;
+  ListNode next;
 
-	ListNode(int x) {
-		val = x;
-		next = null;
-	}
+  ListNode() {}
+
+  ListNode(int val) {
+    this.val = val;
+  }
+
+  ListNode(int val, ListNode next) {
+    this.val = val;
+    this.next = next;
+  }
 }
 
-public class Solution {
-	public ListNode partition(ListNode head, int x) {
-		ListNode[] leftList = new ListNode[2];
-		ListNode[] rightList = new ListNode[2];
+class Solution {
+  public ListNode partition(ListNode head, int x) {
+    ListNode tempLeftHead = new ListNode();
+    ListNode tempRightHead = new ListNode();
 
-		ListNode p = head;
-		while (p != null) {
-			ListNode next = p.next;
-			p.next = null;
-			if (p.val < x) {
-				leftList = appendList(leftList, p);
-			} else {
-				rightList = appendList(rightList, p);
-			}
-			p = next;
-		}
+    ListNode p = head;
+    while (p != null) {
+      ListNode next = p.next;
 
-		if (leftList[0] == null) {
-			return rightList[0];
-		} else {
-			leftList[1].next = rightList[0];
-			return leftList[0];
-		}
-	}
+      if (p.val < x) {
+        p.next = tempLeftHead.next;
+        tempLeftHead.next = p;
+      } else {
+        p.next = tempRightHead.next;
+        tempRightHead.next = p;
+      }
 
-	ListNode[] appendList(ListNode[] list, ListNode node) {
-		ListNode head = list[0];
-		ListNode tail = list[1];
-		if (head == null) {
-			head = node;
-		} else {
-			tail.next = node;
-		}
-		tail = node;
-		return new ListNode[] { head, tail };
-	}
+      p = next;
+    }
+
+    ListNode tempHead = new ListNode();
+    while (tempRightHead.next != null) {
+      ListNode node = tempRightHead.next;
+      tempRightHead.next = node.next;
+
+      node.next = tempHead.next;
+      tempHead.next = node;
+    }
+    while (tempLeftHead.next != null) {
+      ListNode node = tempLeftHead.next;
+      tempLeftHead.next = node.next;
+
+      node.next = tempHead.next;
+      tempHead.next = node;
+    }
+
+    return tempHead.next;
+  }
 }
