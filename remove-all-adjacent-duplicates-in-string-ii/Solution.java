@@ -1,38 +1,33 @@
 import java.util.Stack;
+import java.util.stream.Collectors;
 
-public class Solution {
-	public String removeDuplicates(String s, int k) {
-		Stack<Element> stack = new Stack<>();
-		for (char letter : s.toCharArray()) {
-			if (!stack.empty() && stack.peek().letter == letter) {
-				stack.peek().count += 1;
+class Solution {
+  public String removeDuplicates(String s, int k) {
+    Stack<Element> stack = new Stack<>();
+    for (char letter : s.toCharArray()) {
+      if (!stack.empty() && stack.peek().letter == letter) {
+        ++stack.peek().count;
 
-				if (stack.peek().count == k) {
-					stack.pop();
-				}
-			} else {
-				stack.push(new Element(letter, 1));
-			}
-		}
+        if (stack.peek().count == k) {
+          stack.pop();
+        }
+      } else {
+        stack.push(new Element(letter, 1));
+      }
+    }
 
-		StringBuilder sb = new StringBuilder();
-		while (!stack.empty()) {
-			Element element = stack.pop();
-			for (int i = 0; i < element.count; i++) {
-				sb.append(element.letter);
-			}
-		}
-
-		return sb.reverse().toString();
-	}
+    return stack.stream()
+        .map(e -> String.valueOf(e.letter).repeat(e.count))
+        .collect(Collectors.joining());
+  }
 }
 
 class Element {
-	char letter;
-	int count;
+  char letter;
+  int count;
 
-	Element(char letter, int count) {
-		this.letter = letter;
-		this.count = count;
-	}
+  Element(char letter, int count) {
+    this.letter = letter;
+    this.count = count;
+  }
 }
