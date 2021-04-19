@@ -1,33 +1,28 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int combinationSum4(int[] nums, int target) {
-		int result = 0;
+class Solution {
+  public int combinationSum4(int[] nums, int target) {
+    int result = 0;
 
-		Map<Integer, Integer> sum2count = new HashMap<Integer, Integer>();
-		sum2count.put(0, 1);
-		while (!sum2count.isEmpty()) {
-			Map<Integer, Integer> nextSum2count = new HashMap<Integer, Integer>();
+    Map<Integer, Integer> sumToCount = Map.of(0, 1);
+    while (!sumToCount.isEmpty()) {
+      Map<Integer, Integer> nextSumToCount = new HashMap<>();
+      for (int sum : sumToCount.keySet()) {
+        for (int num : nums) {
+          int nextSum = sum + num;
+          if (nextSum < target) {
+            nextSumToCount.put(
+                nextSum, nextSumToCount.getOrDefault(nextSum, 0) + sumToCount.get(sum));
+          } else if (nextSum == target) {
+            result += sumToCount.get(sum);
+          }
+        }
+      }
 
-			for (int sum : sum2count.keySet()) {
-				int count = sum2count.get(sum);
-				for (int num : nums) {
-					int nextSum = sum + num;
-					if (nextSum < target) {
-						if (!nextSum2count.containsKey(nextSum)) {
-							nextSum2count.put(nextSum, 0);
-						}
-						nextSum2count.put(nextSum, nextSum2count.get(nextSum) + count);
-					} else if (nextSum == target) {
-						result += count;
-					}
-				}
-			}
+      sumToCount = nextSumToCount;
+    }
 
-			sum2count = nextSum2count;
-		}
-
-		return result;
-	}
+    return result;
+  }
 }
