@@ -1,5 +1,5 @@
-public class Solution {
-	public boolean isPowerOfThree(int n) {
-		return n > 0 && 1162261467 % n == 0;
-	}
+class Solution {
+  public boolean isPowerOfThree(int n) {
+    return n > 0 && 1_162_261_467 % n == 0;
+  }
 }
