@@ -1,38 +1,37 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	public int countComponents(int n, int[][] edges) {
-		@SuppressWarnings("unchecked")
-		List<Integer>[] adjacentsList = new ArrayList[n];
-		for (int i = 0; i < adjacentsList.length; i++) {
-			adjacentsList[i] = new ArrayList<Integer>();
-		}
+class Solution {
+  public int countComponents(int n, int[][] edges) {
+    @SuppressWarnings("unchecked")
+    List<Integer>[] adjLists = new List[n];
+    for (int i = 0; i < adjLists.length; ++i) {
+      adjLists[i] = new ArrayList<>();
+    }
 
-		for (int[] edge : edges) {
-			adjacentsList[edge[0]].add(edge[1]);
-			adjacentsList[edge[1]].add(edge[0]);
-		}
+    for (int[] edge : edges) {
+      adjLists[edge[0]].add(edge[1]);
+      adjLists[edge[1]].add(edge[0]);
+    }
 
-		boolean[] visited = new boolean[n];
-		int componentNum = 0;
-		for (int i = 0; i < adjacentsList.length; i++) {
-			if (!visited[i]) {
-				search(adjacentsList, visited, i);
-				componentNum++;
-			}
-		}
-		return componentNum;
-	}
+    boolean[] visited = new boolean[n];
+    int componentNum = 0;
+    for (int i = 0; i < visited.length; ++i) {
+      if (!visited[i]) {
+        search(adjLists, visited, i);
+        ++componentNum;
+      }
+    }
 
-	void search(List<Integer>[] adjacentsList, boolean[] visited, int node) {
-		if (visited[node]) {
-			return;
-		}
+    return componentNum;
+  }
 
-		visited[node] = true;
-		for (int adjacent : adjacentsList[node]) {
-			search(adjacentsList, visited, adjacent);
-		}
-	}
+  void search(List<Integer>[] adjLists, boolean[] visited, int node) {
+    visited[node] = true;
+    for (int adj : adjLists[node]) {
+      if (!visited[adj]) {
+        search(adjLists, visited, adj);
+      }
+    }
+  }
 }
