@@ -1,44 +1,52 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public List<String[]> solveNQueens(int n) {
-		List<String[]> solutions = new ArrayList<String[]>();
-		search(solutions, new boolean[n], new boolean[2 * n - 1],
-				new boolean[2 * n - 1], new int[n], 0);
-		return solutions;
-	}
+class Solution {
+  public List<List<String>> solveNQueens(int n) {
+    List<List<String>> solutions = new ArrayList<>();
+    search(
+        solutions, new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1], new int[n], 0);
 
-	void search(List<String[]> solutions, boolean[] columns, boolean[] diffs,
-			boolean[] sums, int[] rows, int index) {
-		int size = rows.length;
-		if (index == size) {
-			String[] solution = new String[size];
-			for (int i = 0; i < solution.length; i++) {
-				solution[i] = "";
-				for (int j = 0; j < rows[i]; j++) {
-					solution[i] += ".";
-				}
-				solution[i] += "Q";
-				for (int j = rows[i] + 1; j < size; j++) {
-					solution[i] += ".";
-				}
-			}
-			solutions.add(solution);
-			return;
-		}
-		for (int i = 0; i < size; i++) {
-			if (!columns[i] && !diffs[index - i + (size - 1)]
-					&& !sums[index + i]) {
-				rows[index] = i;
-				columns[i] = true;
-				diffs[index - i + (size - 1)] = true;
-				sums[index + i] = true;
-				search(solutions, columns, diffs, sums, rows, index + 1);
-				columns[i] = false;
-				diffs[index - i + (size - 1)] = false;
-				sums[index + i] = false;
-			}
-		}
-	}
+    return solutions;
+  }
+
+  void search(
+      List<List<String>> solutions,
+      boolean[] columns,
+      boolean[] diffs,
+      boolean[] sums,
+      int[] rows,
+      int index) {
+    int n = rows.length;
+
+    if (index == n) {
+      solutions.add(
+          IntStream.range(0, n)
+              .mapToObj(
+                  r ->
+                      IntStream.range(0, n)
+                          .mapToObj(c -> (c == rows[r]) ? "Q" : ".")
+                          .collect(Collectors.joining()))
+              .collect(Collectors.toList()));
+
+      return;
+    }
+
+    for (int i = 0; i < n; ++i) {
+      if (!columns[i] && !diffs[index - i + (n - 1)] && !sums[index + i]) {
+        columns[i] = true;
+        diffs[index - i + (n - 1)] = true;
+        sums[index + i] = true;
+
+        rows[index] = i;
+        search(solutions, columns, diffs, sums, rows, index + 1);
+
+        columns[i] = false;
+        diffs[index - i + (n - 1)] = false;
+        sums[index + i] = false;
+      }
+    }
+  }
 }
