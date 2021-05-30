@@ -1,43 +1,41 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class Solution {
-	public int maximumGap(int[] num) {
-		if (num.length < 2) {
-			return 0;
-		}
-		sort(num);
-		int maxGap = 0;
-		for (int i = 0; i < num.length - 1; i++) {
-			maxGap = Math.max(maxGap, num[i + 1] - num[i]);
-		}
-		return maxGap;
-	}
+class Solution {
+  public int maximumGap(int[] nums) {
+    if (nums.length == 1) {
+      return 0;
+    }
 
-	void sort(int[] num) {
-		int mask = 1;
-		for (int i = 0; i < 32; i++) {
-			List<Integer> numbersWithZero = new ArrayList<Integer>();
-			List<Integer> numbersWithOne = new ArrayList<Integer>();
-			for (int number : num) {
-				if ((number & mask) == 0) {
-					numbersWithZero.add(number);
-				} else {
-					numbersWithOne.add(number);
-				}
-			}
+    int[] sorted = sort(nums);
 
-			int index = 0;
-			for (int number : numbersWithZero) {
-				num[index] = number;
-				index++;
-			}
-			for (int number : numbersWithOne) {
-				num[index] = number;
-				index++;
-			}
+    return IntStream.range(0, sorted.length - 1)
+        .map(i -> sorted[i + 1] - sorted[i])
+        .max()
+        .getAsInt();
+  }
 
-			mask <<= 1;
-		}
-	}
+  int[] sort(int[] nums) {
+    int[] sorted = nums;
+    for (int i = 0; i < 32; ++i) {
+      List<Integer> numbersWithZero = new ArrayList<>();
+      List<Integer> numbersWithOne = new ArrayList<>();
+      for (int num : sorted) {
+        if ((num & (1 << i)) == 0) {
+          numbersWithZero.add(num);
+        } else {
+          numbersWithOne.add(num);
+        }
+      }
+
+      sorted =
+          Stream.concat(numbersWithZero.stream(), numbersWithOne.stream())
+              .mapToInt(x -> x)
+              .toArray();
+    }
+
+    return sorted;
+  }
 }
