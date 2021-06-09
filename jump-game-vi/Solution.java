@@ -8,7 +8,8 @@ class Solution {
     for (int i = 0; i < maxScores.length; ++i) {
       maxScores[i] = (valueToCount.isEmpty() ? 0 : valueToCount.lastKey()) + nums[i];
       valueToCount.put(maxScores[i], valueToCount.getOrDefault(maxScores[i], 0) + 1);
-      if (i - k >= 0) {
+
+      if (i >= k) {
         valueToCount.put(maxScores[i - k], valueToCount.get(maxScores[i - k]) - 1);
         valueToCount.remove(maxScores[i - k], 0);
       }
