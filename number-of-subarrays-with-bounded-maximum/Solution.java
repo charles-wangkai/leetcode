@@ -1,39 +1,35 @@
-import java.util.Arrays;
 import java.util.Stack;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int numSubarrayBoundedMax(int[] A, int L, int R) {
-		int[] leftIndices = new int[A.length];
-		Stack<Integer> leftMaxs = new Stack<Integer>();
-		for (int i = 0; i < A.length; i++) {
-			while (!leftMaxs.empty() && A[leftMaxs.peek()] < A[i]) {
-				leftMaxs.pop();
-			}
+class Solution {
+  public int numSubarrayBoundedMax(int[] nums, int left, int right) {
+    int[] leftIndices = new int[nums.length];
+    Stack<Integer> leftMaxs = new Stack<>();
+    for (int i = 0; i < nums.length; ++i) {
+      while (!leftMaxs.empty() && nums[leftMaxs.peek()] < nums[i]) {
+        leftMaxs.pop();
+      }
 
-			leftIndices[i] = leftMaxs.empty() ? 0 : (leftMaxs.peek() + 1);
+      leftIndices[i] = leftMaxs.empty() ? 0 : (leftMaxs.peek() + 1);
 
-			leftMaxs.push(i);
-		}
-		System.out.println(Arrays.toString(leftIndices));
+      leftMaxs.push(i);
+    }
 
-		int[] rightIndices = new int[A.length];
-		Stack<Integer> rightMaxs = new Stack<Integer>();
-		for (int i = A.length - 1; i >= 0; i--) {
-			while (!rightMaxs.empty() && A[rightMaxs.peek()] <= A[i]) {
-				rightMaxs.pop();
-			}
+    int[] rightIndices = new int[nums.length];
+    Stack<Integer> rightMaxs = new Stack<>();
+    for (int i = nums.length - 1; i >= 0; --i) {
+      while (!rightMaxs.empty() && nums[rightMaxs.peek()] <= nums[i]) {
+        rightMaxs.pop();
+      }
 
-			rightIndices[i] = rightMaxs.empty() ? (A.length - 1) : (rightMaxs.peek() - 1);
+      rightIndices[i] = rightMaxs.empty() ? (nums.length - 1) : (rightMaxs.peek() - 1);
 
-			rightMaxs.push(i);
-		}
+      rightMaxs.push(i);
+    }
 
-		int result = 0;
-		for (int i = 0; i < A.length; i++) {
-			if (A[i] >= L && A[i] <= R) {
-				result += (i - leftIndices[i] + 1) * (rightIndices[i] - i + 1);
-			}
-		}
-		return result;
-	}
+    return IntStream.range(0, nums.length)
+        .filter(i -> nums[i] >= left && nums[i] <= right)
+        .map(i -> (i - leftIndices[i] + 1) * (rightIndices[i] - i + 1))
+        .sum();
+  }
 }
