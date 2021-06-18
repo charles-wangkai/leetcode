@@ -1,79 +1,46 @@
-public class NumArray {
-	SegmentNode root;
-	SegmentNode[] leaves;
+// https://en.wikipedia.org/wiki/Fenwick_tree
 
-	public NumArray(int[] nums) {
-		if (nums.length == 0) {
-			return;
-		}
+class NumArray {
+  int[] A;
 
-		leaves = new SegmentNode[nums.length];
+  public NumArray(int[] nums) {
+    A = new int[nums.length];
+    for (int i = 0; i < A.length; ++i) {
+      update(i, nums[i]);
+    }
+  }
 
-		root = buildSegmentNode(0, nums.length - 1, null);
+  public void update(int index, int val) {
+    add(index, val - get(index));
+  }
 
-		for (int i = 0; i < leaves.length; i++) {
-			update(i, nums[i]);
-		}
-	}
+  public int sumRange(int left, int right) {
+    return range_sum(left, right + 1);
+  }
 
-	private SegmentNode buildSegmentNode(int beginIndex, int endIndex, SegmentNode parent) {
-		SegmentNode node = new SegmentNode();
+  int LSBIT(int i) {
+    return i & (-i);
+  }
 
-		node.beginIndex = beginIndex;
-		node.endIndex = endIndex;
-		node.parent = parent;
+  void add(int i, int delta) {
+    assert (0 <= i && i < A.length);
+    for (; i < A.length; i += LSBIT(i + 1)) A[i] += delta;
+  }
 
-		if (beginIndex == endIndex) {
-			leaves[beginIndex] = node;
-		} else {
-			int middleIndex = (beginIndex + endIndex) / 2;
-			node.leftChild = buildSegmentNode(beginIndex, middleIndex, node);
-			node.rightChild = buildSegmentNode(middleIndex + 1, endIndex, node);
-		}
+  int get(int i) {
+    return range_sum(i, i + 1);
+  }
 
-		return node;
-	}
-
-	void update(int i, int val) {
-		int delta = val - leaves[i].sum;
-
-		SegmentNode node = leaves[i];
-		while (node != null) {
-			node.sum += delta;
-			node = node.parent;
-		}
-	}
-
-	public int sumRange(int i, int j) {
-		return computeSum(root, i, j);
-	}
-
-	private int computeSum(SegmentNode node, int beginIndex, int endIndex) {
-		int mergedBeginIndex = Math.max(beginIndex, node.beginIndex);
-		int mergedEndIndex = Math.min(endIndex, node.endIndex);
-
-		if (mergedBeginIndex > mergedEndIndex) {
-			return 0;
-		} else if (mergedBeginIndex == node.beginIndex && mergedEndIndex == node.endIndex) {
-			return node.sum;
-		} else {
-			return computeSum(node.leftChild, mergedBeginIndex, mergedEndIndex)
-					+ computeSum(node.rightChild, mergedBeginIndex, mergedEndIndex);
-		}
-	}
-}
-
-class SegmentNode {
-	int beginIndex;
-	int endIndex;
-	int sum;
-	SegmentNode parent;
-	SegmentNode leftChild;
-	SegmentNode rightChild;
+  int range_sum(int i, int j) {
+    int sum = 0;
+    assert (0 <= i && i <= j && j <= A.length);
+    for (; j > i; j -= LSBIT(j)) sum += A[j - 1];
+    for (; i > j; i -= LSBIT(i)) sum -= A[i - 1];
+    return sum;
+  }
 }
 
 // Your NumArray object will be instantiated and called as such:
-// NumArray numArray = new NumArray(nums);
-// numArray.sumRange(0, 1);
-// numArray.update(1, 10);
-// numArray.sumRange(1, 2);
+// NumArray obj = new NumArray(nums);
+// obj.update(index,val);
+// int param_2 = obj.sumRange(left,right);
