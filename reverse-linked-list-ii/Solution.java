@@ -1,36 +1,43 @@
 // Definition for singly-linked list.
 class ListNode {
-	int val;
-	ListNode next;
+  int val;
+  ListNode next;
 
-	ListNode(int x) {
-		val = x;
-		next = null;
-	}
+  ListNode() {}
+
+  ListNode(int val) {
+    this.val = val;
+  }
+
+  ListNode(int val, ListNode next) {
+    this.val = val;
+    this.next = next;
+  }
 }
 
-public class Solution {
-	public ListNode reverseBetween(ListNode head, int m, int n) {
-		ListNode tempHead = new ListNode(0);
-		tempHead.next = head;
+class Solution {
+  public ListNode reverseBetween(ListNode head, int left, int right) {
+    ListNode tempHead = new ListNode();
+    tempHead.next = head;
 
-		ListNode reversedPrev = tempHead;
-		ListNode reversedTail = null;
-		ListNode p = head;
-		for (int i = 1; i <= n; i++) {
-			ListNode nextP = p.next;
-			if (i < m) {
-				reversedPrev = reversedPrev.next;
-			} else if (i == m) {
-				reversedTail = p;
-			} else if (i <= n) {
-				reversedTail.next = p.next;
-				p.next = reversedPrev.next;
-				reversedPrev.next = p;
-			}
-			p = nextP;
-		}
+    ListNode reversedPrev = tempHead;
+    ListNode reversedTail = null;
+    ListNode p = head;
+    for (int i = 1; i <= right; ++i) {
+      ListNode nextP = p.next;
+      if (i < left) {
+        reversedPrev = reversedPrev.next;
+      } else if (i == left) {
+        reversedTail = p;
+      } else {
+        reversedTail.next = p.next;
+        p.next = reversedPrev.next;
+        reversedPrev.next = p;
+      }
 
-		return tempHead.next;
-	}
+      p = nextP;
+    }
+
+    return tempHead.next;
+  }
 }
