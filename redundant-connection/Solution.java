@@ -1,56 +1,49 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
-public class Solution {
-	public int[] findRedundantConnection(int[][] edges) {
-		for (int i = edges.length - 1;; i--) {
-			if (isTree(edges, i)) {
-				return edges[i];
-			}
-		}
-	}
+class Solution {
+  public int[] findRedundantConnection(int[][] edges) {
+    for (int i = edges.length - 1; ; --i) {
+      if (isTree(edges, i)) {
+        return edges[i];
+      }
+    }
+  }
 
-	boolean isTree(int[][] edges, int redundantIndex) {
-		Map<Integer, Integer> node2root = new HashMap<Integer, Integer>();
-		for (int i = 0; i < edges.length; i++) {
-			if (i == redundantIndex) {
-				continue;
-			}
+  boolean isTree(int[][] edges, int redundantIndex) {
+    int n = edges.length;
 
-			int[] edge = edges[i];
+    int[] parents = new int[n];
+    Arrays.fill(parents, -1);
 
-			if (!node2root.containsKey(edge[0])) {
-				node2root.put(edge[0], edge[0]);
-			}
-			if (!node2root.containsKey(edge[1])) {
-				node2root.put(edge[1], edge[1]);
-			}
+    for (int i = 0; i < edges.length; ++i) {
+      if (i != redundantIndex) {
+        int root0 = findRoot(parents, edges[i][0] - 1);
+        int root1 = findRoot(parents, edges[i][1] - 1);
+        if (root0 == root1) {
+          return false;
+        }
 
-			int root0 = getRoot(node2root, edge[0]);
-			int root1 = getRoot(node2root, edge[1]);
+        parents[root1] = root0;
+      }
+    }
 
-			if (root0 == root1) {
-				return false;
-			}
+    return true;
+  }
 
-			node2root.put(root1, root0);
-		}
-		return node2root.keySet().stream().mapToInt(node -> getRoot(node2root, node)).distinct().count() == 1;
-	}
+  int findRoot(int[] parents, int node) {
+    int root = node;
+    while (parents[root] != -1) {
+      root = parents[root];
+    }
 
-	int getRoot(Map<Integer, Integer> node2root, int node) {
-		int root = node;
-		while (node2root.get(root) != root) {
-			root = node2root.get(root);
-		}
+    int p = node;
+    while (p != root) {
+      int next = parents[p];
+      parents[p] = root;
 
-		int tempNode = node;
-		while (tempNode != root) {
-			int nextTempNode = node2root.get(tempNode);
-			node2root.put(tempNode, root);
-			tempNode = nextTempNode;
-		}
+      p = next;
+    }
 
-		return root;
-	}
+    return root;
+  }
 }
