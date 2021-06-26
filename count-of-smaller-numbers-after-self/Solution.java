@@ -1,60 +1,64 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public List<Integer> countSmaller(int[] nums) {
-		List<Integer> result = new ArrayList<Integer>();
-		for (int i = 0; i < nums.length; i++) {
-			result.add(0);
-		}
+class Solution {
+  public List<Integer> countSmaller(int[] nums) {
+    List<Integer> smallerNums =
+        IntStream.range(0, nums.length).map(i -> 0).boxed().collect(Collectors.toList());
 
-		NumberAndIndex[] nis = new NumberAndIndex[nums.length];
-		for (int i = 0; i < nis.length; i++) {
-			nis[i] = new NumberAndIndex(nums[i], i);
-		}
+    Element[] elements =
+        IntStream.range(0, nums.length)
+            .mapToObj(i -> new Element(i, nums[i]))
+            .toArray(Element[]::new);
 
-		sort(result, nis, 0, nums.length - 1);
+    sort(smallerNums, elements, 0, elements.length - 1);
 
-		return result;
-	}
+    return smallerNums;
+  }
 
-	void sort(List<Integer> result, NumberAndIndex[] nis, int beginIndex, int endIndex) {
-		if (endIndex <= beginIndex) {
-			return;
-		}
+  void sort(List<Integer> smallerNums, Element[] elements, int beginIndex, int endIndex) {
+    if (beginIndex >= endIndex) {
+      return;
+    }
 
-		int middleIndex = (beginIndex + endIndex) / 2;
-		sort(result, nis, beginIndex, middleIndex);
-		sort(result, nis, middleIndex + 1, endIndex);
+    int middleIndex = (beginIndex + endIndex) / 2;
 
-		List<NumberAndIndex> merged = new ArrayList<NumberAndIndex>();
-		int leftIndex = beginIndex;
-		int rightIndex = middleIndex + 1;
-		while (leftIndex <= middleIndex || rightIndex <= endIndex) {
-			if (leftIndex == middleIndex + 1
-					|| (rightIndex != endIndex + 1 && nis[rightIndex].number >= nis[leftIndex].number)) {
-				merged.add(nis[rightIndex]);
-				rightIndex++;
-			} else {
-				result.set(nis[leftIndex].index, result.get(nis[leftIndex].index) + (endIndex + 1 - rightIndex));
+    sort(smallerNums, elements, beginIndex, middleIndex);
+    sort(smallerNums, elements, middleIndex + 1, endIndex);
 
-				merged.add(nis[leftIndex]);
-				leftIndex++;
-			}
-		}
+    List<Element> merged = new ArrayList<>();
+    int leftIndex = beginIndex;
+    int rightIndex = middleIndex + 1;
+    while (leftIndex != middleIndex + 1 || rightIndex != endIndex + 1) {
+      if (rightIndex == endIndex + 1
+          || (leftIndex != middleIndex + 1
+              && elements[leftIndex].value > elements[rightIndex].value)) {
+        smallerNums.set(
+            elements[leftIndex].index,
+            smallerNums.get(elements[leftIndex].index) + (endIndex + 1 - rightIndex));
 
-		for (int i = beginIndex; i <= endIndex; i++) {
-			nis[i] = merged.get(i - beginIndex);
-		}
-	}
+        merged.add(elements[leftIndex]);
+        ++leftIndex;
+      } else {
+        merged.add(elements[rightIndex]);
+        ++rightIndex;
+      }
+    }
+
+    for (int i = beginIndex; i <= endIndex; ++i) {
+      elements[i] = merged.get(i - beginIndex);
+    }
+  }
 }
 
-class NumberAndIndex {
-	int number;
-	int index;
+class Element {
+  int index;
+  int value;
 
-	NumberAndIndex(int number, int index) {
-		this.number = number;
-		this.index = index;
-	}
+  Element(int index, int value) {
+    this.index = index;
+    this.value = value;
+  }
 }
