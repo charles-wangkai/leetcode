@@ -1,35 +1,27 @@
-public class Solution {
-	int result = 0;
-	int level = 0;
-	int startIndex = 0;
+import java.util.stream.IntStream;
 
-	public int candy(int[] ratings) {
-		for (int i = 0; i < ratings.length; i++) {
-			if (i == 0 || ratings[i] == ratings[i - 1]) {
-				lowerLevel(i);
-				level = 0;
-				startIndex = i;
-			} else if (ratings[i] < ratings[i - 1]) {
-				level--;
-				if (level < 0) {
-					level = 0;
-					result += i - startIndex;
-				}
-			} else {
-				lowerLevel(i);
-				level++;
-				startIndex = i;
-			}
-			result += level + 1;
-		}
-		lowerLevel(ratings.length);
-		return result;
-	}
+class Solution {
+  public int candy(int[] ratings) {
+    int n = ratings.length;
 
-	void lowerLevel(int currentIndex) {
-		if (currentIndex > startIndex + 1) {
-			result -= level * (currentIndex - startIndex - 1);
-			level = 0;
-		}
-	}
+    int[] leftMins = new int[n];
+    for (int i = 0; i < leftMins.length; ++i) {
+      if (i != 0 && ratings[i] > ratings[i - 1]) {
+        leftMins[i] = leftMins[i - 1] + 1;
+      } else {
+        leftMins[i] = 1;
+      }
+    }
+
+    int[] rightMins = new int[n];
+    for (int i = rightMins.length - 1; i >= 0; --i) {
+      if (i != rightMins.length - 1 && ratings[i] > ratings[i + 1]) {
+        rightMins[i] = rightMins[i + 1] + 1;
+      } else {
+        rightMins[i] = 1;
+      }
+    }
+
+    return IntStream.range(0, n).map(i -> Math.max(leftMins[i], rightMins[i])).sum();
+  }
 }
