@@ -3,50 +3,48 @@ import java.util.List;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode(int x) {
+    val = x;
+  }
 }
 
-public class Solution {
-	TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-		List<TreeNode> pathP = new ArrayList<TreeNode>();
-		findPath(root, p, pathP);
-		System.out.println(pathP);
+class Solution {
+  TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    List<TreeNode> pPath = new ArrayList<>();
+    buildPath(pPath, p, root);
 
-		List<TreeNode> pathQ = new ArrayList<TreeNode>();
-		findPath(root, q, pathQ);
-		System.out.println(pathQ);
+    List<TreeNode> qPath = new ArrayList<>();
+    buildPath(qPath, q, root);
 
-		TreeNode result = null;
-		int index = 0;
-		while (index < pathP.size() && index < pathQ.size()
-				&& pathP.get(index) == pathQ.get(index)) {
-			result = pathP.get(index);
-			index++;
-		}
-		return result;
-	}
+    int index = 0;
+    while (index + 1 != pPath.size()
+        && index + 1 != qPath.size()
+        && pPath.get(index + 1) == qPath.get(index + 1)) {
+      ++index;
+    }
 
-	boolean findPath(TreeNode root, TreeNode node, List<TreeNode> path) {
-		path.add(root);
-		if (root == node) {
-			return true;
-		}
+    return pPath.get(index);
+  }
 
-		if (root != null) {
-			if (findPath(root.left, node, path)) {
-				return true;
-			}
-			if (findPath(root.right, node, path)) {
-				return true;
-			}
-		}
-		path.remove(path.size() - 1);
-		return false;
-	}
+  boolean buildPath(List<TreeNode> path, TreeNode target, TreeNode node) {
+    path.add(node);
+    if (node == target) {
+      return true;
+    }
+
+    if (node.left != null && buildPath(path, target, node.left)) {
+      return true;
+    }
+    if (node.right != null && buildPath(path, target, node.right)) {
+      return true;
+    }
+
+    path.remove(path.size() - 1);
+
+    return false;
+  }
 }
