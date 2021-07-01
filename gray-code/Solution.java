@@ -1,29 +1,32 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	public List<Integer> grayCode(int n) {
-		List<Integer> sequence = new ArrayList<Integer>();
-		search(sequence, new int[n], 0);
-		return sequence;
-	}
+class Solution {
+  public List<Integer> grayCode(int n) {
+    List<Integer> sequence = new ArrayList<>();
+    search(sequence, new int[n], 0);
 
-	void search(List<Integer> sequence, int[] bits, int index) {
-		if (index == bits.length) {
-			sequence.add(convertToInt(bits));
-			return;
-		}
+    return sequence;
+  }
 
-		search(sequence, bits, index + 1);
-		bits[index] = 1 - bits[index];
-		search(sequence, bits, index + 1);
-	}
+  void search(List<Integer> sequence, int[] bits, int index) {
+    if (index == bits.length) {
+      sequence.add(convertToInt(bits));
 
-	int convertToInt(int[] bits) {
-		int number = 0;
-		for (int bit : bits) {
-			number = number * 2 + bit;
-		}
-		return number;
-	}
+      return;
+    }
+
+    search(sequence, bits, index + 1);
+    bits[index] = 1 - bits[index];
+    search(sequence, bits, index + 1);
+  }
+
+  int convertToInt(int[] bits) {
+    int result = 0;
+    for (int bit : bits) {
+      result = result * 2 + bit;
+    }
+
+    return result;
+  }
 }
