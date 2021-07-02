@@ -1,39 +1,40 @@
 import java.util.LinkedList;
 import java.util.List;
 
-public class Solution {
-	public List<Integer> findClosestElements(List<Integer> arr, int k, int x) {
-		int leftIndex = findLeftIndex(arr, x);
-		int rightIndex = leftIndex + 1;
+class Solution {
+  public List<Integer> findClosestElements(int[] arr, int k, int x) {
+    int leftIndex = findLeftIndex(arr, x);
+    int rightIndex = leftIndex + 1;
 
-		LinkedList<Integer> result = new LinkedList<Integer>();
-		for (int i = 0; i < k; i++) {
-			if (rightIndex == arr.size() || (leftIndex >= 0 && x - arr.get(leftIndex) <= arr.get(rightIndex) - x)) {
-				result.addFirst(arr.get(leftIndex));
-				leftIndex--;
-			} else {
-				result.add(arr.get(rightIndex));
-				rightIndex++;
-			}
-		}
-		return result;
-	}
+    LinkedList<Integer> result = new LinkedList<>();
+    for (int i = 0; i < k; ++i) {
+      if (rightIndex == arr.length
+          || (leftIndex != -1 && x - arr[leftIndex] <= arr[rightIndex] - x)) {
+        result.addFirst(arr[leftIndex]);
+        --leftIndex;
+      } else {
+        result.addLast(arr[rightIndex]);
+        ++rightIndex;
+      }
+    }
 
-	int findLeftIndex(List<Integer> arr, int x) {
-		if (x < arr.get(0)) {
-			return -1;
-		}
+    return result;
+  }
 
-		int lower = 0;
-		int upper = arr.size() - 1;
-		while (lower < upper) {
-			int middle = (lower + upper + 1) / 2;
-			if (arr.get(middle) <= x) {
-				lower = middle;
-			} else {
-				upper = middle - 1;
-			}
-		}
-		return lower;
-	}
+  int findLeftIndex(int[] arr, int x) {
+    int result = -1;
+    int lower = 0;
+    int upper = arr.length - 1;
+    while (lower <= upper) {
+      int middle = (lower + upper) / 2;
+      if (arr[middle] <= x) {
+        result = middle;
+        lower = middle + 1;
+      } else {
+        upper = middle - 1;
+      }
+    }
+
+    return result;
+  }
 }
