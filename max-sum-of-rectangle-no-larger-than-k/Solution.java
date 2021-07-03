@@ -1,62 +1,43 @@
-import java.util.SortedMap;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class Solution {
-	public int maxSumSubmatrix(int[][] matrix, int k) {
-		int row = matrix.length;
-		int col = matrix[0].length;
+class Solution {
+  public int maxSumSubmatrix(int[][] matrix, int k) {
+    int m = matrix.length;
+    int n = matrix[0].length;
 
-		int result = Integer.MIN_VALUE;
-		for (int beginC = 0; beginC < col; beginC++) {
-			int[] column = new int[row];
-			for (int endC = beginC; endC < col; endC++) {
-				for (int r = 0; r < row; r++) {
-					column[r] += matrix[r][endC];
-				}
+    int result = Integer.MIN_VALUE;
+    for (int beginR = 0; beginR < m; ++beginR) {
+      int[] columnSums = new int[n];
+      for (int endR = beginR; endR < m; ++endR) {
+        for (int c = 0; c < n; ++c) {
+          columnSums[c] += matrix[endR][c];
+        }
 
-				result = Math.max(result, findMaxSum(column, k));
-			}
-		}
-		return result;
-	}
+        result = Math.max(result, findMaxSum(columnSums, k));
+      }
+    }
 
-	private int findMaxSum(int[] a, int k) {
-		int[] sums = new int[a.length + 1];
-		sums[0] = 0;
-		for (int i = 1; i < sums.length; i++) {
-			sums[i] = sums[i - 1] + a[i - 1];
-		}
+    return result;
+  }
 
-		SortedMap<Integer, Integer> sum2count = new TreeMap<Integer, Integer>();
-		for (int sum : sums) {
-			if (!sum2count.containsKey(sum)) {
-				sum2count.put(sum, 0);
-			}
-			sum2count.put(sum, sum2count.get(sum) + 1);
-		}
+  private int findMaxSum(int[] a, int k) {
+    int sum = 0;
+    NavigableMap<Integer, Integer> sumToCount = new TreeMap<>();
+    sumToCount.put(0, 1);
 
-		int result = Integer.MIN_VALUE;
-		for (int sum : sums) {
-			sum2count.put(sum, sum2count.get(sum) - 1);
-			if (sum2count.get(sum) == 0) {
-				sum2count.remove(sum);
-			}
+    int result = Integer.MIN_VALUE;
+    for (int ai : a) {
+      sum += ai;
 
-			int target = sum + k;
+      Integer prefixSum = sumToCount.ceilingKey(sum - k);
+      if (prefixSum != null) {
+        result = Math.max(result, sum - prefixSum);
+      }
 
-			int chosen;
-			if (sum2count.containsKey(target)) {
-				chosen = target;
-			} else {
-				SortedMap<Integer, Integer> headMap = sum2count.headMap(target);
-				if (headMap.isEmpty()) {
-					continue;
-				}
-				chosen = headMap.lastKey();
-			}
+      sumToCount.put(sum, sumToCount.getOrDefault(sum, 0) + 1);
+    }
 
-			result = Math.max(result, chosen - sum);
-		}
-		return result;
-	}
+    return result;
+  }
 }
