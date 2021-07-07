@@ -1,35 +1,34 @@
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class Solution {
-	public int kthSmallest(int[][] matrix, int k) {
-		int row = matrix.length;
-		int col = matrix[0].length;
+class Solution {
+  public int kthSmallest(int[][] matrix, int k) {
+    int n = matrix.length;
 
-		PriorityQueue<Grid> pq = new PriorityQueue<Grid>((g1, g2) -> matrix[g1.r][g1.c] - matrix[g2.r][g2.c]);
-		pq.offer(new Grid(0, 0));
+    PriorityQueue<Point> pq = new PriorityQueue<>(Comparator.comparing(p -> matrix[p.r][p.c]));
+    pq.offer(new Point(0, 0));
 
-		int result = 0;
-		for (int i = 0; i < k; i++) {
-			Grid head = pq.poll();
-			result = matrix[head.r][head.c];
+    for (int i = 0; i < k - 1; ++i) {
+      Point head = pq.poll();
 
-			if (head.c + 1 < col) {
-				pq.offer(new Grid(head.r, head.c + 1));
-			}
-			if (head.c == 0 && head.r + 1 < row) {
-				pq.offer(new Grid(head.r + 1, head.c));
-			}
-		}
-		return result;
-	}
+      if (head.c + 1 != n) {
+        pq.offer(new Point(head.r, head.c + 1));
+      }
+      if (head.c == 0 && head.r + 1 != n) {
+        pq.offer(new Point(head.r + 1, head.c));
+      }
+    }
+
+    return matrix[pq.peek().r][pq.peek().c];
+  }
 }
 
-class Grid {
-	int r;
-	int c;
+class Point {
+  int r;
+  int c;
 
-	Grid(int r, int c) {
-		this.r = r;
-		this.c = c;
-	}
+  Point(int r, int c) {
+    this.r = r;
+    this.c = c;
+  }
 }
