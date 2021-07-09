@@ -1,32 +1,34 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	public int lengthOfLIS(int[] nums) {
-		List<Integer> tails = new ArrayList<Integer>();
-		for (int number : nums) {
-			if (tails.isEmpty() || number > tails.get(tails.size() - 1)) {
-				tails.add(number);
-			} else {
-				tails.set(findFirstNotLessIndex(tails, number), number);
-			}
-		}
-		return tails.size();
-	}
+class Solution {
+  public int lengthOfLIS(int[] nums) {
+    List<Integer> subsequence = new ArrayList<>();
+    for (int num : nums) {
+      if (subsequence.isEmpty() || num > subsequence.get(subsequence.size() - 1)) {
+        subsequence.add(num);
+      } else {
+        subsequence.set(findFirstGreaterEqualIndex(subsequence, num), num);
+      }
+    }
 
-	int findFirstNotLessIndex(List<Integer> numbers, int target) {
-		int result = -1;
-		int lower = 0;
-		int upper = numbers.size() - 1;
-		while (lower <= upper) {
-			int middle = (lower + upper) / 2;
-			if (numbers.get(middle) < target) {
-				lower = middle + 1;
-			} else {
-				upper = middle - 1;
-				result = middle;
-			}
-		}
-		return result;
-	}
+    return subsequence.size();
+  }
+
+  int findFirstGreaterEqualIndex(List<Integer> subsequence, int target) {
+    int result = -1;
+    int lower = 0;
+    int upper = subsequence.size() - 1;
+    while (lower <= upper) {
+      int middle = (lower + upper) / 2;
+      if (subsequence.get(middle) >= target) {
+        result = middle;
+        upper = middle - 1;
+      } else {
+        lower = middle + 1;
+      }
+    }
+
+    return result;
+  }
 }
