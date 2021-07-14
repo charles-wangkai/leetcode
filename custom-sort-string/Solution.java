@@ -1,30 +1,28 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public String customSortString(String S, String T) {
-		Map<Character, Integer> letter2count = new HashMap<Character, Integer>();
-		for (char letter : T.toCharArray()) {
-			letter2count.put(letter, letter2count.getOrDefault(letter, 0) + 1);
-		}
+class Solution {
+  public String customSortString(String order, String str) {
+    Map<Character, Integer> letterToCount = new HashMap<>();
+    for (char letter : str.toCharArray()) {
+      letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
+    }
 
-		StringBuilder result = new StringBuilder();
-		for (char letter : S.toCharArray()) {
-			if (letter2count.containsKey(letter)) {
-				for (int i = 0; i < letter2count.get(letter); i++) {
-					result.append(letter);
-				}
-			}
-		}
+    StringBuilder result = new StringBuilder();
+    for (char letter : order.toCharArray()) {
+      for (int i = 0; i < letterToCount.getOrDefault(letter, 0); ++i) {
+        result.append(letter);
+      }
+    }
 
-		for (char letter : letter2count.keySet()) {
-			if (S.indexOf(letter) < 0) {
-				for (int i = 0; i < letter2count.get(letter); i++) {
-					result.append(letter);
-				}
-			}
-		}
+    for (char letter : letterToCount.keySet()) {
+      if (order.indexOf(letter) == -1) {
+        for (int i = 0; i < letterToCount.get(letter); ++i) {
+          result.append(letter);
+        }
+      }
+    }
 
-		return result.toString();
-	}
+    return result.toString();
+  }
 }
