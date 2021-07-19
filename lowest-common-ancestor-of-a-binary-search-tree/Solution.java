@@ -3,50 +3,44 @@ import java.util.List;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode(int x) {
+    val = x;
+  }
 }
 
-public class Solution {
-	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-		List<TreeNode> pathP = new ArrayList<TreeNode>();
-		findPath(root, p, pathP);
-		System.out.println(pathP);
+class Solution {
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    List<TreeNode> pPath = new ArrayList<>();
+    findPath(pPath, root, p);
 
-		List<TreeNode> pathQ = new ArrayList<TreeNode>();
-		findPath(root, q, pathQ);
-		System.out.println(pathQ);
+    List<TreeNode> qPath = new ArrayList<>();
+    findPath(qPath, root, q);
 
-		TreeNode result = null;
-		int index = 0;
-		while (index < pathP.size() && index < pathQ.size()
-				&& pathP.get(index) == pathQ.get(index)) {
-			result = pathP.get(index);
-			index++;
-		}
-		return result;
-	}
+    int index = 0;
+    while (index + 1 != pPath.size()
+        && index + 1 != qPath.size()
+        && pPath.get(index + 1) == qPath.get(index + 1)) {
+      ++index;
+    }
 
-	boolean findPath(TreeNode root, TreeNode node, List<TreeNode> path) {
-		path.add(root);
-		if (root == node) {
-			return true;
-		}
+    return pPath.get(index);
+  }
 
-		if (root != null) {
-			if (root.val >= node.val && findPath(root.left, node, path)) {
-				return true;
-			}
-			if (root.val <= node.val && findPath(root.right, node, path)) {
-				return true;
-			}
-		}
-		path.remove(path.size() - 1);
-		return false;
-	}
+  void findPath(List<TreeNode> path, TreeNode node, TreeNode target) {
+    path.add(node);
+
+    if (node == target) {
+      return;
+    }
+
+    if (node.val < target.val) {
+      findPath(path, node.right, target);
+    } else {
+      findPath(path, node.left, target);
+    }
+  }
 }
