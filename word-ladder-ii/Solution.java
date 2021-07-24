@@ -1,111 +1,98 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class Solution {
-	final int STARTING_STEP = 1;
+class Solution {
+  public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+    Set<String> words = wordList.stream().collect(Collectors.toSet());
 
-	public List<List<String>> findLadders(String start, String end,
-			Set<String> dict) {
-		Map<String, Word> wordMap = new HashMap<String, Word>();
-		for (String value : dict) {
-			wordMap.put(value, new Word(value));
-		}
-		wordMap.put(end, new Word(end));
-		Word startWord = new Word(start);
-		startWord.step = STARTING_STEP;
-		wordMap.put(start, startWord);
+    Queue<Element> queue = new ArrayDeque<>();
+    queue.offer(new Element(beginWord, 0));
 
-		Queue<Element> queue = new LinkedList<Element>();
-		queue.offer(new Element(start, STARTING_STEP));
-		boolean found = false;
-		while (!queue.isEmpty()) {
-			Element head = queue.poll();
-			Word word = wordMap.get(head.value);
-			if (word.visited) {
-				continue;
-			}
-			word.visited = true;
-			if (head.value.equals(end)) {
-				found = true;
-				break;
-			}
-			for (String candidate : findCandidates(head.value)) {
-				if (!wordMap.containsKey(candidate)) {
-					continue;
-				}
-				Word candidateWord = wordMap.get(candidate);
-				if (candidateWord.step != 0
-						&& candidateWord.step != head.step + 1) {
-					continue;
-				}
-				candidateWord.step = head.step + 1;
-				candidateWord.prevWords.add(head.value);
-				queue.offer(new Element(candidate, head.step + 1));
-			}
-		}
+    Map<String, Integer> wordToStep = new HashMap<>();
+    wordToStep.put(beginWord, 0);
 
-		List<List<String>> ladders = new ArrayList<List<String>>();
-		if (found) {
-			search(ladders, wordMap, end, new LinkedList<String>());
-		}
-		return ladders;
-	}
+    Map<String, Set<String>> wordToPrevWords = new HashMap<>();
+    wordToPrevWords.put(beginWord, Set.of());
 
-	List<String> findCandidates(String value) {
-		List<String> candidates = new ArrayList<String>();
-		StringBuilder sb = new StringBuilder(value);
-		for (int i = 0; i < sb.length(); i++) {
-			char ch = sb.charAt(i);
-			for (char letter = 'a'; letter <= 'z'; letter++) {
-				if (letter == ch) {
-					continue;
-				}
-				sb.setCharAt(i, letter);
-				candidates.add(sb.toString());
-				sb.setCharAt(i, ch);
-			}
-		}
-		return candidates;
-	}
+    while (!queue.isEmpty()) {
+      Element head = queue.poll();
 
-	void search(List<List<String>> ladders, Map<String, Word> wordMap,
-			String current, LinkedList<String> ladder) {
-		ladder.addFirst(current);
-		Word word = wordMap.get(current);
-		if (word.step == 1) {
-			ladders.add(new ArrayList<String>(ladder));
-		} else {
-			for (String prevWord : word.prevWords) {
-				search(ladders, wordMap, prevWord, ladder);
-			}
-		}
-		ladder.removeFirst();
-	}
-}
+      if (head.word.equals(endWord)) {
+        List<List<String>> ladders = new ArrayList<>();
+        search(ladders, wordToPrevWords, endWord, new ArrayDeque<>());
 
-class Word {
-	String value;
-	int step;
-	boolean visited;
-	Set<String> prevWords = new HashSet<String>();
+        return ladders;
+      }
 
-	public Word(String value) {
-		this.value = value;
-	}
+      for (String nextWord : findNextWords(words, head.word)) {
+        if (!wordToStep.containsKey(nextWord) || wordToStep.get(nextWord) == head.step + 1) {
+          if (!wordToPrevWords.containsKey(nextWord)) {
+            wordToStep.put(nextWord, head.step + 1);
+            queue.offer(new Element(nextWord, head.step + 1));
+            wordToPrevWords.put(nextWord, new HashSet<>());
+          }
+          wordToPrevWords.get(nextWord).add(head.word);
+        }
+      }
+    }
+
+    return List.of();
+  }
+
+  List<String> findNextWords(Set<String> words, String word) {
+    List<String> result = new ArrayList<>();
+    StringBuilder sb = new StringBuilder(word);
+    for (int i = 0; i < sb.length(); ++i) {
+      for (char letter = 'a'; letter <= 'z'; ++letter) {
+        if (letter != word.charAt(i)) {
+          sb.setCharAt(i, letter);
+
+          String nextWord = sb.toString();
+          if (words.contains(nextWord)) {
+            result.add(nextWord);
+          }
+        }
+      }
+      sb.setCharAt(i, word.charAt(i));
+    }
+
+    return result;
+  }
+
+  void search(
+      List<List<String>> ladders,
+      Map<String, Set<String>> wordToPrevWords,
+      String current,
+      Deque<String> ladder) {
+    ladder.offerFirst(current);
+
+    Set<String> prevWords = wordToPrevWords.get(current);
+    if (prevWords.isEmpty()) {
+      ladders.add(List.copyOf(ladder));
+    } else {
+      for (String prevWord : prevWords) {
+        search(ladders, wordToPrevWords, prevWord, ladder);
+      }
+    }
+
+    ladder.pollFirst();
+  }
 }
 
 class Element {
-	String value;
-	int step;
+  String word;
+  int step;
 
-	public Element(String value, int step) {
-		this.value = value;
-		this.step = step;
-	}
+  public Element(String word, int step) {
+    this.word = word;
+    this.step = step;
+  }
 }
