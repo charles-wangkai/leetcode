@@ -1,40 +1,31 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	Map<String, Integer> cache = new HashMap<String, Integer>();
+class Solution {
+  Map<String, Integer> cache = new HashMap<>();
 
-	public int findIntegers(int num) {
-		return search(Integer.toBinaryString(num));
-	}
+  public int findIntegers(int n) {
+    return search(Integer.toBinaryString(n));
+  }
 
-	int search(String numStr) {
-		if (numStr.length() == 0) {
-			return 1;
-		}
-		if (numStr.length() == 1) {
-			return Integer.parseInt(numStr) + 1;
-		}
+  int search(String s) {
+    if (s.isEmpty()) {
+      return 1;
+    }
+    if (s.length() == 1) {
+      return Integer.parseInt(s) + 1;
+    }
+    if (s.charAt(0) == '0') {
+      return search(s.substring(1));
+    }
 
-		if (numStr.charAt(0) == '0') {
-			return search(numStr.substring(1));
-		}
+    if (!cache.containsKey(s)) {
+      cache.put(
+          s,
+          search("1".repeat(s.length() - 1))
+              + search((s.charAt(1) == '0') ? s.substring(2) : "1".repeat(s.length() - 2)));
+    }
 
-		if (cache.containsKey(numStr)) {
-			return cache.get(numStr);
-		}
-
-		int result = search(repeat('1', numStr.length() - 1))
-				+ search((numStr.charAt(1) == '0') ? numStr.substring(2) : repeat('1', numStr.length() - 2));
-		cache.put(numStr, result);
-		return result;
-	}
-
-	String repeat(char digit, int count) {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < count; i++) {
-			result.append(digit);
-		}
-		return result.toString();
-	}
+    return cache.get(s);
+  }
 }
