@@ -1,18 +1,16 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int[] twoSum(int[] numbers, int target) {
-		Map<Integer, Integer> number2index = new HashMap<Integer, Integer>();
-		for (int i = 0; i < numbers.length; i++) {
-			number2index.put(numbers[i], i);
-		}
+class Solution {
+  public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> valueToIndex = new HashMap<>();
+    for (int i = 0; ; ++i) {
+      Integer otherIndex = valueToIndex.get(target - nums[i]);
+      if (otherIndex != null) {
+        return new int[] {otherIndex, i};
+      }
 
-		for (int i = 0;; i++) {
-			Integer j = number2index.get(target - numbers[i]);
-			if (j != null && j > i) {
-				return new int[] { i + 1, j + 1 };
-			}
-		}
-	}
+      valueToIndex.put(nums[i], i);
+    }
+  }
 }
