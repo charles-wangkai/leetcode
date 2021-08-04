@@ -2,26 +2,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Solution {
-	public List<List<Integer>> subsetsWithDup(int[] num) {
-		Arrays.sort(num);
-		List<List<Integer>> subsets = new ArrayList<List<Integer>>();
-		search(subsets, num, new ArrayList<Integer>(), 0, Integer.MIN_VALUE);
-		return subsets;
-	}
+class Solution {
+  public List<List<Integer>> subsetsWithDup(int[] nums) {
+    Arrays.sort(nums);
 
-	void search(List<List<Integer>> subsets, int[] num, List<Integer> subset,
-			int index, int lower) {
-		if (index == num.length) {
-			subsets.add(new ArrayList<Integer>(subset));
-			return;
-		}
+    List<List<Integer>> subsets = new ArrayList<>();
+    search(subsets, nums, new ArrayList<>(), 0, Integer.MIN_VALUE);
 
-		search(subsets, num, subset, index + 1, num[index] + 1);
-		if (num[index] >= lower) {
-			subset.add(num[index]);
-			search(subsets, num, subset, index + 1, num[index]);
-			subset.remove(subset.size() - 1);
-		}
-	}
+    return subsets;
+  }
+
+  void search(List<List<Integer>> subsets, int[] nums, List<Integer> subset, int index, int lower) {
+    if (index == nums.length) {
+      subsets.add(List.copyOf(subset));
+
+      return;
+    }
+
+    search(subsets, nums, subset, index + 1, nums[index] + 1);
+
+    if (nums[index] >= lower) {
+      subset.add(nums[index]);
+      search(subsets, nums, subset, index + 1, nums[index]);
+      subset.remove(subset.size() - 1);
+    }
+  }
 }
