@@ -1,5 +1,5 @@
-public class Solution {
-	public boolean stoneGame(int[] piles) {
-		return true;
-	}
+class Solution {
+  public boolean stoneGame(int[] piles) {
+    return true;
+  }
 }
