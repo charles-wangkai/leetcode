@@ -8,12 +8,12 @@ import java.util.stream.IntStream;
 
 class Solution {
   public int[][] matrixRankTransform(int[][] matrix) {
-    int row = matrix.length;
-    int col = matrix[0].length;
+    int m = matrix.length;
+    int n = matrix[0].length;
 
     SortedMap<Integer, List<Location>> valueToLocations = new TreeMap<>();
-    for (int r = 0; r < row; ++r) {
-      for (int c = 0; c < col; ++c) {
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
         if (!valueToLocations.containsKey(matrix[r][c])) {
           valueToLocations.put(matrix[r][c], new ArrayList<>());
         }
@@ -22,16 +22,16 @@ class Solution {
       }
     }
 
-    int[] lastColInRows = IntStream.range(0, row).map(i -> -1).toArray();
-    int[] lastRowInCols = IntStream.range(0, col).map(i -> -1).toArray();
-    int[][] result = new int[row][col];
+    int[] lastColInRows = IntStream.range(0, m).map(i -> -1).toArray();
+    int[] lastRowInCols = IntStream.range(0, n).map(i -> -1).toArray();
+    int[][] result = new int[m][n];
     for (int value : valueToLocations.keySet()) {
       List<Location> locations = valueToLocations.get(value);
 
-      int[] parents = IntStream.range(0, row + col).map(i -> -1).toArray();
+      int[] parents = IntStream.range(0, m + n).map(i -> -1).toArray();
       for (Location location : locations) {
         int rootR = findRoot(parents, location.r);
-        int rootC = findRoot(parents, location.c + row);
+        int rootC = findRoot(parents, location.c + m);
         if (rootR != rootC) {
           parents[rootC] = rootR;
         }
