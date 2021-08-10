@@ -1,29 +1,23 @@
-public class Solution {
-	public int minFlipsMonoIncr(String S) {
-		int length = S.length();
+import java.util.stream.IntStream;
 
-		int leftOneNum = 0;
-		int[] leftOneNums = new int[length];
-		for (int i = 0; i < leftOneNums.length; i++) {
-			if (S.charAt(i) == '1') {
-				leftOneNum++;
-			}
-			leftOneNums[i] = leftOneNum;
-		}
+class Solution {
+  public int minFlipsMonoIncr(String s) {
+    int[] leftOneNums = new int[s.length()];
+    for (int i = 0; i < leftOneNums.length; ++i) {
+      leftOneNums[i] = ((i == 0) ? 0 : leftOneNums[i - 1]) + ((s.charAt(i) == '1') ? 1 : 0);
+    }
 
-		int rightZeroNum = 0;
-		int[] rightZeroNums = new int[length];
-		for (int i = rightZeroNums.length - 1; i >= 0; i--) {
-			if (S.charAt(i) == '0') {
-				rightZeroNum++;
-			}
-			rightZeroNums[i] = rightZeroNum;
-		}
+    int[] rightZeroNums = new int[s.length()];
+    for (int i = rightZeroNums.length - 1; i >= 0; --i) {
+      rightZeroNums[i] =
+          ((i == rightZeroNums.length - 1) ? 0 : rightZeroNums[i + 1])
+              + ((s.charAt(i) == '0') ? 1 : 0);
+    }
 
-		int result = Math.min(rightZeroNums[0], leftOneNums[length - 1]);
-		for (int i = 0; i < length - 1; i++) {
-			result = Math.min(result, leftOneNums[i] + rightZeroNums[i + 1]);
-		}
-		return result;
-	}
+    return IntStream.concat(
+            IntStream.of(rightZeroNums[0], leftOneNums[leftOneNums.length - 1]),
+            IntStream.range(0, s.length() - 1).map(i -> leftOneNums[i] + rightZeroNums[i + 1]))
+        .min()
+        .getAsInt();
+  }
 }
