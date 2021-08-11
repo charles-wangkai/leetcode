@@ -3,50 +3,48 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public class Solution {
-	public boolean canReorderDoubled(int[] A) {
-		List<Integer> zeros = new ArrayList<>();
-		List<Integer> positives = new ArrayList<>();
-		List<Integer> negatives = new ArrayList<>();
-		for (int a : A) {
-			if (a == 0) {
-				zeros.add(a);
-			} else if (a > 0) {
-				positives.add(a);
-			} else {
-				negatives.add(a);
-			}
-		}
+class Solution {
+  public boolean canReorderDoubled(int[] arr) {
+    List<Integer> negatives = new ArrayList<>();
+    List<Integer> positives = new ArrayList<>();
+    List<Integer> zeros = new ArrayList<>();
+    for (int value : arr) {
+      if (value < 0) {
+        negatives.add(value);
+      } else if (value > 0) {
+        positives.add(value);
+      } else {
+        zeros.add(value);
+      }
+    }
 
-		return isPossible(zeros) && isPossible(positives) && isPossible(negatives);
-	}
+    return isPossible(negatives) && isPossible(positives) && isPossible(zeros);
+  }
 
-	boolean isPossible(List<Integer> numbers) {
-		SortedMap<Integer, Integer> numberToCount = new TreeMap<>();
-		for (int number : numbers) {
-			int absNumber = Math.abs(number);
+  boolean isPossible(List<Integer> values) {
+    SortedMap<Integer, Integer> absValueToCount = new TreeMap<>();
+    for (int value : values) {
+      int absValue = Math.abs(value);
 
-			numberToCount.put(absNumber, numberToCount.getOrDefault(absNumber, 0) + 1);
-		}
+      absValueToCount.put(absValue, absValueToCount.getOrDefault(absValue, 0) + 1);
+    }
 
-		while (!numberToCount.isEmpty()) {
-			int lower = numberToCount.firstKey();
-			decrease(numberToCount, lower);
+    while (!absValueToCount.isEmpty()) {
+      int lower = absValueToCount.firstKey();
+      decrement(absValueToCount, lower);
 
-			int upper = lower * 2;
-			if (!numberToCount.containsKey(upper)) {
-				return false;
-			}
-			decrease(numberToCount, upper);
-		}
-		return true;
-	}
+      int upper = lower * 2;
+      if (!absValueToCount.containsKey(upper)) {
+        return false;
+      }
+      decrement(absValueToCount, upper);
+    }
 
-	void decrease(SortedMap<Integer, Integer> numberToCount, int number) {
-		numberToCount.put(number, numberToCount.get(number) - 1);
+    return true;
+  }
 
-		if (numberToCount.get(number) == 0) {
-			numberToCount.remove(number);
-		}
-	}
+  void decrement(SortedMap<Integer, Integer> absValueToCount, int absValue) {
+    absValueToCount.put(absValue, absValueToCount.get(absValue) - 1);
+    absValueToCount.remove(absValue, 0);
+  }
 }
