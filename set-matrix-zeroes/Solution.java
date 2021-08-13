@@ -1,67 +1,52 @@
-public class Solution {
-	public void setZeroes(int[][] matrix) {
-		int row = matrix.length;
-		if (row == 0) {
-			return;
-		}
-		int col = matrix[0].length;
-		if (col == 0) {
-			return;
-		}
+import java.util.stream.IntStream;
 
-		boolean zeroInFirstRow = existsZero(matrix, 0, 0, 0, 1, col);
-		boolean zeroInFirstCol = existsZero(matrix, 0, 0, 1, 0, row);
+class Solution {
+  public void setZeroes(int[][] matrix) {
+    int m = matrix.length;
+    int n = matrix[0].length;
 
-		for (int i = 1; i < row; i++) {
-			if (existsZero(matrix, i, 0, 0, 1, col)) {
-				matrix[i][0] = 0;
-			}
-		}
+    boolean zeroInFirstRow = IntStream.range(0, n).anyMatch(c -> matrix[0][c] == 0);
+    boolean zeroInFirstCol = IntStream.range(0, m).anyMatch(r -> matrix[r][0] == 0);
 
-		for (int i = 1; i < col; i++) {
-			if (existsZero(matrix, 0, i, 1, 0, row)) {
-				matrix[0][i] = 0;
-			}
-		}
+    for (int r = 1; r < m; ++r) {
+      int r_ = r;
+      if (IntStream.range(0, n).anyMatch(c -> matrix[r_][c] == 0)) {
+        matrix[r][0] = 0;
+      }
+    }
 
-		for (int i = 1; i < row; i++) {
-			if (matrix[i][0] == 0) {
-				fillZeros(matrix, i, 0, 0, 1, col);
-			}
-		}
+    for (int c = 1; c < n; ++c) {
+      int c_ = c;
+      if (IntStream.range(0, m).anyMatch(r -> matrix[r][c_] == 0)) {
+        matrix[0][c] = 0;
+      }
+    }
 
-		for (int i = 1; i < col; i++) {
-			if (matrix[0][i] == 0) {
-				fillZeros(matrix, 0, i, 1, 0, row);
-			}
-		}
+    for (int r = 1; r < m; ++r) {
+      if (matrix[r][0] == 0) {
+        for (int c = 0; c < n; ++c) {
+          matrix[r][c] = 0;
+        }
+      }
+    }
 
-		if (zeroInFirstRow) {
-			fillZeros(matrix, 0, 0, 0, 1, col);
-		}
-		if (zeroInFirstCol) {
-			fillZeros(matrix, 0, 0, 1, 0, row);
-		}
-	}
+    for (int c = 1; c < n; ++c) {
+      if (matrix[0][c] == 0) {
+        for (int r = 0; r < m; ++r) {
+          matrix[r][c] = 0;
+        }
+      }
+    }
 
-	boolean existsZero(int[][] matrix, int r, int c, int offsetR, int offsetC,
-			int step) {
-		for (int i = 0; i < step; i++) {
-			if (matrix[r][c] == 0) {
-				return true;
-			}
-			r += offsetR;
-			c += offsetC;
-		}
-		return false;
-	}
-
-	void fillZeros(int[][] matrix, int r, int c, int offsetR, int offsetC,
-			int step) {
-		for (int i = 0; i < step; i++) {
-			matrix[r][c] = 0;
-			r += offsetR;
-			c += offsetC;
-		}
-	}
+    if (zeroInFirstRow) {
+      for (int c = 0; c < n; ++c) {
+        matrix[0][c] = 0;
+      }
+    }
+    if (zeroInFirstCol) {
+      for (int r = 0; r < m; ++r) {
+        matrix[r][0] = 0;
+      }
+    }
+  }
 }
