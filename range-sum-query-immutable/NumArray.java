@@ -1,21 +1,18 @@
-public class NumArray {
-	int[] accumulativeSums;
+class NumArray {
+  int[] prefixSums;
 
-	public NumArray(int[] nums) {
-		accumulativeSums = new int[nums.length];
-		int accumulativeSum = 0;
-		for (int i = 0; i < accumulativeSums.length; i++) {
-			accumulativeSum += nums[i];
-			accumulativeSums[i] = accumulativeSum;
-		}
-	}
+  public NumArray(int[] nums) {
+    prefixSums = new int[nums.length];
+    for (int i = 0; i < prefixSums.length; ++i) {
+      prefixSums[i] = ((i == 0) ? 0 : prefixSums[i - 1]) + nums[i];
+    }
+  }
 
-	public int sumRange(int i, int j) {
-		return accumulativeSums[j] - (i == 0 ? 0 : accumulativeSums[i - 1]);
-	}
+  public int sumRange(int left, int right) {
+    return prefixSums[right] - ((left == 0) ? 0 : prefixSums[left - 1]);
+  }
 }
 
 // Your NumArray object will be instantiated and called as such:
-// NumArray numArray = new NumArray(nums);
-// numArray.sumRange(0, 1);
-// numArray.sumRange(1, 2);
+// NumArray obj = new NumArray(nums);
+// int param_1 = obj.sumRange(left,right);
