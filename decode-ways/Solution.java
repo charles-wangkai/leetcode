@@ -1,10 +1,6 @@
 class Solution {
   public int numDecodings(String s) {
-    if (s.isEmpty()) {
-      return 0;
-    }
-
-    int prev = 0;
+    int prev = -1;
     int curr = 1;
     for (int i = 0; i < s.length(); ++i) {
       int next = 0;
