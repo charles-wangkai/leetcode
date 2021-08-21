@@ -1,58 +1,72 @@
-public class Solution {
-	public void solveSudoku(char[][] board) {
-		boolean[][] rows = new boolean[9][10];
-		boolean[][] columns = new boolean[9][10];
-		boolean[][][] blocks = new boolean[3][3][10];
-		for (int r = 0; r < 9; r++) {
-			for (int c = 0; c < 9; c++) {
-				if (board[r][c] != '.') {
-					fill(board, rows, columns, blocks, r, c, board[r][c] - '0');
-				}
-			}
-		}
-		search(board, rows, columns, blocks, 0, 0);
-	}
+class Solution {
+  static final int CELL_SIZE = 9;
+  static final int BLOCK_SIZE = 3;
 
-	boolean fill(char[][] board, boolean[][] rows, boolean[][] columns,
-			boolean[][][] blocks, int r, int c, int digit) {
-		if (rows[r][digit] || columns[c][digit] || blocks[r / 3][c / 3][digit]) {
-			return false;
-		}
-		board[r][c] = (char) ('0' + digit);
-		rows[r][digit] = true;
-		columns[c][digit] = true;
-		blocks[r / 3][c / 3][digit] = true;
-		return true;
-	}
+  public void solveSudoku(char[][] board) {
+    boolean[][] rows = new boolean[CELL_SIZE][10];
+    boolean[][] cols = new boolean[CELL_SIZE][10];
+    boolean[][][] blocks = new boolean[BLOCK_SIZE][BLOCK_SIZE][10];
+    for (int r = 0; r < CELL_SIZE; ++r) {
+      for (int c = 0; c < CELL_SIZE; ++c) {
+        if (board[r][c] != '.') {
+          fill(board, rows, cols, blocks, r, c, board[r][c] - '0');
+        }
+      }
+    }
+    search(board, rows, cols, blocks, 0, 0);
+  }
 
-	void unfill(char[][] board, boolean[][] rows, boolean[][] columns,
-			boolean[][][] blocks, int r, int c) {
-		int digit = board[r][c] - '0';
-		board[r][c] = '.';
-		rows[r][digit] = false;
-		columns[c][digit] = false;
-		blocks[r / 3][c / 3][digit] = false;
-	}
+  boolean fill(
+      char[][] board,
+      boolean[][] rows,
+      boolean[][] cols,
+      boolean[][][] blocks,
+      int r,
+      int c,
+      int digit) {
+    if (rows[r][digit] || cols[c][digit] || blocks[r / BLOCK_SIZE][c / BLOCK_SIZE][digit]) {
+      return false;
+    }
 
-	boolean search(char[][] board, boolean[][] rows, boolean[][] columns,
-			boolean[][][] blocks, int r, int c) {
-		if (r == 9) {
-			return true;
-		}
-		if (c == 9) {
-			return search(board, rows, columns, blocks, r + 1, 0);
-		}
-		if (board[r][c] != '.') {
-			return search(board, rows, columns, blocks, r, c + 1);
-		}
-		for (int digit = 1; digit <= 9; digit++) {
-			if (fill(board, rows, columns, blocks, r, c, digit)) {
-				if (search(board, rows, columns, blocks, r, c + 1)) {
-					return true;
-				}
-				unfill(board, rows, columns, blocks, r, c);
-			}
-		}
-		return false;
-	}
+    board[r][c] = (char) ('0' + digit);
+    rows[r][digit] = true;
+    cols[c][digit] = true;
+    blocks[r / BLOCK_SIZE][c / BLOCK_SIZE][digit] = true;
+
+    return true;
+  }
+
+  void unfill(
+      char[][] board, boolean[][] rows, boolean[][] cols, boolean[][][] blocks, int r, int c) {
+    int digit = board[r][c] - '0';
+    board[r][c] = '.';
+    rows[r][digit] = false;
+    cols[c][digit] = false;
+    blocks[r / BLOCK_SIZE][c / BLOCK_SIZE][digit] = false;
+  }
+
+  boolean search(
+      char[][] board, boolean[][] rows, boolean[][] cols, boolean[][][] blocks, int r, int c) {
+    if (r == CELL_SIZE) {
+      return true;
+    }
+    if (c == CELL_SIZE) {
+      return search(board, rows, cols, blocks, r + 1, 0);
+    }
+    if (board[r][c] != '.') {
+      return search(board, rows, cols, blocks, r, c + 1);
+    }
+
+    for (int digit = 1; digit <= 9; ++digit) {
+      if (fill(board, rows, cols, blocks, r, c, digit)) {
+        if (search(board, rows, cols, blocks, r, c + 1)) {
+          return true;
+        }
+
+        unfill(board, rows, cols, blocks, r, c);
+      }
+    }
+
+    return false;
+  }
 }
