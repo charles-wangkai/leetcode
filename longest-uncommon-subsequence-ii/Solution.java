@@ -1,29 +1,25 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int findLUSlength(String[] strs) {
-		int result = -1;
-		for (String s : strs) {
-			if (Arrays.stream(strs).filter(str -> isSubsequence(s, str)).count() == 1) {
-				result = Math.max(result, s.length());
-			}
-		}
-		return result;
-	}
+class Solution {
+  public int findLUSlength(String[] strs) {
+    return Arrays.stream(strs)
+        .filter(s -> Arrays.stream(strs).filter(str -> isSubsequence(s, str)).count() == 1)
+        .mapToInt(String::length)
+        .max()
+        .orElse(-1);
+  }
 
-	boolean isSubsequence(String s, String target) {
-		int index = 0;
-		for (int i = 0; i < s.length(); i++) {
-			while (index < target.length() && target.charAt(index) != s.charAt(i)) {
-				index++;
-			}
+  boolean isSubsequence(String s, String target) {
+    int fromIndex = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      int index = target.indexOf(s.charAt(i), fromIndex);
+      if (index == -1) {
+        return false;
+      }
 
-			if (index == target.length()) {
-				return false;
-			}
+      fromIndex = index + 1;
+    }
 
-			index++;
-		}
-		return true;
-	}
+    return true;
+  }
 }
