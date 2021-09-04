@@ -1,60 +1,58 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int[] sumOfDistancesInTree(int N, int[][] edges) {
-		Node[] nodes = new Node[N];
-		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node();
-		}
+class Solution {
+  public int[] sumOfDistancesInTree(int n, int[][] edges) {
+    Node[] nodes = IntStream.range(0, n).mapToObj(i -> new Node()).toArray(Node[]::new);
 
-		for (int[] edge : edges) {
-			nodes[edge[0]].adjacents.add(edge[1]);
-			nodes[edge[1]].adjacents.add(edge[0]);
-		}
+    for (int[] edge : edges) {
+      nodes[edge[0]].adjs.add(edge[1]);
+      nodes[edge[1]].adjs.add(edge[0]);
+    }
 
-		postOrderDfs(nodes, new HashSet<>(), 0);
+    postOrderDfs(nodes, new boolean[n], 0);
 
-		nodes[0].distanceSum = nodes[0].subNodeDistanceSum;
-		preOrderDfs(nodes, new HashSet<>(), 0);
+    nodes[0].distanceSum = nodes[0].subNodeDistanceSum;
+    preOrderDfs(nodes, new boolean[n], 0);
 
-		return Arrays.stream(nodes).mapToInt(node -> node.distanceSum).toArray();
-	}
+    return Arrays.stream(nodes).mapToInt(node -> node.distanceSum).toArray();
+  }
 
-	void postOrderDfs(Node[] nodes, Set<Integer> visited, int index) {
-		visited.add(index);
+  void postOrderDfs(Node[] nodes, boolean[] visited, int index) {
+    visited[index] = true;
 
-		nodes[index].subNodeCount = 1;
-		for (int adjacent : nodes[index].adjacents) {
-			if (!visited.contains(adjacent)) {
-				postOrderDfs(nodes, visited, adjacent);
+    nodes[index].subNodeCount = 1;
+    for (int adj : nodes[index].adjs) {
+      if (!visited[adj]) {
+        postOrderDfs(nodes, visited, adj);
 
-				nodes[index].subNodeCount += nodes[adjacent].subNodeCount;
-				nodes[index].subNodeDistanceSum += nodes[adjacent].subNodeDistanceSum + nodes[adjacent].subNodeCount;
-			}
-		}
-	}
+        nodes[index].subNodeCount += nodes[adj].subNodeCount;
+        nodes[index].subNodeDistanceSum += nodes[adj].subNodeDistanceSum + nodes[adj].subNodeCount;
+      }
+    }
+  }
 
-	void preOrderDfs(Node[] nodes, Set<Integer> visited, int index) {
-		visited.add(index);
+  void preOrderDfs(Node[] nodes, boolean[] visited, int index) {
+    visited[index] = true;
 
-		for (int adjacent : nodes[index].adjacents) {
-			if (!visited.contains(adjacent)) {
-				nodes[adjacent].distanceSum = nodes[index].distanceSum - nodes[adjacent].subNodeCount
-						+ (nodes.length - nodes[adjacent].subNodeCount);
+    for (int adj : nodes[index].adjs) {
+      if (!visited[adj]) {
+        nodes[adj].distanceSum =
+            nodes[index].distanceSum
+                - nodes[adj].subNodeCount
+                + (nodes.length - nodes[adj].subNodeCount);
 
-				preOrderDfs(nodes, visited, adjacent);
-			}
-		}
-	}
+        preOrderDfs(nodes, visited, adj);
+      }
+    }
+  }
 }
 
 class Node {
-	List<Integer> adjacents = new ArrayList<>();
-	int subNodeCount;
-	int subNodeDistanceSum;
-	int distanceSum;
+  List<Integer> adjs = new ArrayList<>();
+  int subNodeCount;
+  int subNodeDistanceSum;
+  int distanceSum;
 }
