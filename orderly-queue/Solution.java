@@ -1,20 +1,22 @@
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
-public class Solution {
-	public String orderlyQueue(String S, int K) {
-		if (K > 1) {
-			char[] letters = S.toCharArray();
-			Arrays.sort(letters);
-			return new String(letters);
-		} else {
-			String result = S;
-			for (int i = 1; i < S.length(); i++) {
-				String rotated = S.substring(i) + S.substring(0, i);
-				if (rotated.compareTo(result) < 0) {
-					result = rotated;
-				}
-			}
-			return result;
-		}
-	}
+class Solution {
+  public String orderlyQueue(String s, int k) {
+    if (k >= 2) {
+      return s.chars()
+          .sorted()
+          .mapToObj(ch -> String.valueOf((char) ch))
+          .collect(Collectors.joining());
+    }
+
+    String result = s;
+    for (int i = 1; i < s.length(); ++i) {
+      String rotated = s.substring(i) + s.substring(0, i);
+      if (rotated.compareTo(result) < 0) {
+        result = rotated;
+      }
+    }
+
+    return result;
+  }
 }
