@@ -6,7 +6,7 @@ class Solution {
     for (int i = 0; i < releaseTimes.length; ++i) {
       char key = keysPressed.charAt(i);
       int duration = releaseTimes[i] - prevTime;
-      if (duration > maxDuration || (duration == maxDuration && key >= result)) {
+      if (duration > maxDuration || (duration == maxDuration && key > result)) {
         maxDuration = duration;
         result = key;
       }
