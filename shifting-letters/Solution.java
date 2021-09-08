@@ -1,22 +1,21 @@
-public class Solution {
-	static final int MODULUS = 26;
+import java.util.Arrays;
 
-	public String shiftingLetters(String S, int[] shifts) {
-		int currentShift = 0;
-		for (int shift : shifts) {
-			currentShift = addMod(currentShift, shift);
-		}
+class Solution {
+  static final int MODULUS = 26;
 
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < S.length(); i++) {
-			result.append((char) (addMod(S.charAt(i) - 'a', currentShift) + 'a'));
+  public String shiftingLetters(String s, int[] shifts) {
+    int currentShift = Arrays.stream(shifts).reduce(this::addMod).getAsInt();
 
-			currentShift = addMod(currentShift, -shifts[i]);
-		}
-		return result.toString();
-	}
+    char[] result = new char[s.length()];
+    for (int i = 0; i < result.length; ++i) {
+      result[i] = (char) (addMod(s.charAt(i) - 'a', currentShift) + 'a');
+      currentShift = addMod(currentShift, -shifts[i]);
+    }
 
-	int addMod(int x, int y) {
-		return (x + y % MODULUS + MODULUS) % MODULUS;
-	}
+    return new String(result);
+  }
+
+  int addMod(int x, int y) {
+    return (x + y % MODULUS + MODULUS) % MODULUS;
+  }
 }
