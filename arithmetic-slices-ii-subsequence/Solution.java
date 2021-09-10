@@ -1,39 +1,29 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int numberOfArithmeticSlices(int[] A) {
-		@SuppressWarnings("unchecked")
-		Map<Integer, Integer>[] delta2countList = new Map[A.length];
+class Solution {
+  public int numberOfArithmeticSlices(int[] nums) {
+    @SuppressWarnings("unchecked")
+    Map<Integer, Integer>[] deltaToCountMaps = new Map[nums.length];
+    for (int i = 0; i < deltaToCountMaps.length; ++i) {
+      deltaToCountMaps[i] = new HashMap<>();
+    }
 
-		int result = 0;
-		for (int i = 0; i < A.length; i++) {
-			delta2countList[i] = new HashMap<Integer, Integer>();
+    int result = 0;
+    for (int i = 0; i < nums.length; ++i) {
+      for (int j = 0; j < i; ++j) {
+        long d = (long) nums[i] - nums[j];
+        if (d < Integer.MIN_VALUE || d > Integer.MAX_VALUE) {
+          continue;
+        }
+        int delta = (int) d;
 
-			for (int j = 0; j < i; j++) {
-				long d = (long) A[i] - A[j];
+        int prevCount = deltaToCountMaps[j].getOrDefault(delta, 0);
+        deltaToCountMaps[i].put(delta, deltaToCountMaps[i].getOrDefault(delta, 0) + prevCount + 1);
+        result += prevCount;
+      }
+    }
 
-				if (d < Integer.MIN_VALUE || d > Integer.MAX_VALUE) {
-					continue;
-				}
-
-				int delta = (int) d;
-
-				if (!delta2countList[i].containsKey(delta)) {
-					delta2countList[i].put(delta, 0);
-				}
-
-				if (delta2countList[j].containsKey(delta)) {
-					int prevCount = delta2countList[j].get(delta);
-
-					delta2countList[i].put(delta, delta2countList[i].get(delta) + prevCount);
-					result += prevCount;
-				}
-
-				delta2countList[i].put(delta, delta2countList[i].get(delta) + 1);
-			}
-		}
-
-		return result;
-	}
+    return result;
+  }
 }
