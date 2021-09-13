@@ -1,68 +1,65 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int reachableNodes(int[][] edges, int M, int N) {
-		int[][] graph = new int[N][N];
-		for (int i = 0; i < N; i++) {
-			Arrays.fill(graph[i], -1);
-		}
-		for (int[] edge : edges) {
-			graph[edge[0]][edge[1]] = edge[2] + 1;
-			graph[edge[1]][edge[0]] = edge[2] + 1;
-		}
+class Solution {
+  public int reachableNodes(int[][] edges, int maxMoves, int n) {
+    int[][] graph = new int[n][n];
+    for (int[] edge : edges) {
+      graph[edge[0]][edge[1]] = edge[2] + 1;
+      graph[edge[1]][edge[0]] = edge[2] + 1;
+    }
 
-		boolean[] used = new boolean[N];
-		int[] distances = new int[N];
-		Arrays.fill(distances, -1);
-		PriorityQueue<Element> pq = new PriorityQueue<>(
-				(element1, element2) -> Integer.compare(element1.distance, element2.distance));
+    int[] distances = new int[n];
+    Arrays.fill(distances, -1);
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(e -> e.distance));
+    pq.offer(new Element(0, 0));
+    boolean[] used = new boolean[n];
+    while (!pq.isEmpty()) {
+      Element element = pq.poll();
+      if (used[element.node]) {
+        continue;
+      }
 
-		pq.offer(new Element(0, 0));
+      used[element.node] = true;
+      distances[element.node] = element.distance;
 
-		while (!pq.isEmpty()) {
-			Element element = pq.poll();
-			if (used[element.nextNode]) {
-				continue;
-			}
+      for (int adj = 0; adj < n; ++adj) {
+        if (!used[adj] && graph[element.node][adj] != 0) {
+          pq.offer(new Element(adj, distances[element.node] + graph[element.node][adj]));
+        }
+      }
+    }
 
-			used[element.nextNode] = true;
-			distances[element.nextNode] = element.distance;
+    int result =
+        (int) IntStream.range(0, n).filter(i -> isReachable(distances, maxMoves, i)).count();
+    for (int[] edge : edges) {
+      int middleNum = 0;
+      if (isReachable(distances, maxMoves, edge[0])) {
+        middleNum += Math.min(edge[2], maxMoves - distances[edge[0]]);
+      }
+      if (isReachable(distances, maxMoves, edge[1])) {
+        middleNum += Math.min(edge[2], maxMoves - distances[edge[1]]);
+      }
 
-			for (int adjacent = 0; adjacent < N; adjacent++) {
-				if (!used[adjacent] && graph[element.nextNode][adjacent] >= 0) {
-					pq.offer(new Element(adjacent, distances[element.nextNode] + graph[element.nextNode][adjacent]));
-				}
-			}
-		}
+      result += Math.min(edge[2], middleNum);
+    }
 
-		int result = (int) IntStream.range(0, N).filter(i -> isReachable(distances, M, i)).count();
-		for (int[] edge : edges) {
-			int middleNum = 0;
-			if (isReachable(distances, M, edge[0])) {
-				middleNum += Math.min(edge[2], M - distances[edge[0]]);
-			}
-			if (isReachable(distances, M, edge[1])) {
-				middleNum += Math.min(edge[2], M - distances[edge[1]]);
-			}
+    return result;
+  }
 
-			result += Math.min(edge[2], middleNum);
-		}
-		return result;
-	}
-
-	boolean isReachable(int[] distances, int M, int node) {
-		return distances[node] >= 0 && distances[node] <= M;
-	}
+  boolean isReachable(int[] distances, int maxMoves, int node) {
+    return distances[node] != -1 && distances[node] <= maxMoves;
+  }
 }
 
 class Element {
-	int nextNode;
-	int distance;
+  int node;
+  int distance;
 
-	Element(int nextNode, int distance) {
-		this.nextNode = nextNode;
-		this.distance = distance;
-	}
+  Element(int node, int distance) {
+    this.node = node;
+    this.distance = distance;
+  }
 }
