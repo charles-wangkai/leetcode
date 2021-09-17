@@ -3,35 +3,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Solution {
-	public int[] intersect(int[] nums1, int[] nums2) {
-		Map<Integer, Integer> num2count1 = buildCounter(nums1);
-		Map<Integer, Integer> num2count2 = buildCounter(nums2);
+class Solution {
+  public int[] intersect(int[] nums1, int[] nums2) {
+    Map<Integer, Integer> numToCount1 = buildNumToCount(nums1);
+    Map<Integer, Integer> numToCount2 = buildNumToCount(nums2);
 
-		List<Integer> merged = new ArrayList<Integer>();
-		for (int num : num2count1.keySet()) {
-			if (num2count2.containsKey(num)) {
-				for (int i = 0; i < Math.min(num2count1.get(num), num2count2.get(num)); i++) {
-					merged.add(num);
-				}
-			}
-		}
+    List<Integer> result = new ArrayList<>();
+    for (int num : numToCount1.keySet()) {
+      for (int i = Math.min(numToCount1.get(num), numToCount2.getOrDefault(num, 0)); i >= 1; --i) {
+        result.add(num);
+      }
+    }
 
-		int[] result = new int[merged.size()];
-		for (int i = 0; i < merged.size(); i++) {
-			result[i] = merged.get(i);
-		}
-		return result;
-	}
+    return result.stream().mapToInt(x -> x).toArray();
+  }
 
-	Map<Integer, Integer> buildCounter(int[] nums) {
-		Map<Integer, Integer> num2count = new HashMap<Integer, Integer>();
-		for (int num : nums) {
-			if (!num2count.containsKey(num)) {
-				num2count.put(num, 0);
-			}
-			num2count.put(num, num2count.get(num) + 1);
-		}
-		return num2count;
-	}
+  Map<Integer, Integer> buildNumToCount(int[] nums) {
+    Map<Integer, Integer> numToCount = new HashMap<>();
+    for (int num : nums) {
+      numToCount.put(num, numToCount.getOrDefault(num, 0) + 1);
+    }
+
+    return numToCount;
+  }
 }
