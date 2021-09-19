@@ -1,21 +1,22 @@
-public class Solution {
-	public int numDistinct(String S, String T) {
-		int lengthS = S.length();
-		int lengthT = T.length();
-		int[][] ways = new int[lengthS + 1][lengthT + 1];
-		for (int i = 0; i <= lengthS; i++) {
-			for (int j = 0; j <= lengthT; j++) {
-				if (j == 0) {
-					ways[i][j] = 1;
-				} else if (i == 0) {
-					ways[i][j] = 0;
-				} else {
-					ways[i][j] = ways[i - 1][j]
-							+ (S.charAt(i - 1) == T.charAt(j - 1) ? ways[i - 1][j - 1]
-									: 0);
-				}
-			}
-		}
-		return ways[lengthS][lengthT];
-	}
+class Solution {
+  public int numDistinct(String s, String t) {
+    int sLength = s.length();
+    int tLength = t.length();
+    int[][] wayNums = new int[sLength + 1][tLength + 1];
+    for (int i = 0; i <= sLength; ++i) {
+      for (int j = 0; j <= tLength; ++j) {
+        if (j == 0) {
+          wayNums[i][j] = 1;
+        } else if (i == 0) {
+          wayNums[i][j] = 0;
+        } else {
+          wayNums[i][j] =
+              wayNums[i - 1][j]
+                  + ((s.charAt(i - 1) == t.charAt(j - 1)) ? wayNums[i - 1][j - 1] : 0);
+        }
+      }
+    }
+
+    return wayNums[sLength][tLength];
+  }
 }
