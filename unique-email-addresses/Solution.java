@@ -1,23 +1,25 @@
 import java.util.Arrays;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-public class Solution {
-	public int numUniqueEmails(String[] emails) {
-		return Arrays.stream(emails).map(this::simplify).collect(Collectors.toSet()).size();
-	}
+class Solution {
+  public int numUniqueEmails(String[] emails) {
+    return (int) Arrays.stream(emails).map(this::simplify).distinct().count();
+  }
 
-	String simplify(String email) {
-		String[] parts = email.split("@");
-		return processPeriod(processPlus(parts[0])) + "@" + parts[1];
-	}
+  String simplify(String email) {
+    int atIndex = email.indexOf('@');
 
-	String processPlus(String localName) {
-		int index = localName.indexOf('+');
-		return (index >= 0) ? localName.substring(0, index) : localName;
-	}
+    return String.format(
+        "%s%s", processPeriod(processPlus(email.substring(0, atIndex))), email.substring(atIndex));
+  }
 
-	String processPeriod(String localName) {
-		return localName.replaceAll(Pattern.quote("."), "");
-	}
+  String processPlus(String localName) {
+    int index = localName.indexOf('+');
+
+    return (index == -1) ? localName : localName.substring(0, index);
+  }
+
+  String processPeriod(String localName) {
+    return localName.replaceAll(Pattern.quote("."), "");
+  }
 }
