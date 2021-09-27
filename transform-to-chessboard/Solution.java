@@ -1,86 +1,92 @@
-public class Solution {
-	public int movesToChessboard(int[][] board) {
-		if (!checkValid(board)) {
-			return -1;
-		}
+import java.util.stream.IntStream;
 
-		int totalMove = 0;
+class Solution {
+  public int movesToChessboard(int[][] board) {
+    if (!isPossible(board)) {
+      return -1;
+    }
 
-		int rowMove = swapRows(board);
-		if (rowMove == -1) {
-			return -1;
-		}
-		totalMove += rowMove;
+    int totalMove = 0;
 
-		transpose(board);
+    int rowMove = swapRows(board);
+    if (rowMove == -1) {
+      return -1;
+    }
+    totalMove += rowMove;
 
-		rowMove = swapRows(board);
-		if (rowMove == -1) {
-			return -1;
-		}
-		totalMove += rowMove;
+    transpose(board);
 
-		return totalMove;
-	}
+    rowMove = swapRows(board);
+    if (rowMove == -1) {
+      return -1;
+    }
+    totalMove += rowMove;
 
-	boolean checkValid(int[][] board) {
-		int N = board.length;
-		for (int r = 1; r < N; r++) {
-			boolean sameOrInvert = board[r][0] == board[0][0];
-			for (int c = 0; c < N; c++) {
-				if ((sameOrInvert && board[r][c] != board[0][c]) || (!sameOrInvert && board[r][c] + board[0][c] != 1)) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
+    return totalMove;
+  }
 
-	void transpose(int[][] board) {
-		int N = board.length;
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < r; c++) {
-				int temp = board[r][c];
-				board[r][c] = board[c][r];
-				board[c][r] = temp;
-			}
-		}
-	}
+  boolean isPossible(int[][] board) {
+    int n = board.length;
 
-	int swapRows(int[][] board) {
-		int N = board.length;
+    for (int r = 1; r < n; ++r) {
+      boolean sameOrInvert = board[r][0] == board[0][0];
 
-		int[] counts = new int[2];
-		for (int r = 0; r < N; r++) {
-			counts[board[r][0]]++;
-		}
+      int r_ = r;
+      if (IntStream.range(0, n)
+          .anyMatch(
+              c ->
+                  (sameOrInvert && board[r_][c] != board[0][c])
+                      || (!sameOrInvert && board[r_][c] != 1 - board[0][c]))) {
+        return false;
+      }
+    }
 
-		int minMove = Integer.MAX_VALUE;
-		for (int startValue : new int[] { 0, 1 }) {
-			int[] targetCounts = { N / 2, N / 2 };
-			if (N % 2 != 0) {
-				targetCounts[startValue]++;
-			}
+    return true;
+  }
 
-			if (counts[0] != targetCounts[0] || counts[1] != targetCounts[1]) {
-				continue;
-			}
+  void transpose(int[][] board) {
+    int n = board.length;
+    for (int r = 0; r < n; ++r) {
+      for (int c = 0; c < r; ++c) {
+        int temp = board[r][c];
+        board[r][c] = board[c][r];
+        board[c][r] = temp;
+      }
+    }
+  }
 
-			int diff = 0;
-			int targetValue = startValue;
-			for (int r = 0; r < N; r++) {
-				if (board[r][0] != targetValue) {
-					diff++;
-				}
+  int swapRows(int[][] board) {
+    int n = board.length;
 
-				targetValue = 1 - targetValue;
-			}
+    int[] counts = new int[2];
+    for (int r = 0; r < n; ++r) {
+      ++counts[board[r][0]];
+    }
 
-			if (diff / 2 < minMove) {
-				minMove = diff / 2;
-			}
-		}
+    int minMove = Integer.MAX_VALUE;
+    for (int startValue : new int[] {0, 1}) {
+      int[] targetCounts = {n / 2, n / 2};
+      if (n % 2 != 0) {
+        ++targetCounts[startValue];
+      }
 
-		return minMove == Integer.MAX_VALUE ? -1 : minMove;
-	}
+      if (counts[0] != targetCounts[0] || counts[1] != targetCounts[1]) {
+        continue;
+      }
+
+      int diff = 0;
+      int targetValue = startValue;
+      for (int r = 0; r < n; ++r) {
+        if (board[r][0] != targetValue) {
+          ++diff;
+        }
+
+        targetValue = 1 - targetValue;
+      }
+
+      minMove = Math.min(minMove, diff / 2);
+    }
+
+    return (minMove == Integer.MAX_VALUE) ? -1 : minMove;
+  }
 }
