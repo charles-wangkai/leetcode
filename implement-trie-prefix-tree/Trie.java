@@ -1,74 +1,67 @@
 import java.util.HashMap;
 import java.util.Map;
 
-class TrieNode {
-	private Map<Character, TrieNode> children = new HashMap<>();
+class Trie {
+  private TrieNode root = new TrieNode();
 
-	public boolean hasChild(Character ch) {
-		return children.containsKey(ch);
-	}
+  public void insert(String word) {
+    TrieNode node = root;
+    for (char letter : word.toCharArray()) {
+      node = node.putChild(letter);
+    }
 
-	public TrieNode getChild(Character ch) {
-		return children.get(ch);
-	}
+    node.putChild(null);
+  }
 
-	public TrieNode putChild(Character ch) {
-		if (!hasChild(ch)) {
-			children.put(ch, new TrieNode());
-		}
+  public boolean search(String word) {
+    TrieNode node = root;
+    for (char letter : word.toCharArray()) {
+      if (!node.hasChild(letter)) {
+        return false;
+      }
 
-		return getChild(ch);
-	}
+      node = node.getChild(letter);
+    }
+
+    return node.hasChild(null);
+  }
+
+  public boolean startsWith(String prefix) {
+    TrieNode node = root;
+    for (char letter : prefix.toCharArray()) {
+      if (!node.hasChild(letter)) {
+        return false;
+      }
+
+      node = node.getChild(letter);
+    }
+
+    return true;
+  }
 }
 
-public class Trie {
-	private TrieNode root;
+class TrieNode {
+  private Map<Character, TrieNode> letterToChild = new HashMap<>();
 
-	public Trie() {
-		root = new TrieNode();
-	}
+  public boolean hasChild(Character letter) {
+    return letterToChild.containsKey(letter);
+  }
 
-	// Inserts a word into the trie.
-	public void insert(String word) {
-		TrieNode node = root;
-		for (char ch : word.toCharArray()) {
-			node = node.putChild(ch);
-		}
+  public TrieNode getChild(Character letter) {
+    return letterToChild.get(letter);
+  }
 
-		node.putChild(null);
-	}
+  public TrieNode putChild(Character letter) {
+    if (!hasChild(letter)) {
+      letterToChild.put(letter, new TrieNode());
+    }
 
-	// Returns if the word is in the trie.
-	public boolean search(String word) {
-		TrieNode node = root;
-		for (char ch : word.toCharArray()) {
-			if (!node.hasChild(ch)) {
-				return false;
-			}
-
-			node = node.getChild(ch);
-		}
-
-		return node.hasChild(null);
-	}
-
-	// Returns if there is any word in the trie
-	// that starts with the given prefix.
-	public boolean startsWith(String prefix) {
-		TrieNode node = root;
-		for (char ch : prefix.toCharArray()) {
-			if (!node.hasChild(ch)) {
-				return false;
-			}
-
-			node = node.getChild(ch);
-		}
-
-		return true;
-	}
+    return getChild(letter);
+  }
 }
 
 // Your Trie object will be instantiated and called as such:
-// Trie trie = new Trie();
-// trie.insert("somestring");
-// trie.search("key");
+// Trie obj = new Trie();
+// obj.insert(word);
+// boolean param_2 = obj.search(word);
+// boolean param_3 = obj.startsWith(prefix);
