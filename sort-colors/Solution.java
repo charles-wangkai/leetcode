@@ -1,22 +1,25 @@
-public class Solution {
-	public void sortColors(int[] A) {
-		int index0 = -1;
-		int index2 = A.length;
-		for (int i = 0; i < index2; ++i) {
-			if (A[i] == 0) {
-				++index0;
-				swap(A, i, index0);
-			} else if (A[i] == 2) {
-				--index2;
-				swap(A, i, index2);
-				--i;
-			}
-		}
-	}
+class Solution {
+  public void sortColors(int[] nums) {
+    int index0 = -1;
+    int index2 = nums.length;
+    int index1 = 0;
+    while (index1 < index2) {
+      if (nums[index1] == 0) {
+        ++index0;
+        swap(nums, index1, index0);
+        ++index1;
+      } else if (nums[index1] == 2) {
+        --index2;
+        swap(nums, index1, index2);
+      } else {
+        ++index1;
+      }
+    }
+  }
 
-	void swap(int[] a, int index1, int index2) {
-		int temp = a[index1];
-		a[index1] = a[index2];
-		a[index2] = temp;
-	}
+  void swap(int[] nums, int index1, int index2) {
+    int temp = nums[index1];
+    nums[index1] = nums[index2];
+    nums[index2] = temp;
+  }
 }
