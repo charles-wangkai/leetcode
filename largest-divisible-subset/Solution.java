@@ -2,41 +2,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Solution {
-	public List<Integer> largestDivisibleSubset(int[] nums) {
-		Arrays.sort(nums);
+class Solution {
+  public List<Integer> largestDivisibleSubset(int[] nums) {
+    Arrays.sort(nums);
 
-		int lastIndex = -1;
-		Element[] elements = new Element[nums.length];
-		for (int i = 0; i < elements.length; i++) {
-			elements[i] = new Element(1, -1);
+    int[] sizes = new int[nums.length];
+    int[] prevIndices = new int[nums.length];
+    int lastIndex = -1;
+    for (int i = 0; i < nums.length; ++i) {
+      sizes[i] = 1;
+      prevIndices[i] = -1;
 
-			for (int j = 0; j < i; ++j) {
-				if (nums[i] % nums[j] == 0 && elements[j].size + 1 > elements[i].size) {
-					elements[i] = new Element(elements[j].size + 1, j);
-				}
-			}
+      for (int j = 0; j < i; ++j) {
+        if (nums[i] % nums[j] == 0 && sizes[j] + 1 > sizes[i]) {
+          sizes[i] = sizes[j] + 1;
+          prevIndices[i] = j;
+        }
+      }
 
-			if (lastIndex < 0 || elements[i].size > elements[lastIndex].size) {
-				lastIndex = i;
-			}
-		}
+      if (lastIndex == -1 || sizes[i] > sizes[lastIndex]) {
+        lastIndex = i;
+      }
+    }
 
-		List<Integer> result = new ArrayList<>();
-		for (int i = lastIndex; i != -1; i = elements[i].prevIndex) {
-			result.add(nums[i]);
-		}
+    List<Integer> result = new ArrayList<>();
+    for (int i = lastIndex; i != -1; i = prevIndices[i]) {
+      result.add(nums[i]);
+    }
 
-		return result;
-	}
-}
-
-class Element {
-	int size;
-	int prevIndex;
-
-	Element(int size, int prevIndex) {
-		this.size = size;
-		this.prevIndex = prevIndex;
-	}
+    return result;
+  }
 }
