@@ -1,27 +1,24 @@
-public class Solution {
-	public int findKthNumber(int m, int n, int k) {
-		int lower = 1;
-		int upper = m * n;
-		int result = -1;
-		while (lower <= upper) {
-			int middle = (lower + upper) / 2;
-			int notGreaterNum = countNotGreaterNum(m, n, middle);
-			if (notGreaterNum >= k) {
-				result = middle;
+import java.util.stream.IntStream;
 
-				upper = middle - 1;
-			} else {
-				lower = middle + 1;
-			}
-		}
-		return result;
-	}
+class Solution {
+  public int findKthNumber(int m, int n, int k) {
+    int result = -1;
+    int lower = 1;
+    int upper = m * n;
+    while (lower <= upper) {
+      int middle = (lower + upper) / 2;
+      if (computeNotGreaterNum(m, n, middle) >= k) {
+        result = middle;
+        upper = middle - 1;
+      } else {
+        lower = middle + 1;
+      }
+    }
 
-	int countNotGreaterNum(int m, int n, int value) {
-		int notGreaterNum = 0;
-		for (int i = 1; i <= m; i++) {
-			notGreaterNum += Math.min(n, value / i);
-		}
-		return notGreaterNum;
-	}
+    return result;
+  }
+
+  int computeNotGreaterNum(int m, int n, int value) {
+    return IntStream.rangeClosed(1, m).map(i -> Math.min(n, value / i)).sum();
+  }
 }
