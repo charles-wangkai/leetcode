@@ -1,15 +1,15 @@
-public class Solution {
-	public int hammingDistance(int x, int y) {
-		int result = 0;
-		while (x != y) {
-			if ((x & 1) != (y & 1)) {
-				++result;
-			}
+class Solution {
+  public int hammingDistance(int x, int y) {
+    int result = 0;
+    while (x != y) {
+      if ((x & 1) != (y & 1)) {
+        ++result;
+      }
 
-			x >>= 1;
-			y >>= 1;
-		}
+      x >>= 1;
+      y >>= 1;
+    }
 
-		return result;
-	}
+    return result;
+  }
 }
