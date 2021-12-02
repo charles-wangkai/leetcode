@@ -1,39 +1,43 @@
 // Definition for singly-linked list.
 class ListNode {
-	int val;
-	ListNode next;
+  int val;
+  ListNode next;
 
-	ListNode(int x) {
-		val = x;
-	}
+  ListNode() {}
+
+  ListNode(int val) {
+    this.val = val;
+  }
+
+  ListNode(int val, ListNode next) {
+    this.val = val;
+    this.next = next;
+  }
 }
 
-public class Solution {
-	public ListNode oddEvenList(ListNode head) {
-		ListNode tempHead = new ListNode(0);
-		tempHead.next = head;
+class Solution {
+  public ListNode oddEvenList(ListNode head) {
+    ListNode tempOddHead = new ListNode(0, head);
+    ListNode tempEvenHead = new ListNode();
+    ListNode evenTail = tempEvenHead;
 
-		ListNode evenHead = new ListNode(0);
-		evenHead.next = null;
-		ListNode evenTail = evenHead;
+    ListNode node = tempOddHead;
+    boolean oddOrEven = true;
+    while (node.next != null) {
+      if (oddOrEven) {
+        node = node.next;
+      } else {
+        evenTail.next = node.next;
+        node.next = node.next.next;
+        evenTail.next.next = null;
+        evenTail = evenTail.next;
+      }
 
-		ListNode node = tempHead;
-		boolean oddOrEven = true;
-		while (node.next != null) {
-			if (oddOrEven) {
-				node = node.next;
-			} else {
-				evenTail.next = node.next;
-				node.next = node.next.next;
-				evenTail.next.next = null;
-				evenTail = evenTail.next;
-			}
+      oddOrEven = !oddOrEven;
+    }
 
-			oddOrEven = !oddOrEven;
-		}
+    node.next = tempEvenHead.next;
 
-		node.next = evenHead.next;
-
-		return tempHead.next;
-	}
+    return tempOddHead.next;
+  }
 }
