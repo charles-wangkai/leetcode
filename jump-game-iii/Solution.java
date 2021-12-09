@@ -10,16 +10,8 @@ class Solution {
 
     visited[index] = true;
 
-    if (arr[index] == 0) {
-      return true;
-    }
-
-    for (int offset : new int[] {-arr[index], arr[index]}) {
-      if (search(arr, visited, index + offset)) {
-        return true;
-      }
-    }
-
-    return false;
+    return arr[index] == 0
+        || search(arr, visited, index - arr[index])
+        || search(arr, visited, index + arr[index]);
   }
 }
