@@ -1,36 +1,33 @@
-public class Solution {
-	public int nthMagicalNumber(int N, int A, int B) {
-		long lower = 2;
-		long upper = (long) N * Math.max(A, B);
-		while (true) {
-			long middle = (lower + upper) / 2;
+class Solution {
+  static final int MODULUS = 1_000_000_007;
 
-			long sequence = computeSequence(middle, A, B);
-			if (sequence < N) {
-				lower = middle + 1;
-			} else {
-				if (sequence == N && isMagical(middle, A, B)) {
-					return (int) (middle % 1000000007);
-				}
+  public int nthMagicalNumber(int n, int a, int b) {
+    long result = -1;
+    long lower = 2;
+    long upper = (long) n * Math.min(a, b);
+    while (lower <= upper) {
+      long middle = (lower + upper) / 2;
 
-				upper = middle - 1;
-			}
-		}
-	}
+      if (computeLENum(a, b, middle) >= n) {
+        result = middle;
+        upper = middle - 1;
+      } else {
+        lower = middle + 1;
+      }
+    }
 
-	boolean isMagical(long x, int A, int B) {
-		return x % A == 0 || x % B == 0;
-	}
+    return (int) (result % MODULUS);
+  }
 
-	long computeSequence(long x, int A, int B) {
-		return x / A + x / B - x / lcm(A, B);
-	}
+  long computeLENum(int a, int b, long x) {
+    return x / a + x / b - x / lcm(a, b);
+  }
 
-	int lcm(int x, int y) {
-		return x / gcd(x, y) * y;
-	}
+  int lcm(int x, int y) {
+    return x / gcd(x, y) * y;
+  }
 
-	int gcd(int x, int y) {
-		return y == 0 ? x : gcd(y, x % y);
-	}
+  int gcd(int x, int y) {
+    return (y == 0) ? x : gcd(y, x % y);
+  }
 }
