@@ -22,7 +22,6 @@ class Solution {
     while (head != null) {
       ListNode node = head;
       head = node.next;
-      node.next = null;
 
       ListNode p = tempHead;
       while (p.next != null && p.next.val < node.val) {
