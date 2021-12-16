@@ -1,9 +1,9 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 class Solution {
   public List<Integer> findMinHeightTrees(int n, int[][] edges) {
@@ -22,8 +22,8 @@ class Solution {
       addInMap(degreeToNodes, adjSets[i].size(), i);
     }
 
-    int remainNum = n;
-    while (remainNum > 2) {
+    int restNum = n;
+    while (restNum >= 3) {
       Set<Integer> removedNodes = degreeToNodes.remove(1);
       for (int removedNode : removedNodes) {
         for (int adj : adjSets[removedNode]) {
@@ -35,10 +35,12 @@ class Solution {
         }
       }
 
-      remainNum -= removedNodes.size();
+      restNum -= removedNodes.size();
     }
 
-    return new ArrayList<>(degreeToNodes.get(remainNum == 1 ? 0 : 1));
+    return degreeToNodes.values().stream()
+        .flatMap(nodes -> nodes.stream())
+        .collect(Collectors.toList());
   }
 
   void addInMap(Map<Integer, Set<Integer>> degreeToNodes, int degree, int node) {
