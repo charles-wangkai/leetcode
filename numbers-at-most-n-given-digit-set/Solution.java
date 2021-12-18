@@ -4,11 +4,7 @@ class Solution {
   public int atMostNGivenDigitSet(String[] digits, int n) {
     String strN = String.valueOf(n);
 
-    int result = 0;
-
-    for (int length = 1; length < strN.length(); ++length) {
-      result += pow(digits.length, length);
-    }
+    int result = IntStream.range(1, strN.length()).map(i -> pow(digits.length, i)).sum();
 
     boolean digitInSet = true;
     for (int i = 0; i < strN.length() && digitInSet; ++i) {
