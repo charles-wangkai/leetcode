@@ -1,18 +1,14 @@
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 class Solution {
   public String decodeString(String s) {
+    StringBuilder result = new StringBuilder();
     int level = 0;
     int startIndex = -1;
     int k = 0;
-
-    StringBuilder result = new StringBuilder();
     for (int i = 0; i < s.length(); ++i) {
       char ch = s.charAt(i);
       if (ch == '[') {
         if (level == 0) {
-          startIndex = i;
+          startIndex = i + 1;
         }
 
         ++level;
@@ -20,7 +16,7 @@ class Solution {
         --level;
 
         if (level == 0) {
-          result.append(repeat(decodeString(s.substring(startIndex + 1, i)), k));
+          result.append(decodeString(s.substring(startIndex, i)).repeat(k));
           k = 0;
         }
       } else if (level == 0) {
@@ -33,9 +29,5 @@ class Solution {
     }
 
     return result.toString();
-  }
-
-  String repeat(String str, int k) {
-    return IntStream.range(0, k).mapToObj(i -> str).collect(Collectors.joining());
   }
 }
