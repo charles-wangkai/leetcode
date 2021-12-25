@@ -1,8 +1,8 @@
 class Solution {
   public int calculate(String s) {
-    long result = 0;
+    int result = 0;
     int sign = 1;
-    long term = -1;
+    int term = -1;
 
     Expression expr = new Expression(s);
     while (true) {
@@ -15,32 +15,32 @@ class Solution {
         result += sign * term;
         sign = token.equals("+") ? 1 : -1;
       } else if (token.equals("*") || token.equals("/")) {
-        long nextNumber = Long.parseLong(expr.readNext());
+        int nextNumber = Integer.parseInt(expr.readNext());
         if (token.equals("*")) {
           term *= nextNumber;
         } else {
           term /= nextNumber;
         }
       } else {
-        term = Long.parseLong(token);
+        term = Integer.parseInt(token);
       }
     }
     result += sign * term;
 
-    return (int) result;
+    return result;
   }
 }
 
 class Expression {
-  private String str;
-  private int index = 0;
+  String str;
+  int index = 0;
 
-  public Expression(String str) {
+  Expression(String str) {
     this.str = str;
   }
 
-  public String readNext() {
-    while (index < str.length() && str.charAt(index) == ' ') {
+  String readNext() {
+    while (index != str.length() && str.charAt(index) == ' ') {
       ++index;
     }
 
@@ -51,11 +51,12 @@ class Expression {
     char ch = str.charAt(index);
     if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
       ++index;
+
       return String.valueOf(ch);
     }
 
     int nextIndex = index + 1;
-    while (nextIndex < str.length() && Character.isDigit(str.charAt(nextIndex))) {
+    while (nextIndex != str.length() && Character.isDigit(str.charAt(nextIndex))) {
       ++nextIndex;
     }
     String number = str.substring(index, nextIndex);
