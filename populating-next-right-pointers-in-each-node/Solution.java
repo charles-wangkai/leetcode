@@ -24,10 +24,10 @@ class Solution {
     for (Node head = root; head != null && head.left != null; head = head.left) {
       Node prev = null;
       for (Node node = head; node != null; node = node.next) {
-        node.left.next = node.right;
         if (prev != null) {
           prev.next = node.left;
         }
+        node.left.next = node.right;
         prev = node.right;
       }
     }
