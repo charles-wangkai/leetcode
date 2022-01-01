@@ -9,8 +9,8 @@ class Solution {
 
     int n = a.length;
 
-    int[][] dp = new int[n - 1][n];
-    for (int length = 3; length <= n; length++) {
+    int[][] dp = new int[n][n];
+    for (int length = 3; length <= n; ++length) {
       for (int beginIndex = 0; beginIndex + length - 1 < n; ++beginIndex) {
         int endIndex = beginIndex + length - 1;
 
