@@ -1,20 +1,17 @@
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int findJudge(int N, int[][] trust) {
-		int[] trusting = new int[N + 1];
-		int[] trusted = new int[N + 1];
+class Solution {
+  public int findJudge(int n, int[][] trust) {
+    int[] trusting = new int[n + 1];
+    int[] trusted = new int[n + 1];
+    for (int[] t : trust) {
+      ++trusting[t[0]];
+      ++trusted[t[1]];
+    }
 
-		for (int[] t : trust) {
-			trusting[t[0]]++;
-			trusted[t[1]]++;
-		}
+    int[] candidates =
+        IntStream.rangeClosed(1, n).filter(i -> trusting[i] == 0 && trusted[i] == n - 1).toArray();
 
-		int[] candidates = IntStream.rangeClosed(1, N).filter(i -> trusting[i] == 0 && trusted[i] == N - 1).toArray();
-		if (candidates.length == 1) {
-			return candidates[0];
-		} else {
-			return -1;
-		}
-	}
+    return (candidates.length == 1) ? candidates[0] : -1;
+  }
 }
