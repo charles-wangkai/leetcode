@@ -1,5 +1,5 @@
 class Solution {
-  public int bitwiseComplement(int N) {
-    return (1 << Integer.toBinaryString(N).length()) - 1 - N;
+  public int bitwiseComplement(int n) {
+    return (1 << Integer.toBinaryString(n).length()) - 1 - n;
   }
 }
