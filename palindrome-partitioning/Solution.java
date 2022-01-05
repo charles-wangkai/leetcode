@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 class Solution {
@@ -10,7 +9,7 @@ class Solution {
     for (int i = 0; i < partitions.length; ++i) {
       partitions[i] = new ArrayList<>();
       if (i == 0) {
-        partitions[i].add(Collections.emptyList());
+        partitions[i].add(List.of());
       } else {
         for (int j = 1; j <= i; ++j) {
           String last = s.substring(i - j, i);
