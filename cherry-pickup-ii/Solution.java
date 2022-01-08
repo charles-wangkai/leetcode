@@ -27,7 +27,7 @@ class Solution {
                           cherrySums[r + 1][nextI][nextJ],
                           cherrySums[r][i][j]
                               + grid[r + 1][nextI]
-                              + (nextI == nextJ ? 0 : grid[r + 1][nextJ]));
+                              + ((nextI == nextJ) ? 0 : grid[r + 1][nextJ]));
                 }
               }
             }
