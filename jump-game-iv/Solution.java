@@ -1,7 +1,7 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -22,7 +22,7 @@ class Solution {
     Set<Integer> processedValues = new HashSet<>();
     int[] distances = IntStream.range(0, arr.length).map(i -> -1).toArray();
     distances[0] = 0;
-    Queue<Integer> queue = new LinkedList<>();
+    Queue<Integer> queue = new ArrayDeque<>();
     queue.offer(0);
     while (!queue.isEmpty()) {
       int index = queue.poll();
