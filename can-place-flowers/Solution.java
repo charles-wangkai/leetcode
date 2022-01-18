@@ -10,6 +10,6 @@ class Solution {
       }
     }
 
-    return n <= count;
+    return count >= n;
   }
 }
