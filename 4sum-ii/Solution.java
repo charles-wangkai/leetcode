@@ -2,9 +2,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Solution {
-  public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
-    Map<Integer, Integer> sumToCount1 = buildSumToCount(A, B);
-    Map<Integer, Integer> sumToCount2 = buildSumToCount(C, D);
+  public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+    Map<Integer, Integer> sumToCount1 = buildSumToCount(nums1, nums2);
+    Map<Integer, Integer> sumToCount2 = buildSumToCount(nums3, nums4);
 
     return sumToCount1.keySet().stream()
         .mapToInt(sum1 -> sumToCount1.get(sum1) * sumToCount2.getOrDefault(-sum1, 0))
