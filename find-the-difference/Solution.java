@@ -1,22 +1,24 @@
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
 class Solution {
-	public char findTheDifference(String s, String t) {
-		return findDiffLetter(buildKey(s), buildKey(t));
-	}
+  public char findTheDifference(String s, String t) {
+    int[] sCounts = buildCounts(s);
+    int[] tCounts = buildCounts(t);
 
-	char[] buildKey(String x) {
-		char[] key = x.toCharArray();
-		Arrays.sort(key);
+    return (char)
+        (IntStream.range(0, sCounts.length)
+                .filter(i -> sCounts[i] != tCounts[i])
+                .findAny()
+                .getAsInt()
+            + 'a');
+  }
 
-		return key;
-	}
+  int[] buildCounts(String x) {
+    int[] result = new int[26];
+    for (char c : x.toCharArray()) {
+      ++result[c - 'a'];
+    }
 
-	char findDiffLetter(char[] keyS, char[] keyT) {
-		for (int i = 0;; ++i) {
-			if (i == keyS.length || keyT[i] != keyS[i]) {
-				return keyT[i];
-			}
-		}
-	}
+    return result;
+  }
 }
