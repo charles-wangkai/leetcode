@@ -8,11 +8,8 @@ class Solution {
       numToCount.put(num, numToCount.getOrDefault(num, 0) + 1);
     }
 
-    if (k == 0) {
-      return (int) numToCount.values().stream().filter(count -> count != 1).count();
-    } else {
-      return (int)
-          numToCount.keySet().stream().filter(num -> numToCount.containsKey(num + k)).count();
-    }
+    return (k == 0)
+        ? (int) numToCount.values().stream().filter(count -> count != 1).count()
+        : (int) numToCount.keySet().stream().filter(num -> numToCount.containsKey(num + k)).count();
   }
 }
