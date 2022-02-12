@@ -4,19 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Solution {
   public int ladderLength(String beginWord, String endWord, List<String> wordList) {
     Map<String, List<String>> patternToWords = new HashMap<>();
-    for (String word :
-        Stream.concat(wordList.stream(), Stream.of(beginWord)).collect(Collectors.toList())) {
+    for (String word : wordList) {
       for (int i = 0; i < word.length(); ++i) {
-        String pattern = String.format("%s?%s", word.substring(0, i), word.substring(i + 1));
-        if (!patternToWords.containsKey(pattern)) {
-          patternToWords.put(pattern, new ArrayList<>());
-        }
+        String pattern = buildPattern(word, i);
+        patternToWords.putIfAbsent(pattern, new ArrayList<>());
         patternToWords.get(pattern).add(word);
       }
     }
@@ -32,8 +27,8 @@ class Solution {
       }
 
       for (int i = 0; i < head.length(); ++i) {
-        String pattern = String.format("%s?%s", head.substring(0, i), head.substring(i + 1));
-        for (String adj : patternToWords.get(pattern)) {
+        String pattern = buildPattern(head, i);
+        for (String adj : patternToWords.getOrDefault(pattern, List.of())) {
           if (!wordToStep.containsKey(adj)) {
             wordToStep.put(adj, wordToStep.get(head) + 1);
             queue.offer(adj);
@@ -43,5 +38,9 @@ class Solution {
     }
 
     return 0;
+  }
+
+  String buildPattern(String s, int index) {
+    return String.format("%s?%s", s.substring(0, index), s.substring(index + 1));
   }
 }
