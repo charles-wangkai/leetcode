@@ -1,20 +1,17 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public List<List<Integer>> subsets(int[] nums) {
-		List<List<Integer>> result = new ArrayList<>();
-		for (int code = 0; code < 1 << nums.length; ++code) {
-			List<Integer> subset = new ArrayList<>();
-			for (int i = 0; i < nums.length; ++i) {
-				if ((code & (1 << i)) != 0) {
-					subset.add(nums[i]);
-				}
-			}
-
-			result.add(subset);
-		}
-
-		return result;
-	}
+class Solution {
+  public List<List<Integer>> subsets(int[] nums) {
+    return IntStream.range(0, 1 << nums.length)
+        .mapToObj(
+            mask ->
+                IntStream.range(0, nums.length)
+                    .filter(i -> (mask & (1 << i)) != 0)
+                    .map(i -> nums[i])
+                    .boxed()
+                    .collect(Collectors.toList()))
+        .collect(Collectors.toList());
+  }
 }
