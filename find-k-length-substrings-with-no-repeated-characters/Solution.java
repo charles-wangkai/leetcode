@@ -1,35 +1,31 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int numKLenSubstrNoRepeats(String S, int K) {
-		if (K > S.length()) {
-			return 0;
-		}
+class Solution {
+  public int numKLenSubstrNoRepeats(String s, int k) {
+    if (k > s.length()) {
+      return 0;
+    }
 
-		Map<Character, Integer> letterToCount = new HashMap<>();
-		for (int i = 0; i < K; i++) {
-			increaseCount(letterToCount, S.charAt(i));
-		}
+    Map<Character, Integer> letterToCount = new HashMap<>();
+    for (int i = 0; i < k - 1; ++i) {
+      updateMap(letterToCount, s.charAt(i), 1);
+    }
 
-		int result = (letterToCount.size() == K) ? 1 : 0;
-		for (int i = K; i < S.length(); i++) {
-			increaseCount(letterToCount, S.charAt(i));
-			decreaseCount(letterToCount, S.charAt(i - K));
+    int result = 0;
+    for (int i = k - 1; i < s.length(); ++i) {
+      updateMap(letterToCount, s.charAt(i), 1);
+      if (letterToCount.size() == k) {
+        ++result;
+      }
 
-			if (letterToCount.size() == K) {
-				result++;
-			}
-		}
-		return result;
-	}
+      updateMap(letterToCount, s.charAt(i - k + 1), -1);
+    }
+    return result;
+  }
 
-	void increaseCount(Map<Character, Integer> letterToCount, char letter) {
-		letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
-	}
-
-	void decreaseCount(Map<Character, Integer> letterToCount, char letter) {
-		letterToCount.put(letter, letterToCount.get(letter) - 1);
-		letterToCount.remove(letter, 0);
-	}
+  void updateMap(Map<Character, Integer> letterToCount, char letter, int delta) {
+    letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + delta);
+    letterToCount.remove(letter, 0);
+  }
 }
