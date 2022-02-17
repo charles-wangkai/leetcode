@@ -12,11 +12,11 @@ class Solution {
   void search(
       List<List<Integer>> combinations,
       int[] candidates,
-      int remain,
-      List<Integer> solution,
+      int rest,
+      List<Integer> combination,
       int index) {
-    if (remain == 0) {
-      combinations.add(new ArrayList<>(solution));
+    if (rest == 0) {
+      combinations.add(List.copyOf(combination));
 
       return;
     }
@@ -24,12 +24,12 @@ class Solution {
       return;
     }
 
-    search(combinations, candidates, remain, solution, index + 1);
+    search(combinations, candidates, rest, combination, index + 1);
 
-    if (remain >= candidates[index]) {
-      solution.add(candidates[index]);
-      search(combinations, candidates, remain - candidates[index], solution, index);
-      solution.remove(solution.size() - 1);
+    if (candidates[index] <= rest) {
+      combination.add(candidates[index]);
+      search(combinations, candidates, rest - candidates[index], combination, index);
+      combination.remove(combination.size() - 1);
     }
   }
 }
