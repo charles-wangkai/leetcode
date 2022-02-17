@@ -1,5 +1,23 @@
-SELECT ROUND(CASE WHEN (SELECT COUNT(*) FROM friend_request) = 0
-                  THEN 0.0
-                  ELSE (SELECT COUNT(DISTINCT requester_id, accepter_id) FROM request_accepted) / (SELECT COUNT(DISTINCT sender_id, send_to_id) FROM friend_request)
-             END
-             , 2) AS accept_rate
+SELECT
+     round(
+          CASE
+               WHEN (
+                    SELECT
+                         count(*)
+                    FROM
+                         FriendRequest
+               ) = 0 THEN 0.0
+               ELSE (
+                    SELECT
+                         count(DISTINCT requester_id, accepter_id)
+                    FROM
+                         RequestAccepted
+               ) / (
+                    SELECT
+                         count(DISTINCT sender_id, send_to_id)
+                    FROM
+                         FriendRequest
+               )
+          END,
+          2
+     ) AS accept_rate

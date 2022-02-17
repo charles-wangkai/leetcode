@@ -1,2 +1,12 @@
-SELECT CONCAT(DAYNAME(day), ', ', MONTHNAME(day), ' ', DAY(day), ', ', YEAR(day)) AS day
-FROM Days
+SELECT
+  concat(
+    dayname(DAY),
+    ', ',
+    monthname(DAY),
+    ' ',
+    DAY(DAY),
+    ', ',
+    year(DAY)
+  ) AS DAY
+FROM
+  Days

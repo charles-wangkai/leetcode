@@ -1,6 +1,14 @@
-SELECT IF(COUNT(*) = 0, NULL, MAX(num)) AS num
-  FROM (SELECT num, COUNT(*) AS cnt
-          FROM number
-        GROUP BY num
-        HAVING COUNT(*) = 1
-       ) t
+SELECT
+  IF(count(*) = 0, NULL, max(num)) AS num
+FROM
+  (
+    SELECT
+      num,
+      count(*) AS cnt
+    FROM
+      MyNumbers
+    GROUP BY
+      num
+    HAVING
+      count(*) = 1
+  ) t

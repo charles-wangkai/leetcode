@@ -1,26 +1,54 @@
-SELECT (lt.Number + gt.Number) / 2 median
-FROM (
-    SELECT *
-    FROM (
-        SELECT n1.Number, SUM(n2.Frequency) AS lte_num
-          FROM Numbers n1
-          JOIN Numbers n2
-            ON n2.Number <= n1.Number
-        GROUP BY n1.Number
-    ) t
-    WHERE lte_num >= (SELECT SUM(Frequency) / 2 FROM Numbers)
-    ORDER BY t.Number
-    LIMIT 1
-) lt, (
-    SELECT *
-    FROM (
-        SELECT n1.Number, SUM(n2.Frequency) AS gte_num
-          FROM Numbers n1
-          JOIN Numbers n2
-            ON n2.Number >= n1.Number
-        GROUP BY n1.Number
-    ) t
-    WHERE gte_num >= (SELECT SUM(Frequency) / 2 FROM Numbers)
-    ORDER BY t.Number DESC
-    LIMIT 1
-) gt
+SELECT
+    (lt.num + gt.num) / 2 AS median
+FROM
+    (
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    n1.num,
+                    sum(n2.frequency) AS lte_num
+                FROM
+                    Numbers n1
+                    JOIN Numbers n2 ON n2.num <= n1.num
+                GROUP BY
+                    n1.num
+            ) t
+        WHERE
+            lte_num >= (
+                SELECT
+                    sum(frequency) / 2
+                FROM
+                    Numbers
+            )
+        ORDER BY
+            t.num
+        LIMIT
+            1
+    ) lt, (
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    n1.num,
+                    sum(n2.frequency) AS gte_num
+                FROM
+                    Numbers n1
+                    JOIN Numbers n2 ON n2.num >= n1.num
+                GROUP BY
+                    n1.num
+            ) t
+        WHERE
+            gte_num >= (
+                SELECT
+                    sum(frequency) / 2
+                FROM
+                    Numbers
+            )
+        ORDER BY
+            t.num DESC
+        LIMIT
+            1
+    ) gt

@@ -1,9 +1,15 @@
-SELECT e.Name
-  FROM (
-    SELECT ManagerId, COUNT(*) as cnt
-      FROM Employee
-    GROUP BY ManagerId
-    HAVING cnt >= 5
+SELECT
+  e.Name
+FROM
+  (
+    SELECT
+      ManagerId,
+      count(*) AS cnt
+    FROM
+      Employee
+    GROUP BY
+      ManagerId
+    HAVING
+      cnt >= 5
   ) m
-  JOIN Employee e
-    ON m.ManagerId = e.Id
+  JOIN Employee e ON m.ManagerId = e.Id

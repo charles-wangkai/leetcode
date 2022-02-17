@@ -1,8 +1,14 @@
-SELECT Name
-  FROM Employee e
- WHERE EXISTS (
-        SELECT 1
-          FROM Employee m
-         WHERE m.Id = e.ManagerId
-           AND e.Salary > m.Salary
-       )
+SELECT
+  name AS Employee
+FROM
+  Employee e
+WHERE
+  EXISTS (
+    SELECT
+      1
+    FROM
+      Employee m
+    WHERE
+      m.id = e.managerId
+      AND e.salary > m.salary
+  )
