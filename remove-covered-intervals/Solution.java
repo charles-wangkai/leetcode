@@ -1,11 +1,12 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 class Solution {
   public int removeCoveredIntervals(int[][] intervals) {
     Arrays.sort(
         intervals,
-        (i1, i2) ->
-            (i1[0] != i2[0]) ? Integer.compare(i1[0], i2[0]) : -Integer.compare(i1[1], i2[1]));
+        Comparator.comparing((int[] i) -> i[0])
+            .thenComparing(Comparator.comparing((int[] i) -> i[1]).reversed()));
 
     int result = 0;
     int right = -1;
