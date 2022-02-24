@@ -18,8 +18,7 @@ class ListNode {
 class Solution {
   public ListNode sortList(ListNode head) {
     int length = findLength(head);
-    ListNode tempHead = new ListNode();
-    tempHead.next = head;
+    ListNode tempHead = new ListNode(0, head);
     for (int halfLength = 1; halfLength < length; halfLength *= 2) {
       ListNode ahead = tempHead;
       while (ahead.next != null) {
