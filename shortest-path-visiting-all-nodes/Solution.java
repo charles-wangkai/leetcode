@@ -1,51 +1,48 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int shortestPathLength(int[][] graph) {
-		int nodeNum = graph.length;
+class Solution {
+  public int shortestPathLength(int[][] graph) {
+    int n = graph.length;
 
-		int[][] steps = new int[1 << nodeNum][nodeNum];
-		for (int i = 0; i < steps.length; i++) {
-			Arrays.fill(steps[i], Integer.MAX_VALUE);
-		}
+    int[][] steps = new int[1 << n][n];
+    for (int i = 0; i < steps.length; ++i) {
+      Arrays.fill(steps[i], Integer.MAX_VALUE);
+    }
 
-		Queue<State> queue = new LinkedList<>();
-		for (int i = 0; i < nodeNum; i++) {
-			State state = new State(1 << i, i);
+    Queue<State> queue = new ArrayDeque<>();
+    for (int i = 0; i < n; ++i) {
+      State state = new State(1 << i, i);
 
-			steps[state.code][state.currentNode] = 0;
-			queue.offer(state);
-		}
+      steps[state.mask][state.currentNode] = 0;
+      queue.offer(state);
+    }
 
-		while (!queue.isEmpty()) {
-			State state = queue.poll();
+    while (!queue.isEmpty()) {
+      State state = queue.poll();
 
-			for (int nextNode : graph[state.currentNode]) {
-				int nextCode = state.code | (1 << nextNode);
+      for (int nextNode : graph[state.currentNode]) {
+        int nextMask = state.mask | (1 << nextNode);
 
-				if (steps[nextCode][nextNode] == Integer.MAX_VALUE) {
-					steps[nextCode][nextNode] = steps[state.code][state.currentNode] + 1;
-					queue.offer(new State(nextCode, nextNode));
-				}
-			}
-		}
+        if (steps[nextMask][nextNode] == Integer.MAX_VALUE) {
+          steps[nextMask][nextNode] = steps[state.mask][state.currentNode] + 1;
+          queue.offer(new State(nextMask, nextNode));
+        }
+      }
+    }
 
-		int result = Integer.MAX_VALUE;
-		for (int i = 0; i < nodeNum; i++) {
-			result = Math.min(result, steps[(1 << nodeNum) - 1][i]);
-		}
-		return result;
-	}
+    return IntStream.range(0, n).map(i -> steps[(1 << n) - 1][i]).min().getAsInt();
+  }
 }
 
 class State {
-	int code;
-	int currentNode;
+  int mask;
+  int currentNode;
 
-	State(int code, int currentNode) {
-		this.code = code;
-		this.currentNode = currentNode;
-	}
+  State(int mask, int currentNode) {
+    this.mask = mask;
+    this.currentNode = currentNode;
+  }
 }
