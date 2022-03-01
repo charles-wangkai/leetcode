@@ -1,10 +1,10 @@
-public class Solution {
-	public int[] countBits(int num) {
-		int[] oneNums = new int[num + 1];
-		for (int i = 0; i <= num; ++i) {
-			oneNums[i] = oneNums[i / 2] + i % 2;
-		}
+class Solution {
+  public int[] countBits(int n) {
+    int[] oneNums = new int[n + 1];
+    for (int i = 0; i <= n; ++i) {
+      oneNums[i] = oneNums[i / 2] + i % 2;
+    }
 
-		return oneNums;
-	}
+    return oneNums;
+  }
 }
