@@ -16,17 +16,17 @@ class ListNode {
 }
 
 class Solution {
-  public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+  public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
     ListNode mergedHead = null;
     ListNode mergedTail = null;
-    while (l1 != null || l2 != null) {
+    while (list1 != null || list2 != null) {
       ListNode node;
-      if (l1 != null && (l2 == null || l1.val < l2.val)) {
-        node = l1;
-        l1 = l1.next;
+      if (list1 != null && (list2 == null || list1.val < list2.val)) {
+        node = list1;
+        list1 = list1.next;
       } else {
-        node = l2;
-        l2 = l2.next;
+        node = list2;
+        list2 = list2.next;
       }
 
       node.next = null;
