@@ -5,42 +5,42 @@ import java.util.Map;
 
 // Definition for a Node.
 class Node {
-    public int val;
-    public List<Node> children;
+  public int val;
+  public List<Node> children;
 
-    public Node() {
-        children = new ArrayList<Node>();
-    }
+  public Node() {
+    children = new ArrayList<Node>();
+  }
 
-    public Node(int _val) {
-        val = _val;
-        children = new ArrayList<Node>();
-    }
+  public Node(int _val) {
+    val = _val;
+    children = new ArrayList<Node>();
+  }
 
-    public Node(int _val, ArrayList<Node> _children) {
-        val = _val;
-        children = _children;
-    }
+  public Node(int _val, ArrayList<Node> _children) {
+    val = _val;
+    children = _children;
+  }
 }
 
 class Solution {
-    public Node cloneTree(Node root) {
-        if (root == null) {
-            return null;
-        }
-
-        Map<Node, Node> nodeToClone = new HashMap<>();
-        clone(nodeToClone, root);
-
-        return nodeToClone.get(root);
+  public Node cloneTree(Node root) {
+    if (root == null) {
+      return null;
     }
 
-    void clone(Map<Node, Node> nodeToClone, Node node) {
-        Node clone = new Node(node.val);
-        nodeToClone.put(node, clone);
-        for (Node child : node.children) {
-            clone(nodeToClone, child);
-            clone.children.add(nodeToClone.get(child));
-        }
+    Map<Node, Node> originToCopy = new HashMap<>();
+    clone(originToCopy, root);
+
+    return originToCopy.get(root);
+  }
+
+  void clone(Map<Node, Node> originToCopy, Node node) {
+    Node copy = new Node(node.val);
+    originToCopy.put(node, copy);
+    for (Node child : node.children) {
+      clone(originToCopy, child);
+      copy.children.add(originToCopy.get(child));
     }
+  }
 }
