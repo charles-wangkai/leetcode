@@ -39,10 +39,10 @@ class Solution {
   }
 
   int getValue(ListNode l) {
-    return l != null ? l.val : 0;
+    return (l != null) ? l.val : 0;
   }
 
   ListNode getNext(ListNode l) {
-    return l != null ? l.next : null;
+    return (l != null) ? l.next : null;
   }
 }
