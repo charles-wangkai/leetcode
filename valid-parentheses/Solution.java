@@ -3,17 +3,17 @@ import java.util.Stack;
 class Solution {
   public boolean isValid(String s) {
     Stack<Character> leftBrackets = new Stack<>();
-    for (char ch : s.toCharArray()) {
-      if (ch == '(' || ch == '[' || ch == '{') {
-        leftBrackets.push(ch);
+    for (char c : s.toCharArray()) {
+      if (c == '(' || c == '[' || c == '{') {
+        leftBrackets.push(c);
       } else {
         if (leftBrackets.empty()) {
           return false;
         }
         char leftBracket = leftBrackets.pop();
-        if ((ch == ')' && leftBracket != '(')
-            || (ch == ']' && leftBracket != '[')
-            || (ch == '}' && leftBracket != '{')) {
+        if ((c == ')' && leftBracket != '(')
+            || (c == ']' && leftBracket != '[')
+            || (c == '}' && leftBracket != '{')) {
           return false;
         }
       }
