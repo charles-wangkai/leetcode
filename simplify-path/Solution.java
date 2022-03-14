@@ -2,23 +2,18 @@ import java.util.Stack;
 
 class Solution {
   public String simplifyPath(String path) {
-    path += "/";
+    String[] parts = path.split("/");
     Stack<String> directories = new Stack<>();
-    int prevSlashIndex = -1;
-    for (int i = 0; i < path.length(); ++i) {
-      if (path.charAt(i) == '/') {
-        String directory = path.substring(prevSlashIndex + 1, i);
-        if (directory.equals("..")) {
-          if (!directories.isEmpty()) {
-            directories.pop();
-          }
-        } else if (!directory.equals(".") && !directory.isEmpty()) {
-          directories.push(directory);
+    for (String part : parts) {
+      if (part.equals("..")) {
+        if (!directories.empty()) {
+          directories.pop();
         }
-        prevSlashIndex = i;
+      } else if (!part.equals(".") && !part.isEmpty()) {
+        directories.push(part);
       }
     }
 
-    return "/" + String.join("/", directories);
+    return String.format("/%s", String.join("/", directories));
   }
 }
