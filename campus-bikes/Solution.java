@@ -1,56 +1,63 @@
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int[] assignBikes(int[][] workers, int[][] bikes) {
-		int N = workers.length;
-		int M = bikes.length;
+class Solution {
+  public int[] assignBikes(int[][] workers, int[][] bikes) {
+    int n = workers.length;
+    int m = bikes.length;
 
-		int[] result = new int[N];
-		Arrays.fill(result, -1);
+    int[] result = new int[n];
+    Arrays.fill(result, -1);
 
-		boolean[] bikeUsed = new boolean[M];
+    boolean[] bikeUsed = new boolean[m];
 
-		List<Element> sortedElements = IntStream.range(0, N).boxed()
-				.flatMap(workerIndex -> IntStream.range(0, M)
-						.mapToObj(bikeIndex -> new Element(workerIndex, bikeIndex,
-								computeDistance(workers, bikes, workerIndex, bikeIndex))))
-				.sorted((element1, element2) -> {
-					if (element1.distance != element2.distance) {
-						return Integer.compare(element1.distance, element2.distance);
-					} else if (element1.workerIndex != element2.workerIndex) {
-						return Integer.compare(element1.workerIndex, element2.workerIndex);
-					} else {
-						return Integer.compare(element1.bikeIndex, element2.bikeIndex);
-					}
-				}).collect(Collectors.toList());
+    Element[] sortedElements =
+        IntStream.range(0, n)
+            .boxed()
+            .flatMap(
+                workerIndex ->
+                    IntStream.range(0, m)
+                        .mapToObj(
+                            bikeIndex ->
+                                new Element(
+                                    workerIndex,
+                                    bikeIndex,
+                                    computeDistance(workers[workerIndex], bikes[bikeIndex]))))
+            .sorted(
+                (e1, e2) -> {
+                  if (e1.distance != e2.distance) {
+                    return Integer.compare(e1.distance, e2.distance);
+                  } else if (e1.workerIndex != e2.workerIndex) {
+                    return Integer.compare(e1.workerIndex, e2.workerIndex);
+                  } else {
+                    return Integer.compare(e1.bikeIndex, e2.bikeIndex);
+                  }
+                })
+            .toArray(Element[]::new);
 
-		for (Element element : sortedElements) {
-			if (result[element.workerIndex] == -1 && !bikeUsed[element.bikeIndex]) {
-				result[element.workerIndex] = element.bikeIndex;
-				bikeUsed[element.bikeIndex] = true;
-			}
-		}
+    for (Element element : sortedElements) {
+      if (result[element.workerIndex] == -1 && !bikeUsed[element.bikeIndex]) {
+        result[element.workerIndex] = element.bikeIndex;
+        bikeUsed[element.bikeIndex] = true;
+      }
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	int computeDistance(int[][] workers, int[][] bikes, int workerIndex, int bikeIndex) {
-		return Math.abs(workers[workerIndex][0] - bikes[bikeIndex][0])
-				+ Math.abs(workers[workerIndex][1] - bikes[bikeIndex][1]);
-	}
+  int computeDistance(int[] worker, int[] bike) {
+    return Math.abs(worker[0] - bike[0]) + Math.abs(worker[1] - bike[1]);
+  }
 }
 
 class Element {
-	int workerIndex;
-	int bikeIndex;
-	int distance;
+  int workerIndex;
+  int bikeIndex;
+  int distance;
 
-	Element(int workerIndex, int bikeIndex, int distance) {
-		this.workerIndex = workerIndex;
-		this.bikeIndex = bikeIndex;
-		this.distance = distance;
-	}
+  Element(int workerIndex, int bikeIndex, int distance) {
+    this.workerIndex = workerIndex;
+    this.bikeIndex = bikeIndex;
+    this.distance = distance;
+  }
 }
