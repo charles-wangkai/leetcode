@@ -1,10 +1,10 @@
 import java.util.Stack;
 
 class Solution {
-  public int scoreOfParentheses(String S) {
+  public int scoreOfParentheses(String s) {
     Stack<Integer> stack = new Stack<>();
-    for (char ch : S.toCharArray()) {
-      if (ch == '(') {
+    for (char c : s.toCharArray()) {
+      if (c == '(') {
         stack.push(0);
       } else {
         int top = stack.pop();
