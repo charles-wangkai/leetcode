@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -15,11 +15,12 @@ class Solution {
       letterStates.get(s.charAt(i) - 'a').appendIndex(i);
     }
 
-    letterStates.removeIf(li -> li.indices.isEmpty());
+    letterStates.removeIf(letterState -> letterState.indices.isEmpty());
 
     StringBuilder result = new StringBuilder();
     while (!letterStates.isEmpty()) {
-      int minLastIndex = letterStates.stream().mapToInt(li -> li.lastIndex).min().getAsInt();
+      int minLastIndex =
+          letterStates.stream().mapToInt(letterState -> letterState.lastIndex).min().getAsInt();
 
       char selectedLetter = 0;
       int selectedIndex = -1;
@@ -33,7 +34,7 @@ class Solution {
       }
 
       char selectedLetter_ = selectedLetter;
-      letterStates.removeIf(li -> li.letter == selectedLetter_);
+      letterStates.removeIf(letterState -> letterState.letter == selectedLetter_);
 
       int selectedIndex_ = selectedIndex;
       letterStates.forEach(
@@ -52,7 +53,7 @@ class Solution {
 
 class LetterState {
   char letter;
-  Queue<Integer> indices = new LinkedList<>();
+  Queue<Integer> indices = new ArrayDeque<>();
   int lastIndex = -1;
 
   LetterState(char letter) {
