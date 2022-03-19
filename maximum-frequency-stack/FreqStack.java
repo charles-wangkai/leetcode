@@ -14,14 +14,14 @@ class FreqStack {
               .thenComparing(e -> e.sequences.peek()));
   private int sequence = 0;
 
-  public void push(int x) {
+  public void push(int val) {
     Element element;
-    if (valueToElement.containsKey(x)) {
-      element = valueToElement.get(x);
+    if (valueToElement.containsKey(val)) {
+      element = valueToElement.get(val);
       elements.remove(element);
     } else {
-      element = new Element(x);
-      valueToElement.put(x, element);
+      element = new Element(val);
+      valueToElement.put(val, element);
     }
 
     element.sequences.push(sequence);
@@ -67,5 +67,5 @@ class Element {
 
 // Your FreqStack object will be instantiated and called as such:
 // FreqStack obj = new FreqStack();
-// obj.push(x);
+// obj.push(val);
 // int param_2 = obj.pop();
