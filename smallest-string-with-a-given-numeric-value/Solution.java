@@ -1,11 +1,10 @@
 class Solution {
   public String getSmallestString(int n, int k) {
     StringBuilder result = new StringBuilder();
-    while (n != 0) {
-      int value = Math.max(1, k - 26 * (n - 1));
+    for (int i = n; i >= 1; --i) {
+      int value = Math.max(1, k - 26 * (i - 1));
       result.append((char) (value + 'a' - 1));
 
-      --n;
       k -= value;
     }
 
