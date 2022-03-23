@@ -1,16 +1,16 @@
 class Solution {
-  public int brokenCalc(int X, int Y) {
+  public int brokenCalc(int startValue, int target) {
     int operationNum = 0;
-    while (Y > X) {
-      if (Y % 2 != 0) {
-        ++Y;
+    while (target > startValue) {
+      if (target % 2 != 0) {
+        ++target;
         ++operationNum;
       }
 
-      Y /= 2;
+      target /= 2;
       ++operationNum;
     }
-    operationNum += X - Y;
+    operationNum += startValue - target;
 
     return operationNum;
   }
