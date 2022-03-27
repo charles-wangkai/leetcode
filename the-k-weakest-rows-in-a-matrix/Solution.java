@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -8,7 +9,8 @@ class Solution {
 
     return IntStream.range(0, mat.length)
         .boxed()
-        .sorted(Comparator.comparing((Integer i) -> oneCounts[i]).thenComparing(i -> i))
+        .sorted(
+            Comparator.comparing((Integer i) -> oneCounts[i]).thenComparing(Function.identity()))
         .limit(k)
         .mapToInt(x -> x)
         .toArray();
