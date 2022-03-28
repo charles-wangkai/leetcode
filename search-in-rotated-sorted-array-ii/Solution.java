@@ -1,21 +1,19 @@
 class Solution {
-  public boolean search(int[] A, int target) {
-    return search(A, target, 0, A.length - 1);
+  public boolean search(int[] nums, int target) {
+    return search(nums, target, 0, nums.length - 1);
   }
 
-  boolean search(int[] A, int target, int lower, int upper) {
-    if (lower > upper) {
-      return false;
-    }
-    if (A[lower] < A[upper] && !(target >= A[lower] && target <= A[upper])) {
+  boolean search(int[] nums, int target, int lower, int upper) {
+    if (lower > upper
+        || (nums[lower] < nums[upper] && !(target >= nums[lower] && target <= nums[upper]))) {
       return false;
     }
 
     int middle = (lower + upper) / 2;
-    if (A[middle] == target) {
+    if (nums[middle] == target) {
       return true;
     }
 
-    return search(A, target, lower, middle - 1) || search(A, target, middle + 1, upper);
+    return search(nums, target, lower, middle - 1) || search(nums, target, middle + 1, upper);
   }
 }
