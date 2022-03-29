@@ -1,20 +1,16 @@
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Solution {
-	public int findDuplicate(int[] nums) {
-		int lower = 1;
-		int upper = nums.length - 1;
-		while (lower < upper) {
-			int middle = (lower + upper) / 2;
+class Solution {
+  public int findDuplicate(int[] nums) {
+    Map<Integer, Integer> valueToCount = new HashMap<>();
+    for (int num : nums) {
+      valueToCount.put(num, valueToCount.getOrDefault(num, 0) + 1);
+    }
 
-			int lower_ = lower;
-			if (Arrays.stream(nums).filter(num -> num >= lower_ && num <= middle).count() > middle - lower + 1) {
-				upper = middle;
-			} else {
-				lower = middle + 1;
-			}
-		}
-
-		return lower;
-	}
+    return valueToCount.keySet().stream()
+        .filter(value -> valueToCount.get(value) >= 2)
+        .findAny()
+        .get();
+  }
 }
