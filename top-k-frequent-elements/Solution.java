@@ -1,24 +1,24 @@
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
 
 class Solution {
-	public int[] topKFrequent(int[] nums, int k) {
-		Map<Integer, Integer> valueToCount = new HashMap<>();
-		for (int value : nums) {
-			valueToCount.put(value, valueToCount.getOrDefault(value, 0) + 1);
-		}
+  public int[] topKFrequent(int[] nums, int k) {
+    Map<Integer, Integer> valueToCount = new HashMap<>();
+    for (int value : nums) {
+      valueToCount.put(value, valueToCount.getOrDefault(value, 0) + 1);
+    }
 
-		PriorityQueue<Integer> pq = new PriorityQueue<>(
-				(v1, v2) -> Integer.compare(valueToCount.get(v1), valueToCount.get(v2)));
-		for (int value : valueToCount.keySet()) {
-			pq.offer(value);
+    int minCount =
+        valueToCount.values().stream()
+            .sorted(Comparator.reverseOrder())
+            .skip(k - 1)
+            .findFirst()
+            .get();
 
-			if (pq.size() == k + 1) {
-				pq.poll();
-			}
-		}
-
-		return pq.stream().mapToInt(x -> x).toArray();
-	}
+    return valueToCount.keySet().stream()
+        .filter(value -> valueToCount.get(value) >= minCount)
+        .mapToInt(x -> x)
+        .toArray();
+  }
 }
