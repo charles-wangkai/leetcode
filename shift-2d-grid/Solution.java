@@ -2,20 +2,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Solution {
-	public List<List<Integer>> shiftGrid(int[][] grid, int k) {
-		int row = grid.length;
-		int col = grid[0].length;
-		int[][] result = new int[row][col];
-		for (int r = 0; r < row; r++) {
-			for (int c = 0; c < col; c++) {
-				int index = (r * col + c + k) % (row * col);
+class Solution {
+  public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+    int m = grid.length;
+    int n = grid[0].length;
+    int[][] result = new int[m][n];
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
+        int index = (r * n + c + k) % (m * n);
 
-				result[index / col][index % col] = grid[r][c];
-			}
-		}
+        result[index / n][index % n] = grid[r][c];
+      }
+    }
 
-		return Arrays.stream(result).map(line -> Arrays.stream(line).boxed().collect(Collectors.toList()))
-				.collect(Collectors.toList());
-	}
+    return Arrays.stream(result)
+        .map(line -> Arrays.stream(line).boxed().collect(Collectors.toList()))
+        .collect(Collectors.toList());
+  }
 }
