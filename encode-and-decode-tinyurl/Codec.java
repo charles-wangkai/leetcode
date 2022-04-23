@@ -6,7 +6,7 @@ import java.util.Map;
 public class Codec {
   static final String DOMAIN = "http://my_short_url.com/";
 
-  List<String> longUrls = new ArrayList<String>();
+  List<String> longUrls = new ArrayList<>();
   Map<String, Integer> longUrlToIndex = new HashMap<>();
 
   // Encodes a URL to a shortened URL.
