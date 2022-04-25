@@ -8,8 +8,6 @@ class PeekingIterator implements Iterator<Integer> {
   private Integer next;
 
   public PeekingIterator(Iterator<Integer> iterator) {
-    // initialize any member here.
-
     this.iterator = iterator;
     move();
   }
