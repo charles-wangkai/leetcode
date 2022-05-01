@@ -1,39 +1,39 @@
-public class Solution {
-	public boolean backspaceCompare(String S, String T) {
-		int indexS = S.length() - 1;
-		int deleteCountS = 0;
-		int indexT = T.length() - 1;
-		int deleteCountT = 0;
-		while (true) {
-			while (indexS >= 0 && (S.charAt(indexS) == '#' || deleteCountS != 0)) {
-				if (S.charAt(indexS) == '#') {
-					++deleteCountS;
-				} else {
-					--deleteCountS;
-				}
+class Solution {
+  public boolean backspaceCompare(String s, String t) {
+    int sIndex = s.length() - 1;
+    int sDeleteCount = 0;
+    int tIndex = t.length() - 1;
+    int tDeleteCount = 0;
+    while (true) {
+      while (sIndex >= 0 && (s.charAt(sIndex) == '#' || sDeleteCount != 0)) {
+        if (s.charAt(sIndex) == '#') {
+          ++sDeleteCount;
+        } else {
+          --sDeleteCount;
+        }
 
-				--indexS;
-			}
+        --sIndex;
+      }
 
-			while (indexT >= 0 && (T.charAt(indexT) == '#' || deleteCountT != 0)) {
-				if (T.charAt(indexT) == '#') {
-					++deleteCountT;
-				} else {
-					--deleteCountT;
-				}
+      while (tIndex >= 0 && (t.charAt(tIndex) == '#' || tDeleteCount != 0)) {
+        if (t.charAt(tIndex) == '#') {
+          ++tDeleteCount;
+        } else {
+          --tDeleteCount;
+        }
 
-				--indexT;
-			}
+        --tIndex;
+      }
 
-			if (indexS == -1 && indexT == -1) {
-				return true;
-			}
-			if (indexS == -1 || indexT == -1 || S.charAt(indexS) != T.charAt(indexT)) {
-				return false;
-			}
+      if (sIndex == -1 && tIndex == -1) {
+        return true;
+      }
+      if (sIndex == -1 || tIndex == -1 || s.charAt(sIndex) != t.charAt(tIndex)) {
+        return false;
+      }
 
-			--indexS;
-			--indexT;
-		}
-	}
+      --sIndex;
+      --tIndex;
+    }
+  }
 }
