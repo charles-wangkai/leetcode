@@ -1,7 +1,12 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 class Solution {
-	public int[] sortArrayByParity(int[] A) {
-		return Arrays.stream(A).boxed().sorted((e1, e2) -> Integer.compare(e1 % 2, e2 % 2)).mapToInt(x -> x).toArray();
-	}
+  public int[] sortArrayByParity(int[] nums) {
+    return Arrays.stream(nums)
+        .boxed()
+        .sorted(Comparator.comparing(x -> x % 2))
+        .mapToInt(x -> x)
+        .toArray();
+  }
 }
