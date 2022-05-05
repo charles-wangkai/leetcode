@@ -1,45 +1,40 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class MyStack {
-	Queue<Integer> queue;
-	Queue<Integer> buffer;
-	int topElement;
+class MyStack {
+  Queue<Integer> queue = new ArrayDeque<>();
+  Queue<Integer> buffer = new ArrayDeque<>();
+  int topElement;
 
-	MyStack() {
-		queue = new LinkedList<Integer>();
-		buffer = new LinkedList<Integer>();
-	}
+  public void push(int x) {
+    queue.offer(x);
+    topElement = x;
+  }
 
-	// Push element x onto stack.
-	public void push(int x) {
-		queue.offer(x);
-		topElement = x;
-	}
+  public int pop() {
+    int result = topElement;
 
-	// Removes the element on top of the stack.
-	public void pop() {
-		while (queue.size() > 1) {
-			buffer.offer(queue.poll());
-		}
-		queue.poll();
+    while (queue.size() >= 2) {
+      buffer.offer(queue.poll());
+    }
+    queue.poll();
 
-		while (!buffer.isEmpty()) {
-			int element = buffer.poll();
-			queue.offer(element);
-			topElement = element;
-		}
-	}
+    while (!buffer.isEmpty()) {
+      int element = buffer.poll();
+      queue.offer(element);
+      topElement = element;
+    }
 
-	// Get the top element.
-	public int top() {
-		return topElement;
-	}
+    return result;
+  }
 
-	// Return whether the stack is empty.
-	public boolean empty() {
-		return queue.isEmpty();
-	}
+  public int top() {
+    return topElement;
+  }
+
+  public boolean empty() {
+    return queue.isEmpty();
+  }
 }
 
 // Your MyStack object will be instantiated and called as such:
