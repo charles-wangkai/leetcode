@@ -2,7 +2,7 @@ import java.util.Stack;
 
 class Solution {
   public boolean find132pattern(int[] nums) {
-    Stack<Range> stack = new Stack<Range>();
+    Stack<Range> stack = new Stack<>();
     for (int num : nums) {
       Range current = new Range(num, num);
       while (!stack.empty() && current.max > stack.peek().min) {
@@ -17,6 +17,7 @@ class Solution {
         return true;
       }
     }
+
     return false;
   }
 }
