@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 class Solution {
-  static final Map<Character, String> DIGIT_TO_LETTERS =
+  static final Map<Character, char[]> DIGIT_TO_LETTERS =
       Map.ofEntries(
-          entry('2', "abc"),
-          entry('3', "def"),
-          entry('4', "ghi"),
-          entry('5', "jkl"),
-          entry('6', "mno"),
-          entry('7', "pqrs"),
-          entry('8', "tuv"),
-          entry('9', "wxyz"));
+          entry('2', new char[] {'a', 'b', 'c'}),
+          entry('3', new char[] {'d', 'e', 'f'}),
+          entry('4', new char[] {'g', 'h', 'i'}),
+          entry('5', new char[] {'j', 'k', 'l'}),
+          entry('6', new char[] {'m', 'n', 'o'}),
+          entry('7', new char[] {'p', 'q', 'r', 's'}),
+          entry('8', new char[] {'t', 'u', 'v'}),
+          entry('9', new char[] {'w', 'x', 'y', 'z'}));
 
   public List<String> letterCombinations(String digits) {
     if (digits.isEmpty()) {
@@ -34,7 +34,7 @@ class Solution {
       return;
     }
 
-    for (char letter : DIGIT_TO_LETTERS.get(digits.charAt(index)).toCharArray()) {
+    for (char letter : DIGIT_TO_LETTERS.get(digits.charAt(index))) {
       current[index] = letter;
       search(combinations, digits, current, index + 1);
     }
