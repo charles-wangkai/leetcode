@@ -1,27 +1,19 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class Solution {
-	public List<List<Integer>> combinationSum3(int k, int n) {
-		List<List<Integer>> sets = new ArrayList<>();
-		search(sets, 1, k, n, new ArrayList<>());
-
-		return sets;
-	}
-
-	void search(List<List<Integer>> sets, int current, int remainK, int remainN, List<Integer> set) {
-		if (current == 10) {
-			if (remainK == 0 && remainN == 0) {
-				sets.add(new ArrayList<>(set));
-			}
-
-			return;
-		}
-
-		search(sets, current + 1, remainK, remainN, set);
-
-		set.add(current);
-		search(sets, current + 1, remainK - 1, remainN - current, set);
-		set.remove(set.size() - 1);
-	}
+  public List<List<Integer>> combinationSum3(int k, int n) {
+    return IntStream.range(0, 1 << 9)
+        .mapToObj(
+            code ->
+                IntStream.rangeClosed(1, 9)
+                    .filter(i -> (code & (1 << (i - 1))) != 0)
+                    .boxed()
+                    .collect(Collectors.toList()))
+        .filter(
+            combination ->
+                combination.size() == k && combination.stream().mapToInt(x -> x).sum() == n)
+        .collect(Collectors.toList());
+  }
 }
