@@ -26,23 +26,16 @@ class Solution {
       nextHead = null;
       Node prev = null;
       for (Node node = head; node != null; node = node.next) {
-        if (node.left != null) {
-          if (nextHead == null) {
-            nextHead = node.left;
+        for (Node child : new Node[] {node.left, node.right}) {
+          if (child != null) {
+            if (nextHead == null) {
+              nextHead = child;
+            }
+            if (prev != null) {
+              prev.next = child;
+            }
+            prev = child;
           }
-          if (prev != null) {
-            prev.next = node.left;
-          }
-          prev = node.left;
-        }
-        if (node.right != null) {
-          if (nextHead == null) {
-            nextHead = node.right;
-          }
-          if (prev != null) {
-            prev.next = node.right;
-          }
-          prev = node.right;
         }
       }
     }
