@@ -1,56 +1,49 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.stream.Collectors;
 
-public class Solution {
-	public int networkDelayTime(int[][] times, int N, int K) {
-		Map<Integer, List<Edge>> source2edges = Arrays.stream(times).collect(
-				Collectors.groupingBy(t -> t[0], Collectors.mapping(t -> new Edge(t[1], t[2]), Collectors.toList())));
+class Solution {
+  public int networkDelayTime(int[][] times, int n, int k) {
+    @SuppressWarnings("unchecked")
+    List<Integer>[] edgeIndices = new List[n];
+    for (int i = 0; i < edgeIndices.length; ++i) {
+      edgeIndices[i] = new ArrayList<>();
+    }
+    for (int i = 0; i < times.length; ++i) {
+      edgeIndices[times[i][0] - 1].add(i);
+    }
 
-		boolean[] visited = new boolean[N + 1];
-		int remain = N;
-		int lastTime = -1;
-		PriorityQueue<Element> pq = new PriorityQueue<Element>((e1, e2) -> Integer.compare(e1.time, e2.time));
-		pq.offer(new Element(K, 0));
-		while (!pq.isEmpty()) {
-			Element head = pq.poll();
+    boolean[] visited = new boolean[n];
+    int rest = n;
+    int lastTime = -1;
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(e -> e.time));
+    pq.offer(new Element(k - 1, 0));
+    while (!pq.isEmpty()) {
+      Element head = pq.poll();
+      if (visited[head.node]) {
+        continue;
+      }
 
-			if (visited[head.node]) {
-				continue;
-			}
+      visited[head.node] = true;
+      lastTime = head.time;
+      --rest;
 
-			visited[head.node] = true;
-			lastTime = head.time;
-			remain--;
+      for (int edgeIndex : edgeIndices[head.node]) {
+        pq.offer(new Element(times[edgeIndex][1] - 1, head.time + times[edgeIndex][2]));
+      }
+    }
 
-			if (source2edges.containsKey(head.node)) {
-				for (Edge edge : source2edges.get(head.node)) {
-					pq.offer(new Element(edge.target, head.time + edge.time));
-				}
-			}
-		}
-		return (remain == 0) ? lastTime : -1;
-	}
-}
-
-class Edge {
-	int target;
-	int time;
-
-	Edge(int target, int time) {
-		this.target = target;
-		this.time = time;
-	}
+    return (rest == 0) ? lastTime : -1;
+  }
 }
 
 class Element {
-	int node;
-	int time;
+  int node;
+  int time;
 
-	Element(int node, int time) {
-		this.node = node;
-		this.time = time;
-	}
+  Element(int node, int time) {
+    this.node = node;
+    this.time = time;
+  }
 }
