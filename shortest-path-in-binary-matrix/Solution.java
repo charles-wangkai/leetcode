@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 class Solution {
@@ -10,32 +10,32 @@ class Solution {
       return -1;
     }
 
-    int N = grid.length;
+    int n = grid.length;
 
-    int[][] minLengths = new int[N][N];
-    Queue<Point> queue = new LinkedList<>();
+    int[][] minLengths = new int[n][n];
+    Queue<Point> queue = new ArrayDeque<>();
     queue.offer(new Point(0, 0));
     minLengths[0][0] = 1;
 
     while (!queue.isEmpty()) {
       Point head = queue.poll();
-      if (head.r == N - 1 && head.c == N - 1) {
+      if (head.r == n - 1 && head.c == n - 1) {
         return minLengths[head.r][head.c];
       }
 
       for (int i = 0; i < R_OFFSETS.length; ++i) {
-        int nextR = head.r + R_OFFSETS[i];
-        int nextC = head.c + C_OFFSETS[i];
+        int adjR = head.r + R_OFFSETS[i];
+        int adjC = head.c + C_OFFSETS[i];
 
-        if (nextR >= 0
-            && nextR < N
-            && nextC >= 0
-            && nextC < N
-            && grid[nextR][nextC] == 0
-            && minLengths[nextR][nextC] == 0) {
-          minLengths[nextR][nextC] = minLengths[head.r][head.c] + 1;
+        if (adjR >= 0
+            && adjR < n
+            && adjC >= 0
+            && adjC < n
+            && grid[adjR][adjC] == 0
+            && minLengths[adjR][adjC] == 0) {
+          minLengths[adjR][adjC] = minLengths[head.r][head.c] + 1;
 
-          queue.offer(new Point(nextR, nextC));
+          queue.offer(new Point(adjR, adjC));
         }
       }
     }
