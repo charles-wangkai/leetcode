@@ -3,52 +3,52 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
   int time;
 
   public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
     @SuppressWarnings("unchecked")
-    List<Integer>[] adjLists = new List[n];
-    for (int i = 0; i < adjLists.length; ++i) {
-      adjLists[i] = new ArrayList<>();
+    List<Integer>[] edgeLists = new List[n];
+    for (int i = 0; i < edgeLists.length; ++i) {
+      edgeLists[i] = new ArrayList<>();
     }
-    for (List<Integer> connection : connections) {
-      adjLists[connection.get(0)].add(connection.get(1));
-      adjLists[connection.get(1)].add(connection.get(0));
+    for (int i = 0; i < connections.size(); ++i) {
+      edgeLists[connections.get(i).get(0)].add(i);
+      edgeLists[connections.get(i).get(1)].add(i);
     }
 
     List<List<Integer>> bridgeEdges = new ArrayList<>();
     time = 0;
-    search(bridgeEdges, adjLists, new boolean[n], new int[n], new int[n], new int[n], 0);
+    search(bridgeEdges, connections, edgeLists, new int[n], new int[n], -1, 0);
 
     return bridgeEdges;
   }
 
   void search(
       List<List<Integer>> bridgeEdges,
-      List<Integer>[] adjLists,
-      boolean[] visited,
+      List<List<Integer>> connections,
+      List<Integer>[] edgeLists,
       int[] times,
       int[] lows,
-      int[] parents,
+      int parent,
       int node) {
-    visited[node] = true;
-
+    ++time;
     times[node] = time;
     lows[node] = time;
-    ++time;
 
-    for (int adj : adjLists[node]) {
-      if (!visited[adj]) {
-        parents[adj] = node;
-        search(bridgeEdges, adjLists, visited, times, lows, parents, adj);
+    for (int edge : edgeLists[node]) {
+      List<Integer> connection = connections.get(edge);
+      int adj = (connection.get(0) == node) ? connection.get(1) : connection.get(0);
+
+      if (times[adj] == 0) {
+        search(bridgeEdges, connections, edgeLists, times, lows, node, adj);
 
         lows[node] = Math.min(lows[node], lows[adj]);
 
         if (lows[adj] > times[node]) {
-          bridgeEdges.add(List.of(node, adj));
+          bridgeEdges.add(connection);
         }
-      } else if (adj != parents[node]) {
+      } else if (adj != parent) {
         lows[node] = Math.min(lows[node], times[adj]);
       }
     }
