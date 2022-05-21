@@ -7,8 +7,8 @@ class Solution {
     minCoinNums[0] = 0;
 
     for (int coin : coins) {
-      for (int i = 0; i < minCoinNums.length; ++i) {
-        if (i >= coin && minCoinNums[i - coin] != Integer.MAX_VALUE) {
+      for (int i = coin; i < minCoinNums.length; ++i) {
+        if (minCoinNums[i - coin] != Integer.MAX_VALUE) {
           minCoinNums[i] = Math.min(minCoinNums[i], minCoinNums[i - coin] + 1);
         }
       }
