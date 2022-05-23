@@ -1,32 +1,28 @@
 class Solution {
   public int findMaxForm(String[] strs, int m, int n) {
-    int[][] counts = new int[m + 1][n + 1];
+    int[][] dp = new int[m + 1][n + 1];
     for (String str : strs) {
-      int num0 = count(str, '0');
-      int num1 = count(str, '1');
+      int num0 = (int) str.chars().filter(x -> x == '0').count();
+      int num1 = str.length() - num0;
 
-      int[][] nextCounts = new int[m + 1][n + 1];
+      int[][] nextDp = new int[m + 1][n + 1];
       for (int i = 0; i <= m; ++i) {
         for (int j = 0; j <= n; ++j) {
           if (i - 1 >= 0) {
-            nextCounts[i][j] = Math.max(counts[i][j], counts[i - 1][j]);
+            nextDp[i][j] = Math.max(dp[i][j], dp[i - 1][j]);
           }
           if (j - 1 >= 0) {
-            nextCounts[i][j] = Math.max(counts[i][j], counts[i][j - 1]);
+            nextDp[i][j] = Math.max(dp[i][j], dp[i][j - 1]);
           }
-          if (i - num0 >= 0 && j - num1 >= 0) {
-            nextCounts[i][j] = Math.max(counts[i][j], counts[i - num0][j - num1] + 1);
+          if (i >= num0 && j >= num1) {
+            nextDp[i][j] = Math.max(dp[i][j], dp[i - num0][j - num1] + 1);
           }
         }
       }
 
-      counts = nextCounts;
+      dp = nextDp;
     }
 
-    return counts[m][n];
-  }
-
-  int count(String s, char c) {
-    return (int) s.chars().filter(x -> x == c).count();
+    return dp[m][n];
   }
 }
