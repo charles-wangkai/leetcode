@@ -1,20 +1,46 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
-public class Solution {
+class Solution {
   public int maxEnvelopes(int[][] envelopes) {
-    Arrays.sort(envelopes, Comparator.comparing(e -> e[0]));
+    return lengthOfLIS(
+        Arrays.stream(envelopes)
+            .sorted(
+                Comparator.comparing((int[] e) -> e[0])
+                    .thenComparing(Comparator.comparing((int[] e) -> e[1]).reversed()))
+            .mapToInt(e -> e[1])
+            .toArray());
+  }
 
-    int[] maxLengths = new int[envelopes.length];
-    for (int i = 0; i < maxLengths.length; ++i) {
-      maxLengths[i] = 1;
-      for (int j = 0; j < i; ++j) {
-        if (envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1]) {
-          maxLengths[i] = Math.max(maxLengths[i], maxLengths[j] + 1);
-        }
+  int lengthOfLIS(int[] nums) {
+    List<Integer> subsequence = new ArrayList<>();
+    for (int num : nums) {
+      if (subsequence.isEmpty() || num > subsequence.get(subsequence.size() - 1)) {
+        subsequence.add(num);
+      } else {
+        subsequence.set(findFirstGreaterEqualIndex(subsequence, num), num);
       }
     }
 
-    return Arrays.stream(maxLengths).max().getAsInt();
+    return subsequence.size();
+  }
+
+  int findFirstGreaterEqualIndex(List<Integer> subsequence, int target) {
+    int result = -1;
+    int lower = 0;
+    int upper = subsequence.size() - 1;
+    while (lower <= upper) {
+      int middle = (lower + upper) / 2;
+      if (subsequence.get(middle) >= target) {
+        result = middle;
+        upper = middle - 1;
+      } else {
+        lower = middle + 1;
+      }
+    }
+
+    return result;
   }
 }
