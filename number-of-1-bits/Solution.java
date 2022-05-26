@@ -5,12 +5,6 @@ class Solution {
       number += 1L << 32;
     }
 
-    int oneCount = 0;
-    while (number != 0) {
-      number = number & (number - 1);
-      ++oneCount;
-    }
-
-    return oneCount;
+    return Long.bitCount(number);
   }
 }
