@@ -21,6 +21,6 @@ class Solution {
   }
 
   int generateKey(String word) {
-    return word.chars().map(ch -> 1 << (ch - 'a')).reduce(0, (x, y) -> x | y);
+    return word.chars().map(ch -> 1 << (ch - 'a')).reduce((x, y) -> x | y).getAsInt();
   }
 }
