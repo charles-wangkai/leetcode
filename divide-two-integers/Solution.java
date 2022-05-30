@@ -12,33 +12,24 @@ class Solution {
       positive = !positive;
     }
 
-    if (a < b) {
-      return 0;
-    }
-
     long result = 0;
     long power = b;
-    long factor = 1;
     while (power << 1 <= a) {
       power <<= 1;
-      factor <<= 1;
     }
 
     while (power >= b) {
       if (a >= power) {
         a -= power;
-        result += factor;
+        result += power / b;
       }
       power >>= 1;
-      factor >>= 1;
     }
 
     if (!positive) {
       result = -result;
     }
 
-    return (result >= Integer.MIN_VALUE && result <= Integer.MAX_VALUE)
-        ? (int) result
-        : Integer.MAX_VALUE;
+    return (int) Math.min(Integer.MAX_VALUE, Math.max(Integer.MIN_VALUE, result));
   }
 }
