@@ -43,9 +43,9 @@ class Solution {
         rows[index] = i;
         search(solutions, columns, diffs, sums, rows, index + 1);
 
-        columns[i] = false;
-        diffs[index - i + (n - 1)] = false;
         sums[index + i] = false;
+        diffs[index - i + (n - 1)] = false;
+        columns[i] = false;
       }
     }
   }
