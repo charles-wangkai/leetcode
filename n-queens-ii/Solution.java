@@ -1,9 +1,11 @@
 class Solution {
   public int totalNQueens(int n) {
-    return search(n, new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1], 0);
+    return search(new boolean[n], new boolean[2 * n - 1], new boolean[2 * n - 1], 0);
   }
 
-  int search(int n, boolean[] columns, boolean[] diffs, boolean[] sums, int r) {
+  int search(boolean[] columns, boolean[] diffs, boolean[] sums, int r) {
+    int n = columns.length;
+
     if (r == n) {
       return 1;
     }
@@ -15,11 +17,11 @@ class Solution {
         diffs[r - c + (n - 1)] = true;
         sums[r + c] = true;
 
-        result += search(n, columns, diffs, sums, r + 1);
+        result += search(columns, diffs, sums, r + 1);
 
-        columns[c] = false;
-        diffs[r - c + (n - 1)] = false;
         sums[r + c] = false;
+        diffs[r - c + (n - 1)] = false;
+        columns[c] = false;
       }
     }
 
