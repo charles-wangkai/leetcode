@@ -1,15 +1,20 @@
-public class Solution {
-	public int[] twoSum(int[] numbers, int target) {
-		int lower = 0;
-		int upper = numbers.length - 1;
-		int sum;
-		while ((sum = numbers[lower] + numbers[upper]) != target) {
-			if (sum > target) {
-				upper--;
-			} else {
-				lower++;
-			}
-		}
-		return new int[] { lower + 1, upper + 1 };
-	}
+class Solution {
+  public int[] twoSum(int[] numbers, int target) {
+    int leftIndex = 0;
+    int rightIndex = numbers.length - 1;
+    while (true) {
+      int sum = numbers[leftIndex] + numbers[rightIndex];
+      if (sum == target) {
+        break;
+      }
+
+      if (sum < target) {
+        ++leftIndex;
+      } else {
+        --rightIndex;
+      }
+    }
+
+    return new int[] {leftIndex + 1, rightIndex + 1};
+  }
 }
