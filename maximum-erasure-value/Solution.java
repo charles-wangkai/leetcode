@@ -1,21 +1,21 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
   public int maximumUniqueSubarray(int[] nums) {
     int result = 0;
     int beginIndex = 0;
-    Map<Integer, Integer> valueToCount = new HashMap<>();
+    Set<Integer> seen = new HashSet<>();
     int sum = 0;
     for (int endIndex = 0; endIndex < nums.length; ++endIndex) {
-      sum += nums[endIndex];
-      valueToCount.put(nums[endIndex], valueToCount.getOrDefault(nums[endIndex], 0) + 1);
-
-      while (valueToCount.get(nums[endIndex]) != 1) {
+      while (seen.contains(nums[endIndex])) {
         sum -= nums[beginIndex];
-        valueToCount.put(nums[beginIndex], valueToCount.get(nums[beginIndex]) - 1);
+        seen.remove(nums[beginIndex]);
         ++beginIndex;
       }
+
+      sum += nums[endIndex];
+      seen.add(nums[endIndex]);
 
       result = Math.max(result, sum);
     }
