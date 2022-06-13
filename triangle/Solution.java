@@ -3,10 +3,10 @@ import java.util.List;
 
 class Solution {
   public int minimumTotal(List<List<Integer>> triangle) {
-    List<Integer> minSums = List.of();
+    List<Integer> minSums = null;
     for (List<Integer> row : triangle) {
       List<Integer> nextMinSums = new ArrayList<>();
-      if (minSums.isEmpty()) {
+      if (minSums == null) {
         nextMinSums.add(row.get(0));
       } else {
         nextMinSums.add(minSums.get(0) + row.get(0));
