@@ -1,15 +1,9 @@
-public class Solution {
+class Solution {
   public String longestPalindrome(String s) {
     String result = "";
     for (int i = 0; i < s.length(); ++i) {
-      String palindrome = findMaxLengthPalindrome(s, i, i);
-      if (palindrome.length() > result.length()) {
-        result = palindrome;
-      }
-    }
-    for (int i = 0; i < s.length() - 1; ++i) {
-      if (s.charAt(i) == s.charAt(i + 1)) {
-        String palindrome = findMaxLengthPalindrome(s, i, i + 1);
+      for (int offset = 0; offset <= ((i == s.length() - 1) ? 0 : 1); ++offset) {
+        String palindrome = findMaxLengthPalindrome(s, i, i + offset);
         if (palindrome.length() > result.length()) {
           result = palindrome;
         }
@@ -20,8 +14,12 @@ public class Solution {
   }
 
   String findMaxLengthPalindrome(String s, int leftIndex, int rightIndex) {
-    while (leftIndex >= 1
-        && rightIndex + 1 < s.length()
+    if (s.charAt(leftIndex) != s.charAt(rightIndex)) {
+      return "";
+    }
+
+    while (leftIndex != 0
+        && rightIndex != s.length() - 1
         && s.charAt(leftIndex - 1) == s.charAt(rightIndex + 1)) {
       --leftIndex;
       ++rightIndex;
