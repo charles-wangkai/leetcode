@@ -1,45 +1,66 @@
+import java.util.HashMap;
+import java.util.Map;
+
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	int cameraNum;
+class Solution {
+  Map<TreeNode, Integer> minCameraCoverCache = new HashMap<>();
+  Map<TreeNode, Integer> searchCameraNodeCache = new HashMap<>();
 
-	public int minCameraCover(TreeNode root) {
-		cameraNum = 0;
-		search(root, false);
-		return cameraNum;
-	}
+  public int minCameraCover(TreeNode root) {
+    if (root == null) {
+      return 0;
+    }
 
-	int search(TreeNode node, boolean hasParent) {
-		if (node == null) {
-			return 2;
-		}
+    if (!minCameraCoverCache.containsKey(root)) {
+      int result = searchCameraNode(root);
+      if (root.left != null) {
+        result = Math.min(result, searchCameraNode(root.left) + minCameraCover(root.right));
+      }
+      if (root.right != null) {
+        result = Math.min(result, minCameraCover(root.left) + searchCameraNode(root.right));
+      }
 
-		int leftDistance = search(node.left, true);
-		int rightDistance = search(node.right, true);
+      minCameraCoverCache.put(root, result);
+    }
 
-		if (leftDistance == 3 || rightDistance == 3) {
-			cameraNum++;
+    return minCameraCoverCache.get(root);
+  }
 
-			return 1;
-		} else if (Math.min(leftDistance, rightDistance) == 1) {
-			return 2;
-		} else {
-			if (hasParent) {
-				return 3;
-			} else {
-				cameraNum++;
+  int searchCameraNode(TreeNode node) {
+    if (!searchCameraNodeCache.containsKey(node)) {
+      searchCameraNodeCache.put(
+          node,
+          1
+              + ((node.left == null)
+                  ? 0
+                  : Math.min(
+                      searchCameraNode(node.left),
+                      minCameraCover(node.left.left) + minCameraCover(node.left.right)))
+              + ((node.right == null)
+                  ? 0
+                  : Math.min(
+                      searchCameraNode(node.right),
+                      minCameraCover(node.right.left) + minCameraCover(node.right.right))));
+    }
 
-				return 1;
-			}
-		}
-	}
+    return searchCameraNodeCache.get(node);
+  }
 }
