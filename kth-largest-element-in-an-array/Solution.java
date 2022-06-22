@@ -6,9 +6,8 @@ class Solution {
     return Arrays.stream(nums)
         .boxed()
         .sorted(Comparator.reverseOrder())
-        .mapToInt(x -> x)
         .skip(k - 1)
         .findFirst()
-        .getAsInt();
+        .get();
   }
 }
