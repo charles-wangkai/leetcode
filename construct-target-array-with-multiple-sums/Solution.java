@@ -1,40 +1,37 @@
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.PriorityQueue;
 
 class Solution {
   public boolean isPossible(int[] target) {
-    int oneCount = 0;
-    long pqSum = 0;
+    long sum = Arrays.stream(target).asLongStream().sum();
     PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
     for (int x : target) {
-      if (x == 1) {
-        ++oneCount;
-      } else {
-        pq.offer(x);
-        pqSum += x;
-      }
+      pq.offer(x);
     }
 
-    while (!pq.isEmpty()) {
+    while (true) {
       int max = pq.poll();
-      pqSum -= max;
+      if (max == 1) {
+        return true;
+      }
 
-      if (max <= pqSum + oneCount || pqSum + oneCount == 0) {
+      sum -= max;
+
+      if (max <= sum || sum == 0) {
         return false;
       }
 
-      long prev = max % (pqSum + oneCount);
-      if (prev == 0 && pqSum + oneCount != 1) {
+      int prev = (int) (max % sum);
+      if (prev == 0 && sum == 1) {
+        prev = 1;
+      }
+      if (prev == 0) {
         return false;
       }
-      if (prev == 1 || pqSum + oneCount == 1) {
-        ++oneCount;
-      } else {
-        pq.offer((int) prev);
-        pqSum += prev;
-      }
+
+      pq.offer(prev);
+      sum += prev;
     }
-
-    return true;
   }
 }
