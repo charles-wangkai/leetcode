@@ -1,30 +1,29 @@
+import java.util.stream.IntStream;
+
 class Solution {
   public boolean checkPossibility(int[] nums) {
-    int decreaseNum = 0;
-    for (int i = 0; i + 1 != nums.length; ++i) {
-      if (nums[i] > nums[i + 1]) {
-        ++decreaseNum;
-        if (!isNonDecreasing(get(nums, i - 1), get(nums, i + 1), get(nums, i + 2))
-            && !isNonDecreasing(get(nums, i - 1), get(nums, i), get(nums, i + 2))) {
-          return false;
-        }
-      }
+    int leftIndex = 0;
+    while (leftIndex + 1 != nums.length && nums[leftIndex] <= nums[leftIndex + 1]) {
+      ++leftIndex;
     }
 
-    return decreaseNum <= 1;
+    int rightIndex = nums.length - 1;
+    while (rightIndex != 0 && nums[rightIndex - 1] <= nums[rightIndex]) {
+      --rightIndex;
+    }
+
+    return IntStream.rangeClosed(rightIndex - 1, leftIndex + 1)
+        .anyMatch(i -> get(nums, i - 1) <= get(nums, i + 1));
   }
 
   int get(int[] nums, int index) {
     if (index < 0) {
       return Integer.MIN_VALUE;
-    } else if (index == nums.length) {
+    }
+    if (index >= nums.length) {
       return Integer.MAX_VALUE;
     }
 
     return nums[index];
-  }
-
-  boolean isNonDecreasing(int x, int y, int z) {
-    return x <= y && y <= z;
   }
 }
