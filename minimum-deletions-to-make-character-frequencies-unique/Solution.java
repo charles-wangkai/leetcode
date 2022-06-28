@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -17,16 +17,15 @@ class Solution {
     }
 
     int result = 0;
-    for (int freq : new ArrayList<>(freqToCount.keySet())) {
+    for (int freq : List.copyOf(freqToCount.keySet())) {
       while (freqToCount.get(freq) >= 2) {
-        int f = freq;
-        while (f >= 1 && freqToCount.getOrDefault(f, 0) >= 2) {
+        for (int f = freq; f >= 1 && freqToCount.getOrDefault(f, 0) >= 2; --f) {
           freqToCount.put(f, freqToCount.get(f) - 1);
           if (f != 1) {
             freqToCount.put(f - 1, freqToCount.getOrDefault(f - 1, 0) + 1);
           }
+
           ++result;
-          --f;
         }
       }
     }
