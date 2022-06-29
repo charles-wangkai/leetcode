@@ -1,30 +1,23 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Solution {
-	public int[][] reconstructQueue(int[][] people) {
-		Arrays.sort(people,
-				(p1, p2) -> (p1[0] != p2[0]) ? Integer.compare(p1[0], p2[0]) : Integer.compare(p1[1], p2[1]));
+  public int[][] reconstructQueue(int[][] people) {
+    Arrays.sort(
+        people,
+        Comparator.comparing((int[] p) -> p[0])
+            .thenComparing(Comparator.comparing((int[] p) -> p[1]).reversed()));
 
-		List<Integer> indices = IntStream.range(0, people.length).boxed().collect(Collectors.toList());
+    List<Integer> indices = IntStream.range(0, people.length).boxed().collect(Collectors.toList());
 
-		int[][] queue = new int[people.length][];
-		int prevHeight = -1;
-		int count = -1;
-		for (int[] person : people) {
-			if (person[0] == prevHeight) {
-				queue[indices.remove(person[1] - count)] = person;
-				++count;
-			} else {
-				queue[indices.remove(person[1])] = person;
-				count = 1;
-			}
+    int[][] queue = new int[people.length][];
+    for (int[] person : people) {
+      queue[indices.remove(person[1])] = person;
+    }
 
-			prevHeight = person[0];
-		}
-
-		return queue;
-	}
+    return queue;
+  }
 }
