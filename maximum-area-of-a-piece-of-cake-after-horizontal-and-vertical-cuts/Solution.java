@@ -3,9 +3,8 @@ import java.util.stream.IntStream;
 
 class Solution {
   public int maxArea(int h, int w, int[] horizontalCuts, int[] verticalCuts) {
-    return (int)
-        (((long) computeMaxGap(h, horizontalCuts) * computeMaxGap(w, verticalCuts))
-            % 1_000_000_007);
+    return Math.floorMod(
+        (long) computeMaxGap(h, horizontalCuts) * computeMaxGap(w, verticalCuts), 1_000_000_007);
   }
 
   int computeMaxGap(int limit, int[] cuts) {
