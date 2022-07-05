@@ -1,21 +1,23 @@
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
   public int longestConsecutive(int[] nums) {
-    Set<Integer> numbers = Arrays.stream(nums).boxed().collect(Collectors.toSet());
+    Map<Integer, Boolean> valueToAvailable = new HashMap<>();
+    for (int num : nums) {
+      valueToAvailable.put(num, true);
+    }
 
     int maxLength = 0;
-    while (!numbers.isEmpty()) {
-      int middle = numbers.iterator().next();
+    for (int middle : List.copyOf(valueToAvailable.keySet())) {
       int length = 0;
-      for (int i = middle; numbers.contains(i); ++i) {
-        numbers.remove(i);
+      for (int i = middle; valueToAvailable.getOrDefault(i, false); ++i) {
+        valueToAvailable.put(i, false);
         ++length;
       }
-      for (int i = middle - 1; numbers.contains(i); --i) {
-        numbers.remove(i);
+      for (int i = middle - 1; valueToAvailable.getOrDefault(i, false); --i) {
+        valueToAvailable.put(i, false);
         ++length;
       }
 
