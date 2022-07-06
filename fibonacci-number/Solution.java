@@ -1,18 +1,14 @@
 class Solution {
-  public int fib(int N) {
-    if (N == 0) {
-      return 0;
+  public int fib(int n) {
+    int prev = 1;
+    int curr = 0;
+    for (int i = 0; i < n; ++i) {
+      int next = prev + curr;
+
+      prev = curr;
+      curr = next;
     }
 
-    int prev = 0;
-    int cur = 1;
-    for (int i = 0; i < N - 1; ++i) {
-      int next = prev + cur;
-
-      prev = cur;
-      cur = next;
-    }
-
-    return cur;
+    return curr;
   }
 }
