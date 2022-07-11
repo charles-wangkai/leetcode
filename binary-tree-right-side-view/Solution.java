@@ -22,24 +22,24 @@ class TreeNode {
 
 public class Solution {
   public List<Integer> rightSideView(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-    search(result, root, 0);
+    List<Integer> rightValues = new ArrayList<>();
+    search(rightValues, root, 0);
 
-    return result;
+    return rightValues;
   }
 
-  void search(List<Integer> result, TreeNode node, int depth) {
+  void search(List<Integer> rightValues, TreeNode node, int depth) {
     if (node == null) {
       return;
     }
 
-    if (depth == result.size()) {
-      result.add(node.val);
+    if (depth == rightValues.size()) {
+      rightValues.add(node.val);
     } else {
-      result.set(depth, node.val);
+      rightValues.set(depth, node.val);
     }
 
-    search(result, node.left, depth + 1);
-    search(result, node.right, depth + 1);
+    search(rightValues, node.left, depth + 1);
+    search(rightValues, node.right, depth + 1);
   }
 }
