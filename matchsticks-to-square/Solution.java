@@ -4,16 +4,16 @@ class Solution {
   public boolean makesquare(int[] matchsticks) {
     Arrays.sort(matchsticks);
 
-    long perimeter = Arrays.stream(matchsticks).asLongStream().sum();
+    int perimeter = Arrays.stream(matchsticks).sum();
     if (perimeter % 4 != 0) {
       return false;
     }
-    long size = perimeter / 4;
+    int size = perimeter / 4;
 
     return search(matchsticks, size, new boolean[matchsticks.length], 0, 0, matchsticks.length - 1);
   }
 
-  boolean search(int[] matchsticks, long size, boolean[] used, int side, int length, int index) {
+  boolean search(int[] matchsticks, int size, boolean[] used, int side, int length, int index) {
     if (side == 3) {
       return true;
     }
@@ -26,13 +26,17 @@ class Solution {
     }
 
     if (!used[index] && length + matchsticks[index] <= size) {
-      int nextSide = side;
-      int nextLength = length + matchsticks[index];
-      int nextIndex = index - 1;
-      if (nextLength == size) {
-        ++nextSide;
+      int nextSide;
+      int nextLength;
+      int nextIndex;
+      if (length + matchsticks[index] == size) {
+        nextSide = side + 1;
         nextLength = 0;
         nextIndex = matchsticks.length - 1;
+      } else {
+        nextSide = side;
+        nextLength = length + matchsticks[index];
+        nextIndex = index - 1;
       }
 
       used[index] = true;
