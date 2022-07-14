@@ -30,13 +30,13 @@ class Solution {
 
     int rootValue = preorder[beginPre];
     int rootIn = findValue(inorder, beginIn, rootValue);
-    int leftLen = rootIn - beginIn;
-    int rightLen = endIn - rootIn;
+    int leftLength = rootIn - beginIn;
+    int rightLength = endIn - rootIn;
 
     return new TreeNode(
         rootValue,
-        buildTree(preorder, beginPre + 1, beginPre + leftLen, inorder, beginIn, rootIn - 1),
-        buildTree(preorder, endPre - rightLen + 1, endPre, inorder, rootIn + 1, endIn));
+        buildTree(preorder, beginPre + 1, beginPre + leftLength, inorder, beginIn, rootIn - 1),
+        buildTree(preorder, endPre - rightLength + 1, endPre, inorder, rootIn + 1, endIn));
   }
 
   int findValue(int[] a, int begin, int target) {
