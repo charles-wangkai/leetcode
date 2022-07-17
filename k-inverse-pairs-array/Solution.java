@@ -10,7 +10,7 @@ class Solution {
         sum = addMod(sum, dp[i - 1][j]);
 
         if (j >= i) {
-          sum = subtractMod(sum, dp[i - 1][j - i]);
+          sum = addMod(sum, -dp[i - 1][j - i]);
         }
 
         dp[i][j] = sum;
@@ -21,10 +21,6 @@ class Solution {
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MODULUS;
-  }
-
-  int subtractMod(int x, int y) {
-    return addMod(x, MODULUS - y);
+    return Math.floorMod(x + y, MODULUS);
   }
 }
