@@ -1,51 +1,39 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Solution {
-	public int numMatchingSubseq(String S, String[] words) {
-		Map<Character, List<Element>> letter2elements = new HashMap<Character, List<Element>>();
-		for (String word : words) {
-			char letter = word.charAt(0);
-			addElement(letter2elements, letter, new Element(word, 0));
-		}
+  public int numMatchingSubseq(String s, String[] words) {
+    Map<Character, List<Integer>> letterToIndices = new HashMap<>();
+    for (int i = 0; i < s.length(); ++i) {
+      char letter = s.charAt(i);
+      letterToIndices.putIfAbsent(letter, new ArrayList<>());
+      letterToIndices.get(letter).add(i);
+    }
 
-		int result = 0;
-		for (int i = 0; i < S.length(); i++) {
-			char letter = S.charAt(i);
-			if (letter2elements.containsKey(letter)) {
-				List<Element> elements = letter2elements.get(letter);
+    return (int)
+        Arrays.stream(words)
+            .filter(
+                word -> {
+                  int beginIndex = 0;
+                  for (char c : word.toCharArray()) {
+                    List<Integer> indices = letterToIndices.getOrDefault(c, List.of());
+                    int index = Collections.binarySearch(indices, beginIndex);
+                    if (index < 0) {
+                      index = -1 - index;
+                    }
+                    if (index == indices.size()) {
+                      return false;
+                    }
 
-				letter2elements.put(letter, new ArrayList<Element>());
+                    beginIndex = indices.get(index) + 1;
+                  }
 
-				for (Element element : elements) {
-					element.index++;
-					if (element.index == element.word.length()) {
-						result++;
-					} else {
-						addElement(letter2elements, element.word.charAt(element.index), element);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	void addElement(Map<Character, List<Element>> letter2elements, char letter, Element element) {
-		if (!letter2elements.containsKey(letter)) {
-			letter2elements.put(letter, new ArrayList<Element>());
-		}
-		letter2elements.get(letter).add(element);
-	}
-}
-
-class Element {
-	String word;
-	int index;
-
-	Element(String word, int index) {
-		this.word = word;
-		this.index = index;
-	}
+                  return true;
+                })
+            .count();
+  }
 }
