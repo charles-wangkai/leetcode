@@ -17,14 +17,13 @@ class ListNode {
 
 class Solution {
   public ListNode reverseBetween(ListNode head, int left, int right) {
-    ListNode tempHead = new ListNode();
-    tempHead.next = head;
+    ListNode tempHead = new ListNode(0, head);
 
     ListNode reversedPrev = tempHead;
     ListNode reversedTail = null;
     ListNode p = head;
     for (int i = 1; i <= right; ++i) {
-      ListNode nextP = p.next;
+      ListNode next = p.next;
       if (i < left) {
         reversedPrev = reversedPrev.next;
       } else if (i == left) {
@@ -35,7 +34,7 @@ class Solution {
         reversedPrev.next = p;
       }
 
-      p = nextP;
+      p = next;
     }
 
     return tempHead.next;
