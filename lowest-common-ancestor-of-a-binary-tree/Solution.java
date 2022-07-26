@@ -32,6 +32,7 @@ class Solution {
 
   boolean buildPath(List<TreeNode> path, TreeNode target, TreeNode node) {
     path.add(node);
+
     if (node == target) {
       return true;
     }
