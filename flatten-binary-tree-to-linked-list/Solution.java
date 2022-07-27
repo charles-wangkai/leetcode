@@ -1,28 +1,38 @@
-// Definition for binary tree
+// Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	TreeNode prev = null;
+class Solution {
+  TreeNode prev = null;
 
-	public void flatten(TreeNode root) {
-		if (root == null) {
-			return;
-		}
-		if (prev != null) {
-			prev.left = null;
-			prev.right = root;
-		}
-		prev = root;
-		TreeNode right = root.right;
-		flatten(root.left);
-		flatten(right);
-	}
+  public void flatten(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+
+    if (prev != null) {
+      prev.right = root;
+    }
+    prev = root;
+
+    TreeNode right = root.right;
+    flatten(root.left);
+    root.left = null;
+    flatten(right);
+  }
 }
