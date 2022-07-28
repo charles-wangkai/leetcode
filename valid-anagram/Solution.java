@@ -8,7 +8,7 @@ class Solution {
   String toKey(String str) {
     return str.chars()
         .sorted()
-        .mapToObj(ch -> String.valueOf((char) ch))
+        .mapToObj(c -> String.valueOf((char) c))
         .collect(Collectors.joining());
   }
 }
