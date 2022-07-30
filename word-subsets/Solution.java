@@ -2,22 +2,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
-  public List<String> wordSubsets(String[] A, String[] B) {
+  public List<String> wordSubsets(String[] words1, String[] words2) {
     Map<Character, Integer> letterToMinCount = new HashMap<>();
-    for (String wordB : B) {
-      Map<Character, Integer> letterToCountB = buildLetterToCount(wordB);
-      for (char letter : letterToCountB.keySet()) {
+    for (String word2 : words2) {
+      Map<Character, Integer> letterToCount2 = buildLetterToCount(word2);
+      for (char letter : letterToCount2.keySet()) {
         letterToMinCount.put(
-            letter, Math.max(letterToMinCount.getOrDefault(letter, 0), letterToCountB.get(letter)));
+            letter, Math.max(letterToMinCount.getOrDefault(letter, 0), letterToCount2.get(letter)));
       }
     }
 
-    return Arrays.stream(A)
-        .filter(wordA -> isUniversal(letterToMinCount, wordA))
-        .collect(Collectors.toList());
+    return Arrays.stream(words1).filter(word1 -> isUniversal(letterToMinCount, word1)).toList();
   }
 
   Map<Character, Integer> buildLetterToCount(String word) {
@@ -32,7 +29,7 @@ class Solution {
   boolean isUniversal(Map<Character, Integer> letterToMinCount, String word) {
     Map<Character, Integer> letterToCount = buildLetterToCount(word);
 
-    return letterToMinCount.entrySet().stream()
-        .allMatch(entry -> letterToCount.getOrDefault(entry.getKey(), 0) >= entry.getValue());
+    return letterToMinCount.keySet().stream()
+        .allMatch(letter -> letterToCount.getOrDefault(letter, 0) >= letterToMinCount.get(letter));
   }
 }
