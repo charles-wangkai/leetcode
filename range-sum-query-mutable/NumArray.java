@@ -1,42 +1,42 @@
 // https://en.wikipedia.org/wiki/Fenwick_tree
 
 class NumArray {
+  int[] nums;
   int[] A;
 
   public NumArray(int[] nums) {
-    A = new int[nums.length];
-    for (int i = 0; i < A.length; ++i) {
-      update(i, nums[i]);
+    this.nums = nums;
+    A = new int[Integer.highestOneBit(nums.length) * 2 + 1];
+    for (int i = 0; i < nums.length; ++i) {
+      add(i, nums[i]);
     }
   }
 
   public void update(int index, int val) {
-    add(index, val - get(index));
+    add(index, val - nums[index]);
+    nums[index] = val;
   }
 
   public int sumRange(int left, int right) {
-    return range_sum(left, right + 1);
+    return prefix_sum(right) - ((left == 0) ? 0 : prefix_sum(left - 1));
   }
 
-  int LSBIT(int i) {
-    return i & (-i);
+  int LSB(int i) {
+    return i & -i;
+  }
+
+  int prefix_sum(int i) {
+    int sum = A[0];
+    for (; i != 0; i -= LSB(i)) sum += A[i];
+    return sum;
   }
 
   void add(int i, int delta) {
-    assert (0 <= i && i < A.length);
-    for (; i < A.length; i += LSBIT(i + 1)) A[i] += delta;
-  }
-
-  int get(int i) {
-    return range_sum(i, i + 1);
-  }
-
-  int range_sum(int i, int j) {
-    int sum = 0;
-    assert (0 <= i && i <= j && j <= A.length);
-    for (; j > i; j -= LSBIT(j)) sum += A[j - 1];
-    for (; i > j; i -= LSBIT(i)) sum -= A[i - 1];
-    return sum;
+    if (i == 0) {
+      A[0] += delta;
+      return;
+    }
+    for (; i < A.length; i += LSB(i)) A[i] += delta;
   }
 }
 
