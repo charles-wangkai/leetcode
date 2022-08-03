@@ -16,20 +16,12 @@ class MyCalendar {
     return true;
   }
 
-  boolean isIntersect(Event e1, Event e2) {
-    return !(e1.end <= e2.start || e1.start >= e2.end);
+  private boolean isIntersect(Event e1, Event e2) {
+    return !(e1.end() <= e2.start() || e1.start() >= e2.end());
   }
 }
 
-class Event {
-  int start;
-  int end;
-
-  Event(int start, int end) {
-    this.start = start;
-    this.end = end;
-  }
-}
+record Event(int start, int end) {}
 
 // Your MyCalendar object will be instantiated and called as such:
 // MyCalendar obj = new MyCalendar();
