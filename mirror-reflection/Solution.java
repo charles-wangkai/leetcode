@@ -1,20 +1,21 @@
 class Solution {
   public int mirrorReflection(int p, int q) {
-    int lcm = computeLCM(p, q);
-    if (lcm / p % 2 == 0) {
+    int l = lcm(p, q);
+    if (l / p % 2 == 0) {
       return 0;
-    } else if (lcm / q % 2 == 0) {
-      return 2;
-    } else {
-      return 1;
     }
+    if (l / q % 2 == 0) {
+      return 2;
+    }
+
+    return 1;
   }
 
-  int computeLCM(int a, int b) {
-    return a / computeGCD(a, b) * b;
+  int lcm(int x, int y) {
+    return x / gcd(x, y) * y;
   }
 
-  int computeGCD(int a, int b) {
-    return b == 0 ? a : computeGCD(b, a % b);
+  int gcd(int x, int y) {
+    return (y == 0) ? x : gcd(y, x % y);
   }
 }
