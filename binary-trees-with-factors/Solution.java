@@ -12,28 +12,28 @@ class Solution {
     Map<Integer, Integer> valueToIndex =
         IntStream.range(0, arr.length).boxed().collect(Collectors.toMap(i -> arr[i], i -> i));
 
-    int[] ways = new int[arr.length];
-    Arrays.fill(ways, 1);
+    int[] dp = new int[arr.length];
+    Arrays.fill(dp, 1);
 
     for (int i = 0; i < arr.length; ++i) {
-      for (int j = 0; j < i; j++) {
+      for (int j = 0; j < i; ++j) {
         if (arr[i] % arr[j] == 0) {
           int other = arr[i] / arr[j];
           if (valueToIndex.containsKey(other)) {
-            ways[i] = addMod(ways[i], multiplyMod(ways[j], ways[valueToIndex.get(other)]));
+            dp[i] = addMod(dp[i], multiplyMod(dp[j], dp[valueToIndex.get(other)]));
           }
         }
       }
     }
 
-    return Arrays.stream(ways).reduce(this::addMod).getAsInt();
+    return Arrays.stream(dp).reduce(this::addMod).getAsInt();
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MODULUS;
+    return Math.floorMod(x + y, MODULUS);
   }
 
   int multiplyMod(int x, int y) {
-    return (int) ((long) x * y % MODULUS);
+    return Math.floorMod((long) x * y, MODULUS);
   }
 }
