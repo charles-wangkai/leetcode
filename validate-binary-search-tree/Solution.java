@@ -23,13 +23,10 @@ class Solution {
   }
 
   boolean check(TreeNode root, long lower, long upper) {
-    if (root == null) {
-      return true;
-    }
-    if (root.val < lower || root.val > upper) {
-      return false;
-    }
-
-    return check(root.left, lower, root.val - 1L) && check(root.right, root.val + 1L, upper);
+    return root == null
+        || (root.val >= lower
+            && root.val <= upper
+            && check(root.left, lower, root.val - 1L)
+            && check(root.right, root.val + 1L, upper));
   }
 }
