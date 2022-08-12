@@ -37,10 +37,10 @@ class Solution {
       return;
     }
 
-    if (node.val < target.val) {
-      findPath(path, node.right, target);
-    } else {
+    if (target.val < node.val) {
       findPath(path, node.left, target);
+    } else {
+      findPath(path, node.right, target);
     }
   }
 }
