@@ -4,66 +4,38 @@ import java.util.List;
 import java.util.Map;
 
 public class Solution {
-	public List<Integer> findSubstring(String S, String[] L) {
-		List<Integer> result = new ArrayList<Integer>();
-		if (L.length > 0) {
-			Map<String, Integer> word2count = new HashMap<String, Integer>();
-			for (String word : L) {
-				if (!word2count.containsKey(word)) {
-					word2count.put(word, 0);
-				}
-				word2count.put(word, word2count.get(word) + 1);
-			}
+  public List<Integer> findSubstring(String s, String[] words) {
+    List<Integer> startIndices = new ArrayList<>();
+    for (int i = 0; i < words[0].length(); ++i) {
+      search(startIndices, s, words, i);
+    }
 
-			for (int i = 0; i < L[0].length(); i++) {
-				search(result, word2count, S, L, i);
-			}
-		}
-		return result;
-	}
+    return startIndices;
+  }
 
-	void search(List<Integer> result, Map<String, Integer> word2count,
-			String S, String[] L, int startIndex) {
-		int wordLen = L[0].length();
-		int backIndex = -1;
-		int frontIndex;
-		for (frontIndex = startIndex; frontIndex + wordLen <= S.length(); frontIndex += wordLen) {
-			String word = S.substring(frontIndex, frontIndex + wordLen);
-			if (!word2count.containsKey(word)) {
-				restoreWord2count(backIndex, frontIndex, wordLen, word2count, S);
-				backIndex = -1;
-				continue;
-			}
+  void search(List<Integer> startIndices, String s, String[] words, int beginIndex) {
+    Map<String, Integer> wordToCount = new HashMap<>();
+    for (String word : words) {
+      update(wordToCount, word, 1);
+    }
 
-			while (word2count.get(word) == 0) {
-				backIndex = moveBackIndex(backIndex, wordLen, word2count, S);
-			}
-			word2count.put(word, word2count.get(word) - 1);
-			if (backIndex < 0) {
-				backIndex = frontIndex;
-			}
+    int wordLength = words[0].length();
+    for (int endIndex = beginIndex; endIndex + wordLength <= s.length(); endIndex += wordLength) {
+      update(wordToCount, s.substring(endIndex, endIndex + wordLength), -1);
 
-			if (frontIndex - backIndex == wordLen * (L.length - 1)) {
-				result.add(backIndex);
-			}
-		}
+      if (wordToCount.isEmpty()) {
+        startIndices.add(beginIndex);
+      }
 
-		restoreWord2count(backIndex, frontIndex, wordLen, word2count, S);
-	}
+      if ((endIndex - beginIndex) / wordLength + 1 == words.length) {
+        update(wordToCount, s.substring(beginIndex, beginIndex + wordLength), 1);
+        beginIndex += wordLength;
+      }
+    }
+  }
 
-	void restoreWord2count(int backIndex, int frontIndex, int wordLen,
-			Map<String, Integer> word2count, String S) {
-		if (backIndex >= 0) {
-			while (backIndex <= frontIndex - wordLen) {
-				backIndex = moveBackIndex(backIndex, wordLen, word2count, S);
-			}
-		}
-	}
-
-	int moveBackIndex(int backIndex, int wordLen,
-			Map<String, Integer> word2count, String S) {
-		String w = S.substring(backIndex, backIndex + wordLen);
-		word2count.put(w, word2count.get(w) + 1);
-		return backIndex + wordLen;
-	}
+  void update(Map<String, Integer> wordToCount, String word, int delta) {
+    wordToCount.put(word, wordToCount.getOrDefault(word, 0) + delta);
+    wordToCount.remove(word, 0);
+  }
 }
