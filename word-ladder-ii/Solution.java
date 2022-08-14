@@ -25,21 +25,21 @@ class Solution {
     while (!queue.isEmpty()) {
       Element head = queue.poll();
 
-      if (head.word.equals(endWord)) {
+      if (head.word().equals(endWord)) {
         List<List<String>> ladders = new ArrayList<>();
         search(ladders, wordToPrevWords, endWord, new ArrayDeque<>());
 
         return ladders;
       }
 
-      for (String nextWord : findNextWords(words, head.word)) {
-        if (!wordToStep.containsKey(nextWord) || wordToStep.get(nextWord) == head.step + 1) {
+      for (String nextWord : findNextWords(words, head.word())) {
+        if (!wordToStep.containsKey(nextWord) || wordToStep.get(nextWord) == head.step() + 1) {
           if (!wordToPrevWords.containsKey(nextWord)) {
-            wordToStep.put(nextWord, head.step + 1);
-            queue.offer(new Element(nextWord, head.step + 1));
+            wordToStep.put(nextWord, head.step() + 1);
+            queue.offer(new Element(nextWord, head.step() + 1));
             wordToPrevWords.put(nextWord, new HashSet<>());
           }
-          wordToPrevWords.get(nextWord).add(head.word);
+          wordToPrevWords.get(nextWord).add(head.word());
         }
       }
     }
@@ -87,12 +87,4 @@ class Solution {
   }
 }
 
-class Element {
-  String word;
-  int step;
-
-  public Element(String word, int step) {
-    this.word = word;
-    this.step = step;
-  }
-}
+record Element(String word, int step) {}
