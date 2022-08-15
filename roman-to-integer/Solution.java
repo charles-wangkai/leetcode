@@ -20,9 +20,9 @@ class Solution {
     int index = 0;
     while (index != s.length()) {
       for (Element element : ELEMENTS) {
-        if (s.startsWith(element.roman, index)) {
-          result += element.value;
-          index += element.roman.length();
+        if (s.startsWith(element.roman(), index)) {
+          result += element.value();
+          index += element.roman().length();
 
           break;
         }
@@ -33,12 +33,4 @@ class Solution {
   }
 }
 
-class Element {
-  String roman;
-  int value;
-
-  Element(String roman, int value) {
-    this.roman = roman;
-    this.value = value;
-  }
-}
+record Element(String roman, int value) {}
