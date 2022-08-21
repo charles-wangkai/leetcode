@@ -1,19 +1,19 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 class Solution {
   public int[] movesToStamp(String stamp, String target) {
     List<Integer> indices = new ArrayList<>();
-    int remainNum = target.length();
-    StringBuilder sb = new StringBuilder(target);
-    while (remainNum != 0) {
+    int rest = target.length();
+    char[] letters = target.toCharArray();
+    while (rest != 0) {
       boolean found = false;
-      for (int i = 0; i <= sb.length() - stamp.length(); ++i) {
-        int matchNum = match(sb, stamp, i);
+      for (int i = 0; i <= letters.length - stamp.length(); ++i) {
+        int matchNum = match(letters, stamp, i);
         if (matchNum > 0) {
           indices.add(i);
-          remainNum -= matchNum;
+          rest -= matchNum;
           found = true;
 
           break;
@@ -24,20 +24,16 @@ class Solution {
         return new int[0];
       }
     }
+    Collections.reverse(indices);
 
-    return IntStream.range(0, indices.size())
-        .map(i -> indices.get(indices.size() - 1 - i))
-        .toArray();
+    return indices.stream().mapToInt(x -> x).toArray();
   }
 
-  int match(StringBuilder sb, String stamp, int beginIndex) {
+  int match(char[] letters, String stamp, int beginIndex) {
     int matchNum = 0;
     for (int i = 0; i < stamp.length(); ++i) {
-      char stampCh = stamp.charAt(i);
-      char targetCh = sb.charAt(beginIndex + i);
-
-      if (targetCh != '*') {
-        if (targetCh != stampCh) {
+      if (letters[beginIndex + i] != '*') {
+        if (letters[beginIndex + i] != stamp.charAt(i)) {
           return -1;
         }
 
@@ -46,7 +42,7 @@ class Solution {
     }
 
     for (int i = 0; i < stamp.length(); ++i) {
-      sb.setCharAt(beginIndex + i, '*');
+      letters[beginIndex + i] = '*';
     }
 
     return matchNum;
