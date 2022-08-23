@@ -21,7 +21,7 @@ class Solution {
   }
 
   ListNode findRightHalf(ListNode head) {
-    int length = findLength(head);
+    int length = computeLength(head);
     ListNode rightHead = head;
     for (int i = 0; i < (length + 1) / 2; ++i) {
       rightHead = rightHead.next;
@@ -30,11 +30,10 @@ class Solution {
     return rightHead;
   }
 
-  int findLength(ListNode head) {
+  int computeLength(ListNode head) {
     int length = 0;
-    while (head != null) {
+    for (ListNode node = head; node != null; node = node.next) {
       ++length;
-      head = head.next;
     }
 
     return length;
@@ -42,7 +41,6 @@ class Solution {
 
   ListNode reverse(ListNode head) {
     ListNode tempHead = new ListNode();
-    tempHead.next = null;
     while (head != null) {
       ListNode node = head;
       head = head.next;
@@ -54,7 +52,7 @@ class Solution {
   }
 
   boolean isMatch(ListNode head1, ListNode head2) {
-    while (head1 != null && head2 != null) {
+    while (head2 != null) {
       if (head1.val != head2.val) {
         return false;
       }
