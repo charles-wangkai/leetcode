@@ -1,5 +1,5 @@
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 class Solution {
   public int maxSumSubmatrix(int[][] matrix, int k) {
@@ -23,19 +23,19 @@ class Solution {
 
   private int findMaxSum(int[] a, int k) {
     int sum = 0;
-    NavigableMap<Integer, Integer> sumToCount = new TreeMap<>();
-    sumToCount.put(0, 1);
+    NavigableSet<Integer> sums = new TreeSet<>();
+    sums.add(0);
 
     int result = Integer.MIN_VALUE;
     for (int ai : a) {
       sum += ai;
 
-      Integer prefixSum = sumToCount.ceilingKey(sum - k);
+      Integer prefixSum = sums.ceiling(sum - k);
       if (prefixSum != null) {
         result = Math.max(result, sum - prefixSum);
       }
 
-      sumToCount.put(sum, sumToCount.getOrDefault(sum, 0) + 1);
+      sums.add(sum);
     }
 
     return result;
