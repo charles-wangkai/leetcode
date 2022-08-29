@@ -1,44 +1,36 @@
-public class Solution {
-	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
-	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
+class Solution {
+  static final int[] R_OFFSETS = {-1, 0, 1, 0};
+  static final int[] C_OFFSETS = {0, 1, 0, -1};
 
-	public int numIslands(char[][] grid) {
-		if (grid == null || grid.length == 0 || grid[0].length == 0) {
-			return 0;
-		}
+  public int numIslands(char[][] grid) {
+    int m = grid.length;
+    int n = grid[0].length;
 
-		int row = grid.length;
-		int col = grid[0].length;
+    int islandNum = 0;
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
+        if (grid[r][c] == '1') {
+          flood(grid, r, c);
+          ++islandNum;
+        }
+      }
+    }
 
-		int islandNum = 0;
-		for (int r = 0; r < row; ++r) {
-			for (int c = 0; c < col; ++c) {
-				if (grid[r][c] == '1') {
-					flood(grid, r, c);
-					islandNum++;
-				}
-			}
-		}
+    return islandNum;
+  }
 
-		return islandNum;
-	}
+  void flood(char[][] grid, int r, int c) {
+    int m = grid.length;
+    int n = grid[0].length;
 
-	void flood(char[][] grid, int r, int c) {
-		if (!isInGrid(grid, r, c) || grid[r][c] == '0') {
-			return;
-		}
+    grid[r][c] = '0';
 
-		grid[r][c] = '0';
-
-		for (int i = 0; i < R_OFFSETS.length; ++i) {
-			flood(grid, r + R_OFFSETS[i], c + C_OFFSETS[i]);
-		}
-	}
-
-	boolean isInGrid(char[][] grid, int r, int c) {
-		int row = grid.length;
-		int col = grid[0].length;
-
-		return r >= 0 && r < row && c >= 0 && c < col;
-	}
+    for (int i = 0; i < R_OFFSETS.length; ++i) {
+      int adjR = r + R_OFFSETS[i];
+      int adjC = c + C_OFFSETS[i];
+      if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n && grid[adjR][adjC] == '1') {
+        flood(grid, adjR, adjC);
+      }
+    }
+  }
 }
