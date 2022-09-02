@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -24,14 +23,14 @@ class TreeNode {
 class Solution {
   public List<Double> averageOfLevels(TreeNode root) {
     List<List<Integer>> values = new ArrayList<>();
-    search(root, values, 0);
+    search(values, 0, root);
 
     return values.stream()
         .map(line -> line.stream().mapToInt(x -> x).average().getAsDouble())
-        .collect(Collectors.toList());
+        .toList();
   }
 
-  void search(TreeNode node, List<List<Integer>> values, int index) {
+  void search(List<List<Integer>> values, int index, TreeNode node) {
     if (node == null) {
       return;
     }
@@ -41,7 +40,7 @@ class Solution {
     }
     values.get(index).add(node.val);
 
-    search(node.left, values, index + 1);
-    search(node.right, values, index + 1);
+    search(values, index + 1, node.left);
+    search(values, index + 1, node.right);
   }
 }
