@@ -2,33 +2,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
-	public int[] numsSameConsecDiff(int N, int K) {
-		List<Integer> solutions = new ArrayList<>();
-		for (int digit = 0; digit <= 9; ++digit) {
-			search(N, K, solutions, String.valueOf(digit));
-		}
+  public int[] numsSameConsecDiff(int n, int k) {
+    List<Integer> solutions = new ArrayList<>();
+    for (int digit = 1; digit <= 9; ++digit) {
+      search(n, k, solutions, 1, digit);
+    }
 
-		return solutions.stream().mapToInt(x -> x).toArray();
-	}
+    return solutions.stream().mapToInt(x -> x).toArray();
+  }
 
-	void search(int N, int K, List<Integer> solutions, String current) {
-		if (current.length() == N) {
-			solutions.add(Integer.parseInt(current));
+  void search(int n, int k, List<Integer> solutions, int length, int current) {
+    if (length == n) {
+      solutions.add(current);
 
-			return;
-		}
+      return;
+    }
 
-		if (current.startsWith("0")) {
-			return;
-		}
+    int lastDigit = current % 10;
+    if (lastDigit + k <= 9) {
+      search(n, k, solutions, length + 1, current * 10 + (lastDigit + k));
+    }
 
-		int lastDigit = current.charAt(current.length() - 1) - '0';
-		if (lastDigit + K <= 9) {
-			search(N, K, solutions, current + (lastDigit + K));
-		}
-
-		if (K != 0 && lastDigit - K >= 0) {
-			search(N, K, solutions, current + (lastDigit - K));
-		}
-	}
+    if (k != 0 && lastDigit - k >= 0) {
+      search(n, k, solutions, length + 1, current * 10 + (lastDigit - k));
+    }
+  }
 }
