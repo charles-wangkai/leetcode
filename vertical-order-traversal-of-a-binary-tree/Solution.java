@@ -29,23 +29,23 @@ class Solution {
 
     Collections.sort(
         elements,
-        Comparator.comparing((Element e) -> e.x)
-            .thenComparing(e -> e.y, Comparator.reverseOrder())
-            .thenComparing(e -> e.val));
+        Comparator.comparing((Element e) -> e.c())
+            .thenComparing(e -> e.r())
+            .thenComparing(e -> e.value()));
 
     List<List<Integer>> result = new ArrayList<>();
-    List<Integer> report = null;
+    List<Integer> column = null;
     for (int i = 0; i <= elements.size(); ++i) {
-      if (i != 0 && i != elements.size() && elements.get(i).x == elements.get(i - 1).x) {
-        report.add(elements.get(i).val);
+      if (i != 0 && i != elements.size() && elements.get(i).c() == elements.get(i - 1).c()) {
+        column.add(elements.get(i).value());
       } else {
-        if (report != null) {
-          result.add(report);
+        if (column != null) {
+          result.add(column);
         }
 
         if (i != elements.size()) {
-          report = new ArrayList<>();
-          report.add(elements.get(i).val);
+          column = new ArrayList<>();
+          column.add(elements.get(i).value());
         }
       }
     }
@@ -53,26 +53,16 @@ class Solution {
     return result;
   }
 
-  void search(List<Element> elements, int x, int y, TreeNode node) {
-    elements.add(new Element(x, y, node.val));
+  void search(List<Element> elements, int r, int c, TreeNode node) {
+    elements.add(new Element(r, c, node.val));
 
     if (node.left != null) {
-      search(elements, x - 1, y - 1, node.left);
+      search(elements, r + 1, c - 1, node.left);
     }
     if (node.right != null) {
-      search(elements, x + 1, y - 1, node.right);
+      search(elements, r + 1, c + 1, node.right);
     }
   }
 }
 
-class Element {
-  int x;
-  int y;
-  int val;
-
-  Element(int x, int y, int val) {
-    this.x = x;
-    this.y = y;
-    this.val = val;
-  }
-}
+record Element(int r, int c, int value) {}
