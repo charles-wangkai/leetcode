@@ -22,7 +22,7 @@ class Solution {
       offProfits = nextOffProfits;
     }
 
-    return IntStream.concat(Arrays.stream(inProfits), Arrays.stream(offProfits)).max().orElse(0);
+    return IntStream.concat(Arrays.stream(inProfits), Arrays.stream(offProfits)).max().getAsInt();
   }
 
   int maxProfitWithUnlimitedTransactions(int[] prices) {
