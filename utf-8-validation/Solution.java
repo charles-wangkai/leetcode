@@ -1,47 +1,30 @@
-public class Solution {
-	public boolean validUtf8(int[] data) {
-		int followNum = 0;
-		for (int part : data) {
-			String binary = toByteString(part);
+class Solution {
+  public boolean validUtf8(int[] data) {
+    int followRest = 0;
+    for (int part : data) {
+      if (followRest == 0) {
+        if ((part & (1 << 7)) == 0) {
+          followRest = 0;
+        } else if ((part & (1 << 6)) == 0) {
+          return false;
+        } else if ((part & (1 << 5)) == 0) {
+          followRest = 1;
+        } else if ((part & (1 << 4)) == 0) {
+          followRest = 2;
+        } else if ((part & (1 << 3)) == 0) {
+          followRest = 3;
+        } else {
+          return false;
+        }
+      } else {
+        if ((part & (1 << 7)) == 0 || (part & (1 << 6)) != 0) {
+          return false;
+        }
 
-			if (followNum > 0) {
-				if (!binary.startsWith("10")) {
-					return false;
-				}
+        --followRest;
+      }
+    }
 
-				followNum--;
-			} else {
-				int leadingOneNum = countLeadingOnes(binary);
-
-				if (leadingOneNum == 1 || leadingOneNum > 4) {
-					return false;
-				}
-
-				if (leadingOneNum >= 2) {
-					followNum = leadingOneNum - 1;
-				}
-			}
-		}
-
-		if (followNum > 0) {
-			return false;
-		}
-
-		return true;
-	}
-
-	String toByteString(int n) {
-		return String.format("%8s", Integer.toBinaryString(n)).replace(' ', '0');
-	}
-
-	int countLeadingOnes(String binary) {
-		int leadingOneNum = 0;
-		for (int i = 0; i < binary.length(); i++) {
-			if (binary.charAt(i) != '1') {
-				break;
-			}
-			leadingOneNum++;
-		}
-		return leadingOneNum;
-	}
+    return followRest == 0;
+  }
 }
