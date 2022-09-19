@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<List<String>> findDuplicate(String[] paths) {
@@ -15,15 +14,11 @@ class Solution {
         String fileName = fields[i].substring(0, startIndex);
         String content = fields[i].substring(startIndex + 1, fields[i].length() - 1);
 
-        if (!contentToPaths.containsKey(content)) {
-          contentToPaths.put(content, new ArrayList<>());
-        }
+        contentToPaths.putIfAbsent(content, new ArrayList<>());
         contentToPaths.get(content).add(String.format("%s/%s", directory, fileName));
       }
     }
 
-    return contentToPaths.values().stream()
-        .filter(ps -> ps.size() >= 2)
-        .collect(Collectors.toList());
+    return contentToPaths.values().stream().filter(ps -> ps.size() >= 2).toList();
   }
 }
