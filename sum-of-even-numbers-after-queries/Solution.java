@@ -1,26 +1,24 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int[] sumEvenAfterQueries(int[] A, int[][] queries) {
-		int[] result = new int[queries.length];
-		int sumEven = Arrays.stream(A).filter(this::isEven).sum();
-		for (int i = 0; i < result.length; i++) {
-			int val = queries[i][0];
-			int index = queries[i][1];
+class Solution {
+  public int[] sumEvenAfterQueries(int[] nums, int[][] queries) {
+    int[] result = new int[queries.length];
+    int evenSum = Arrays.stream(nums).filter(x -> x % 2 == 0).sum();
+    for (int i = 0; i < result.length; ++i) {
+      int value = queries[i][0];
+      int index = queries[i][1];
 
-			if (isEven(A[index])) {
-				sumEven -= A[index];
-			}
-			A[index] += val;
-			if (isEven(A[index])) {
-				sumEven += A[index];
-			}
-			result[i] = sumEven;
-		}
-		return result;
-	}
+      if (nums[index] % 2 == 0) {
+        evenSum -= nums[index];
+      }
+      nums[index] += value;
+      if (nums[index] % 2 == 0) {
+        evenSum += nums[index];
+      }
 
-	boolean isEven(int x) {
-		return x % 2 == 0;
-	}
+      result[i] = evenSum;
+    }
+
+    return result;
+  }
 }
