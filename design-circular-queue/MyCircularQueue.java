@@ -1,10 +1,10 @@
 class MyCircularQueue {
-  private int[] data;
+  private int[] values;
   private int beginIndex = 0;
   private int itemNum = 0;
 
   public MyCircularQueue(int k) {
-    data = new int[k];
+    values = new int[k];
   }
 
   public boolean enQueue(int value) {
@@ -12,7 +12,7 @@ class MyCircularQueue {
       return false;
     }
 
-    data[(beginIndex + itemNum) % data.length] = value;
+    values[(beginIndex + itemNum) % values.length] = value;
     ++itemNum;
 
     return true;
@@ -23,18 +23,18 @@ class MyCircularQueue {
       return false;
     }
 
-    beginIndex = (beginIndex + 1) % data.length;
+    beginIndex = (beginIndex + 1) % values.length;
     --itemNum;
 
     return true;
   }
 
   public int Front() {
-    return isEmpty() ? -1 : data[beginIndex];
+    return isEmpty() ? -1 : values[beginIndex];
   }
 
   public int Rear() {
-    return isEmpty() ? -1 : data[(beginIndex + itemNum - 1) % data.length];
+    return isEmpty() ? -1 : values[(beginIndex + itemNum - 1) % values.length];
   }
 
   public boolean isEmpty() {
@@ -42,7 +42,7 @@ class MyCircularQueue {
   }
 
   public boolean isFull() {
-    return itemNum == data.length;
+    return itemNum == values.length;
   }
 }
 
