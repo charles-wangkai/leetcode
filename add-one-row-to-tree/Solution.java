@@ -18,29 +18,29 @@ class TreeNode {
 }
 
 class Solution {
-  public TreeNode addOneRow(TreeNode root, int v, int d) {
-    if (d == 1) {
-      return new TreeNode(v, root, null);
-    } else {
-      insert(root, v, d, 2);
-
-      return root;
+  public TreeNode addOneRow(TreeNode root, int val, int depth) {
+    if (depth == 1) {
+      return new TreeNode(val, root, null);
     }
+
+    insert(val, depth, root, 2);
+
+    return root;
   }
 
-  void insert(TreeNode parent, int v, int d, int depth) {
-    if (depth == d) {
-      parent.left = new TreeNode(v, parent.left, null);
-      parent.right = new TreeNode(v, null, parent.right);
+  void insert(int val, int depth, TreeNode parent, int d) {
+    if (d == depth) {
+      parent.left = new TreeNode(val, parent.left, null);
+      parent.right = new TreeNode(val, null, parent.right);
 
       return;
     }
 
     if (parent.left != null) {
-      insert(parent.left, v, d, depth + 1);
+      insert(val, depth, parent.left, d + 1);
     }
     if (parent.right != null) {
-      insert(parent.right, v, d, depth + 1);
+      insert(val, depth, parent.right, d + 1);
     }
   }
 }
