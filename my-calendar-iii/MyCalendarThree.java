@@ -1,64 +1,51 @@
+import java.util.Comparator;
 import java.util.List;
-import java.util.NavigableSet;
+import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
-public class MyCalendarThree {
-	NavigableSet<Event> events = new TreeSet<Event>((event1, event2) -> Integer.compare(event1.start, event2.start));
-	int maxCount = 1;
+class MyCalendarThree {
+  private SortedSet<Event> events = new TreeSet<>(Comparator.comparing(Event::start));
+  private int maxCount = 1;
 
-	public MyCalendarThree() {
-	}
+  public int book(int start, int end) {
+    int start_ = start;
+    List<Event> impacts =
+        events.stream().filter(e -> !(e.start() >= end || e.end() <= start_)).toList();
+    events.removeAll(impacts);
 
-	public int book(int start, int end) {
-		Event event = new Event(start, end, 0);
-		List<Event> impacts = events.stream().filter(e -> e.isIntersect(event)).collect(Collectors.toList());
+    if (!impacts.isEmpty()) {
+      Event firstImpact = impacts.get(0);
+      if (firstImpact.start() < start) {
+        events.add(new Event(firstImpact.start(), start, firstImpact.count()));
+      }
 
-		events.removeAll(impacts);
-		if (!impacts.isEmpty()) {
-			Event firstImpact = impacts.iterator().next();
-			if (firstImpact.start < start) {
-				events.add(new Event(firstImpact.start, start, firstImpact.count));
-			}
-		}
-		for (Event impact : impacts) {
-			if (start < impact.start) {
-				events.add(new Event(start, impact.start, 1));
-			}
+      Event lastImpact = impacts.get(impacts.size() - 1);
+      if (lastImpact.end() > end) {
+        events.add(new Event(end, lastImpact.end(), lastImpact.count()));
+      }
+    }
 
-			int currStart = Math.max(start, impact.start);
-			int nextStart = Math.min(end, impact.end);
-			events.add(new Event(currStart, nextStart, impact.count + 1));
-			maxCount = Math.max(maxCount, impact.count + 1);
-			if (end < impact.end) {
-				events.add(new Event(end, impact.end, impact.count));
-			}
+    for (Event impact : impacts) {
+      if (start < impact.start()) {
+        events.add(new Event(start, impact.start(), 1));
+      }
 
-			start = nextStart;
-		}
-		if (start < end) {
-			events.add(new Event(start, end, 1));
-		}
+      int currStart = Math.max(start, impact.start());
+      int nextStart = Math.min(end, impact.end());
+      events.add(new Event(currStart, nextStart, impact.count() + 1));
+      maxCount = Math.max(maxCount, impact.count() + 1);
 
-		return maxCount;
-	}
+      start = nextStart;
+    }
+    if (start < end) {
+      events.add(new Event(start, end, 1));
+    }
+
+    return maxCount;
+  }
 }
 
-class Event {
-	int start;
-	int end;
-	int count;
-
-	Event(int start, int end, int count) {
-		this.start = start;
-		this.end = end;
-		this.count = count;
-	}
-
-	boolean isIntersect(Event other) {
-		return !(end <= other.start || start >= other.end);
-	}
-}
+record Event(int start, int end, int count) {}
 
 // Your MyCalendarThree object will be instantiated and called as such:
 // MyCalendarThree obj = new MyCalendarThree();
