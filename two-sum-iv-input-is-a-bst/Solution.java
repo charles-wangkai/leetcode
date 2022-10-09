@@ -21,16 +21,16 @@ class TreeNode {
 
 class Solution {
   public boolean findTarget(TreeNode root, int k) {
-    Stack<Element> lowers = new Stack<>();
-    lowers.push(new Element(root, true));
-    TreeNode lower = leftScan(lowers);
+    Stack<Object> lowers = new Stack<>();
+    lowers.push(root);
+    int lower = leftScan(lowers);
 
-    Stack<Element> uppers = new Stack<>();
-    uppers.push(new Element(root, true));
-    TreeNode upper = rightScan(uppers);
+    Stack<Object> uppers = new Stack<>();
+    uppers.push(root);
+    int upper = rightScan(uppers);
 
     while (lower != upper) {
-      int sum = lower.val + upper.val;
+      int sum = lower + upper;
       if (sum > k) {
         upper = rightScan(uppers);
       } else if (sum < k) {
@@ -43,47 +43,41 @@ class Solution {
     return false;
   }
 
-  TreeNode leftScan(Stack<Element> lowers) {
+  int leftScan(Stack<Object> lowers) {
     while (true) {
-      Element head = lowers.pop();
-      if (!head.toExpand) {
-        return head.node;
+      Object head = lowers.pop();
+      if (head instanceof Integer value) {
+        return value;
       }
 
-      if (head.node.right != null) {
-        lowers.push(new Element(head.node.right, true));
+      TreeNode node = (TreeNode) head;
+
+      if (node.right != null) {
+        lowers.push(node.right);
       }
-      lowers.push(new Element(head.node, false));
-      if (head.node.left != null) {
-        lowers.push(new Element(head.node.left, true));
+      lowers.push(node.val);
+      if (node.left != null) {
+        lowers.push(node.left);
       }
     }
   }
 
-  TreeNode rightScan(Stack<Element> uppers) {
+  int rightScan(Stack<Object> uppers) {
     while (true) {
-      Element head = uppers.pop();
-      if (!head.toExpand) {
-        return head.node;
+      Object head = uppers.pop();
+      if (head instanceof Integer value) {
+        return value;
       }
 
-      if (head.node.left != null) {
-        uppers.push(new Element(head.node.left, true));
+      TreeNode node = (TreeNode) head;
+
+      if (node.left != null) {
+        uppers.push(node.left);
       }
-      uppers.push(new Element(head.node, false));
-      if (head.node.right != null) {
-        uppers.push(new Element(head.node.right, true));
+      uppers.push(node.val);
+      if (node.right != null) {
+        uppers.push(node.right);
       }
     }
-  }
-}
-
-class Element {
-  TreeNode node;
-  boolean toExpand;
-
-  Element(TreeNode node, boolean toExpand) {
-    this.node = node;
-    this.toExpand = toExpand;
   }
 }
