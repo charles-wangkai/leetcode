@@ -15,8 +15,8 @@ class Solution {
       return String.format(
           "%sa%s",
           palindrome.substring(0, index.getAsInt()), palindrome.substring(index.getAsInt() + 1));
-    } else {
-      return String.format("%sb", palindrome.substring(0, palindrome.length() - 1));
     }
+
+    return String.format("%sb", palindrome.substring(0, palindrome.length() - 1));
   }
 }
