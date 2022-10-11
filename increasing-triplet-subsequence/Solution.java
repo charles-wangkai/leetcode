@@ -3,7 +3,6 @@ class Solution {
     Integer min = null;
     Integer first = null;
     Integer second = null;
-
     for (int num : nums) {
       if (second != null && num > second) {
         return true;
@@ -13,7 +12,7 @@ class Solution {
         second = num;
       }
 
-      if (min != null && num > min && (first == null || (min <= first && num <= second))) {
+      if (min != null && num > min && (second == null || num < second)) {
         first = min;
         second = num;
       }
