@@ -1,21 +1,15 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int largestPerimeter(int[] A) {
-		Arrays.sort(A);
+class Solution {
+  public int largestPerimeter(int[] nums) {
+    Arrays.sort(nums);
 
-		int result = 0;
-		for (int i = 1; i < A.length - 1; i++) {
-			int index = Arrays.binarySearch(A, i + 1, A.length, A[i - 1] + A[i] - 1);
-			if (index < 0) {
-				index = -1 - index - 1;
-				if (index < i + 1) {
-					continue;
-				}
-			}
+    for (int i = nums.length - 1; i >= 2; --i) {
+      if (nums[i - 2] + nums[i - 1] > nums[i]) {
+        return nums[i - 2] + nums[i - 1] + nums[i];
+      }
+    }
 
-			result = Math.max(result, A[i - 1] + A[i] + A[index]);
-		}
-		return result;
-	}
+    return 0;
+  }
 }
