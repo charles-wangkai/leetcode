@@ -1,24 +1,25 @@
-public class Solution {
-	public String countAndSay(int n) {
-		String number = "1";
-		for (int i = 1; i < n; i++) {
-			StringBuilder nextNumber = new StringBuilder();
-			char current = number.charAt(0);
-			int count = 1;
-			for (int j = 1; j <= number.length(); j++) {
-				if (j < number.length() && number.charAt(j) == current) {
-					count++;
-				} else {
-					nextNumber.append(count);
-					nextNumber.append(current);
-					if (j != number.length()) {
-						current = number.charAt(j);
-						count = 1;
-					}
-				}
-			}
-			number = nextNumber.toString();
-		}
-		return number;
-	}
+class Solution {
+  public String countAndSay(int n) {
+    String curr = "1";
+    for (int i = 0; i < n - 1; ++i) {
+      StringBuilder next = new StringBuilder();
+      char digit = curr.charAt(0);
+      int count = 1;
+      for (int j = 1; j <= curr.length(); ++j) {
+        if (j != curr.length() && curr.charAt(j) == digit) {
+          ++count;
+        } else {
+          next.append(count).append(digit);
+          if (j != curr.length()) {
+            digit = curr.charAt(j);
+            count = 1;
+          }
+        }
+      }
+
+      curr = next.toString();
+    }
+
+    return curr;
+  }
 }
