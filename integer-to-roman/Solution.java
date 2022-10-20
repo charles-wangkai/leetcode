@@ -17,14 +17,10 @@ class Solution {
 
   public String intToRoman(int num) {
     StringBuilder result = new StringBuilder();
-    while (num != 0) {
-      for (Element element : ELEMENTS) {
-        if (element.value <= num) {
-          result.append(element.roman);
-          num -= element.value;
-
-          break;
-        }
+    for (Element element : ELEMENTS) {
+      while (num >= element.value()) {
+        result.append(element.roman());
+        num -= element.value();
       }
     }
 
@@ -32,12 +28,4 @@ class Solution {
   }
 }
 
-class Element {
-  int value;
-  String roman;
-
-  Element(int value, String roman) {
-    this.value = value;
-    this.roman = roman;
-  }
-}
+record Element(int value, String roman) {}
