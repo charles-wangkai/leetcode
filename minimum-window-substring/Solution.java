@@ -9,21 +9,21 @@ class Solution {
     }
 
     String result = null;
-    int back = 0;
-    for (int front = 0; front < s.length(); ++front) {
-      char frontLetter = s.charAt(front);
-      if (letterToCount.containsKey(frontLetter)) {
-        letterToCount.put(frontLetter, letterToCount.get(frontLetter) - 1);
+    int beginIndex = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      char letter = s.charAt(i);
+      if (letterToCount.containsKey(letter)) {
+        letterToCount.put(letter, letterToCount.get(letter) - 1);
         while (letterToCount.values().stream().allMatch(count -> count <= 0)) {
-          if (result == null || front - back + 1 < result.length()) {
-            result = s.substring(back, front + 1);
+          if (result == null || i - beginIndex + 1 < result.length()) {
+            result = s.substring(beginIndex, i + 1);
           }
 
-          char backLetter = s.charAt(back);
-          if (letterToCount.containsKey(backLetter)) {
-            letterToCount.put(backLetter, letterToCount.get(backLetter) + 1);
+          char beginLetter = s.charAt(beginIndex);
+          if (letterToCount.containsKey(beginLetter)) {
+            letterToCount.put(beginLetter, letterToCount.get(beginLetter) + 1);
           }
-          ++back;
+          ++beginIndex;
         }
       }
     }
