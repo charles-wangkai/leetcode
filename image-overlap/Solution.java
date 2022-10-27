@@ -1,44 +1,46 @@
 class Solution {
-	public int largestOverlap(int[][] A, int[][] B) {
-		int result = 0;
-		int size = A.length;
-		for (int rOffset = -(size - 1); rOffset <= size - 1; ++rOffset) {
-			for (int cOffset = -(size - 1); cOffset <= size - 1; ++cOffset) {
-				result = Math.max(result, overlap(translate(A, rOffset, cOffset), B));
-			}
-		}
+  public int largestOverlap(int[][] img1, int[][] img2) {
+    int n = img1.length;
 
-		return result;
-	}
+    int result = 0;
+    for (int rOffset = -(n - 1); rOffset <= n - 1; ++rOffset) {
+      for (int cOffset = -(n - 1); cOffset <= n - 1; ++cOffset) {
+        result = Math.max(result, overlap(translate(img1, rOffset, cOffset), img2));
+      }
+    }
 
-	int[][] translate(int[][] image, int rOffset, int cOffset) {
-		int size = image.length;
-		int[][] result = new int[size][size];
-		for (int r = 0; r < size; ++r) {
-			for (int c = 0; c < size; ++c) {
-				int originalR = r + rOffset;
-				int originalC = c + cOffset;
+    return result;
+  }
 
-				if (originalR >= 0 && originalR < size && originalC >= 0 && originalC < size) {
-					result[r][c] = image[originalR][originalC];
-				}
-			}
-		}
+  int[][] translate(int[][] image, int rOffset, int cOffset) {
+    int n = image.length;
 
-		return result;
-	}
+    int[][] result = new int[n][n];
+    for (int r = 0; r < n; ++r) {
+      for (int c = 0; c < n; ++c) {
+        int originalR = r + rOffset;
+        int originalC = c + cOffset;
+        if (originalR >= 0 && originalR < n && originalC >= 0 && originalC < n) {
+          result[r][c] = image[originalR][originalC];
+        }
+      }
+    }
 
-	int overlap(int[][] image1, int[][] image2) {
-		int size = image1.length;
-		int result = 0;
-		for (int r = 0; r < size; ++r) {
-			for (int c = 0; c < size; ++c) {
-				if (image1[r][c] == 1 && image2[r][c] == 1) {
-					++result;
-				}
-			}
-		}
+    return result;
+  }
 
-		return result;
-	}
+  int overlap(int[][] image1, int[][] image2) {
+    int n = image1.length;
+
+    int result = 0;
+    for (int r = 0; r < n; ++r) {
+      for (int c = 0; c < n; ++c) {
+        if (image1[r][c] == 1 && image2[r][c] == 1) {
+          ++result;
+        }
+      }
+    }
+
+    return result;
+  }
 }
