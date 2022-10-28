@@ -9,10 +9,7 @@ class Solution {
     Map<String, List<String>> keyToWords = new HashMap<>();
     for (String str : strs) {
       String key = generateKey(str);
-      if (!keyToWords.containsKey(key)) {
-        keyToWords.put(key, new ArrayList<>());
-      }
-
+      keyToWords.putIfAbsent(key, new ArrayList<>());
       keyToWords.get(key).add(str);
     }
 
@@ -22,7 +19,7 @@ class Solution {
   String generateKey(String word) {
     return word.chars()
         .sorted()
-        .mapToObj(ch -> String.valueOf((char) ch))
+        .mapToObj(c -> String.valueOf((char) c))
         .collect(Collectors.joining());
   }
 }
