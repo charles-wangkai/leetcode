@@ -25,22 +25,21 @@ class Solution {
       Element head = queue.poll();
 
       for (int i = 0; i < R_OFFSETS.length; ++i) {
-        int adjR = head.r + R_OFFSETS[i];
-        int adjC = head.c + C_OFFSETS[i];
-
+        int adjR = head.r() + R_OFFSETS[i];
+        int adjC = head.c() + C_OFFSETS[i];
         if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n) {
           if (grid[adjR][adjC] == 0) {
-            if (minDistances[adjR][adjC][head.elimRemain] == Integer.MAX_VALUE) {
-              minDistances[adjR][adjC][head.elimRemain] =
-                  minDistances[head.r][head.c][head.elimRemain] + 1;
-              queue.offer(new Element(adjR, adjC, head.elimRemain));
+            if (minDistances[adjR][adjC][head.elimRest()] == Integer.MAX_VALUE) {
+              minDistances[adjR][adjC][head.elimRest()] =
+                  minDistances[head.r()][head.c()][head.elimRest()] + 1;
+              queue.offer(new Element(adjR, adjC, head.elimRest()));
             }
           } else {
-            if (head.elimRemain != 0
-                && minDistances[adjR][adjC][head.elimRemain - 1] == Integer.MAX_VALUE) {
-              minDistances[adjR][adjC][head.elimRemain - 1] =
-                  minDistances[head.r][head.c][head.elimRemain] + 1;
-              queue.offer(new Element(adjR, adjC, head.elimRemain - 1));
+            if (head.elimRest() != 0
+                && minDistances[adjR][adjC][head.elimRest() - 1] == Integer.MAX_VALUE) {
+              minDistances[adjR][adjC][head.elimRest() - 1] =
+                  minDistances[head.r()][head.c()][head.elimRest()] + 1;
+              queue.offer(new Element(adjR, adjC, head.elimRest() - 1));
             }
           }
         }
@@ -53,14 +52,4 @@ class Solution {
   }
 }
 
-class Element {
-  int r;
-  int c;
-  int elimRemain;
-
-  Element(int r, int c, int elimRemain) {
-    this.r = r;
-    this.c = c;
-    this.elimRemain = elimRemain;
-  }
-}
+record Element(int r, int c, int elimRest) {}
