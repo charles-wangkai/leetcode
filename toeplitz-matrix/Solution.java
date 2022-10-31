@@ -1,8 +1,11 @@
 import java.util.stream.IntStream;
 
-public class Solution {
-	public boolean isToeplitzMatrix(int[][] matrix) {
-		return IntStream.range(0, Math.min(matrix.length, matrix[0].length))
-				.allMatch(i -> matrix[i][i] == matrix[0][0]);
-	}
+class Solution {
+  public boolean isToeplitzMatrix(int[][] matrix) {
+    return IntStream.range(1, matrix.length)
+        .allMatch(
+            r ->
+                IntStream.range(1, matrix[r].length)
+                    .allMatch(c -> matrix[r][c] == matrix[r - 1][c - 1]));
+  }
 }
