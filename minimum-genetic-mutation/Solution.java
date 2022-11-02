@@ -2,32 +2,34 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class Solution {
-	int minDistance;
+class Solution {
+  public int minMutation(String start, String end, String[] bank) {
+    int minDistance = search(end, bank, new HashSet<>(), start);
 
-	public int minMutation(String start, String end, String[] bank) {
-		minDistance = Integer.MAX_VALUE;
-		search(start, end, bank, new HashSet<String>());
-		return minDistance == Integer.MAX_VALUE ? -1 : minDistance;
-	}
+    return (minDistance == Integer.MAX_VALUE) ? -1 : minDistance;
+  }
 
-	void search(String current, String end, String[] bank, Set<String> path) {
-		if (current.equals(end)) {
-			minDistance = Math.min(minDistance, path.size());
-			return;
-		}
+  int search(String end, String[] bank, Set<String> seen, String current) {
+    if (current.equals(end)) {
+      return seen.size();
+    }
 
-		for (String next : bank) {
-			if (!path.contains(next) && canMutate(current, next)) {
-				path.add(next);
-				search(next, end, bank, path);
-				path.remove(next);
-			}
-		}
-	}
+    int result = Integer.MAX_VALUE;
+    for (String next : bank) {
+      if (!seen.contains(next) && canMutate(current, next)) {
+        seen.add(next);
+        result = Math.min(result, search(end, bank, seen, next));
+        seen.remove(next);
+      }
+    }
 
-	boolean canMutate(String gene1, String gene2) {
-		return gene1.length() == gene2.length()
-				&& IntStream.range(0, gene1.length()).filter(i -> gene1.charAt(i) != gene2.charAt(i)).count() == 1;
-	}
+    return result;
+  }
+
+  boolean canMutate(String gene1, String gene2) {
+    return IntStream.range(0, gene1.length())
+            .filter(i -> gene1.charAt(i) != gene2.charAt(i))
+            .count()
+        == 1;
+  }
 }
