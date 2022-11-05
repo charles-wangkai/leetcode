@@ -1,64 +1,26 @@
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-public class MyCalendarTwo {
-	NavigableSet<Event> events = new TreeSet<Event>((event1, event2) -> Integer.compare(event1.start, event2.start));
+class MyCalendarTwo {
+  SortedMap<Integer, Integer> timeToDelta = new TreeMap<>();
 
-	public MyCalendarTwo() {
-	}
+  public boolean book(int start, int end) {
+    timeToDelta.put(start, timeToDelta.getOrDefault(start, 0) + 1);
+    timeToDelta.put(end, timeToDelta.getOrDefault(end, 0) - 1);
 
-	public boolean book(int start, int end) {
-		Event event = new Event(start, end, 0);
-		List<Event> impacts = events.stream().filter(e -> e.isIntersect(event)).collect(Collectors.toList());
+    int depth = 0;
+    for (int delta : timeToDelta.values()) {
+      depth += delta;
+      if (depth >= 3) {
+        timeToDelta.put(start, timeToDelta.get(start) - 1);
+        timeToDelta.put(end, timeToDelta.get(end) + 1);
 
-		if (impacts.stream().anyMatch(impact -> impact.count == 2)) {
-			return false;
-		}
+        return false;
+      }
+    }
 
-		events.removeAll(impacts);
-		if (!impacts.isEmpty()) {
-			Event firstImpact = impacts.iterator().next();
-			if (firstImpact.start < start) {
-				events.add(new Event(firstImpact.start, start, firstImpact.count));
-			}
-		}
-		for (Event impact : impacts) {
-			if (start < impact.start) {
-				events.add(new Event(start, impact.start, 1));
-			}
-
-			int currStart = Math.max(start, impact.start);
-			int nextStart = Math.min(end, impact.end);
-			events.add(new Event(currStart, nextStart, impact.count + 1));
-			if (end < impact.end) {
-				events.add(new Event(end, impact.end, impact.count));
-			}
-
-			start = nextStart;
-		}
-		if (start < end) {
-			events.add(new Event(start, end, 1));
-		}
-		return true;
-	}
-}
-
-class Event {
-	int start;
-	int end;
-	int count;
-
-	Event(int start, int end, int count) {
-		this.start = start;
-		this.end = end;
-		this.count = count;
-	}
-
-	boolean isIntersect(Event other) {
-		return !(end <= other.start || start >= other.end);
-	}
+    return true;
+  }
 }
 
 // Your MyCalendarTwo object will be instantiated and called as such:
