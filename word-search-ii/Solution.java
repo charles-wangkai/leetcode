@@ -39,30 +39,28 @@ class Solution {
     int m = board.length;
     int n = board[0].length;
 
-    if (!(r >= 0 && r < m && c >= 0 && c < n) || visited[r][c] || !node.hasChild(board[r][c])) {
-      return;
+    if (r >= 0 && r < m && c >= 0 && c < n && !visited[r][c] && node.hasChild(board[r][c])) {
+      Trie child = node.getChild(board[r][c]);
+      current.append(board[r][c]);
+
+      if (child.hasChild(null)) {
+        foundWords.add(current.toString());
+      }
+
+      visited[r][c] = true;
+      for (int i = 0; i < R_OFFSETS.length; ++i) {
+        search(board, foundWords, child, visited, r + R_OFFSETS[i], c + C_OFFSETS[i], current);
+      }
+      visited[r][c] = false;
+
+      current.deleteCharAt(current.length() - 1);
     }
-
-    Trie child = node.getChild(board[r][c]);
-    current.append(board[r][c]);
-
-    if (child.hasChild(null)) {
-      foundWords.add(current.toString());
-    }
-
-    visited[r][c] = true;
-    for (int i = 0; i < R_OFFSETS.length; ++i) {
-      search(board, foundWords, child, visited, r + R_OFFSETS[i], c + C_OFFSETS[i], current);
-    }
-    visited[r][c] = false;
-
-    current.deleteCharAt(current.length() - 1);
   }
 
   void insert(Trie node, String word) {
-    for (int i = 0; i < word.length(); ++i) {
-      node.addChild(word.charAt(i));
-      node = node.getChild(word.charAt(i));
+    for (char letter : word.toCharArray()) {
+      node.addChild(letter);
+      node = node.getChild(letter);
     }
 
     node.addChild(null);
