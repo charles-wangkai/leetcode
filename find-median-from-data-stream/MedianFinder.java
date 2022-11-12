@@ -12,9 +12,9 @@ class MedianFinder {
       upperHalf.offer(num);
     }
 
-    if (lowerHalf.size() >= upperHalf.size() + 2) {
+    if (lowerHalf.size() == upperHalf.size() + 2) {
       upperHalf.offer(lowerHalf.poll());
-    } else if (upperHalf.size() >= lowerHalf.size() + 2) {
+    } else if (upperHalf.size() == lowerHalf.size() + 2) {
       lowerHalf.offer(upperHalf.poll());
     }
   }
