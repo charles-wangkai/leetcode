@@ -29,7 +29,7 @@ class Solution {
     int lower = 1 << (height - 1);
     int upper = (1 << height) - 1;
     while (lower <= upper) {
-      int middle = lower + (upper - lower) / 2;
+      int middle = (lower + upper) / 2;
       if (check(root, height, middle)) {
         result = middle;
         lower = middle + 1;
@@ -53,7 +53,7 @@ class Solution {
   boolean check(TreeNode root, int height, int value) {
     TreeNode node = root;
     for (int i = 0; i < height - 1; ++i) {
-      if ((value & (1 << (height - 2 - i))) == 0) {
+      if (((value >> (height - 2 - i)) & 1) == 0) {
         node = node.left;
       } else {
         node = node.right;
