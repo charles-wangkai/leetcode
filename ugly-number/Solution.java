@@ -1,14 +1,15 @@
-public class Solution {
-	public boolean isUgly(int num) {
-		if (num <= 0) {
-			return false;
-		}
+class Solution {
+  public boolean isUgly(int n) {
+    if (n <= 0) {
+      return false;
+    }
 
-		for (int factor : new int[] { 2, 3, 5 }) {
-			while (num % factor == 0) {
-				num /= factor;
-			}
-		}
-		return num == 1;
-	}
+    for (int factor : new int[] {2, 3, 5}) {
+      while (n % factor == 0) {
+        n /= factor;
+      }
+    }
+
+    return n == 1;
+  }
 }
