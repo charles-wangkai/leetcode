@@ -2,14 +2,17 @@ import java.util.Stack;
 
 class Solution {
   public int calculate(String s) {
+    int result = 0;
     Stack<Integer> factors = new Stack<>();
     factors.push(1);
     int sign = 1;
-    int result = 0;
-
     Expression expr = new Expression(s);
-    String token;
-    while ((token = expr.readNext()) != null) {
+    while (true) {
+      String token = expr.readNext();
+      if (token == null) {
+        break;
+      }
+
       if (token.equals("(")) {
         factors.push(factors.peek() * sign);
         sign = 1;
@@ -33,23 +36,19 @@ class Expression {
   private int index = 0;
 
   public Expression(String str) {
-    this.str = str;
+    this.str = str.replace(" ", "");
   }
 
   public String readNext() {
-    while (index != str.length() && str.charAt(index) == ' ') {
-      ++index;
-    }
-
     if (index == str.length()) {
       return null;
     }
 
-    char ch = str.charAt(index);
-    if (ch == '(' || ch == ')' || ch == '+' || ch == '-') {
+    char c = str.charAt(index);
+    if (c == '(' || c == ')' || c == '+' || c == '-') {
       ++index;
 
-      return String.valueOf(ch);
+      return String.valueOf(c);
     }
 
     int nextIndex = index;
