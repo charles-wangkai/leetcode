@@ -9,17 +9,17 @@ class Solution {
   }
 
   boolean check(char[][] board, int r, int c, int row, int col) {
-    boolean[] used = new boolean[10];
+    boolean[] seen = new boolean[10];
     for (int dr = 0; dr < row; ++dr) {
       for (int dc = 0; dc < col; ++dc) {
         char cell = board[r + dr][c + dc];
         if (cell != '.') {
           int digit = cell - '0';
-          if (used[digit]) {
+          if (seen[digit]) {
             return false;
           }
 
-          used[digit] = true;
+          seen[digit] = true;
         }
       }
     }
