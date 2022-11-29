@@ -5,8 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 class RandomizedSet {
-  private static Random random = new Random();
-
+  private Random random = new Random();
   private List<Integer> values = new ArrayList<>();
   private Map<Integer, Integer> valueToIndex = new HashMap<>();
 
@@ -33,6 +32,10 @@ class RandomizedSet {
     return true;
   }
 
+  public int getRandom() {
+    return values.get(random.nextInt(values.size()));
+  }
+
   private void swap(int value1, int value2) {
     int index1 = valueToIndex.get(value1);
     int index2 = valueToIndex.get(value2);
@@ -42,10 +45,6 @@ class RandomizedSet {
 
     valueToIndex.put(value1, index2);
     valueToIndex.put(value2, index1);
-  }
-
-  public int getRandom() {
-    return values.get(random.nextInt(values.size()));
   }
 }
 
