@@ -5,12 +5,12 @@ import java.util.Map;
 class Solution {
   public boolean closeStrings(String word1, String word2) {
     Map<Character, Integer> letterToCount1 = buildletterToCount(word1);
-    int[] sortedCounts1 = letterToCount1.values().stream().mapToInt(x -> x).sorted().toArray();
     Map<Character, Integer> letterToCount2 = buildletterToCount(word2);
-    int[] sortedCounts2 = letterToCount2.values().stream().mapToInt(x -> x).sorted().toArray();
 
     return letterToCount1.keySet().equals(letterToCount2.keySet())
-        && Arrays.equals(sortedCounts1, sortedCounts2);
+        && Arrays.equals(
+            letterToCount1.values().stream().mapToInt(x -> x).sorted().toArray(),
+            letterToCount2.values().stream().mapToInt(x -> x).sorted().toArray());
   }
 
   Map<Character, Integer> buildletterToCount(String word) {
