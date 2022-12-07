@@ -19,21 +19,14 @@ class TreeNode {
 
 class Solution {
   public int rangeSumBST(TreeNode root, int low, int high) {
-    return search(root, Integer.MIN_VALUE, Integer.MAX_VALUE, low, high);
+    return search(low, high, root);
   }
 
-  int search(TreeNode node, int lower, int upper, int low, int high) {
-    if (node == null || upper < low || lower > high) {
-      return 0;
-    }
-
-    int result = 0;
-    if (node.val >= low && node.val <= high) {
-      result += node.val;
-    }
-    result += search(node.left, lower, node.val - 1, low, high);
-    result += search(node.right, node.val + 1, upper, low, high);
-
-    return result;
+  int search(int low, int high, TreeNode node) {
+    return (node == null)
+        ? 0
+        : (((node.val >= low && node.val <= high) ? node.val : 0)
+            + search(low, high, node.left)
+            + search(low, high, node.right));
   }
 }
