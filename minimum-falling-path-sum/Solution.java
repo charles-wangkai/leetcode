@@ -1,27 +1,29 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int minFallingPathSum(int[][] A) {
-		int size = A.length;
+class Solution {
+  public int minFallingPathSum(int[][] matrix) {
+    int n = matrix.length;
 
-		int[] minSums = Arrays.copyOf(A[0], size);
-		for (int r = 1; r < size; r++) {
-			int[] nextMinSums = new int[size];
-			for (int c = 0; c < size; c++) {
-				nextMinSums[c] = Integer.MAX_VALUE;
-				for (int offset = -1; offset <= 1; offset++) {
-					int prevC = c + offset;
-					if (prevC >= 0 && prevC < size) {
-						nextMinSums[c] = Math.min(nextMinSums[c], minSums[prevC]);
-					}
-				}
+    int[] minSums = matrix[0];
+    for (int r = 1; r < n; ++r) {
+      int[] nextMinSums = new int[n];
+      for (int c = 0; c < n; ++c) {
+        int c_ = c;
+        int[] minSums_ = minSums;
+        nextMinSums[c] =
+            IntStream.rangeClosed(-1, 1)
+                    .map(i -> c_ + i)
+                    .filter(prevC -> prevC >= 0 && prevC < n)
+                    .map(prevC -> minSums_[prevC])
+                    .min()
+                    .getAsInt()
+                + matrix[r][c];
+      }
 
-				nextMinSums[c] += A[r][c];
-			}
+      minSums = nextMinSums;
+    }
 
-			minSums = nextMinSums;
-		}
-
-		return Arrays.stream(minSums).min().getAsInt();
-	}
+    return Arrays.stream(minSums).min().getAsInt();
+  }
 }
