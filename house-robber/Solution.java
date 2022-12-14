@@ -3,8 +3,8 @@ class Solution {
     int prev3 = 0;
     int prev2 = 0;
     int prev1 = 0;
-    for (int x : nums) {
-      int current = Math.max(prev3, prev2) + x;
+    for (int num : nums) {
+      int current = Math.max(prev3, prev2) + num;
 
       prev3 = prev2;
       prev2 = prev1;
