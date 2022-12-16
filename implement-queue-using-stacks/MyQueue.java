@@ -1,39 +1,36 @@
 import java.util.Stack;
 
-// MyQueue
-public class MyQueue {
-	Stack<Integer> stackBack = new Stack<Integer>();
-	Stack<Integer> stackFront = new Stack<Integer>();
+class MyQueue {
+  Stack<Integer> backStack = new Stack<>();
+  Stack<Integer> frontStack = new Stack<>();
 
-	// Push element x to the back of queue.
-	public void push(int x) {
-		stackBack.push(x);
-	}
+  public void push(int x) {
+    backStack.push(x);
+  }
 
-	// Removes the element from in front of queue.
-	public void pop() {
-		checkAndMove();
-		stackFront.pop();
-	}
+  public int pop() {
+    checkAndMove();
 
-	// Get the front element.
-	public int peek() {
-		checkAndMove();
-		return stackFront.peek();
-	}
+    return frontStack.pop();
+  }
 
-	// Return whether the queue is empty.
-	public boolean empty() {
-		return stackBack.empty() && stackFront.empty();
-	}
+  public int peek() {
+    checkAndMove();
 
-	private void checkAndMove() {
-		if (stackFront.empty()) {
-			while (!stackBack.empty()) {
-				stackFront.push(stackBack.pop());
-			}
-		}
-	}
+    return frontStack.peek();
+  }
+
+  public boolean empty() {
+    return backStack.empty() && frontStack.empty();
+  }
+
+  private void checkAndMove() {
+    if (frontStack.empty()) {
+      while (!backStack.empty()) {
+        frontStack.push(backStack.pop());
+      }
+    }
+  }
 }
 
 // Your MyQueue object will be instantiated and called as such:
