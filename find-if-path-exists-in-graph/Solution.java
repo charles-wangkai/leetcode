@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
-  public boolean validPath(int n, int[][] edges, int start, int end) {
+  public boolean validPath(int n, int[][] edges, int source, int destination) {
     @SuppressWarnings("unchecked")
     List<Integer>[] adjLists = new List[n];
     for (int i = 0; i < adjLists.length; ++i) {
@@ -13,17 +13,17 @@ class Solution {
       adjLists[edge[1]].add(edge[0]);
     }
 
-    return search(adjLists, end, new boolean[n], start);
+    return search(adjLists, destination, new boolean[n], source);
   }
 
-  boolean search(List<Integer>[] adjLists, int end, boolean[] visited, int node) {
+  boolean search(List<Integer>[] adjLists, int destination, boolean[] visited, int node) {
     visited[node] = true;
-    if (node == end) {
+    if (node == destination) {
       return true;
     }
 
     for (int adj : adjLists[node]) {
-      if (!visited[adj] && search(adjLists, end, visited, adj)) {
+      if (!visited[adj] && search(adjLists, destination, visited, adj)) {
         return true;
       }
     }
