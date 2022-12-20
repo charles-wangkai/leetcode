@@ -5,8 +5,7 @@ import java.util.stream.IntStream;
 
 class Solution {
   public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-    int N = rooms.size();
-    boolean[] visited = new boolean[N];
+    boolean[] visited = new boolean[rooms.size()];
     visited[0] = true;
     Queue<Integer> queue = new ArrayDeque<>();
     queue.offer(0);
@@ -22,6 +21,6 @@ class Solution {
       }
     }
 
-    return IntStream.range(0, N).allMatch(i -> visited[i]);
+    return IntStream.range(0, visited.length).allMatch(i -> visited[i]);
   }
 }
