@@ -1,58 +1,69 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 class Solution {
   public int[] sumOfDistancesInTree(int n, int[][] edges) {
-    Node[] nodes = IntStream.range(0, n).mapToObj(i -> new Node()).toArray(Node[]::new);
-
+    @SuppressWarnings("unchecked")
+    List<Integer>[] adjLists = new List[n];
+    for (int i = 0; i < adjLists.length; ++i) {
+      adjLists[i] = new ArrayList<>();
+    }
     for (int[] edge : edges) {
-      nodes[edge[0]].adjs.add(edge[1]);
-      nodes[edge[1]].adjs.add(edge[0]);
+      adjLists[edge[0]].add(edge[1]);
+      adjLists[edge[1]].add(edge[0]);
     }
 
-    postOrderDfs(nodes, new boolean[n], 0);
+    int[] subtreeSizes = new int[n];
+    buildSubtreeSizes(subtreeSizes, adjLists, new boolean[n], 0);
 
-    nodes[0].distanceSum = nodes[0].subNodeDistanceSum;
-    preOrderDfs(nodes, new boolean[n], 0);
+    int[] distanceSums = new int[n];
+    distanceSums[0] = computeDistanceSum(adjLists, new boolean[n], 0, 0);
 
-    return Arrays.stream(nodes).mapToInt(node -> node.distanceSum).toArray();
+    buildDistanceSums(distanceSums, adjLists, subtreeSizes, new boolean[n], 0);
+
+    return distanceSums;
   }
 
-  void postOrderDfs(Node[] nodes, boolean[] visited, int index) {
-    visited[index] = true;
+  void buildDistanceSums(
+      int[] distanceSums,
+      List<Integer>[] adjLists,
+      int[] subtreeSizes,
+      boolean[] visited,
+      int node) {
+    visited[node] = true;
 
-    nodes[index].subNodeCount = 1;
-    for (int adj : nodes[index].adjs) {
+    for (int adj : adjLists[node]) {
       if (!visited[adj]) {
-        postOrderDfs(nodes, visited, adj);
-
-        nodes[index].subNodeCount += nodes[adj].subNodeCount;
-        nodes[index].subNodeDistanceSum += nodes[adj].subNodeDistanceSum + nodes[adj].subNodeCount;
+        distanceSums[adj] =
+            distanceSums[node] - subtreeSizes[adj] + (distanceSums.length - subtreeSizes[adj]);
+        buildDistanceSums(distanceSums, adjLists, subtreeSizes, visited, adj);
       }
     }
   }
 
-  void preOrderDfs(Node[] nodes, boolean[] visited, int index) {
-    visited[index] = true;
+  int computeDistanceSum(List<Integer>[] adjLists, boolean[] visited, int node, int distance) {
+    visited[node] = true;
 
-    for (int adj : nodes[index].adjs) {
+    int result = distance;
+    for (int adj : adjLists[node]) {
       if (!visited[adj]) {
-        nodes[adj].distanceSum =
-            nodes[index].distanceSum
-                - nodes[adj].subNodeCount
-                + (nodes.length - nodes[adj].subNodeCount);
+        result += computeDistanceSum(adjLists, visited, adj, distance + 1);
+      }
+    }
 
-        preOrderDfs(nodes, visited, adj);
+    return result;
+  }
+
+  void buildSubtreeSizes(
+      int[] subtreeSizes, List<Integer>[] adjLists, boolean[] visited, int node) {
+    visited[node] = true;
+
+    subtreeSizes[node] = 1;
+    for (int adj : adjLists[node]) {
+      if (!visited[adj]) {
+        buildSubtreeSizes(subtreeSizes, adjLists, visited, adj);
+        subtreeSizes[node] += subtreeSizes[adj];
       }
     }
   }
-}
-
-class Node {
-  List<Integer> adjs = new ArrayList<>();
-  int subNodeCount;
-  int subNodeDistanceSum;
-  int distanceSum;
 }
