@@ -17,6 +17,6 @@ class Solution {
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MODULUS;
+    return Math.floorMod(x + y, MODULUS);
   }
 }
