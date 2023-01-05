@@ -5,11 +5,11 @@ class Solution {
   public int findMinArrowShots(int[][] points) {
     Arrays.sort(points, Comparator.comparing(p -> p[0]));
 
-    int arrowNum = 1;
+    int result = 1;
     int end = points[0][1];
     for (int i = 1; i < points.length; ++i) {
       if (points[i][0] > end) {
-        ++arrowNum;
+        ++result;
 
         end = points[i][1];
       } else {
@@ -17,6 +17,6 @@ class Solution {
       }
     }
 
-    return arrowNum;
+    return result;
   }
 }
