@@ -2,10 +2,10 @@ import java.util.Arrays;
 
 class Solution {
   public int maxIceCream(int[] costs, int coins) {
-    int[] sortedCosts = Arrays.stream(costs).boxed().sorted().mapToInt(x -> x).toArray();
+    Arrays.sort(costs);
 
     int result = 0;
-    for (int cost : sortedCosts) {
+    for (int cost : costs) {
       if (coins >= cost) {
         coins -= cost;
         ++result;
