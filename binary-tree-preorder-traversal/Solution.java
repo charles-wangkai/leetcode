@@ -2,31 +2,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-// Definition for binary tree
+// Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	public List<Integer> preorderTraversal(TreeNode root) {
-		List<Integer> result = new ArrayList<Integer>();
-		Stack<TreeNode> nodeStack = new Stack<TreeNode>();
-		nodeStack.push(root);
-		while (!nodeStack.empty()) {
-			TreeNode node = nodeStack.pop();
-			if (node == null) {
-				continue;
-			}
-			result.add(node.val);
-			nodeStack.push(node.right);
-			nodeStack.push(node.left);
-		}
-		return result;
-	}
+class Solution {
+  public List<Integer> preorderTraversal(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+    while (!stack.empty()) {
+      TreeNode node = stack.pop();
+      if (node != null) {
+        result.add(node.val);
+        stack.push(node.right);
+        stack.push(node.left);
+      }
+    }
+
+    return result;
+  }
 }
