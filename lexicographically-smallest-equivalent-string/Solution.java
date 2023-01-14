@@ -3,40 +3,44 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public String smallestEquivalentString(String A, String B, String S) {
-		Map<Character, Character> letterToParent = IntStream.range(0, 26).mapToObj(i -> (char) (i + 'a'))
-				.collect(Collectors.toMap(Function.identity(), Function.identity()));
+class Solution {
+  public String smallestEquivalentString(String s1, String s2, String baseStr) {
+    Map<Character, Character> letterToParent =
+        IntStream.rangeClosed('a', 'z')
+            .mapToObj(c -> (char) c)
+            .collect(Collectors.toMap(Function.identity(), Function.identity()));
 
-		for (int i = 0; i < A.length(); i++) {
-			char rootA = findRoot(letterToParent, A.charAt(i));
-			char rootB = findRoot(letterToParent, B.charAt(i));
+    for (int i = 0; i < s1.length(); ++i) {
+      char root1 = findRoot(letterToParent, s1.charAt(i));
+      char root2 = findRoot(letterToParent, s2.charAt(i));
+      if (root1 < root2) {
+        letterToParent.put(root2, root1);
+      } else if (root1 > root2) {
+        letterToParent.put(root1, root2);
+      }
+    }
 
-			if (rootA < rootB) {
-				letterToParent.put(rootB, rootA);
-			} else if (rootA > rootB) {
-				letterToParent.put(rootA, rootB);
-			}
-		}
+    return baseStr
+        .chars()
+        .mapToObj(c -> findRoot(letterToParent, (char) c))
+        .map(String::valueOf)
+        .collect(Collectors.joining());
+  }
 
-		return S.chars().mapToObj(ch -> findRoot(letterToParent, (char) ch))
-				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append).toString();
-	}
+  char findRoot(Map<Character, Character> letterToParent, char letter) {
+    char root = letter;
+    while (letterToParent.get(root) != root) {
+      root = letterToParent.get(root);
+    }
 
-	char findRoot(Map<Character, Character> letterToParent, char letter) {
-		char root = letter;
-		while (letterToParent.get(root) != root) {
-			root = letterToParent.get(root);
-		}
+    char p = letter;
+    while (p != root) {
+      char next = letterToParent.get(p);
+      letterToParent.put(p, root);
 
-		char ch = letter;
-		while (ch != root) {
-			char next = letterToParent.get(ch);
-			letterToParent.put(ch, root);
+      p = next;
+    }
 
-			ch = next;
-		}
-
-		return root;
-	}
+    return root;
+  }
 }
