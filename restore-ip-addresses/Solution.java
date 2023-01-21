@@ -1,40 +1,29 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	public List<String> restoreIpAddresses(String s) {
-		List<String> ipAddresses = new ArrayList<String>();
-		search(ipAddresses, s, new int[5], 1);
-		return ipAddresses;
-	}
+class Solution {
+  public List<String> restoreIpAddresses(String s) {
+    List<String> result = new ArrayList<>();
+    for (int length1 = 1; length1 < s.length(); ++length1) {
+      for (int length2 = 1; length1 + length2 < s.length(); ++length2) {
+        for (int length3 = 1; length1 + length2 + length3 < s.length(); ++length3) {
+          String part1 = s.substring(0, length1);
+          String part2 = s.substring(length1, length1 + length2);
+          String part3 = s.substring(length1 + length2, length1 + length2 + length3);
+          String part4 = s.substring(length1 + length2 + length3);
+          if (isValid(part1) && isValid(part2) && isValid(part3) && isValid(part4)) {
+            result.add(String.format("%s.%s.%s.%s", part1, part2, part3, part4));
+          }
+        }
+      }
+    }
 
-	void search(List<String> ipAddresses, String s, int[] positions, int index) {
-		if (index == positions.length) {
-			if (positions[positions.length - 1] == s.length()) {
-				ipAddresses.add(convertToIp(s, positions));
-			}
-			return;
-		}
-		for (int i = positions[index - 1] + 1; i <= Math.min(s.length(),
-				positions[index - 1] + 3); i++) {
-			String partStr = s.substring(positions[index - 1], i);
-			int part = Integer.parseInt(partStr);
-			if (partStr.equals("0")
-					|| (!partStr.startsWith("0") && part <= 255)) {
-				positions[index] = i;
-				search(ipAddresses, s, positions, index + 1);
-			}
-		}
-	}
+    return result;
+  }
 
-	String convertToIp(String s, int[] positions) {
-		StringBuilder ip = new StringBuilder();
-		for (int i = 1; i < positions.length; i++) {
-			if (ip.length() != 0) {
-				ip.append(".");
-			}
-			ip.append(s.substring(positions[i - 1], positions[i]));
-		}
-		return ip.toString();
-	}
+  boolean isValid(String part) {
+    long value = Long.parseLong(part);
+
+    return value >= 0 && value <= 255 && String.valueOf(value).equals(part);
+  }
 }
