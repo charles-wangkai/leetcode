@@ -1,31 +1,22 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 class Solution {
   public List<List<String>> partition(String s) {
-    @SuppressWarnings("unchecked")
-    List<List<String>>[] partitions = new List[s.length() + 1];
-
-    for (int i = 0; i < partitions.length; ++i) {
-      partitions[i] = new ArrayList<>();
-      if (i == 0) {
-        partitions[i].add(List.of());
-      } else {
-        for (int j = 1; j <= i; ++j) {
-          String last = s.substring(i - j, i);
-          if (isPalindrome(last)) {
-            for (List<String> p : partitions[i - j]) {
-              List<String> part = new ArrayList<>(p);
-              part.add(last);
-
-              partitions[i].add(part);
-            }
-          }
-        }
-      }
-    }
-
-    return partitions[s.length()];
+    return IntStream.range(0, 1 << (s.length() - 1))
+        .mapToObj(
+            mask ->
+                IntStream.concat(
+                        IntStream.range(0, s.length() - 1).filter(i -> ((mask >> i) & 1) == 1),
+                        IntStream.of(s.length() - 1))
+                    .toArray())
+        .map(
+            indices ->
+                IntStream.range(0, indices.length)
+                    .mapToObj(i -> s.substring((i == 0) ? 0 : (indices[i - 1] + 1), indices[i] + 1))
+                    .toList())
+        .filter(parts -> parts.stream().allMatch(this::isPalindrome))
+        .toList();
   }
 
   boolean isPalindrome(String s) {
