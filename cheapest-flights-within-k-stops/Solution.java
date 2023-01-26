@@ -1,52 +1,49 @@
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
 
-public class Solution {
-	public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
-		@SuppressWarnings("unchecked")
-		Map<Integer, Integer>[] edgeLists = new Map[n];
-		for (int i = 0; i < edgeLists.length; ++i) {
-			edgeLists[i] = new HashMap<>();
-		}
+class Solution {
+  public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+    @SuppressWarnings("unchecked")
+    Map<Integer, Integer>[] edgeLists = new Map[n];
+    for (int i = 0; i < edgeLists.length; ++i) {
+      edgeLists[i] = new HashMap<>();
+    }
+    for (int[] flight : flights) {
+      edgeLists[flight[0]].put(flight[1], flight[2]);
+    }
 
-		for (int[] flight : flights) {
-			int from = flight[0];
-			int to = flight[1];
-			int price = flight[2];
+    @SuppressWarnings("unchecked")
+    Set<Integer>[] stopCountSeens = new Set[n];
+    for (int i = 0; i < stopCountSeens.length; ++i) {
+      stopCountSeens[i] = new HashSet<>();
+    }
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::cost));
+    pq.add(new Element(src, 0, -1));
+    while (!pq.isEmpty()) {
+      Element head = pq.poll();
+      if (head.city() == dst) {
+        return head.cost();
+      }
 
-			edgeLists[from].put(to, price);
-		}
+      if (!stopCountSeens[head.city()].contains(head.stopCount())) {
+        stopCountSeens[head.city()].add(head.stopCount());
 
-		PriorityQueue<City> pq = new PriorityQueue<>((c1, c2) -> Integer.compare(c1.cost, c2.cost));
-		pq.add(new City(src, 0, -1));
+        if (head.stopCount() + 1 <= k) {
+          for (int to : edgeLists[head.city()].keySet()) {
+            pq.offer(
+                new Element(
+                    to, head.cost() + edgeLists[head.city()].get(to), head.stopCount() + 1));
+          }
+        }
+      }
+    }
 
-		while (!pq.isEmpty()) {
-			City city = pq.poll();
-
-			if (city.index == dst) {
-				return city.cost;
-			}
-
-			if (city.stopCount + 1 <= K) {
-				for (int to : edgeLists[city.index].keySet()) {
-					pq.offer(new City(to, city.cost + edgeLists[city.index].get(to), city.stopCount + 1));
-				}
-			}
-		}
-
-		return -1;
-	}
+    return -1;
+  }
 }
 
-class City {
-	int index;
-	int cost;
-	int stopCount;
-
-	City(int index, int cost, int stopCount) {
-		this.index = index;
-		this.cost = cost;
-		this.stopCount = stopCount;
-	}
-}
+record Element(int city, int cost, int stopCount) {}
