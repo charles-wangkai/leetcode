@@ -1,65 +1,55 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
-// Definition for an interval.
-class Interval {
-	int start;
-	int end;
+class SummaryRanges {
+  private NavigableSet<Interval> intervals =
+      new TreeSet<>(Comparator.comparing(interval -> interval.start));
 
-	Interval() {
-		start = 0;
-		end = 0;
-	}
+  public void addNum(int value) {
+    Interval toAdd = new Interval(value, value);
+    Interval floor = intervals.floor(toAdd);
+    Interval ceiling = intervals.ceiling(toAdd);
 
-	Interval(int s, int e) {
-		start = s;
-		end = e;
-	}
+    if (!isWithin(value, floor) && !isWithin(value, ceiling)) {
+      if (floor != null && ceiling != null & value == floor.end + 1 && value == ceiling.start - 1) {
+        intervals.remove(floor);
+        intervals.remove(ceiling);
+        intervals.add(new Interval(floor.start, ceiling.end));
+      } else if (floor != null && value == floor.end + 1) {
+        intervals.remove(floor);
+        intervals.add(new Interval(floor.start, value));
+      } else if (ceiling != null && value == ceiling.start - 1) {
+        intervals.remove(ceiling);
+        intervals.add(new Interval(value, ceiling.end));
+      } else {
+        intervals.add(toAdd);
+      }
+    }
+  }
+
+  private boolean isWithin(int value, Interval interval) {
+    return interval != null && value >= interval.start && value <= interval.end;
+  }
+
+  public int[][] getIntervals() {
+    return intervals.stream()
+        .map(interval -> new int[] {interval.start, interval.end})
+        .toArray(int[][]::new);
+  }
 }
 
-public class SummaryRanges {
-	/** Initialize your data structure here. */
-	private TreeSet<Interval> intervals = new TreeSet<Interval>(
-			(interval1, interval2) -> interval1.start - interval2.start);
+class Interval {
+  int start;
+  int end;
 
-	public SummaryRanges() {
-	}
-
-	public void addNum(int val) {
-		Interval toAdd = new Interval(val, val);
-		Interval floor = intervals.floor(toAdd);
-		Interval ceiling = intervals.ceiling(toAdd);
-
-		if (isWithin(val, floor) || isWithin(val, ceiling)) {
-			return;
-		}
-
-		if (floor != null && ceiling != null & val == floor.end + 1 && val == ceiling.start - 1) {
-			intervals.remove(floor);
-			intervals.remove(ceiling);
-			intervals.add(new Interval(floor.start, ceiling.end));
-		} else if (floor != null && val == floor.end + 1) {
-			intervals.remove(floor);
-			intervals.add(new Interval(floor.start, val));
-		} else if (ceiling != null && val == ceiling.start - 1) {
-			intervals.remove(ceiling);
-			intervals.add(new Interval(val, ceiling.end));
-		} else {
-			intervals.add(toAdd);
-		}
-	}
-
-	private boolean isWithin(int val, Interval interval) {
-		return interval != null && val >= interval.start && val <= interval.end;
-	}
-
-	public List<Interval> getIntervals() {
-		return new ArrayList<Interval>(intervals);
-	}
+  Interval(int start, int end) {
+    this.start = start;
+    this.end = end;
+  }
 }
 
 // Your SummaryRanges object will be instantiated and called as such:
 // SummaryRanges obj = new SummaryRanges();
-// obj.addNum(val);
-// List <Interval> param_2 = obj.getIntervals();
+// obj.addNum(value);
+// int[][] param_2 = obj.getIntervals();
