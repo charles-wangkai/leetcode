@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -6,25 +7,21 @@ class Solution {
     int[] sortedIndices =
         IntStream.range(0, scores.length)
             .boxed()
-            .sorted(
-                (i1, i2) ->
-                    (ages[i1] != ages[i2])
-                        ? Integer.compare(ages[i1], ages[i2])
-                        : Integer.compare(scores[i1], scores[i2]))
-            .mapToInt(x -> x)
+            .sorted(Comparator.comparing((Integer i) -> ages[i]).thenComparing(i -> scores[i]))
+            .mapToInt(Integer::intValue)
             .toArray();
 
-    int[] sums = new int[scores.length];
-    for (int i = 0; i < sums.length; ++i) {
-      sums[i] = scores[sortedIndices[i]];
+    int[] dp = new int[scores.length];
+    for (int i = 0; i < dp.length; ++i) {
+      dp[i] = scores[sortedIndices[i]];
       for (int j = 0; j < i; ++j) {
         if (ages[sortedIndices[j]] == ages[sortedIndices[i]]
             || scores[sortedIndices[j]] <= scores[sortedIndices[i]]) {
-          sums[i] = Math.max(sums[i], sums[j] + scores[sortedIndices[i]]);
+          dp[i] = Math.max(dp[i], dp[j] + scores[sortedIndices[i]]);
         }
       }
     }
 
-    return Arrays.stream(sums).max().getAsInt();
+    return Arrays.stream(dp).max().getAsInt();
   }
 }
