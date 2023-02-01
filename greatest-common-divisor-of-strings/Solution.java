@@ -1,20 +1,21 @@
 import java.util.stream.IntStream;
 
-public class Solution {
-	public String gcdOfStrings(String str1, String str2) {
-		String result = "";
-		for (int length = 1; length <= Math.min(str1.length(), str2.length()); length++) {
-			String x = str1.substring(0, length);
+class Solution {
+  public String gcdOfStrings(String str1, String str2) {
+    return str1.substring(
+        0,
+        IntStream.rangeClosed(1, Math.min(str1.length(), str2.length()))
+            .filter(
+                length ->
+                    str1.substring(0, length).equals(str2.substring(0, length))
+                        && isDivide(str1, length)
+                        && isDivide(str2, length))
+            .max()
+            .orElse(0));
+  }
 
-			if (isDivide(str1, x) && isDivide(str2, x)) {
-				result = x;
-			}
-		}
-		return result;
-	}
-
-	static boolean isDivide(String s, String x) {
-		return s.length() % x.length() == 0
-				&& IntStream.range(0, s.length()).allMatch(i -> s.charAt(i) == x.charAt(i % x.length()));
-	}
+  boolean isDivide(String s, int length) {
+    return s.length() % length == 0
+        && IntStream.range(0, s.length()).allMatch(i -> s.charAt(i) == s.charAt(i % length));
+  }
 }
