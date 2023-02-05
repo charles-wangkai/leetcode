@@ -24,10 +24,10 @@ class Solution {
     return result;
   }
 
-  int[] buildCounts(String str) {
+  int[] buildCounts(String s) {
     int[] counts = new int[26];
-    for (char ch : str.toCharArray()) {
-      ++counts[ch - 'a'];
+    for (char c : s.toCharArray()) {
+      ++counts[c - 'a'];
     }
 
     return counts;
