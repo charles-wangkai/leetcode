@@ -1,30 +1,26 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Solution {
-	public int totalFruit(int[] tree) {
-		Map<Integer, Integer> typeToCount = new HashMap<>();
-		int maxLength = 0;
-		int leftIndex = 0;
-		for (int rightIndex = 0; rightIndex < tree.length; rightIndex++) {
-			int type = tree[rightIndex];
+class Solution {
+  public int totalFruit(int[] fruits) {
+    int result = 0;
+    Map<Integer, Integer> typeToCount = new HashMap<>();
+    int leftIndex = 0;
+    for (int rightIndex = 0; rightIndex < fruits.length; ++rightIndex) {
+      updateMap(typeToCount, fruits[rightIndex], 1);
+      while (typeToCount.size() == 3) {
+        updateMap(typeToCount, fruits[leftIndex], -1);
+        ++leftIndex;
+      }
 
-			if (typeToCount.size() == 2 && !typeToCount.containsKey(type)) {
-				while (typeToCount.size() == 2) {
-					int leftType = tree[leftIndex];
-					leftIndex++;
+      result = Math.max(result, rightIndex - leftIndex + 1);
+    }
 
-					typeToCount.put(leftType, typeToCount.get(leftType) - 1);
-					if (typeToCount.get(leftType) == 0) {
-						typeToCount.remove(leftType);
-					}
-				}
-			}
+    return result;
+  }
 
-			typeToCount.put(type, typeToCount.getOrDefault(type, 0) + 1);
-
-			maxLength = Math.max(maxLength, rightIndex - leftIndex + 1);
-		}
-		return maxLength;
-	}
+  void updateMap(Map<Integer, Integer> typeToCount, int type, int delta) {
+    typeToCount.put(type, typeToCount.getOrDefault(type, 0) + delta);
+    typeToCount.remove(type, 0);
+  }
 }
