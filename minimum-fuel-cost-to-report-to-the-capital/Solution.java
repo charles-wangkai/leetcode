@@ -18,21 +18,19 @@ class Solution {
     }
 
     cost = 0;
-    search(seats, adjLists, new boolean[n], 0, 0);
+    search(seats, adjLists, 0, -1);
 
     return cost;
   }
 
-  int search(int seats, List<Integer>[] adjLists, boolean[] visited, int node, int depth) {
-    visited[node] = true;
-
+  int search(int seats, List<Integer>[] adjLists, int node, int parent) {
     int result = 1;
     for (int adj : adjLists[node]) {
-      if (!visited[adj]) {
-        result += search(seats, adjLists, visited, adj, depth + 1);
+      if (adj != parent) {
+        result += search(seats, adjLists, adj, node);
       }
     }
-    if (depth != 0) {
+    if (parent != -1) {
       cost += (result + seats - 1) / seats;
     }
 
