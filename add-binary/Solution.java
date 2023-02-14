@@ -6,8 +6,8 @@ class Solution {
         indexA >= 0 || indexB >= 0;
         --indexA, --indexB) {
       int sum =
-          (indexA >= 0 ? (a.charAt(indexA) - '0') : 0)
-              + (indexB >= 0 ? (b.charAt(indexB) - '0') : 0)
+          ((indexA >= 0) ? (a.charAt(indexA) - '0') : 0)
+              + ((indexB >= 0) ? (b.charAt(indexB) - '0') : 0)
               + carry;
       result.append(sum % 2);
       carry = sum / 2;
