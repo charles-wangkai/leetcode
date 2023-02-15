@@ -3,9 +3,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Solution {
-	public List<Integer> addToArrayForm(int[] A, int K) {
-		return new BigInteger(String.join("", Arrays.stream(A).mapToObj(String::valueOf).toArray(String[]::new)))
-				.add(BigInteger.valueOf(K)).toString().chars().mapToObj(ch -> ch - '0').collect(Collectors.toList());
-	}
+class Solution {
+  public List<Integer> addToArrayForm(int[] num, int k) {
+    return new BigInteger(
+            Arrays.stream(num).mapToObj(String::valueOf).collect(Collectors.joining()))
+        .add(BigInteger.valueOf(k))
+        .toString()
+        .chars()
+        .map(c -> c - '0')
+        .boxed()
+        .toList();
+  }
 }
