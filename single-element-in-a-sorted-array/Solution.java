@@ -6,7 +6,7 @@ class Solution {
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
       if ((middle % 2 == 0 && middle + 1 != nums.length && nums[middle] == nums[middle + 1])
-          || (middle % 2 != 0 && middle != 0 && nums[middle] == nums[middle - 1])) {
+          || (middle % 2 != 0 && nums[middle] == nums[middle - 1])) {
         lower = middle + 1;
       } else {
         result = nums[middle];
