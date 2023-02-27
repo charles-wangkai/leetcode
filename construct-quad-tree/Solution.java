@@ -1,56 +1,65 @@
 // Definition for a QuadTree node.
 class Node {
-	public boolean val;
-	public boolean isLeaf;
-	public Node topLeft;
-	public Node topRight;
-	public Node bottomLeft;
-	public Node bottomRight;
+  public boolean val;
+  public boolean isLeaf;
+  public Node topLeft;
+  public Node topRight;
+  public Node bottomLeft;
+  public Node bottomRight;
 
-	public Node() {
-	}
+  public Node() {
+    this.val = false;
+    this.isLeaf = false;
+    this.topLeft = null;
+    this.topRight = null;
+    this.bottomLeft = null;
+    this.bottomRight = null;
+  }
 
-	public Node(boolean _val, boolean _isLeaf, Node _topLeft, Node _topRight, Node _bottomLeft, Node _bottomRight) {
-		val = _val;
-		isLeaf = _isLeaf;
-		topLeft = _topLeft;
-		topRight = _topRight;
-		bottomLeft = _bottomLeft;
-		bottomRight = _bottomRight;
-	}
+  public Node(boolean val, boolean isLeaf) {
+    this.val = val;
+    this.isLeaf = isLeaf;
+    this.topLeft = null;
+    this.topRight = null;
+    this.bottomLeft = null;
+    this.bottomRight = null;
+  }
+
+  public Node(
+      boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
+    this.val = val;
+    this.isLeaf = isLeaf;
+    this.topLeft = topLeft;
+    this.topRight = topRight;
+    this.bottomLeft = bottomLeft;
+    this.bottomRight = bottomRight;
+  }
 }
 
-public class Solution {
-	public Node construct(int[][] grid) {
-		if (grid.length == 0) {
-			return null;
-		}
+class Solution {
+  public Node construct(int[][] grid) {
+    return buildNode(grid, 0, 0, grid.length);
+  }
 
-		return buildNode(grid, 0, 0, grid.length);
-	}
+  Node buildNode(int[][] grid, int beginR, int beginC, int size) {
+    if (size == 1) {
+      return new Node(grid[beginR][beginC] == 1, true);
+    }
 
-	Node buildNode(int[][] grid, int beginR, int beginC, int size) {
-		Boolean sameValue = getSameValue(grid, beginR, beginC, size);
-		if (sameValue != null) {
-			return new Node(sameValue, true, null, null, null, null);
-		} else {
-			Node topLeft = buildNode(grid, beginR, beginC, size / 2);
-			Node topRight = buildNode(grid, beginR, beginC + size / 2, size / 2);
-			Node bottomLeft = buildNode(grid, beginR + size / 2, beginC, size / 2);
-			Node bottomRight = buildNode(grid, beginR + size / 2, beginC + size / 2, size / 2);
-			return new Node(true, false, topLeft, topRight, bottomLeft, bottomRight);
-		}
-	}
+    int nextSize = size / 2;
+    Node topLeft = buildNode(grid, beginR, beginC, nextSize);
+    Node topRight = buildNode(grid, beginR, beginC + nextSize, nextSize);
+    Node bottomLeft = buildNode(grid, beginR + nextSize, beginC, nextSize);
+    Node bottomRight = buildNode(grid, beginR + nextSize, beginC + nextSize, nextSize);
 
-	Boolean getSameValue(int[][] grid, int beginR, int beginC, int size) {
-		int sameValue = grid[beginR][beginC];
-		for (int r = beginR; r < beginR + size; r++) {
-			for (int c = beginC; c < beginC + size; c++) {
-				if (grid[r][c] != sameValue) {
-					return null;
-				}
-			}
-		}
-		return sameValue == 1;
-	}
+    return (topLeft.isLeaf
+            && topRight.isLeaf
+            && bottomLeft.isLeaf
+            && bottomRight.isLeaf
+            && topLeft.val == topRight.val
+            && topRight.val == bottomLeft.val
+            && bottomLeft.val == bottomRight.val)
+        ? new Node(topLeft.val, true)
+        : new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+  }
 }
