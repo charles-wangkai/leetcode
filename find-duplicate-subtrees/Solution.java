@@ -1,45 +1,52 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
-		Map<String, TreeNode> subtree2root = new HashMap<String, TreeNode>();
-		Set<TreeNode> duplicateRoots = new HashSet<TreeNode>();
+class Solution {
+  public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+    List<TreeNode> duplicateRoots = new ArrayList<>();
+    Map<String, Integer> subtreeToCount = new HashMap<>();
+    search(duplicateRoots, subtreeToCount, root);
 
-		search(subtree2root, duplicateRoots, root);
+    return duplicateRoots;
+  }
 
-		return new ArrayList<TreeNode>(duplicateRoots);
-	}
+  String search(List<TreeNode> duplicateRoots, Map<String, Integer> subtreeToCount, TreeNode node) {
+    if (node == null) {
+      return "";
+    }
 
-	String search(Map<String, TreeNode> subtree2root, Set<TreeNode> duplicateRoots, TreeNode root) {
-		if (root == null) {
-			return "";
-		}
+    String subtree =
+        String.format(
+            "%d(%s)(%s)",
+            node.val,
+            search(duplicateRoots, subtreeToCount, node.left),
+            search(duplicateRoots, subtreeToCount, node.right));
+    subtreeToCount.put(subtree, subtreeToCount.getOrDefault(subtree, 0) + 1);
+    if (subtreeToCount.get(subtree) == 2) {
+      duplicateRoots.add(node);
+    }
 
-		String result = String.format("%d(%s)(%s)", root.val, search(subtree2root, duplicateRoots, root.left),
-				search(subtree2root, duplicateRoots, root.right));
-
-		if (subtree2root.containsKey(result)) {
-			duplicateRoots.add(subtree2root.get(result));
-		} else {
-			subtree2root.put(result, root);
-		}
-
-		return result;
-	}
+    return subtree;
+  }
 }
