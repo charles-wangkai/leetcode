@@ -1,26 +1,24 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 class Solution {
   public int minJumps(int[] arr) {
     Map<Integer, List<Integer>> valueToIndices = new HashMap<>();
     for (int i = 0; i < arr.length; ++i) {
-      if (!valueToIndices.containsKey(arr[i])) {
-        valueToIndices.put(arr[i], new ArrayList<>());
-      }
-
+      valueToIndices.putIfAbsent(arr[i], new ArrayList<>());
       valueToIndices.get(arr[i]).add(i);
     }
 
     Set<Integer> processedValues = new HashSet<>();
-    int[] distances = IntStream.range(0, arr.length).map(i -> -1).toArray();
+    int[] distances = new int[arr.length];
+    Arrays.fill(distances, -1);
     distances[0] = 0;
     Queue<Integer> queue = new ArrayDeque<>();
     queue.offer(0);
