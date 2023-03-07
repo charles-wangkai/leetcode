@@ -19,14 +19,6 @@ class Solution {
   }
 
   boolean check(int[] time, int totalTrips, long totalTime) {
-    long tripNum = 0;
-    for (int t : time) {
-      tripNum += totalTime / t;
-      if (tripNum >= totalTrips) {
-        return true;
-      }
-    }
-
-    return false;
+    return Arrays.stream(time).mapToLong(t -> totalTime / t).sum() >= totalTrips;
   }
 }
