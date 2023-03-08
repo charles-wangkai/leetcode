@@ -7,7 +7,7 @@ class Solution {
     int upper = Arrays.stream(piles).max().getAsInt();
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
-      if (canEatAll(piles, h, middle)) {
+      if (check(piles, h, middle)) {
         result = middle;
         upper = middle - 1;
       } else {
@@ -18,7 +18,7 @@ class Solution {
     return result;
   }
 
-  boolean canEatAll(int[] piles, int h, int eatSpeed) {
+  boolean check(int[] piles, int h, int eatSpeed) {
     return Arrays.stream(piles).map(pile -> (pile + eatSpeed - 1) / eatSpeed).asLongStream().sum()
         <= h;
   }
