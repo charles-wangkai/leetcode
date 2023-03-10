@@ -26,7 +26,7 @@ class Solution {
   }
 
   public int getRandom() {
-    int result = 0;
+    int result = Integer.MIN_VALUE;
     int size = 0;
     for (ListNode node = head; node != null; node = node.next) {
       ++size;
