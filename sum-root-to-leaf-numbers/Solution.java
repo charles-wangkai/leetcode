@@ -23,14 +23,11 @@ class Solution {
   }
 
   int search(TreeNode node, int prev) {
-    if (node == null) {
-      return 0;
-    }
-
     int current = prev * 10 + node.val;
 
     return (node.left == null && node.right == null)
         ? current
-        : (search(node.left, current) + search(node.right, current));
+        : (((node.left == null) ? 0 : search(node.left, current))
+            + ((node.right == null) ? 0 : search(node.right, current)));
   }
 }
