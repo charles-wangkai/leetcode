@@ -9,7 +9,6 @@ class Trie {
     for (char letter : word.toCharArray()) {
       node = node.putChild(letter);
     }
-
     node.putChild(null);
   }
 
