@@ -1,8 +1,5 @@
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 class WordDictionary {
   TrieNode root = new TrieNode();
@@ -10,9 +7,10 @@ class WordDictionary {
   public void addWord(String word) {
     TrieNode node = root;
     for (char letter : word.toCharArray()) {
-      node = node.putChild(letter);
+      node.letterToChild.putIfAbsent(letter, new TrieNode());
+      node = node.letterToChild.get(letter);
     }
-    node.putChild(null);
+    node.letterToChild.putIfAbsent(null, null);
   }
 
   public boolean search(String word) {
@@ -21,40 +19,27 @@ class WordDictionary {
 
   private boolean search(String word, int index, TrieNode node) {
     if (index == word.length()) {
-      return node.hasChild(null);
+      return node.letterToChild.containsKey(null);
     }
 
-    char ch = word.charAt(index);
+    char letter = word.charAt(index);
+    if (letter != '.') {
+      return node.letterToChild.containsKey(letter)
+          && search(word, index + 1, node.letterToChild.get(letter));
+    }
 
-    return (ch == '.')
-        ? node.getChildren().stream().anyMatch(child -> search(word, index + 1, child))
-        : (node.hasChild(ch) && search(word, index + 1, node.getChild(ch)));
+    for (Character c : node.letterToChild.keySet()) {
+      if (c != null && search(word, index + 1, node.letterToChild.get(c))) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 
 class TrieNode {
-  private Map<Character, TrieNode> letterToChild = new HashMap<>();
-
-  public boolean hasChild(Character ch) {
-    return letterToChild.containsKey(ch);
-  }
-
-  public TrieNode getChild(Character ch) {
-    return letterToChild.get(ch);
-  }
-
-  public TrieNode putChild(Character ch) {
-    letterToChild.putIfAbsent(ch, new TrieNode());
-
-    return getChild(ch);
-  }
-
-  public List<TrieNode> getChildren() {
-    return letterToChild.entrySet().stream()
-        .filter(entry -> entry.getKey() != null)
-        .map(Entry::getValue)
-        .collect(Collectors.toList());
-  }
+  Map<Character, TrieNode> letterToChild = new HashMap<>();
 }
 
 // Your WordDictionary object will be instantiated and called as such:
