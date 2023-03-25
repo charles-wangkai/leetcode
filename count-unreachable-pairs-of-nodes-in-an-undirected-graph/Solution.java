@@ -25,19 +25,12 @@ class Solution {
   }
 
   int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+    if (parents[node] == -1) {
+      return node;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parents[node] = findRoot(parents, parents[node]);
 
-      p = next;
-    }
-
-    return root;
+    return parents[node];
   }
 }
