@@ -4,7 +4,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
-  Map<Pair, Boolean> cache = new HashMap<>();
+  Map<String, Boolean> cache = new HashMap<>();
 
   public boolean isScramble(String s1, String s2) {
     if (s1.equals(s2)) {
@@ -14,7 +14,7 @@ class Solution {
       return false;
     }
 
-    Pair pair = new Pair(s1, s2);
+    String pair = generatePair(s1, s2);
     if (!cache.containsKey(pair)) {
       boolean scramble =
           IntStream.range(1, s1.length())
@@ -34,9 +34,11 @@ class Solution {
     return cache.get(pair);
   }
 
+  String generatePair(String s1, String s2) {
+    return String.format("%s|%s", s1, s2);
+  }
+
   String generateKey(String s) {
     return s.chars().sorted().mapToObj(String::valueOf).collect(Collectors.joining(","));
   }
 }
-
-record Pair(String str1, String str2) {}
