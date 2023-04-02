@@ -2,20 +2,18 @@ import java.util.Arrays;
 
 class Solution {
   public int[] successfulPairs(int[] spells, int[] potions, long success) {
-    int[] sortedPotions = Arrays.stream(potions).boxed().sorted().mapToInt(x -> x).toArray();
+    Arrays.sort(potions);
 
-    return Arrays.stream(spells)
-        .map(spell -> computePotionNum(success, sortedPotions, spell))
-        .toArray();
+    return Arrays.stream(spells).map(spell -> computePotionNum(potions, success, spell)).toArray();
   }
 
-  int computePotionNum(long success, int[] sortedPotions, int spell) {
-    int index = sortedPotions.length;
+  int computePotionNum(int[] potions, long success, int spell) {
+    int index = potions.length;
     int lowerIndex = 0;
-    int upperIndex = sortedPotions.length - 1;
+    int upperIndex = potions.length - 1;
     while (lowerIndex <= upperIndex) {
       int middleIndex = (lowerIndex + upperIndex) / 2;
-      if ((long) sortedPotions[middleIndex] * spell >= success) {
+      if ((long) potions[middleIndex] * spell >= success) {
         index = middleIndex;
         upperIndex = middleIndex - 1;
       } else {
@@ -23,6 +21,6 @@ class Solution {
       }
     }
 
-    return sortedPotions.length - index;
+    return potions.length - index;
   }
 }
