@@ -5,7 +5,7 @@ class Solution {
   public int numRescueBoats(int[] people, int limit) {
     NavigableMap<Integer, Integer> weightToCount = new TreeMap<>();
     for (int weight : people) {
-      weightToCount.put(weight, weightToCount.getOrDefault(weight, 0) + 1);
+      update(weightToCount, weight, 1);
     }
 
     int boatNum = 0;
@@ -13,19 +13,19 @@ class Solution {
       ++boatNum;
 
       int maxWeight = weightToCount.lastKey();
-      decreaseCount(weightToCount, maxWeight);
+      update(weightToCount, maxWeight, -1);
 
       Integer otherWeight = weightToCount.floorKey(limit - maxWeight);
       if (otherWeight != null) {
-        decreaseCount(weightToCount, otherWeight);
+        update(weightToCount, otherWeight, -1);
       }
     }
 
     return boatNum;
   }
 
-  void decreaseCount(NavigableMap<Integer, Integer> weightToCount, int weight) {
-    weightToCount.put(weight, weightToCount.get(weight) - 1);
+  void update(NavigableMap<Integer, Integer> weightToCount, int weight, int delta) {
+    weightToCount.put(weight, weightToCount.getOrDefault(weight, 0) + delta);
     weightToCount.remove(weight, 0);
   }
 }
