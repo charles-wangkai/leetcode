@@ -33,7 +33,7 @@ class Solution {
     }
 
     Map<Node, Node> originToCopy = new HashMap<>();
-    Set<Node> visited = new HashSet<Node>();
+    Set<Node> visited = new HashSet<>();
     clone(originToCopy, visited, node);
 
     return originToCopy.get(node);
