@@ -1,23 +1,23 @@
-public class Solution {
-	public int longestPalindromeSubseq(String s) {
-		int length = s.length();
+class Solution {
+  public int longestPalindromeSubseq(String s) {
+    int[][] dp = new int[s.length()][s.length()];
+    for (int i = 0; i < s.length(); ++i) {
+      dp[i][i] = 1;
+    }
 
-		int[][] maxLengths = new int[length][length + 1];
-		for (int i = 0; i < length; i++) {
-			maxLengths[i][i + 1] = 1;
-		}
+    for (int length = 2; length <= s.length(); ++length) {
+      for (int beginIndex = 0; beginIndex + length <= s.length(); ++beginIndex) {
+        int endIndex = beginIndex + length - 1;
 
-		for (int i = 2; i <= length; i++) {
-			for (int j = 0; j + i <= length; j++) {
-				if (s.charAt(j) == s.charAt(j + i - 1)) {
-					maxLengths[j][j + i] = maxLengths[j + 1][j + i - 1] + 2;
-				} else {
-					maxLengths[j][j + i] = Math.max(Math.max(maxLengths[j + 1][j + i], maxLengths[j][j + i - 1]),
-							maxLengths[j + 1][j + i - 1]);
-				}
-			}
-		}
+        if (s.charAt(beginIndex) == s.charAt(endIndex)) {
+          dp[beginIndex][endIndex] = dp[beginIndex + 1][endIndex - 1] + 2;
+        } else {
+          dp[beginIndex][endIndex] =
+              Math.max(dp[beginIndex + 1][endIndex], dp[beginIndex][endIndex - 1]);
+        }
+      }
+    }
 
-		return maxLengths[0][length];
-	}
+    return dp[0][s.length() - 1];
+  }
 }
