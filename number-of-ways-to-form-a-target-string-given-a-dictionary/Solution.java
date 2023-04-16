@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 class Solution {
   static final int MODULUS = 1_000_000_007;
 
@@ -11,27 +9,22 @@ class Solution {
       }
     }
 
-    int[] wayNums = new int[target.length() + 1];
-    wayNums[0] = 1;
-    for (int i = 0; i < counts.length; ++i) {
-      int[] nextWayNums = Arrays.copyOf(wayNums, wayNums.length);
-      for (int j = 1; j <= target.length(); ++j) {
-        nextWayNums[j] =
-            addMod(
-                nextWayNums[j], multiplyMod(counts[i][target.charAt(j - 1) - 'a'], wayNums[j - 1]));
+    int[] dp = new int[target.length() + 1];
+    dp[0] = 1;
+    for (int[] c : counts) {
+      for (int i = dp.length - 1; i >= 1; --i) {
+        dp[i] = addMod(dp[i], multiplyMod(c[target.charAt(i - 1) - 'a'], dp[i - 1]));
       }
-
-      wayNums = nextWayNums;
     }
 
-    return wayNums[target.length()];
+    return dp[target.length()];
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MODULUS;
+    return Math.floorMod(x + y, MODULUS);
   }
 
   int multiplyMod(int x, int y) {
-    return (int) ((long) x * y % MODULUS);
+    return Math.floorMod((long) x * y, MODULUS);
   }
 }
