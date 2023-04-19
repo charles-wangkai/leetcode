@@ -1,39 +1,39 @@
 // Definition for a binary tree node.
 class TreeNode {
-    int val;
-    TreeNode left;
-    TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-    TreeNode(int x) {
-        val = x;
-    }
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
 class Solution {
-    int maxLength;
+  int maxLength;
 
-    public int longestZigZag(TreeNode root) {
-        maxLength = 0;
-        search(root);
+  public int longestZigZag(TreeNode root) {
+    maxLength = 0;
+    search(root);
 
-        return maxLength;
-    }
+    return maxLength;
+  }
 
-    Element search(TreeNode node) {
-        int leftLength = (node.left != null) ? (1 + search(node.left).rightLength) : 0;
-        int rightLength = (node.right != null) ? (1 + search(node.right).leftLength) : 0;
-        maxLength = Math.max(maxLength, Math.max(leftLength, rightLength));
+  Outcome search(TreeNode node) {
+    int leftLength = (node.left == null) ? 0 : (1 + search(node.left).rightLength());
+    int rightLength = (node.right == null) ? 0 : (1 + search(node.right).leftLength());
+    maxLength = Math.max(maxLength, Math.max(leftLength, rightLength));
 
-        return new Element(leftLength, rightLength);
-    }
+    return new Outcome(leftLength, rightLength);
+  }
 }
 
-class Element {
-    int leftLength;
-    int rightLength;
-
-    Element(int leftLength, int rightLength) {
-        this.leftLength = leftLength;
-        this.rightLength = rightLength;
-    }
-}
+record Outcome(int leftLength, int rightLength) {}
