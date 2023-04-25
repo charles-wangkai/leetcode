@@ -7,12 +7,12 @@ class SmallestInfiniteSet {
 
   public int popSmallest() {
     int result;
-    if (!rest.isEmpty()) {
-      result = rest.first();
-      rest.remove(result);
-    } else {
+    if (rest.isEmpty()) {
       result = minConsecutive;
       ++minConsecutive;
+    } else {
+      result = rest.first();
+      rest.remove(result);
     }
 
     return result;
