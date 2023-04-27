@@ -1,13 +1,10 @@
-public class Solution {
-	public int bulbSwitch(int n) {
-		return computeSquareRoot(n);
-	}
+class Solution {
+  public int bulbSwitch(int n) {
+    int root = (int) Math.round(Math.sqrt(n));
+    if (root * root > n) {
+      --root;
+    }
 
-	int computeSquareRoot(int number) {
-		int root = (int) Math.round(Math.sqrt(number));
-		if (root * root > number) {
-			root--;
-		}
-		return root;
-	}
+    return root;
+  }
 }
