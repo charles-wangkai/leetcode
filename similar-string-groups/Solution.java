@@ -6,49 +6,52 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int numSimilarGroups(String[] A) {
-		Map<String, List<String>> wordToSimilarWords = new HashMap<>();
-		for (String word : A) {
-			wordToSimilarWords.put(word, new ArrayList<>());
-		}
+class Solution {
+  public int numSimilarGroups(String[] strs) {
+    Map<String, List<String>> wordToSimilars = new HashMap<>();
+    for (String word : strs) {
+      wordToSimilars.put(word, new ArrayList<>());
+    }
 
-		for (int i = 0; i < A.length; i++) {
-			for (int j = i + 1; j < A.length; j++) {
-				if (isSimilar(A[i], A[j])) {
-					wordToSimilarWords.get(A[i]).add(A[j]);
-					wordToSimilarWords.get(A[j]).add(A[i]);
-				}
-			}
-		}
+    for (int i = 0; i < strs.length; ++i) {
+      for (int j = i + 1; j < strs.length; ++j) {
+        if (isSimilar(strs[i], strs[j])) {
+          wordToSimilars.get(strs[i]).add(strs[j]);
+          wordToSimilars.get(strs[j]).add(strs[i]);
+        }
+      }
+    }
 
-		int groupNum = 0;
-		Set<String> visited = new HashSet<>();
-		for (String word : A) {
-			if (!visited.contains(word)) {
-				search(wordToSimilarWords, visited, word);
+    int result = 0;
+    Set<String> visited = new HashSet<>();
+    for (String word : strs) {
+      if (!visited.contains(word)) {
+        search(wordToSimilars, visited, word);
+        ++result;
+      }
+    }
 
-				groupNum++;
-			}
-		}
-		return groupNum;
-	}
+    return result;
+  }
 
-	boolean isSimilar(String word1, String word2) {
-		int[] diffIndexes = IntStream.range(0, word1.length()).filter(i -> word1.charAt(i) != word2.charAt(i))
-				.toArray();
+  boolean isSimilar(String word1, String word2) {
+    int[] diffIndices =
+        IntStream.range(0, word1.length())
+            .filter(i -> word1.charAt(i) != word2.charAt(i))
+            .toArray();
 
-		return diffIndexes.length == 2 && word2.charAt(diffIndexes[0]) == word1.charAt(diffIndexes[1])
-				&& word2.charAt(diffIndexes[1]) == word1.charAt(diffIndexes[0]);
-	}
+    return diffIndices.length == 2
+        && word2.charAt(diffIndices[0]) == word1.charAt(diffIndices[1])
+        && word2.charAt(diffIndices[1]) == word1.charAt(diffIndices[0]);
+  }
 
-	void search(Map<String, List<String>> wordToSimilarWords, Set<String> visited, String word) {
-		visited.add(word);
+  void search(Map<String, List<String>> wordToSimilars, Set<String> visited, String word) {
+    visited.add(word);
 
-		for (String similarWord : wordToSimilarWords.get(word)) {
-			if (!visited.contains(similarWord)) {
-				search(wordToSimilarWords, visited, similarWord);
-			}
-		}
-	}
+    for (String similar : wordToSimilars.get(word)) {
+      if (!visited.contains(similar)) {
+        search(wordToSimilars, visited, similar);
+      }
+    }
+  }
 }
