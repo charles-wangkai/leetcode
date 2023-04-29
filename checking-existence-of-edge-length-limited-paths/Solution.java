@@ -9,7 +9,7 @@ class Solution {
         IntStream.range(0, queries.length)
             .boxed()
             .sorted(Comparator.comparing(i -> queries[i][2]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
 
     int[] parents = new int[n];
@@ -17,8 +17,8 @@ class Solution {
 
     boolean[] result = new boolean[queries.length];
     int edgeIndex = 0;
-    for (int sortedQueryIndex : sortedQueryIndices) {
-      int[] query = queries[sortedQueryIndex];
+    for (int queryIndex : sortedQueryIndices) {
+      int[] query = queries[queryIndex];
       while (edgeIndex != edgeList.length && edgeList[edgeIndex][2] < query[2]) {
         int root1 = findRoot(parents, edgeList[edgeIndex][0]);
         int root2 = findRoot(parents, edgeList[edgeIndex][1]);
@@ -29,26 +29,19 @@ class Solution {
         ++edgeIndex;
       }
 
-      result[sortedQueryIndex] = findRoot(parents, query[0]) == findRoot(parents, query[1]);
+      result[queryIndex] = findRoot(parents, query[0]) == findRoot(parents, query[1]);
     }
 
     return result;
   }
 
   int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+    if (parents[node] == -1) {
+      return node;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parents[node] = findRoot(parents, parents[node]);
 
-      p = next;
-    }
-
-    return root;
+    return parents[node];
   }
 }
