@@ -9,7 +9,7 @@ class Solution {
     Set<Integer> set2 = Arrays.stream(nums2).boxed().collect(Collectors.toSet());
 
     return List.of(
-        set1.stream().filter(x -> !set2.contains(x)).collect(Collectors.toList()),
-        set2.stream().filter(x -> !set1.contains(x)).collect(Collectors.toList()));
+        set1.stream().filter(x -> !set2.contains(x)).toList(),
+        set2.stream().filter(x -> !set1.contains(x)).toList());
   }
 }
