@@ -1,35 +1,35 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class Solution {
-	public String predictPartyVictory(String senate) {
-		Queue<Integer> radiant = new LinkedList<Integer>();
-		Queue<Integer> dire = new LinkedList<Integer>();
+class Solution {
+  public String predictPartyVictory(String senate) {
+    Queue<Integer> radiant = new ArrayDeque<>();
+    Queue<Integer> dire = new ArrayDeque<>();
 
-		int sequence = 0;
-		for (int i = 0; i < senate.length(); i++) {
-			if (senate.charAt(i) == 'R') {
-				radiant.offer(sequence);
-			} else {
-				dire.offer(sequence);
-			}
+    int sequence = 0;
+    for (int i = 0; i < senate.length(); ++i) {
+      if (senate.charAt(i) == 'R') {
+        radiant.offer(sequence);
+      } else {
+        dire.offer(sequence);
+      }
 
-			sequence++;
-		}
+      ++sequence;
+    }
 
-		while (!radiant.isEmpty() && !dire.isEmpty()) {
-			int radiantHead = radiant.poll();
-			int direHead = dire.poll();
+    while (!radiant.isEmpty() && !dire.isEmpty()) {
+      int radiantHead = radiant.poll();
+      int direHead = dire.poll();
 
-			if (radiantHead < direHead) {
-				radiant.offer(sequence);
-			} else {
-				dire.offer(sequence);
-			}
+      if (radiantHead < direHead) {
+        radiant.offer(sequence);
+      } else {
+        dire.offer(sequence);
+      }
 
-			sequence++;
-		}
+      ++sequence;
+    }
 
-		return dire.isEmpty() ? "Radiant" : "Dire";
-	}
+    return dire.isEmpty() ? "Radiant" : "Dire";
+  }
 }
