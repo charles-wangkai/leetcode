@@ -7,12 +7,7 @@ class Solution {
     NavigableMap<Integer, Integer> obstacleToLength = new TreeMap<>();
     for (int i = 0; i < result.length; ++i) {
       Integer floorObstacle = obstacleToLength.floorKey(obstacles[i]);
-      int length;
-      if (floorObstacle == null) {
-        length = 1;
-      } else {
-        length = obstacleToLength.get(floorObstacle) + 1;
-      }
+      int length = (floorObstacle == null) ? 1 : (obstacleToLength.get(floorObstacle) + 1);
 
       result[i] = length;
       obstacleToLength.put(obstacles[i], length);
