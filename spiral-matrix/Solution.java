@@ -1,51 +1,36 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	static final int[] OFFSET_R = { 0, 1, 0, -1 };
-	static final int[] OFFSET_C = { 1, 0, -1, 0 };
-	int r;
-	int c;
+class Solution {
+  static final int[] R_OFFSETS = {0, 1, 0, -1};
+  static final int[] C_OFFSETS = {1, 0, -1, 0};
 
-	public List<Integer> spiralOrder(int[][] matrix) {
-		List<Integer> result = new ArrayList<Integer>();
-		int row = matrix.length;
-		if (row > 0) {
-			int col = matrix[0].length;
-			if (col > 0) {
-				r = 0;
-				c = -1;
-				int direction = 0;
-				for (int sizeC = col, sizeR = row; sizeC > 0 && sizeR > 0; sizeC -= 2, sizeR -= 2) {
-					move(matrix, result, direction, sizeC);
-					if (sizeR == 1) {
-						break;
-					}
-					direction = turn(direction);
-					move(matrix, result, direction, sizeR - 1);
-					if (sizeC == 1) {
-						break;
-					}
-					direction = turn(direction);
-					move(matrix, result, direction, sizeC - 1);
-					direction = turn(direction);
-					move(matrix, result, direction, sizeR - 2);
-					direction = turn(direction);
-				}
-			}
-		}
-		return result;
-	}
+  public List<Integer> spiralOrder(int[][] matrix) {
+    int m = matrix.length;
+    int n = matrix[0].length;
 
-	void move(int[][] matrix, List<Integer> result, int direction, int step) {
-		for (int i = 0; i < step; i++) {
-			r += OFFSET_R[direction];
-			c += OFFSET_C[direction];
-			result.add(matrix[r][c]);
-		}
-	}
+    List<Integer> result = new ArrayList<>();
+    boolean[][] visited = new boolean[m][n];
+    int r = 0;
+    int c = -1;
+    int direction = 0;
+    for (int i = 0; i < m * n; ++i) {
+      r += R_OFFSETS[direction];
+      c += C_OFFSETS[direction];
+      if (!(r >= 0 && r < m && c >= 0 && c < n && !visited[r][c])) {
+        r -= R_OFFSETS[direction];
+        c -= C_OFFSETS[direction];
 
-	int turn(int direction) {
-		return (direction + 1) % 4;
-	}
+        direction = (direction + 1) % R_OFFSETS.length;
+
+        r += R_OFFSETS[direction];
+        c += C_OFFSETS[direction];
+      }
+
+      visited[r][c] = true;
+      result.add(matrix[r][c]);
+    }
+
+    return result;
+  }
 }
