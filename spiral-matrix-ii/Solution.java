@@ -3,27 +3,26 @@ class Solution {
   static final int[] C_OFFSETS = {1, 0, -1, 0};
 
   public int[][] generateMatrix(int n) {
-    int[][] matrix = new int[n][n];
+    int[][] result = new int[n][n];
     int r = 0;
     int c = -1;
     int direction = 0;
-    for (int i = 1; i <= n * n; ++i) {
-      while (true) {
-        int nextR = r + R_OFFSETS[direction];
-        int nextC = c + C_OFFSETS[direction];
-        if (nextR >= 0 && nextR < n && nextC >= 0 && nextC < n && matrix[nextR][nextC] == 0) {
-          r = nextR;
-          c = nextC;
-
-          break;
-        }
+    for (int i = 0; i < n * n; ++i) {
+      r += R_OFFSETS[direction];
+      c += C_OFFSETS[direction];
+      if (!(r >= 0 && r < n && c >= 0 && c < n && result[r][c] == 0)) {
+        r -= R_OFFSETS[direction];
+        c -= C_OFFSETS[direction];
 
         direction = (direction + 1) % R_OFFSETS.length;
+
+        r += R_OFFSETS[direction];
+        c += C_OFFSETS[direction];
       }
 
-      matrix[r][c] = i;
+      result[r][c] = i + 1;
     }
 
-    return matrix;
+    return result;
   }
 }
