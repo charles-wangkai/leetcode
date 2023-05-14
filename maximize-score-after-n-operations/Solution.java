@@ -23,8 +23,8 @@ class Solution {
     for (int i2 = i1 + 1; i2 < used.length; ++i2) {
       if (!used[i2]) {
         used[i2] = true;
-        gcds[index] = computeGCD(nums[i1], nums[i2]);
 
+        gcds[index] = gcd(nums[i1], nums[i2]);
         result = Math.max(result, search(nums, used, gcds, index + 1));
 
         used[i2] = false;
@@ -36,7 +36,7 @@ class Solution {
     return result;
   }
 
-  int computeGCD(int x, int y) {
-    return (y == 0) ? x : computeGCD(y, x % y);
+  int gcd(int x, int y) {
+    return (y == 0) ? x : gcd(y, x % y);
   }
 }
