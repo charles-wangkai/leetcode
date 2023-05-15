@@ -18,15 +18,15 @@ class ListNode {
 class Solution {
   public ListNode swapNodes(ListNode head, int k) {
     int length = 0;
-    for (ListNode n = head; n != null; n = n.next) {
+    for (ListNode node = head; node != null; node = node.next) {
       ++length;
     }
 
-    ListNode n1 = findNode(head, k - 1);
-    ListNode n2 = findNode(head, length - k);
-    int temp = n1.val;
-    n1.val = n2.val;
-    n2.val = temp;
+    ListNode node1 = findNode(head, k - 1);
+    ListNode node2 = findNode(head, length - k);
+    int temp = node1.val;
+    node1.val = node2.val;
+    node2.val = temp;
 
     return head;
   }
