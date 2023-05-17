@@ -22,8 +22,8 @@ class ListNode {
 class Solution {
   public int pairSum(ListNode head) {
     List<Integer> values = new ArrayList<>();
-    for (ListNode p = head; p != null; p = p.next) {
-      values.add(p.val);
+    for (ListNode node = head; node != null; node = node.next) {
+      values.add(node.val);
     }
 
     return IntStream.range(0, values.size() / 2)
