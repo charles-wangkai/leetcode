@@ -1,7 +1,6 @@
 class Solution {
   public boolean isBipartite(int[][] graph) {
     int[] colors = new int[graph.length];
-
     for (int i = 0; i < colors.length; ++i) {
       if (colors[i] == 0 && !paint(graph, colors, i, 1)) {
         return false;
