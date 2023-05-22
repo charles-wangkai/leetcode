@@ -18,7 +18,7 @@ class Solution {
 
     return valueToCount.keySet().stream()
         .filter(value -> valueToCount.get(value) >= minCount)
-        .mapToInt(x -> x)
+        .mapToInt(Integer::intValue)
         .toArray();
   }
 }
