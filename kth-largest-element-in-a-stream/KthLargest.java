@@ -11,8 +11,8 @@ class KthLargest {
     Arrays.stream(nums).forEach(this::add);
   }
 
-  public int add(int value) {
-    pq.offer(value);
+  public int add(int val) {
+    pq.offer(val);
     if (pq.size() == k + 1) {
       pq.poll();
     }
