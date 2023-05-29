@@ -1,16 +1,16 @@
 class ParkingSystem {
-  int[] remains;
+  int[] rests;
 
   public ParkingSystem(int big, int medium, int small) {
-    remains = new int[] {-1, big, medium, small};
+    rests = new int[] {-1, big, medium, small};
   }
 
   public boolean addCar(int carType) {
-    if (remains[carType] == 0) {
+    if (rests[carType] == 0) {
       return false;
     }
 
-    --remains[carType];
+    --rests[carType];
 
     return true;
   }
