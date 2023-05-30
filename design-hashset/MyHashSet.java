@@ -1,18 +1,18 @@
 class MyHashSet {
-  private static final int SIZE = 1_000_001;
+  private static final int LIMIT = 1_000_000;
 
-  private boolean[] used = new boolean[SIZE];
+  private boolean[] seen = new boolean[LIMIT + 1];
 
   public void add(int key) {
-    used[key] = true;
+    seen[key] = true;
   }
 
   public void remove(int key) {
-    used[key] = false;
+    seen[key] = false;
   }
 
   public boolean contains(int key) {
-    return used[key];
+    return seen[key];
   }
 }
 
