@@ -1,6 +1,5 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 class UndergroundSystem {
   private Map<Pair, Long> pairToTotalTime = new HashMap<>();
@@ -28,27 +27,7 @@ class UndergroundSystem {
   }
 }
 
-class Pair {
-  String startStation;
-  String endStation;
-
-  Pair(String startStation, String endStation) {
-    this.startStation = startStation;
-    this.endStation = endStation;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(startStation, endStation);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    Pair other = (Pair) obj;
-
-    return startStation.equals(other.startStation) && endStation.equals(other.endStation);
-  }
-}
+record Pair(String startStation, String endStation) {}
 
 // Your UndergroundSystem object will be instantiated and called as such:
 // UndergroundSystem obj = new UndergroundSystem();
