@@ -1,24 +1,21 @@
+import java.util.stream.IntStream;
+
 class Solution {
   public int maximumDetonation(int[][] bombs) {
-    int result = 0;
-    for (int i = 0; i < bombs.length; ++i) {
-      result = Math.max(result, search(bombs, new boolean[bombs.length], i));
-    }
-
-    return result;
+    return IntStream.range(0, bombs.length)
+        .map(i -> search(bombs, new boolean[bombs.length], i))
+        .max()
+        .getAsInt();
   }
 
   int search(int[][] bombs, boolean[] visited, int v) {
     visited[v] = true;
 
-    int result = 1;
-    for (int i = 0; i < bombs.length; ++i) {
-      if (!visited[i] && canReach(bombs, v, i)) {
-        result += search(bombs, visited, i);
-      }
-    }
-
-    return result;
+    return 1
+        + IntStream.range(0, bombs.length)
+            .filter(i -> !visited[i] && canReach(bombs, v, i))
+            .map(i -> search(bombs, visited, i))
+            .sum();
   }
 
   boolean canReach(int[][] bombs, int from, int to) {
