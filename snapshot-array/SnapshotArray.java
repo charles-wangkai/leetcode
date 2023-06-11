@@ -1,33 +1,33 @@
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-public class SnapshotArray {
-	private int currentSnapId = 0;
-	private NavigableMap<Integer, Integer>[] firstSnapIdToValueArray;
+class SnapshotArray {
+  private int currentSnapId = 0;
+  private NavigableMap<Integer, Integer>[] firstSnapIdToValueArray;
 
-	@SuppressWarnings("unchecked")
-	public SnapshotArray(int length) {
-		firstSnapIdToValueArray = new TreeMap[length];
-		for (int i = 0; i < firstSnapIdToValueArray.length; i++) {
-			firstSnapIdToValueArray[i] = new TreeMap<>();
-			firstSnapIdToValueArray[i].put(0, 0);
-		}
-	}
+  @SuppressWarnings("unchecked")
+  public SnapshotArray(int length) {
+    firstSnapIdToValueArray = new TreeMap[length];
+    for (int i = 0; i < firstSnapIdToValueArray.length; ++i) {
+      firstSnapIdToValueArray[i] = new TreeMap<>();
+      firstSnapIdToValueArray[i].put(0, 0);
+    }
+  }
 
-	public void set(int index, int val) {
-		firstSnapIdToValueArray[index].put(currentSnapId, val);
-	}
+  public void set(int index, int val) {
+    firstSnapIdToValueArray[index].put(currentSnapId, val);
+  }
 
-	public int snap() {
-		int result = currentSnapId;
-		currentSnapId++;
+  public int snap() {
+    int result = currentSnapId;
+    ++currentSnapId;
 
-		return result;
-	}
+    return result;
+  }
 
-	public int get(int index, int snap_id) {
-		return firstSnapIdToValueArray[index].floorEntry(snap_id).getValue();
-	}
+  public int get(int index, int snap_id) {
+    return firstSnapIdToValueArray[index].floorEntry(snap_id).getValue();
+  }
 }
 
 // Your SnapshotArray object will be instantiated and called as such:
