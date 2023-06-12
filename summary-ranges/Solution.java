@@ -9,11 +9,7 @@ class Solution {
     for (int i = 0; i <= nums.length; ++i) {
       if (i == nums.length || end == null || nums[i] != end + 1) {
         if (end != null) {
-          if (begin == end) {
-            summary.add(String.valueOf(begin));
-          } else {
-            summary.add(String.format("%d->%d", begin, end));
-          }
+          summary.add((begin == end) ? String.valueOf(begin) : String.format("%d->%d", begin, end));
         }
 
         if (i != nums.length) {
