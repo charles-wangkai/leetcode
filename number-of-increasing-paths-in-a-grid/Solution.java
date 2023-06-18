@@ -14,7 +14,7 @@ class Solution {
         IntStream.range(0, m * n)
             .boxed()
             .sorted(Comparator.comparing(i -> grid[i / n][i % n]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
 
     int[][] dp = new int[m][n];
