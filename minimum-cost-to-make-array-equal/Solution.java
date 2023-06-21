@@ -10,7 +10,7 @@ class Solution {
         IntStream.range(0, nums.length)
             .boxed()
             .sorted(Comparator.comparing(i -> nums[i]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
 
     long result = Long.MAX_VALUE;
