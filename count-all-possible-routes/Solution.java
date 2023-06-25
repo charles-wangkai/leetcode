@@ -1,46 +1,37 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 class Solution {
-    static final int MODULUS = 1_000_000_007;
+  static final int MODULUS = 1_000_000_007;
 
-    public int countRoutes(int[] locations, int start, int finish, int fuel) {
-        boolean[][] visited = new boolean[locations.length][fuel + 1];
-        int[][] wayNums = new int[locations.length][fuel + 1];
-        wayNums[start][fuel] = 1;
-        PriorityQueue<Element> pq = new PriorityQueue<>((e1, e2) -> -Integer.compare(e1.fuel, e2.fuel));
-        pq.offer(new Element(start, fuel));
+  public int countRoutes(int[] locations, int start, int finish, int fuel) {
+    int[][] dp = new int[locations.length][fuel + 1];
+    dp[start][fuel] = 1;
 
-        while (!pq.isEmpty()) {
-            Element head = pq.poll();
-            if (!visited[head.index][head.fuel]) {
-                visited[head.index][head.fuel] = true;
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::rest).reversed());
+    pq.offer(new Element(start, fuel));
 
-                for (int i = 0; i < locations.length; ++i) {
-                    if (i != head.index && Math.abs(locations[i] - locations[head.index]) <= head.fuel) {
-                        int nextFuel = head.fuel - Math.abs(locations[i] - locations[head.index]);
+    while (!pq.isEmpty()) {
+      Element head = pq.poll();
+      for (int i = 0; i < locations.length; ++i) {
+        if (i != head.city() && Math.abs(locations[i] - locations[head.city()]) <= head.rest()) {
+          int nextRest = head.rest() - Math.abs(locations[i] - locations[head.city()]);
 
-                        wayNums[i][nextFuel] = addMod(wayNums[i][nextFuel], wayNums[head.index][head.fuel]);
-                        pq.offer(new Element(i, nextFuel));
-                    }
-                }
-            }
+          if (dp[i][nextRest] == 0) {
+            pq.offer(new Element(i, nextRest));
+          }
+          dp[i][nextRest] = addMod(dp[i][nextRest], dp[head.city()][head.rest()]);
         }
-
-        return Arrays.stream(wayNums[finish]).reduce(this::addMod).getAsInt();
+      }
     }
 
-    int addMod(int x, int y) {
-        return (x + y) % MODULUS;
-    }
+    return Arrays.stream(dp[finish]).reduce(this::addMod).getAsInt();
+  }
+
+  int addMod(int x, int y) {
+    return Math.floorMod(x + y, MODULUS);
+  }
 }
 
-class Element {
-    int index;
-    int fuel;
-
-    Element(int index, int fuel) {
-        this.index = index;
-        this.fuel = fuel;
-    }
-}
+record Element(int city, int rest) {}
