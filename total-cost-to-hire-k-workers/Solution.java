@@ -7,7 +7,7 @@ class Solution {
     int rightIndex = costs.length - 1;
     PriorityQueue<Integer> pq =
         new PriorityQueue<>(Comparator.comparing((Integer i) -> costs[i]).thenComparing(i -> i));
-    for (int i = 0; i < candidates && leftIndex <= rightIndex; ++i) {
+    for (int i = 0; i < candidates; ++i) {
       pq.offer(leftIndex);
       ++leftIndex;
     }
@@ -20,14 +20,16 @@ class Solution {
     for (int i = 0; i < k; ++i) {
       int index = pq.poll();
       result += costs[index];
-      if (index < leftIndex) {
-        if (leftIndex <= rightIndex) {
+
+      if (leftIndex <= rightIndex) {
+        if (index < leftIndex) {
           pq.offer(leftIndex);
           ++leftIndex;
+
+        } else {
+          pq.offer(rightIndex);
+          --rightIndex;
         }
-      } else if (leftIndex <= rightIndex) {
-        pq.offer(rightIndex);
-        --rightIndex;
       }
     }
 
