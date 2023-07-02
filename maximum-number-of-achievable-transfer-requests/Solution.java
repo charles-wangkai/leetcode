@@ -1,22 +1,23 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 class Solution {
-    public int maximumRequests(int n, int[][] requests) {
-        int result = 0;
-        for (int code = 0; code < 1 << requests.length; ++code) {
-            int[] delta = new int[n];
-            for (int i = 0; i < requests.length; ++i) {
-                if ((code & (1 << i)) != 0) {
-                    --delta[requests[i][0]];
-                    ++delta[requests[i][1]];
+  public int maximumRequests(int n, int[][] requests) {
+    return IntStream.range(0, 1 << requests.length)
+        .filter(
+            mask -> {
+              int[] deltas = new int[n];
+              for (int i = 0; i < requests.length; ++i) {
+                if (((mask >> i) & 1) == 1) {
+                  --deltas[requests[i][0]];
+                  ++deltas[requests[i][1]];
                 }
-            }
+              }
 
-            if (Arrays.stream(delta).allMatch(x -> x == 0)) {
-                result = Math.max(result, Integer.bitCount(code));
-            }
-        }
-
-        return result;
-    }
+              return Arrays.stream(deltas).allMatch(delta -> delta == 0);
+            })
+        .map(Integer::bitCount)
+        .max()
+        .getAsInt();
+  }
 }
