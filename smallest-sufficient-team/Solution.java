@@ -1,67 +1,56 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int[] smallestSufficientTeam(String[] req_skills, List<List<String>> people) {
-		List<Integer> values = buildValues(req_skills, people);
+class Solution {
+  public int[] smallestSufficientTeam(String[] req_skills, List<List<String>> people) {
+    int[] values = buildValues(req_skills, people);
 
-		int[][] minSizes = new int[values.size() + 1][1 << req_skills.length];
-		for (int i = 0; i < minSizes.length; i++) {
-			Arrays.fill(minSizes[i], Integer.MAX_VALUE);
-		}
-		minSizes[0][0] = 0;
+    int[][] minSizes = new int[values.length + 1][1 << req_skills.length];
+    Arrays.fill(minSizes[0], Integer.MAX_VALUE);
+    minSizes[0][0] = 0;
 
-		for (int i = 0; i < minSizes.length - 1; i++) {
-			for (int j = 0; j < minSizes[i].length; j++) {
-				minSizes[i + 1][j] = minSizes[i][j];
-			}
+    for (int i = 0; i < minSizes.length - 1; ++i) {
+      minSizes[i + 1] = minSizes[i].clone();
 
-			for (int j = 0; j < minSizes[i].length; j++) {
-				int next = j | values.get(i);
+      for (int j = 0; j < minSizes[i].length; ++j) {
+        if (minSizes[i][j] != Integer.MAX_VALUE) {
+          minSizes[i + 1][j | values[i]] =
+              Math.min(minSizes[i + 1][j | values[i]], minSizes[i][j] + 1);
+        }
+      }
+    }
 
-				if (minSizes[i][j] != Integer.MAX_VALUE) {
-					minSizes[i + 1][next] = Math.min(minSizes[i + 1][next], minSizes[i][j] + 1);
-				}
-			}
-		}
+    List<Integer> result = new ArrayList<>();
+    int mask = (1 << req_skills.length) - 1;
+    for (int i = values.length; i >= 1; --i) {
+      if (minSizes[i - 1][mask] != minSizes[i][mask]) {
+        for (int prevMask = 0; ; ++prevMask) {
+          if ((prevMask | values[i - 1]) == mask
+              && minSizes[i - 1][prevMask] == minSizes[i][mask] - 1) {
+            result.add(i - 1);
+            mask = prevMask;
 
-		List<Integer> result = new ArrayList<>();
-		int j = (1 << req_skills.length) - 1;
-		for (int i = values.size(); i >= 1; i--) {
-			if (minSizes[i - 1][j] != minSizes[i][j]) {
-				for (int k = 0;; k++) {
-					if ((k | values.get(i - 1)) == j && minSizes[i - 1][k] != Integer.MAX_VALUE
-							&& minSizes[i - 1][k] + 1 == minSizes[i][j]) {
-						result.add(i - 1);
-						j = k;
+            break;
+          }
+        }
+      }
+    }
 
-						break;
-					}
-				}
-			}
-		}
+    return result.stream().mapToInt(Integer::intValue).toArray();
+  }
 
-		return result.stream().mapToInt(x -> x).toArray();
-	}
+  int[] buildValues(String[] req_skills, List<List<String>> people) {
+    Map<String, Integer> skillToIndex =
+        IntStream.range(0, req_skills.length)
+            .boxed()
+            .collect(Collectors.toMap(i -> req_skills[i], i -> i));
 
-	List<Integer> buildValues(String[] req_skills, List<List<String>> people) {
-		List<Integer> result = new ArrayList<>();
-		for (List<String> person : people) {
-			Set<String> skillSet = new HashSet<>(person);
-
-			int value = 0;
-			for (String reqSkill : req_skills) {
-				value <<= 1;
-
-				if (skillSet.contains(reqSkill)) {
-					value++;
-				}
-			}
-			result.add(value);
-		}
-		return result;
-	}
+    return people.stream()
+        .mapToInt(p -> p.stream().map(skillToIndex::get).mapToInt(i -> 1 << i).sum())
+        .toArray();
+  }
 }
