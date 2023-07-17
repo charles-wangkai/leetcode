@@ -23,7 +23,7 @@ class Solution {
 
     ListNode sum = new ListNode();
     int carry = add(length1 - maxLength, l1, length2 - maxLength, l2, sum);
-    if (carry > 0) {
+    if (carry != 0) {
       prepend(sum, carry);
     }
 
@@ -51,10 +51,10 @@ class Solution {
       nextNode2 = node2;
     }
 
-    int carry = 0;
-    if (nextNode1 != null || nextNode2 != null) {
-      carry = add(index1 + 1, nextNode1, index2 + 1, nextNode2, sum);
-    }
+    int carry =
+        (nextNode1 != null || nextNode2 != null)
+            ? add(index1 + 1, nextNode1, index2 + 1, nextNode2, sum)
+            : 0;
 
     int s = carry + digit1 + digit2;
     prepend(sum, s % 10);
