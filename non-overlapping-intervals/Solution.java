@@ -1,19 +1,19 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
-public class Solution {
-	public int eraseOverlapIntervals(int[][] intervals) {
-		Arrays.sort(intervals, (i1, i2) -> Integer.compare(i1[1], i2[1]));
+class Solution {
+  public int eraseOverlapIntervals(int[][] intervals) {
+    Arrays.sort(intervals, Comparator.comparing(interval -> interval[1]));
 
-		int result = 0;
-		int endTime = Integer.MIN_VALUE;
-		for (int[] interval : intervals) {
-			if (interval[0] >= endTime) {
-				endTime = interval[1];
-			} else {
-				++result;
-			}
-		}
+    int nonOverlapCount = 0;
+    int endTime = Integer.MIN_VALUE;
+    for (int[] interval : intervals) {
+      if (interval[0] >= endTime) {
+        endTime = interval[1];
+        ++nonOverlapCount;
+      }
+    }
 
-		return result;
-	}
+    return intervals.length - nonOverlapCount;
+  }
 }
