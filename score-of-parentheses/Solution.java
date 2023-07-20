@@ -1,8 +1,9 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public int scoreOfParentheses(String s) {
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (char c : s.toCharArray()) {
       if (c == '(') {
         stack.push(0);

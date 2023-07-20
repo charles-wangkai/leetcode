@@ -1,16 +1,17 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public int longestValidParentheses(String s) {
     int maxLength = 0;
-    Stack<Integer> leftIndices = new Stack<>();
+    Deque<Integer> leftIndices = new ArrayDeque<>();
     leftIndices.add(-1);
     for (int i = 0; i < s.length(); ++i) {
       if (s.charAt(i) == '(') {
         leftIndices.push(i);
       } else {
         leftIndices.pop();
-        if (leftIndices.empty()) {
+        if (leftIndices.isEmpty()) {
           leftIndices.push(i);
         } else {
           maxLength = Math.max(maxLength, i - leftIndices.peek());

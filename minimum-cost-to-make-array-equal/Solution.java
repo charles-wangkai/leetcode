@@ -23,9 +23,9 @@ class Solution {
             .sum();
     for (int i = 0; i < n; ++i) {
       int prev = nums[sortedIndices[(i == 0) ? 0 : (i - 1)]];
-      leftCost += (long) leftSum * (nums[sortedIndices[i]] - prev);
+      leftCost += leftSum * (nums[sortedIndices[i]] - prev);
       leftSum += cost[sortedIndices[i]];
-      rightCost -= (long) rightSum * (nums[sortedIndices[i]] - prev);
+      rightCost -= rightSum * (nums[sortedIndices[i]] - prev);
       rightSum -= cost[sortedIndices[i]];
 
       result = Math.min(result, leftCost + rightCost);

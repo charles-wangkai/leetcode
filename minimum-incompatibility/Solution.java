@@ -23,10 +23,8 @@ class Solution {
         for (int j = 0; j < n; ++j) {
           if ((mask & (1 << j)) != 0) {
             for (int l = 0; l < n; ++l) {
-              if ((mask & (1 << l)) != 0) {
-                if (dp[mask ^ (1 << l)][j] != Integer.MAX_VALUE) {
-                  dp[mask][l] = Math.min(dp[mask][l], dp[mask ^ (1 << l)][j]);
-                }
+              if ((mask & (1 << l)) != 0 && dp[mask ^ (1 << l)][j] != Integer.MAX_VALUE) {
+                dp[mask][l] = Math.min(dp[mask][l], dp[mask ^ (1 << l)][j]);
               }
             }
           }
@@ -35,11 +33,10 @@ class Solution {
         for (int j = 0; j < n; ++j) {
           if ((mask & (1 << j)) != 0) {
             for (int l = j + 1; l < n; ++l) {
-              if ((mask & (1 << l)) != 0 && sorted[l] != sorted[j]) {
-                if (dp[mask ^ (1 << l)][j] != Integer.MAX_VALUE) {
-                  dp[mask][l] =
-                      Math.min(dp[mask][l], dp[mask ^ (1 << l)][j] + sorted[l] - sorted[j]);
-                }
+              if ((mask & (1 << l)) != 0
+                  && sorted[l] != sorted[j]
+                  && dp[mask ^ (1 << l)][j] != Integer.MAX_VALUE) {
+                dp[mask][l] = Math.min(dp[mask][l], dp[mask ^ (1 << l)][j] + sorted[l] - sorted[j]);
               }
             }
           }

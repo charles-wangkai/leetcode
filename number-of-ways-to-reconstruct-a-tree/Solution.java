@@ -30,7 +30,7 @@ class Solution {
         roots.add(node);
       }
     }
-    if (roots.size() == 0) {
+    if (roots.isEmpty()) {
       return 0;
     }
 

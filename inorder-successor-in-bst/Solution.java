@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -15,15 +16,15 @@ class Solution {
   public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
     TreeNode successor;
     if (p.right == null) {
-      Stack<TreeNode> path = new Stack<>();
+      Deque<TreeNode> path = new ArrayDeque<>();
       searchPath(path, p, root);
 
       TreeNode node = path.pop();
-      while (!path.empty() && path.peek().left != node) {
+      while (!path.isEmpty() && path.peek().left != node) {
         node = path.pop();
       }
 
-      successor = path.empty() ? null : path.peek();
+      successor = path.isEmpty() ? null : path.peek();
     } else {
       successor = p.right;
       while (successor.left != null) {
@@ -34,7 +35,7 @@ class Solution {
     return successor;
   }
 
-  void searchPath(Stack<TreeNode> path, TreeNode p, TreeNode node) {
+  void searchPath(Deque<TreeNode> path, TreeNode p, TreeNode node) {
     path.push(node);
 
     if (path.peek() != p && node.left != null) {

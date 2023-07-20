@@ -33,8 +33,7 @@ class Solution {
         } else if (Character.isLetter(s2.charAt(index2))) {
           result =
               (s1.charAt(index1) == s2.charAt(index2))
-                  ? check(s1, index1 + 1, 0, s2, index2 + 1, 0)
-                  : false;
+                  && check(s1, index1 + 1, 0, s2, index2 + 1, 0);
         } else {
           int nextIndex2 = index2;
           while (nextIndex2 != s2.length() && Character.isDigit(s2.charAt(nextIndex2))) {

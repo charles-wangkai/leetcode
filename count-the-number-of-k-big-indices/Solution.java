@@ -11,7 +11,7 @@ class Solution {
   }
 
   boolean[] buildRightValids(int[] nums, int k) {
-    int A[] = new int[Integer.highestOneBit(Arrays.stream(nums).max().getAsInt()) * 2 + 1];
+    int[] A = new int[Integer.highestOneBit(Arrays.stream(nums).max().getAsInt()) * 2 + 1];
 
     boolean[] result = new boolean[nums.length];
     for (int i = result.length - 1; i >= 0; --i) {
@@ -23,7 +23,7 @@ class Solution {
   }
 
   boolean[] buildLeftValids(int[] nums, int k) {
-    int A[] = new int[Integer.highestOneBit(Arrays.stream(nums).max().getAsInt()) * 2 + 1];
+    int[] A = new int[Integer.highestOneBit(Arrays.stream(nums).max().getAsInt()) * 2 + 1];
 
     boolean[] result = new boolean[nums.length];
     for (int i = 0; i < result.length; ++i) {

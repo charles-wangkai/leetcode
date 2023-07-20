@@ -57,9 +57,12 @@ class Solution {
   Circle computeCircleFromThreePoints(Point a, Point b, Point c) {
     double ox = (Math.min(Math.min(a.x, b.x), c.x) + Math.max(Math.max(a.x, b.x), c.x)) / 2;
     double oy = (Math.min(Math.min(a.y, b.y), c.y) + Math.max(Math.max(a.y, b.y), c.y)) / 2;
-    double ax = a.x - ox, ay = a.y - oy;
-    double bx = b.x - ox, by = b.y - oy;
-    double cx = c.x - ox, cy = c.y - oy;
+    double ax = a.x - ox;
+    double ay = a.y - oy;
+    double bx = b.x - ox;
+    double by = b.y - oy;
+    double cx = c.x - ox;
+    double cy = c.y - oy;
     double d = (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) * 2;
     if (d == 0) return null;
     double x =

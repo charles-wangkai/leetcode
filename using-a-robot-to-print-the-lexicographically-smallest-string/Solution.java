@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public String robotWithString(String s) {
@@ -12,10 +13,10 @@ class Solution {
     }
 
     StringBuilder result = new StringBuilder();
-    Stack<Character> stack = new Stack<>();
+    Deque<Character> stack = new ArrayDeque<>();
     int index = 0;
-    while (!stack.empty() || index != s.length()) {
-      if (index == s.length() || (!stack.empty() && stack.peek() <= rightMins[index])) {
+    while (!stack.isEmpty() || index != s.length()) {
+      if (index == s.length() || (!stack.isEmpty() && stack.peek() <= rightMins[index])) {
         result.append(stack.pop());
       } else {
         stack.push(s.charAt(index));

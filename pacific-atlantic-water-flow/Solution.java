@@ -4,8 +4,8 @@ import java.util.Queue;
 import java.util.stream.IntStream;
 
 class Solution {
-  static int[] R_OFFSETS = {-1, 0, 1, 0};
-  static int[] C_OFFSETS = {0, 1, 0, -1};
+  static final int[] R_OFFSETS = {-1, 0, 1, 0};
+  static final int[] C_OFFSETS = {0, 1, 0, -1};
 
   public List<List<Integer>> pacificAtlantic(int[][] heights) {
     int m = heights.length;

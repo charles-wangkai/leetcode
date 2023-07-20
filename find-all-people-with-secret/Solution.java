@@ -1,9 +1,9 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -16,7 +16,7 @@ class Solution {
 
     @SuppressWarnings("unchecked")
     List<Integer>[] indexLists = new List[secrets.length];
-    Stack<Integer> todoIndices = new Stack<>();
+    Deque<Integer> todoIndices = new ArrayDeque<>();
     int[] times = new int[n];
 
     int beginIndex = 0;
@@ -40,7 +40,7 @@ class Solution {
         }
       }
 
-      while (!todoIndices.empty()) {
+      while (!todoIndices.isEmpty()) {
         int todoIndex = todoIndices.pop();
         if (secrets[meetings[todoIndex][0]] && !secrets[meetings[todoIndex][1]]) {
           secrets[meetings[todoIndex][1]] = true;
@@ -60,10 +60,7 @@ class Solution {
       beginIndex = endIndex + 1;
     }
 
-    return IntStream.range(0, secrets.length)
-        .filter(i -> secrets[i])
-        .boxed()
-        .collect(Collectors.toList());
+    return IntStream.range(0, secrets.length).filter(i -> secrets[i]).boxed().toList();
   }
 
   List<Integer> getIndexList(List<Integer>[] indexLists, int[] times, int person, int time) {

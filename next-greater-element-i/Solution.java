@@ -1,14 +1,15 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import java.util.stream.IntStream;
 
 class Solution {
   public int[] nextGreaterElement(int[] nums1, int[] nums2) {
     Map<Integer, Integer> numToGreater = new HashMap<>();
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int num : nums2) {
-      while (!stack.empty() && num > stack.peek()) {
+      while (!stack.isEmpty() && num > stack.peek()) {
         numToGreater.put(stack.pop(), num);
       }
 

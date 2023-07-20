@@ -1,22 +1,23 @@
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
   static final String NULL = "#";
 
   public boolean isValidSerialization(String preorder) {
-    Stack<String> stack = new Stack<>();
+    List<String> values = new ArrayList<>();
     for (String value : preorder.split(",")) {
-      stack.push(value);
+      values.add(value);
 
-      while (canReduce(stack)) {
-        reduce(stack);
+      while (canReduce(values)) {
+        reduce(values);
       }
     }
 
-    return stack.size() == 1 && stack.peek().equals(NULL);
+    return values.size() == 1 && values.get(values.size() - 1).equals(NULL);
   }
 
-  boolean canReduce(Stack<String> stack) {
+  boolean canReduce(List<String> stack) {
     int size = stack.size();
     if (size < 3) {
       return false;
@@ -27,10 +28,10 @@ class Solution {
         && stack.get(size - 1).equals(NULL);
   }
 
-  void reduce(Stack<String> stack) {
-    stack.pop();
-    stack.pop();
-    stack.pop();
-    stack.push(NULL);
+  void reduce(List<String> values) {
+    values.remove(values.size() - 1);
+    values.remove(values.size() - 1);
+    values.remove(values.size() - 1);
+    values.add(NULL);
   }
 }

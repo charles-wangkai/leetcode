@@ -1,7 +1,8 @@
 import static java.util.Map.entry;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Map;
-import java.util.Stack;
 import java.util.function.BiFunction;
 
 class Solution {
@@ -13,7 +14,7 @@ class Solution {
           entry("/", (x, y) -> x / y));
 
   public int evalRPN(String[] tokens) {
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (String token : tokens) {
       if (OPERATOR_TO_CALCULATOR.containsKey(token)) {
         int operand2 = stack.pop();

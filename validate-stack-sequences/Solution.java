@@ -1,11 +1,12 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public boolean validateStackSequences(int[] pushed, int[] popped) {
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     int pushedIndex = 0;
     for (int target : popped) {
-      while (stack.empty() || stack.peek() != target) {
+      while (stack.isEmpty() || stack.peek() != target) {
         if (pushedIndex == pushed.length) {
           return false;
         }

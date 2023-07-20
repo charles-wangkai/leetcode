@@ -1,11 +1,12 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public boolean find132pattern(int[] nums) {
-    Stack<Range> stack = new Stack<>();
+    Deque<Range> stack = new ArrayDeque<>();
     for (int num : nums) {
       Range current = new Range(num, num);
-      while (!stack.empty() && current.max > stack.peek().min) {
+      while (!stack.isEmpty() && current.max > stack.peek().min) {
         current.min = Math.min(current.min, stack.peek().min);
         current.max = Math.max(current.max, stack.peek().max);
 

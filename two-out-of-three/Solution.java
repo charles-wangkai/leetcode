@@ -2,7 +2,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<Integer> twoOutOfThree(int[] nums1, int[] nums2, int[] nums3) {
@@ -13,8 +12,6 @@ class Solution {
       }
     }
 
-    return valueToCount.keySet().stream()
-        .filter(value -> valueToCount.get(value) >= 2)
-        .collect(Collectors.toList());
+    return valueToCount.keySet().stream().filter(value -> valueToCount.get(value) >= 2).toList();
   }
 }

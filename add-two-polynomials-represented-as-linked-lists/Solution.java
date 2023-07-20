@@ -1,6 +1,7 @@
 // Definition for polynomial singly-linked list.
 class PolyNode {
-  int coefficient, power;
+  int coefficient;
+  int power;
   PolyNode next = null;
 
   PolyNode() {}
@@ -30,7 +31,7 @@ class Solution {
         tail = tail.next;
 
         node1 = node1.next;
-      } else if (node1 == null || (node2 != null && node2.power > node1.power)) {
+      } else if (node1 == null || node2.power > node1.power) {
         tail.next = new PolyNode(node2.coefficient, node2.power);
         tail = tail.next;
 

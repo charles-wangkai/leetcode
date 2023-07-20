@@ -17,10 +17,9 @@ class Solution {
 
     Map<String, Double> variableToValue = new HashMap<>();
     for (String variable : variableToEdges.keySet()) {
-      if (!variableToValue.containsKey(variable)) {
-        if (!search(equations, values, variableToEdges, variableToValue, variable, 1)) {
-          return true;
-        }
+      if (!variableToValue.containsKey(variable)
+          && !search(equations, values, variableToEdges, variableToValue, variable, 1)) {
+        return true;
       }
     }
 

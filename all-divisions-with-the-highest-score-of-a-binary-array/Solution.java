@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -25,6 +24,6 @@ class Solution {
     return IntStream.rangeClosed(0, n)
         .filter(i -> leftZeroCounts[i] + rightOneCounts[i] == maxScore)
         .boxed()
-        .collect(Collectors.toList());
+        .toList();
   }
 }

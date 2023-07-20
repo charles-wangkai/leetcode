@@ -1,13 +1,14 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public boolean isValid(String s) {
-    Stack<Character> leftBrackets = new Stack<>();
+    Deque<Character> leftBrackets = new ArrayDeque<>();
     for (char c : s.toCharArray()) {
       if (c == '(' || c == '[' || c == '{') {
         leftBrackets.push(c);
       } else {
-        if (leftBrackets.empty()) {
+        if (leftBrackets.isEmpty()) {
           return false;
         }
         char leftBracket = leftBrackets.pop();
@@ -19,6 +20,6 @@ class Solution {
       }
     }
 
-    return leftBrackets.empty();
+    return leftBrackets.isEmpty();
   }
 }

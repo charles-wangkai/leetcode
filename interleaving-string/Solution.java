@@ -9,11 +9,8 @@ class Solution {
       for (int j = 0; j <= s2.length(); ++j) {
         interleaves[i][j] =
             (i == 0 && j == 0)
-                ? true
-                : (i != 0 && s3.charAt(i + j - 1) == s1.charAt(i - 1) && interleaves[i - 1][j])
-                    || (j != 0
-                        && s3.charAt(i + j - 1) == s2.charAt(j - 1)
-                        && interleaves[i][j - 1]);
+                || (i != 0 && s3.charAt(i + j - 1) == s1.charAt(i - 1) && interleaves[i - 1][j])
+                || (j != 0 && s3.charAt(i + j - 1) == s2.charAt(j - 1) && interleaves[i][j - 1]);
       }
     }
 

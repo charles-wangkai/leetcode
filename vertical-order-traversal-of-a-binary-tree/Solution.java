@@ -29,9 +29,7 @@ class Solution {
 
     Collections.sort(
         elements,
-        Comparator.comparing((Element e) -> e.c())
-            .thenComparing(e -> e.r())
-            .thenComparing(e -> e.value()));
+        Comparator.comparing(Element::c).thenComparing(Element::r).thenComparing(Element::value));
 
     List<List<Integer>> result = new ArrayList<>();
     List<Integer> column = null;

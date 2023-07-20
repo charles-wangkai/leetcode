@@ -42,7 +42,7 @@ class Solution {
   }
 
   String dedup(Map<String, TrieNode> seen, Set<TrieNode> marked, TrieNode node) {
-    StringBuilder sb = new StringBuilder('(');
+    StringBuilder sb = new StringBuilder("(");
     for (String folder : node.folderToChild.keySet()) {
       sb.append(folder).append(dedup(seen, marked, node.folderToChild.get(folder)));
     }

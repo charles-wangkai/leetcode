@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<String> addOperators(String num, int target) {
     return buildNumbersList(num).stream()
         .flatMap(numbers -> search(numbers, 0, target, true).stream())
-        .collect(Collectors.toList());
+        .toList();
   }
 
   List<List<Long>> buildNumbersList(String num) {
     List<List<Long>> numbersList = new ArrayList<>();
-    split(numbersList, num, 0, new ArrayList<Long>());
+    split(numbersList, num, 0, new ArrayList<>());
 
     return numbersList;
   }
@@ -69,6 +68,6 @@ class Solution {
   }
 
   List<String> combine(String leftPart, List<String> rightParts) {
-    return rightParts.stream().map(rightPart -> leftPart + rightPart).collect(Collectors.toList());
+    return rightParts.stream().map(rightPart -> leftPart + rightPart).toList();
   }
 }

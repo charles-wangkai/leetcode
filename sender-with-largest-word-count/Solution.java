@@ -13,7 +13,7 @@ class Solution {
 
     return senderToWordCount.keySet().stream()
         .max(
-            Comparator.comparing((String sender) -> senderToWordCount.get(sender))
+            Comparator.<String, Integer>comparing(senderToWordCount::get)
                 .thenComparing(sender -> sender))
         .get();
   }

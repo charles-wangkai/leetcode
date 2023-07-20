@@ -9,7 +9,7 @@ class Solution {
     int n = nums.length;
 
     long[] result = new long[n];
-    SortedSet<Segment> segments = new TreeSet<>(Comparator.comparing(s -> s.sum()));
+    SortedSet<Segment> segments = new TreeSet<>(Comparator.comparing(Segment::sum));
     Map<Integer, Segment> beginIndexToSegment = new HashMap<>();
     Map<Integer, Segment> endIndexToSegment = new HashMap<>();
     for (int i = result.length - 2; i >= 0; --i) {

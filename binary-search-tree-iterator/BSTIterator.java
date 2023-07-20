@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -20,7 +21,7 @@ class TreeNode {
 }
 
 class BSTIterator {
-  private Stack<Object> stack = new Stack<>();
+  private Deque<Object> stack = new ArrayDeque<>();
 
   public BSTIterator(TreeNode root) {
     stack.push(root);
@@ -28,7 +29,7 @@ class BSTIterator {
   }
 
   public boolean hasNext() {
-    return !stack.empty();
+    return !stack.isEmpty();
   }
 
   public int next() {
@@ -39,12 +40,14 @@ class BSTIterator {
   }
 
   private void expandToMin() {
-    while (!stack.empty() && !(stack.peek() instanceof Integer)) {
-      Object top = stack.pop();
-      if (top != null) {
-        TreeNode node = (TreeNode) top;
+    while (!stack.isEmpty() && stack.peek() instanceof TreeNode) {
+      TreeNode node = (TreeNode) stack.pop();
+
+      if (node.right != null) {
         stack.push(node.right);
-        stack.push(node.val);
+      }
+      stack.push(node.val);
+      if (node.left != null) {
         stack.push(node.left);
       }
     }

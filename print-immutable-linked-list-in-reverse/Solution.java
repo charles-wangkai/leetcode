@@ -1,19 +1,19 @@
 // This is the ImmutableListNode's API interface.
 // You should not implement it, or speculate about its implementation.
 interface ImmutableListNode {
-	public void printValue(); // print the value of this node.
+  public void printValue(); // print the value of this node.
 
-	public ImmutableListNode getNext(); // return the next node.
-};
+  public ImmutableListNode getNext(); // return the next node.
+}
 
 public class Solution {
-	public void printLinkedListInReverse(ImmutableListNode head) {
-		if (head == null) {
-			return;
-		}
+  public void printLinkedListInReverse(ImmutableListNode head) {
+    if (head == null) {
+      return;
+    }
 
-		printLinkedListInReverse(head.getNext());
+    printLinkedListInReverse(head.getNext());
 
-		head.printValue();
-	}
+    head.printValue();
+  }
 }

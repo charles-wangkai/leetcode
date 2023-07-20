@@ -1,5 +1,5 @@
 class Solution {
-  final int MODULUS = 1_000_000_007;
+  static final int MODULUS = 1_000_000_007;
 
   public int numDecodings(String s) {
     int prev = -1;

@@ -1,12 +1,13 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public String simplifyPath(String path) {
     String[] parts = path.split("/");
-    Stack<String> directories = new Stack<>();
+    Deque<String> directories = new ArrayDeque<>();
     for (String part : parts) {
       if (part.equals("..")) {
-        if (!directories.empty()) {
+        if (!directories.isEmpty()) {
           directories.pop();
         }
       } else if (!part.equals(".") && !part.isEmpty()) {

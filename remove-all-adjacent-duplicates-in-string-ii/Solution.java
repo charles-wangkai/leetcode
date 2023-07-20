@@ -1,11 +1,15 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
 import java.util.stream.Collectors;
 
 class Solution {
   public String removeDuplicates(String s, int k) {
-    Stack<Element> stack = new Stack<>();
+    Deque<Element> stack = new ArrayDeque<>();
     for (char letter : s.toCharArray()) {
-      if (!stack.empty() && stack.peek().letter == letter) {
+      if (!stack.isEmpty() && stack.peek().letter == letter) {
         ++stack.peek().count;
 
         if (stack.peek().count == k) {
@@ -16,7 +20,10 @@ class Solution {
       }
     }
 
-    return stack.stream()
+    List<Element> reversed = new ArrayList<>(stack);
+    Collections.reverse(reversed);
+
+    return reversed.stream()
         .map(e -> String.valueOf(e.letter).repeat(e.count))
         .collect(Collectors.joining());
   }

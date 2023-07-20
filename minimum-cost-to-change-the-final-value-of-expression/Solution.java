@@ -1,11 +1,12 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.Deque;
 
 class Solution {
   public int minOperationsToFlip(String expression) {
     int[] matchingIndices = new int[expression.length()];
     Arrays.fill(matchingIndices, -1);
-    Stack<Integer> leftIndices = new Stack<>();
+    Deque<Integer> leftIndices = new ArrayDeque<>();
     for (int i = 0; i < expression.length(); ++i) {
       char ch = expression.charAt(i);
       if (ch == '(') {

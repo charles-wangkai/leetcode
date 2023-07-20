@@ -1,7 +1,6 @@
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<Integer> findLonely(int[] nums) {
@@ -16,6 +15,6 @@ class Solution {
                 valueToCount.get(value) == 1
                     && !valueToCount.containsKey(value - 1)
                     && !valueToCount.containsKey(value + 1))
-        .collect(Collectors.toList());
+        .toList();
   }
 }

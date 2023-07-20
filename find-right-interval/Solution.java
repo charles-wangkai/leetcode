@@ -1,36 +1,39 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
 class Solution {
-	public int[] findRightInterval(int[][] intervals) {
-		Element[] elements = IntStream.range(0, intervals.length).mapToObj(i -> new Element(i, intervals[i])).sorted()
-				.toArray(Element[]::new);
+  public int[] findRightInterval(int[][] intervals) {
+    Comparator<Element> comparator = Comparator.comparing(e -> e.interval[0]);
 
-		int[] result = new int[intervals.length];
-		for (int i = 0; i < result.length; ++i) {
-			int index = Arrays.binarySearch(elements, new Element(-1, new int[] { intervals[i][1], -1 }));
-			if (index < 0) {
-				index = -1 - index;
-			}
+    Element[] elements =
+        IntStream.range(0, intervals.length)
+            .mapToObj(i -> new Element(i, intervals[i]))
+            .sorted(comparator)
+            .toArray(Element[]::new);
 
-			result[i] = (index == elements.length) ? -1 : elements[index].index;
-		}
+    int[] result = new int[intervals.length];
+    for (int i = 0; i < result.length; ++i) {
+      int index =
+          Arrays.binarySearch(
+              elements, new Element(-1, new int[] {intervals[i][1], -1}), comparator);
+      if (index < 0) {
+        index = -1 - index;
+      }
 
-		return result;
-	}
+      result[i] = (index == elements.length) ? -1 : elements[index].index;
+    }
+
+    return result;
+  }
 }
 
-class Element implements Comparable<Element> {
-	int index;
-	int[] interval;
+class Element {
+  int index;
+  int[] interval;
 
-	Element(int index, int[] interval) {
-		this.index = index;
-		this.interval = interval;
-	}
-
-	@Override
-	public int compareTo(Element other) {
-		return Integer.compare(interval[0], other.interval[0]);
-	}
+  Element(int index, int[] interval) {
+    this.index = index;
+    this.interval = interval;
+  }
 }

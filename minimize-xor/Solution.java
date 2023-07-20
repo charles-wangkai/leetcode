@@ -1,5 +1,5 @@
 class Solution {
-  static int BIT_LIMIT = 30;
+  static final int BIT_LIMIT = 30;
 
   public int minimizeXor(int num1, int num2) {
     int result = 0;

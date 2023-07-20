@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -12,6 +11,6 @@ class Solution {
     return IntStream.rangeClosed(minC, maxC)
         .boxed()
         .flatMap(c -> IntStream.rangeClosed(minR, maxR).mapToObj(r -> String.format("%c%c", c, r)))
-        .collect(Collectors.toList());
+        .toList();
   }
 }

@@ -1,28 +1,29 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.stream.IntStream;
 
 class Solution {
   public int numSubarrayBoundedMax(int[] nums, int left, int right) {
     int[] leftIndices = new int[nums.length];
-    Stack<Integer> leftMaxs = new Stack<>();
+    Deque<Integer> leftMaxs = new ArrayDeque<>();
     for (int i = 0; i < nums.length; ++i) {
-      while (!leftMaxs.empty() && nums[leftMaxs.peek()] < nums[i]) {
+      while (!leftMaxs.isEmpty() && nums[leftMaxs.peek()] < nums[i]) {
         leftMaxs.pop();
       }
 
-      leftIndices[i] = leftMaxs.empty() ? 0 : (leftMaxs.peek() + 1);
+      leftIndices[i] = leftMaxs.isEmpty() ? 0 : (leftMaxs.peek() + 1);
 
       leftMaxs.push(i);
     }
 
     int[] rightIndices = new int[nums.length];
-    Stack<Integer> rightMaxs = new Stack<>();
+    Deque<Integer> rightMaxs = new ArrayDeque<>();
     for (int i = nums.length - 1; i >= 0; --i) {
-      while (!rightMaxs.empty() && nums[rightMaxs.peek()] <= nums[i]) {
+      while (!rightMaxs.isEmpty() && nums[rightMaxs.peek()] <= nums[i]) {
         rightMaxs.pop();
       }
 
-      rightIndices[i] = rightMaxs.empty() ? (nums.length - 1) : (rightMaxs.peek() - 1);
+      rightIndices[i] = rightMaxs.isEmpty() ? (nums.length - 1) : (rightMaxs.peek() - 1);
 
       rightMaxs.push(i);
     }

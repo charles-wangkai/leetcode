@@ -1,13 +1,14 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class MinStack {
-  private Stack<Integer> values = new Stack<>();
-  private Stack<Integer> mins = new Stack<>();
+  private Deque<Integer> values = new ArrayDeque<>();
+  private Deque<Integer> mins = new ArrayDeque<>();
 
   public void push(int x) {
     values.push(x);
 
-    if (mins.empty() || x <= mins.peek()) {
+    if (mins.isEmpty() || x <= mins.peek()) {
       mins.push(x);
     }
   }

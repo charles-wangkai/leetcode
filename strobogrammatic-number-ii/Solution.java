@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -19,7 +18,7 @@ class Solution {
           .filter(i -> LEFTS[i] == RIGHTS[i])
           .map(i -> LEFTS[i])
           .mapToObj(String::valueOf)
-          .collect(Collectors.toList());
+          .toList();
     }
 
     return search(n - 2, true).stream()
@@ -28,6 +27,6 @@ class Solution {
                 IntStream.range(0, LEFTS.length)
                     .filter(i -> allowLeadingZero || LEFTS[i] != 0)
                     .mapToObj(i -> String.format("%d%s%d", LEFTS[i], subResult, RIGHTS[i])))
-        .collect(Collectors.toList());
+        .toList();
   }
 }

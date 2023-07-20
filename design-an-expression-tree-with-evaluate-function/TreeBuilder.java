@@ -1,24 +1,13 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 // This is the interface for the expression tree Node.
 // You should not remove it, and you can define some classes to implement it.
 
 abstract class Node {
-  public abstract int evaluate();
-  // define your fields here
-  String value;
-  Node left;
-  Node right;
-
-  boolean isOperator() {
-    return Operator.SYMBOL_TO_OPERATOR.containsKey(value);
-  }
-}
-
-interface Operator {
-  static Map<String, Operator> SYMBOL_TO_OPERATOR = buildSymbolToOperator();
+  static final Map<String, Operator> SYMBOL_TO_OPERATOR = buildSymbolToOperator();
 
   static Map<String, Operator> buildSymbolToOperator() {
     Map<String, Operator> result = new HashMap<>();
@@ -30,10 +19,19 @@ interface Operator {
     return result;
   }
 
-  static Operator from(String value) {
-    return SYMBOL_TO_OPERATOR.get(value);
-  }
+  public abstract int evaluate();
 
+  // define your fields here
+  String value;
+  Node left;
+  Node right;
+
+  boolean isOperator() {
+    return SYMBOL_TO_OPERATOR.containsKey(value);
+  }
+}
+
+interface Operator {
   int operate(int x, int y);
 }
 
@@ -41,7 +39,7 @@ class TreeNode extends Node {
   @Override
   public int evaluate() {
     if (isOperator()) {
-      return Operator.from(value).operate(left.evaluate(), right.evaluate());
+      return SYMBOL_TO_OPERATOR.get(value).operate(left.evaluate(), right.evaluate());
     }
 
     return Integer.valueOf(value);
@@ -54,7 +52,7 @@ class TreeNode extends Node {
 
 class TreeBuilder {
   Node buildTree(String[] postfix) {
-    Stack<Node> stack = new Stack<>();
+    Deque<Node> stack = new ArrayDeque<>();
     for (String s : postfix) {
       Node node = new TreeNode();
       node.value = s;

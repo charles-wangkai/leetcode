@@ -1,27 +1,29 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.Deque;
 
 class Solution {
   public long minCost(int[] nums, int[] costs) {
     int n = nums.length;
 
     int[] nextNonDecreasingIndices = new int[n];
-    Stack<Integer> nonDecreasingIndices = new Stack<>();
+    Deque<Integer> nonDecreasingIndices = new ArrayDeque<>();
     for (int i = nextNonDecreasingIndices.length - 1; i >= 0; --i) {
-      while (!nonDecreasingIndices.empty() && nums[nonDecreasingIndices.peek()] < nums[i]) {
+      while (!nonDecreasingIndices.isEmpty() && nums[nonDecreasingIndices.peek()] < nums[i]) {
         nonDecreasingIndices.pop();
       }
-      nextNonDecreasingIndices[i] = nonDecreasingIndices.empty() ? -1 : nonDecreasingIndices.peek();
+      nextNonDecreasingIndices[i] =
+          nonDecreasingIndices.isEmpty() ? -1 : nonDecreasingIndices.peek();
       nonDecreasingIndices.push(i);
     }
 
     int[] nextDecreasingIndices = new int[n];
-    Stack<Integer> decreasingIndices = new Stack<>();
+    Deque<Integer> decreasingIndices = new ArrayDeque<>();
     for (int i = nextDecreasingIndices.length - 1; i >= 0; --i) {
-      while (!decreasingIndices.empty() && nums[decreasingIndices.peek()] >= nums[i]) {
+      while (!decreasingIndices.isEmpty() && nums[decreasingIndices.peek()] >= nums[i]) {
         decreasingIndices.pop();
       }
-      nextDecreasingIndices[i] = decreasingIndices.empty() ? -1 : decreasingIndices.peek();
+      nextDecreasingIndices[i] = decreasingIndices.isEmpty() ? -1 : decreasingIndices.peek();
       decreasingIndices.push(i);
     }
 

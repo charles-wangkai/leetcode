@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -96,13 +97,13 @@ class Solution {
 
   int[] buildLeftIndices(int[] strength) {
     int[] result = new int[strength.length];
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int i = 0; i < strength.length; ++i) {
-      while (!stack.empty() && strength[i] < strength[stack.peek()]) {
+      while (!stack.isEmpty() && strength[i] < strength[stack.peek()]) {
         stack.pop();
       }
 
-      result[i] = (stack.empty() ? -1 : stack.peek()) + 1;
+      result[i] = (stack.isEmpty() ? -1 : stack.peek()) + 1;
       stack.push(i);
     }
 
@@ -111,13 +112,13 @@ class Solution {
 
   int[] buildRightIndices(int[] strength) {
     int[] result = new int[strength.length];
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int i = strength.length - 1; i >= 0; --i) {
-      while (!stack.empty() && strength[i] <= strength[stack.peek()]) {
+      while (!stack.isEmpty() && strength[i] <= strength[stack.peek()]) {
         stack.pop();
       }
 
-      result[i] = (stack.empty() ? strength.length : stack.peek()) - 1;
+      result[i] = (stack.isEmpty() ? strength.length : stack.peek()) - 1;
       stack.push(i);
     }
 

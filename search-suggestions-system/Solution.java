@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 class Solution {
   static final int LIMIT = 3;
@@ -14,10 +12,10 @@ class Solution {
       addToTrie(trie, product, 0);
     }
 
-    List<List<String>> suggestionLists =
-        IntStream.range(0, searchWord.length())
-            .mapToObj(ArrayList<String>::new)
-            .collect(Collectors.toList());
+    List<List<String>> suggestionLists = new ArrayList<>();
+    for (int i = 0; i < searchWord.length(); ++i) {
+      suggestionLists.add(new ArrayList<>());
+    }
     search(suggestionLists, trie, searchWord, 0);
 
     return suggestionLists;

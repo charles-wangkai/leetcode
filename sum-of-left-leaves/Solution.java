@@ -21,7 +21,7 @@ class Solution {
   enum Direction {
     LEFT,
     RIGHT
-  };
+  }
 
   public int sumOfLeftLeaves(TreeNode root) {
     return search(root, null);

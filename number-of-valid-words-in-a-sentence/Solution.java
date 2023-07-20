@@ -22,7 +22,7 @@ class Solution {
                     return false;
                   }
 
-                  s = s.replaceAll("[-]", "");
+                  s = s.replace("-", "");
 
                   return s.substring(0, s.length() - 1).chars().allMatch(Character::isLetter);
                 })

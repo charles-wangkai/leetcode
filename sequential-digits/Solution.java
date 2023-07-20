@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -15,9 +14,6 @@ class Solution {
           .toArray();
 
   public List<Integer> sequentialDigits(int low, int high) {
-    return Arrays.stream(SEQUENTIALS)
-        .filter(x -> x >= low && x <= high)
-        .boxed()
-        .collect(Collectors.toList());
+    return Arrays.stream(SEQUENTIALS).filter(x -> x >= low && x <= high).boxed().toList();
   }
 }

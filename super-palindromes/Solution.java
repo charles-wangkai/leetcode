@@ -28,8 +28,7 @@ class Solution {
 
   static int buildPalindromeWithoutLast(int half) {
     return Integer.parseInt(
-        String.valueOf(half)
-            + new StringBuilder(String.valueOf(half)).reverse().substring(1).toString());
+        String.valueOf(half) + new StringBuilder(String.valueOf(half)).reverse().substring(1));
   }
 
   static int buildPalindromeWithLast(int half) {

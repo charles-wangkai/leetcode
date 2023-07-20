@@ -1,6 +1,7 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -24,14 +25,20 @@ class TreeNode {
 class Solution {
   public List<Integer> preorderTraversal(TreeNode root) {
     List<Integer> result = new ArrayList<>();
-    Stack<TreeNode> stack = new Stack<>();
-    stack.push(root);
-    while (!stack.empty()) {
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    if (root != null) {
+      stack.push(root);
+    }
+    while (!stack.isEmpty()) {
       TreeNode node = stack.pop();
       if (node != null) {
         result.add(node.val);
-        stack.push(node.right);
-        stack.push(node.left);
+        if (node.right != null) {
+          stack.push(node.right);
+        }
+        if (node.left != null) {
+          stack.push(node.left);
+        }
       }
     }
 

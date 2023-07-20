@@ -13,10 +13,8 @@ class Solution {
   boolean check(int halfLength, String s1, String s2) {
     boolean secondMatched = true;
     for (int i = 0; i < halfLength; ++i) {
-      if (secondMatched) {
-        if (s1.charAt(i) != s2.charAt(s1.length() - 1 - i)) {
-          secondMatched = false;
-        }
+      if (secondMatched && s1.charAt(i) != s2.charAt(s1.length() - 1 - i)) {
+        secondMatched = false;
       }
       if (!secondMatched && s1.charAt(i) != s1.charAt(s1.length() - 1 - i)) {
         return false;

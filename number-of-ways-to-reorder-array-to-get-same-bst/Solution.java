@@ -3,7 +3,7 @@ import java.math.BigInteger;
 class Solution {
   static final int MODULUS = 1_000_000_007;
 
-  static int wayNum;
+  int wayNum;
 
   public int numOfWays(int[] nums) {
     Node root = null;

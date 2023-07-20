@@ -31,7 +31,7 @@ class Solution {
       rotate(digits, b);
     }
 
-    return Arrays.stream(result).mapToObj(x -> String.valueOf(x)).collect(Collectors.joining());
+    return Arrays.stream(result).mapToObj(String::valueOf).collect(Collectors.joining());
   }
 
   void add(int[] digits, int a, int beginIndex) {

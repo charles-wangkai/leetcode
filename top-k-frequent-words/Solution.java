@@ -12,7 +12,7 @@ public class Solution {
 
     return wordToCount.keySet().stream()
         .sorted(
-            Comparator.comparing((String word) -> wordToCount.get(word))
+            Comparator.<String, Integer>comparing(wordToCount::get)
                 .reversed()
                 .thenComparing(word -> word))
         .limit(k)

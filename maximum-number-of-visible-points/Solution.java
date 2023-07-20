@@ -7,7 +7,7 @@ class Solution {
     int baseCount = 0;
     List<Double> thetas = new ArrayList<>();
     for (List<Integer> point : points) {
-      if (point.get(0) == location.get(0) && point.get(1) == location.get(1)) {
+      if (point.get(0).equals(location.get(0)) && point.get(1).equals(location.get(1))) {
         ++baseCount;
       } else {
         double theta = Math.atan2(point.get(1) - location.get(1), point.get(0) - location.get(0));

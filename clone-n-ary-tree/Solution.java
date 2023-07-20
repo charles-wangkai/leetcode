@@ -9,15 +9,15 @@ class Node {
   public List<Node> children;
 
   public Node() {
-    children = new ArrayList<Node>();
+    children = new ArrayList<>();
   }
 
   public Node(int _val) {
     val = _val;
-    children = new ArrayList<Node>();
+    children = new ArrayList<>();
   }
 
-  public Node(int _val, ArrayList<Node> _children) {
+  public Node(int _val, List<Node> _children) {
     val = _val;
     children = _children;
   }

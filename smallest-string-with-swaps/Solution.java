@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
   public String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
@@ -30,8 +29,7 @@ class Solution {
 
     char[] result = new char[s.length()];
     for (List<Integer> indices : rootToIndices.values()) {
-      List<Character> letters =
-          indices.stream().map(s::charAt).sorted().collect(Collectors.toList());
+      List<Character> letters = indices.stream().map(s::charAt).sorted().toList();
 
       for (int i = 0; i < indices.size(); ++i) {
         result[indices.get(i)] = letters.get(i);

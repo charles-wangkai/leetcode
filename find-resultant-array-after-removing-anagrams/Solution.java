@@ -10,7 +10,7 @@ class Solution {
     return IntStream.range(0, keys.length)
         .filter(i -> i == 0 || !keys[i].equals(keys[i - 1]))
         .mapToObj(i -> words[i])
-        .collect(Collectors.toList());
+        .toList();
   }
 
   String buildKey(String word) {

@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -6,25 +7,26 @@ class Solution {
 
   public int sumSubarrayMins(int[] arr) {
     int[] leftIndices = new int[arr.length];
-    Stack<Integer> leftAscendingIndices = new Stack<>();
+    Deque<Integer> leftAscendingIndices = new ArrayDeque<>();
     for (int i = 0; i < leftIndices.length; ++i) {
-      while (!leftAscendingIndices.empty() && arr[i] <= arr[leftAscendingIndices.peek()]) {
+      while (!leftAscendingIndices.isEmpty() && arr[i] <= arr[leftAscendingIndices.peek()]) {
         leftAscendingIndices.pop();
       }
 
-      leftIndices[i] = (leftAscendingIndices.empty() ? -1 : leftAscendingIndices.peek()) + 1;
+      leftIndices[i] = (leftAscendingIndices.isEmpty() ? -1 : leftAscendingIndices.peek()) + 1;
       leftAscendingIndices.push(i);
     }
 
     int[] rightIndices = new int[arr.length];
-    Stack<Integer> rightAscendingIndices = new Stack<>();
+    Deque<Integer> rightAscendingIndices = new ArrayDeque<>();
     for (int i = rightIndices.length - 1; i >= 0; --i) {
-      while (!rightAscendingIndices.empty() && arr[i] < arr[rightAscendingIndices.peek()]) {
+      while (!rightAscendingIndices.isEmpty() && arr[i] < arr[rightAscendingIndices.peek()]) {
         rightAscendingIndices.pop();
       }
 
       rightIndices[i] =
-          (rightAscendingIndices.empty() ? rightIndices.length : rightAscendingIndices.peek()) - 1;
+          (rightAscendingIndices.isEmpty() ? rightIndices.length : rightAscendingIndices.peek())
+              - 1;
       rightAscendingIndices.push(i);
     }
 

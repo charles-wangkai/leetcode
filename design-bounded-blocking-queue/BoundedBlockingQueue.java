@@ -5,50 +5,50 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class BoundedBlockingQueue {
-	int capacity;
-	Queue<Integer> queue = new LinkedList<>();
+  int capacity;
+  Queue<Integer> queue = new LinkedList<>();
 
-	Lock lock = new ReentrantLock();
-	Condition canRunEnqueue = lock.newCondition();
-	Condition canRunDequeue = lock.newCondition();
+  Lock lock = new ReentrantLock();
+  Condition canRunEnqueue = lock.newCondition();
+  Condition canRunDequeue = lock.newCondition();
 
-	public BoundedBlockingQueue(int capacity) {
-		this.capacity = capacity;
-	}
+  public BoundedBlockingQueue(int capacity) {
+    this.capacity = capacity;
+  }
 
-	public void enqueue(int element) throws InterruptedException {
-		lock.lock();
-		try {
-			while (queue.size() == capacity) {
-				canRunEnqueue.await();
-			}
+  public void enqueue(int element) throws InterruptedException {
+    lock.lock();
+    try {
+      while (queue.size() == capacity) {
+        canRunEnqueue.await();
+      }
 
-			queue.offer(element);
+      queue.offer(element);
 
-			canRunDequeue.signal();
-		} finally {
-			lock.unlock();
-		}
-	}
+      canRunDequeue.signal();
+    } finally {
+      lock.unlock();
+    }
+  }
 
-	public int dequeue() throws InterruptedException {
-		lock.lock();
-		try {
-			while (queue.isEmpty()) {
-				canRunDequeue.await();
-			}
+  public int dequeue() throws InterruptedException {
+    lock.lock();
+    try {
+      while (queue.isEmpty()) {
+        canRunDequeue.await();
+      }
 
-			int result = queue.poll();
+      int result = queue.poll();
 
-			canRunEnqueue.signal();
+      canRunEnqueue.signal();
 
-			return result;
-		} finally {
-			lock.unlock();
-		}
-	}
+      return result;
+    } finally {
+      lock.unlock();
+    }
+  }
 
-	public int size() throws InterruptedException {
-		return queue.size();
-	}
+  public int size() {
+    return queue.size();
+  }
 }

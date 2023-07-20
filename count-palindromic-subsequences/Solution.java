@@ -16,9 +16,7 @@ class Solution {
     int[][][] leftCombCounts = new int[s.length()][DIGIT_NUM][DIGIT_NUM];
     for (int i = 1; i < leftCombCounts.length; ++i) {
       for (int d1 = 0; d1 < DIGIT_NUM; ++d1) {
-        for (int d2 = 0; d2 < DIGIT_NUM; ++d2) {
-          leftCombCounts[i][d1][d2] = leftCombCounts[i - 1][d1][d2];
-        }
+        leftCombCounts[i][d1] = leftCombCounts[i - 1][d1].clone();
       }
 
       for (int d2 = 0; d2 < DIGIT_NUM; ++d2) {
@@ -38,9 +36,7 @@ class Solution {
     int[][][] rightCombCounts = new int[s.length()][DIGIT_NUM][DIGIT_NUM];
     for (int i = rightCombCounts.length - 2; i >= 0; --i) {
       for (int d1 = 0; d1 < DIGIT_NUM; ++d1) {
-        for (int d2 = 0; d2 < DIGIT_NUM; ++d2) {
-          rightCombCounts[i][d1][d2] = rightCombCounts[i + 1][d1][d2];
-        }
+        rightCombCounts[i][d1] = rightCombCounts[i + 1][d1].clone();
       }
 
       for (int d2 = 0; d2 < DIGIT_NUM; ++d2) {

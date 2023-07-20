@@ -12,7 +12,7 @@ class Solution {
 
     for (int i = 0; ; ++i) {
       if (!seen.contains(i)) {
-        return String.format("%1$" + nums.length + "s", Integer.toBinaryString(i))
+        return String.format(String.format("%%1$%ds", nums.length), Integer.toBinaryString(i))
             .replace(' ', '0');
       }
     }

@@ -35,6 +35,6 @@ class Solution {
 
     return recipeToNeeded.keySet().stream()
         .filter(recipe -> recipeToNeeded.get(recipe).isEmpty())
-        .collect(Collectors.toList());
+        .toList();
   }
 }

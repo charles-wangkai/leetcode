@@ -1,8 +1,9 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class MyQueue {
-  Stack<Integer> backStack = new Stack<>();
-  Stack<Integer> frontStack = new Stack<>();
+  Deque<Integer> backStack = new ArrayDeque<>();
+  Deque<Integer> frontStack = new ArrayDeque<>();
 
   public void push(int x) {
     backStack.push(x);
@@ -21,12 +22,12 @@ class MyQueue {
   }
 
   public boolean empty() {
-    return backStack.empty() && frontStack.empty();
+    return backStack.isEmpty() && frontStack.isEmpty();
   }
 
   private void checkAndMove() {
-    if (frontStack.empty()) {
-      while (!backStack.empty()) {
+    if (frontStack.isEmpty()) {
+      while (!backStack.isEmpty()) {
         frontStack.push(backStack.pop());
       }
     }

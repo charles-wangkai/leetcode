@@ -1,9 +1,10 @@
+import java.util.ArrayDeque;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
-import java.util.Stack;
 import java.util.TreeSet;
 
 class FreqStack {
@@ -34,7 +35,7 @@ class FreqStack {
     elements.remove(element);
 
     element.sequences.pop();
-    if (element.sequences.empty()) {
+    if (element.sequences.isEmpty()) {
       valueToElement.remove(element.value);
     } else {
       elements.add(element);
@@ -46,7 +47,7 @@ class FreqStack {
 
 class Element {
   int value;
-  Stack<Integer> sequences = new Stack<>();
+  Deque<Integer> sequences = new ArrayDeque<>();
 
   Element(int value) {
     this.value = value;

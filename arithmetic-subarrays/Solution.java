@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -12,6 +11,6 @@ class Solution {
               return IntStream.range(0, sorted.length - 1)
                   .allMatch(j -> sorted[j + 1] - sorted[j] == sorted[1] - sorted[0]);
             })
-        .collect(Collectors.toList());
+        .toList();
   }
 }

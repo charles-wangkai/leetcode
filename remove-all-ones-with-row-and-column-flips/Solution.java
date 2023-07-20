@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 class Solution {
   public boolean removeOnes(int[][] grid) {
-    if (check(Arrays.stream(grid).map(r -> r.clone()).toArray(int[][]::new))) {
+    if (check(Arrays.stream(grid).map(int[]::clone).toArray(int[][]::new))) {
       return true;
     }
 

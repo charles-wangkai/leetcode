@@ -1,6 +1,7 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 // This is the interface that allows for creating nested lists.
 // You should not implement it, or speculate about its implementation
@@ -18,7 +19,7 @@ interface NestedInteger {
 }
 
 class NestedIterator implements Iterator<Integer> {
-  Stack<Iterator<NestedInteger>> iterators = new Stack<>();
+  Deque<Iterator<NestedInteger>> iterators = new ArrayDeque<>();
   Integer nextValue;
 
   public NestedIterator(List<NestedInteger> nestedList) {
@@ -41,7 +42,7 @@ class NestedIterator implements Iterator<Integer> {
   }
 
   private void move() {
-    while (nextValue == null && !iterators.empty()) {
+    while (nextValue == null && !iterators.isEmpty()) {
       if (iterators.peek().hasNext()) {
         NestedInteger ni = iterators.peek().next();
         if (ni.isInteger()) {

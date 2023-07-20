@@ -29,8 +29,7 @@ class Solution {
   List<Long> buildPosSums(int k, int[] values) {
     PriorityQueue<Long> sums = new PriorityQueue<>();
     sums.offer(Arrays.stream(values).asLongStream().sum());
-    PriorityQueue<Element> pq =
-        new PriorityQueue<>(Comparator.comparing((Element e) -> e.sum()).reversed());
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::sum).reversed());
     pq.offer(new Element(-1, Arrays.stream(values).asLongStream().sum()));
 
     List<Long> result = new ArrayList<>();
@@ -59,8 +58,7 @@ class Solution {
   List<Long> buildNegSums(int k, int[] values) {
     PriorityQueue<Long> sums = new PriorityQueue<>();
     sums.offer(0L);
-    PriorityQueue<Element> pq =
-        new PriorityQueue<>(Comparator.comparing((Element e) -> e.sum()).reversed());
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::sum).reversed());
     pq.offer(new Element(values.length, 0));
 
     List<Long> result = new ArrayList<>();

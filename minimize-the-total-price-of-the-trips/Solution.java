@@ -1,8 +1,9 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 class Solution {
   public int minimumTotalPrice(int n, int[][] edges, int[] price, int[][] trips) {
@@ -18,7 +19,7 @@ class Solution {
 
     int[] counts = new int[n];
     for (int[] trip : trips) {
-      buildCounts(counts, adjLists, trip[1], -1, new Stack<>(), trip[0]);
+      buildCounts(counts, adjLists, trip[1], -1, new ArrayDeque<>(), trip[0]);
     }
 
     return search(price, adjLists, counts, -1, false, 0, new HashMap<>());
@@ -62,7 +63,7 @@ class Solution {
       List<Integer>[] adjLists,
       int target,
       int parent,
-      Stack<Integer> path,
+      Deque<Integer> path,
       int node) {
     path.push(node);
 

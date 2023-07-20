@@ -1,6 +1,7 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 // Definition for a Node.
 class Node {
@@ -26,9 +27,9 @@ class Solution {
     }
 
     List<Integer> result = new ArrayList<>();
-    Stack<Node> stack = new Stack<>();
+    Deque<Node> stack = new ArrayDeque<>();
     stack.push(root);
-    while (!stack.empty()) {
+    while (!stack.isEmpty()) {
       Node top = stack.pop();
       result.add(top.val);
       for (int i = top.children.size() - 1; i >= 0; --i) {

@@ -6,7 +6,7 @@ class Solution {
     return search(nums, new boolean[nums.length], new int[nums.length / 2], 0);
   }
 
-  int search(int[] nums, boolean[] used, int gcds[], int index) {
+  int search(int[] nums, boolean[] used, int[] gcds, int index) {
     if (index == gcds.length) {
       int[] sorted = Arrays.stream(gcds).sorted().toArray();
 

@@ -1,5 +1,5 @@
 class Solution {
-  final int MODULUS = 1_000_000_007;
+  static final int MODULUS = 1_000_000_007;
 
   public int kInversePairs(int n, int k) {
     int[][] dp = new int[n + 1][k + 1];

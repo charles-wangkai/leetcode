@@ -6,7 +6,7 @@ class Solution {
     return Arrays.stream(nums)
         .boxed()
         .min(
-            Comparator.comparing((Integer num) -> Math.abs(num))
+            Comparator.<Integer, Integer>comparing(Math::abs)
                 .thenComparing(Comparator.reverseOrder()))
         .get();
   }

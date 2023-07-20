@@ -1,8 +1,9 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -39,13 +40,13 @@ class Solution {
 
   int[] buildLeftLengths(int[] a) {
     int[] result = new int[a.length];
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int i = 0; i < a.length; ++i) {
-      while (!stack.empty() && a[stack.peek()] >= a[i]) {
+      while (!stack.isEmpty() && a[stack.peek()] >= a[i]) {
         stack.pop();
       }
 
-      result[i] = i - (stack.empty() ? -1 : stack.peek()) - 1;
+      result[i] = i - (stack.isEmpty() ? -1 : stack.peek()) - 1;
 
       stack.push(i);
     }

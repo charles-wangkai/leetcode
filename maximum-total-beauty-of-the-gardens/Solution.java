@@ -30,9 +30,9 @@ class Solution {
                 (long) full * (sorted.length - incompleteNum)
                     + ((incompleteNum == 0)
                         ? 0
-                        : (long) partial
+                        : (partial
                             * Math.min(
-                                target - 1, sorted[index] + (rest - gaps[index]) / (index + 1))));
+                                target - 1, sorted[index] + (rest - gaps[index]) / (index + 1)))));
       }
     }
 

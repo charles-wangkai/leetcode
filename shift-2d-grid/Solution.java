@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<List<Integer>> shiftGrid(int[][] grid, int k) {
@@ -15,8 +14,6 @@ class Solution {
       }
     }
 
-    return Arrays.stream(result)
-        .map(line -> Arrays.stream(line).boxed().collect(Collectors.toList()))
-        .collect(Collectors.toList());
+    return Arrays.stream(result).map(line -> Arrays.stream(line).boxed().toList()).toList();
   }
 }

@@ -7,6 +7,10 @@ class Solution {
             || (long) length * width * height >= 1_000_000_000;
     boolean heavy = mass >= 100;
 
-    return bulky ? (heavy ? "Both" : "Bulky") : (heavy ? "Heavy" : "Neither");
+    if (bulky) {
+      return heavy ? "Both" : "Bulky";
+    }
+
+    return heavy ? "Heavy" : "Neither";
   }
 }

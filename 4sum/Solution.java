@@ -1,7 +1,6 @@
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -17,10 +16,7 @@ class Solution {
               && lastValue <= Integer.MAX_VALUE
               && lastValues.contains((int) lastValue)) {
             result.add(
-                IntStream.of(nums[i], nums[j], nums[k], (int) lastValue)
-                    .sorted()
-                    .boxed()
-                    .collect(Collectors.toList()));
+                IntStream.of(nums[i], nums[j], nums[k], (int) lastValue).sorted().boxed().toList());
           }
         }
       }

@@ -38,9 +38,7 @@ class Solution {
       restNum -= removedNodes.size();
     }
 
-    return degreeToNodes.values().stream()
-        .flatMap(nodes -> nodes.stream())
-        .collect(Collectors.toList());
+    return degreeToNodes.values().stream().flatMap(Set::stream).collect(Collectors.toList());
   }
 
   void addInMap(Map<Integer, Set<Integer>> degreeToNodes, int degree, int node) {

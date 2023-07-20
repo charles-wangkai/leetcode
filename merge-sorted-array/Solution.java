@@ -1,5 +1,5 @@
 class Solution {
-  public void merge(int nums1[], int m, int nums2[], int n) {
+  public void merge(int[] nums1, int m, int[] nums2, int n) {
     int indexA = m - 1;
     int indexB = n - 1;
     for (int i = m + n - 1; i >= 0; --i) {

@@ -3,7 +3,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 class Solution {
-  static Map<String, String> TRANSLATION = new HashMap<>();
+  static final Map<String, String> TRANSLATION = new HashMap<>();
 
   static {
     TRANSLATION.put("G", "G");

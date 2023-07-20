@@ -5,7 +5,9 @@ import java.util.Arrays;
 class Solution {
   public long sumScores(String s) {
     int[] z = new int[s.length()];
-    for (int i = 1, l = 0, r = 0; i < s.length(); ++i) {
+    int l = 0;
+    int r = 0;
+    for (int i = 1; i < s.length(); ++i) {
       if (i <= r) {
         z[i] = Math.min(r - i + 1, z[i - l]);
       }

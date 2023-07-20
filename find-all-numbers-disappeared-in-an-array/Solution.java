@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -13,6 +12,6 @@ class Solution {
         .filter(i -> nums[i] >= 1)
         .map(i -> i + 1)
         .boxed()
-        .collect(Collectors.toList());
+        .toList();
   }
 }

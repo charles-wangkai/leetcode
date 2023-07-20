@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -18,6 +17,6 @@ class Solution {
     return IntStream.range(0, security.length)
         .filter(i -> leftNums[i] >= time + 1 && rightNums[i] >= time + 1)
         .boxed()
-        .collect(Collectors.toList());
+        .toList();
   }
 }

@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 class Solution {
   public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
     PriorityQueue<Pair> pq =
-        new PriorityQueue<Pair>(
+        new PriorityQueue<>(
             Comparator.comparing(pair -> nums1[pair.index1()] + nums2[pair.index2()]));
     pq.offer(new Pair(0, 0));
 

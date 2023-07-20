@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.NavigableSet;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -31,10 +30,7 @@ class Solution {
 
     int maxCount = Arrays.stream(counts).max().getAsInt();
 
-    return IntStream.range(0, k)
-        .filter(i -> counts[i] == maxCount)
-        .boxed()
-        .collect(Collectors.toList());
+    return IntStream.range(0, k).filter(i -> counts[i] == maxCount).boxed().toList();
   }
 
   int findAvailable(NavigableSet<Integer> availables, int lower) {

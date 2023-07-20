@@ -1,6 +1,7 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Stack;
+import java.util.Deque;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -45,7 +46,7 @@ class Solution {
             .get();
 
     int cur = (1 << n) - 1;
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     while (cur != 0) {
       stack.push(last);
 
@@ -56,7 +57,7 @@ class Solution {
 
     StringBuilder result = new StringBuilder();
     int prev = -1;
-    while (!stack.empty()) {
+    while (!stack.isEmpty()) {
       int current = stack.pop();
 
       if (prev == -1) {

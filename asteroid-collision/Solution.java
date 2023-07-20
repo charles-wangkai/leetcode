@@ -1,39 +1,37 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
 
 class Solution {
   public int[] asteroidCollision(int[] asteroids) {
-    Stack<Integer> stack = new Stack<>();
-
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int asteroid : asteroids) {
       if (asteroid > 0) {
         stack.push(asteroid);
       } else {
         while (true) {
-          if (stack.empty()) {
+          if (stack.isEmpty() || stack.peek() < 0) {
             stack.push(asteroid);
 
             break;
           }
-
-          int top = stack.peek();
-          if (top < 0) {
-            stack.push(asteroid);
-
+          if (stack.peek() + asteroid > 0) {
             break;
-          } else if (top + asteroid == 0) {
-            stack.pop();
+          }
 
-            break;
-          } else if (top + asteroid < 0) {
-            stack.pop();
-
-          } else {
+          int top = stack.pop();
+          if (top + asteroid == 0) {
             break;
           }
         }
       }
     }
 
-    return stack.stream().mapToInt(x -> x).toArray();
+    List<Integer> result = new ArrayList<>(stack);
+    Collections.reverse(result);
+
+    return result.stream().mapToInt(Integer::intValue).toArray();
   }
 }

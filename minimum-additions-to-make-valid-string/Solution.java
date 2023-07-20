@@ -1,5 +1,5 @@
 class Solution {
-  static String TARGET = "abc";
+  static final String TARGET = "abc";
 
   public int addMinimum(String word) {
     int result = 0;

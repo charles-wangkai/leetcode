@@ -29,7 +29,7 @@ class Solution {
       index += size;
     }
 
-    return ((String.valueOf(segments.size()).length() == bLength))
+    return (String.valueOf(segments.size()).length() == bLength)
         ? IntStream.range(0, segments.size())
             .mapToObj(i -> String.format("%s<%d/%d>", segments.get(i), i + 1, segments.size()))
             .toList()

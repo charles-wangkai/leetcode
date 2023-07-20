@@ -12,7 +12,7 @@ class Solution {
         if (length % 2 == 0) {
           s = half + new StringBuilder(String.valueOf(half)).reverse().toString();
         } else {
-          s = half + new StringBuilder(String.valueOf(half)).reverse().substring(1).toString();
+          s = half + new StringBuilder(String.valueOf(half)).reverse().substring(1);
         }
 
         long value = Long.parseLong(s);

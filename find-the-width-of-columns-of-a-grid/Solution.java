@@ -7,7 +7,7 @@ class Solution {
         .map(
             c ->
                 Arrays.stream(grid)
-                    .mapToInt(line -> String.valueOf(line[c]).toString().length())
+                    .mapToInt(line -> String.valueOf(line[c]).length())
                     .max()
                     .getAsInt())
         .toArray();

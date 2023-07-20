@@ -6,16 +6,18 @@ class Solution {
 
     Integer result = null;
     for (int i = 0; i < nums.length; ++i) {
-      for (int j = i + 1, k = nums.length - 1; j < k; ) {
-        int sum = nums[i] + nums[j] + nums[k];
+      int leftIndex = i + 1;
+      int rightIndex = nums.length - 1;
+      while (leftIndex < rightIndex) {
+        int sum = nums[i] + nums[leftIndex] + nums[rightIndex];
         if (result == null || Math.abs(sum - target) < Math.abs(result - target)) {
           result = sum;
         }
 
         if (sum <= target) {
-          ++j;
+          ++leftIndex;
         } else {
-          --k;
+          --rightIndex;
         }
       }
     }

@@ -1,11 +1,12 @@
 // https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -21,11 +22,11 @@ class Solution {
     }
 
     List<Integer> path = new ArrayList<>();
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     int current = start;
     stack.push(current);
 
-    while (!stack.empty()) {
+    while (!stack.isEmpty()) {
       List<Integer> tos = fromToTos.getOrDefault(current, List.of());
 
       if (tos.isEmpty()) {

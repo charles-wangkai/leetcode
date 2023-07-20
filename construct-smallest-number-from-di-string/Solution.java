@@ -3,21 +3,21 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
-  int solution;
+  int minValue;
 
   public String smallestNumber(String pattern) {
-    solution = Integer.MAX_VALUE;
+    minValue = Integer.MAX_VALUE;
     int[] digits = IntStream.rangeClosed(1, pattern.length() + 1).toArray();
     search(pattern, digits, 0);
 
-    return String.valueOf(solution);
+    return String.valueOf(minValue);
   }
 
   void search(String pattern, int[] digits, int index) {
     if (index == digits.length) {
-      solution =
+      minValue =
           Math.min(
-              solution,
+              minValue,
               Integer.parseInt(
                   Arrays.stream(digits).mapToObj(String::valueOf).collect(Collectors.joining())));
 

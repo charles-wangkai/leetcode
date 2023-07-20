@@ -1,8 +1,9 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class StockSpanner {
   private int index = 0;
-  private Stack<Element> elements = new Stack<>();
+  private Deque<Element> elements = new ArrayDeque<>();
 
   public StockSpanner() {
     elements.push(new Element(-1, Integer.MAX_VALUE));

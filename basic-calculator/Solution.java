@@ -1,9 +1,10 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 class Solution {
   public int calculate(String s) {
     int result = 0;
-    Stack<Integer> factors = new Stack<>();
+    Deque<Integer> factors = new ArrayDeque<>();
     factors.push(1);
     int sign = 1;
     Expression expr = new Expression(s);

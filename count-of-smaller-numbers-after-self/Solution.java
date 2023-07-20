@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -10,7 +9,7 @@ class Solution {
 
     sort(nums, smallerNums, IntStream.range(0, nums.length).toArray(), 0, nums.length - 1);
 
-    return Arrays.stream(smallerNums).boxed().collect(Collectors.toList());
+    return Arrays.stream(smallerNums).boxed().toList();
   }
 
   void sort(int[] nums, int[] smallerNums, int[] indices, int beginIndex, int endIndex) {

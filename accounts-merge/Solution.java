@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class Solution {
@@ -35,8 +34,8 @@ class Solution {
             root ->
                 Stream.concat(
                         Stream.of(emailToName.get(root)), rootToEmails.get(root).stream().sorted())
-                    .collect(Collectors.toList()))
-        .collect(Collectors.toList());
+                    .toList())
+        .toList();
   }
 
   String findRoot(Map<String, String> emailToParent, String email) {

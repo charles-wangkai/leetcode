@@ -1,7 +1,8 @@
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -12,10 +13,10 @@ class Solution {
             .sorted(Comparator.comparing(i -> positions[i]))
             .mapToInt(Integer::intValue)
             .toArray();
-    Stack<Integer> stack = new Stack<>();
+    Deque<Integer> stack = new ArrayDeque<>();
     for (int index : sortedIndices) {
       if (directions.charAt(index) == 'L') {
-        while (!stack.empty()) {
+        while (!stack.isEmpty()) {
           int top = stack.pop();
           if (healths[index] < healths[top]) {
             healths[index] = 0;

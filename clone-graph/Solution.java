@@ -12,15 +12,15 @@ class Node {
 
   public Node() {
     val = 0;
-    neighbors = new ArrayList<Node>();
+    neighbors = new ArrayList<>();
   }
 
   public Node(int _val) {
     val = _val;
-    neighbors = new ArrayList<Node>();
+    neighbors = new ArrayList<>();
   }
 
-  public Node(int _val, ArrayList<Node> _neighbors) {
+  public Node(int _val, List<Node> _neighbors) {
     val = _val;
     neighbors = _neighbors;
   }

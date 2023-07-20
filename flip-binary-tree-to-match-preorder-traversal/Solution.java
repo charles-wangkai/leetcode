@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -24,7 +23,7 @@ class TreeNode {
 
 class Solution {
   public List<Integer> flipMatchVoyage(TreeNode root, int[] voyage) {
-    List<Integer> result = search(root, Arrays.stream(voyage).boxed().collect(Collectors.toList()));
+    List<Integer> result = search(root, Arrays.stream(voyage).boxed().toList());
 
     return (result == null) ? List.of(-1) : result;
   }

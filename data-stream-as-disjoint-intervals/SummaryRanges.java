@@ -12,7 +12,10 @@ class SummaryRanges {
     Interval ceiling = intervals.ceiling(toAdd);
 
     if (!isWithin(value, floor) && !isWithin(value, ceiling)) {
-      if (floor != null && ceiling != null & value == floor.end + 1 && value == ceiling.start - 1) {
+      if (floor != null
+          && ceiling != null
+          && value == floor.end + 1
+          && value == ceiling.start - 1) {
         intervals.remove(floor);
         intervals.remove(ceiling);
         intervals.add(new Interval(floor.start, ceiling.end));

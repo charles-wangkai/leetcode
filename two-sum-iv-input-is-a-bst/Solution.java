@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -21,11 +22,11 @@ class TreeNode {
 
 class Solution {
   public boolean findTarget(TreeNode root, int k) {
-    Stack<Object> lowers = new Stack<>();
+    Deque<Object> lowers = new ArrayDeque<>();
     lowers.push(root);
     int lower = leftScan(lowers);
 
-    Stack<Object> uppers = new Stack<>();
+    Deque<Object> uppers = new ArrayDeque<>();
     uppers.push(root);
     int upper = rightScan(uppers);
 
@@ -43,7 +44,7 @@ class Solution {
     return false;
   }
 
-  int leftScan(Stack<Object> lowers) {
+  int leftScan(Deque<Object> lowers) {
     while (true) {
       Object head = lowers.pop();
       if (head instanceof Integer value) {
@@ -62,7 +63,7 @@ class Solution {
     }
   }
 
-  int rightScan(Stack<Object> uppers) {
+  int rightScan(Deque<Object> uppers) {
     while (true) {
       Object head = uppers.pop();
       if (head instanceof Integer value) {

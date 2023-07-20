@@ -3,54 +3,54 @@ import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-	public List<Integer> majorityElement(int[] nums) {
-		int candidate1 = 0;
-		int count1 = 0;
-		int candidate2 = 0;
-		int count2 = 0;
-		for (int num : nums) {
-			if (count1 <= 0) {
-				if (count2 <= 0 || num != candidate2) {
-					candidate1 = num;
-					count1 += 2;
-					--count2;
-				} else {
-					--count1;
-					count2 += 2;
-				}
-			} else if (count2 <= 0) {
-				if (num == candidate1) {
-					count1 += 2;
-					--count2;
-				} else {
-					candidate2 = num;
-					--count1;
-					count2 += 2;
-				}
-			} else if (num == candidate1) {
-				count1 += 2;
-				--count2;
-			} else if (num == candidate2) {
-				--count1;
-				count2 += 2;
-			} else {
-				--count1;
-				--count2;
-			}
-		}
+  public List<Integer> majorityElement(int[] nums) {
+    int candidate1 = 0;
+    int count1 = 0;
+    int candidate2 = 0;
+    int count2 = 0;
+    for (int num : nums) {
+      if (count1 <= 0) {
+        if (count2 <= 0 || num != candidate2) {
+          candidate1 = num;
+          count1 += 2;
+          --count2;
+        } else {
+          --count1;
+          count2 += 2;
+        }
+      } else if (count2 <= 0) {
+        if (num == candidate1) {
+          count1 += 2;
+          --count2;
+        } else {
+          candidate2 = num;
+          --count1;
+          count2 += 2;
+        }
+      } else if (num == candidate1) {
+        count1 += 2;
+        --count2;
+      } else if (num == candidate2) {
+        --count1;
+        count2 += 2;
+      } else {
+        --count1;
+        --count2;
+      }
+    }
 
-		List<Integer> majorities = new ArrayList<Integer>();
-		if (count1 > 0 && isMajority(nums, candidate1)) {
-			majorities.add(candidate1);
-		}
-		if (count2 > 0 && isMajority(nums, candidate2)) {
-			majorities.add(candidate2);
-		}
+    List<Integer> majorities = new ArrayList<>();
+    if (count1 > 0 && isMajority(nums, candidate1)) {
+      majorities.add(candidate1);
+    }
+    if (count2 > 0 && isMajority(nums, candidate2)) {
+      majorities.add(candidate2);
+    }
 
-		return majorities;
-	}
+    return majorities;
+  }
 
-	boolean isMajority(int[] nums, int candidate) {
-		return Arrays.stream(nums).filter(num -> num == candidate).count() > nums.length / 3;
-	}
+  boolean isMajority(int[] nums, int candidate) {
+    return Arrays.stream(nums).filter(num -> num == candidate).count() > nums.length / 3;
+  }
 }

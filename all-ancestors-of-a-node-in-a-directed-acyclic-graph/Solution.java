@@ -3,7 +3,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<List<Integer>> getAncestors(int n, int[][] edges) {
@@ -30,8 +29,8 @@ class Solution {
     }
 
     return ancestorSets.stream()
-        .map(ancestorSet -> ancestorSet.stream().sorted().collect(Collectors.toList()))
-        .collect(Collectors.toList());
+        .map(ancestorSet -> ancestorSet.stream().sorted().toList())
+        .toList();
   }
 
   List<Integer> topologicalSort(List<Integer>[] adjLists) {
