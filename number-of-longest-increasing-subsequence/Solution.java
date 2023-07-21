@@ -17,7 +17,7 @@ class Solution {
       }
     }
 
-    int maxLength = Arrays.stream(elements).mapToInt(element -> element.length).max().orElse(0);
+    int maxLength = Arrays.stream(elements).mapToInt(element -> element.length).max().getAsInt();
 
     return Arrays.stream(elements)
         .filter(element -> element.length == maxLength)
