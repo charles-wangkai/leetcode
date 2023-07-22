@@ -1,53 +1,33 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-public class Solution {
+class Solution {
   static final int[] R_OFFSETS = {-2, -1, 1, 2, 2, 1, -1, -2};
   static final int[] C_OFFSETS = {1, 2, 2, 1, -1, -2, -2, -1};
 
-  public double knightProbability(int N, int K, int r, int c) {
-    Map<Square, Double> square2prob = new HashMap<>();
-    square2prob.put(new Square(r, c), 1.0);
-    for (int i = 0; i < K; i++) {
-      Map<Square, Double> nextSquare2prob = new HashMap<>();
-      for (Entry<Square, Double> entry : square2prob.entrySet()) {
-        Square square = entry.getKey();
-        double prob = entry.getValue();
-        for (int j = 0; j < R_OFFSETS.length; j++) {
-          int nextR = square.r + R_OFFSETS[j];
-          int nextC = square.c + C_OFFSETS[j];
-          if (nextR >= 0 && nextR < N && nextC >= 0 && nextC < N) {
-            Square nextSquare = new Square(nextR, nextC);
-            nextSquare2prob.put(
-                nextSquare,
-                nextSquare2prob.getOrDefault(nextSquare, 0.0) + prob / R_OFFSETS.length);
+  public double knightProbability(int n, int k, int row, int column) {
+    Map<Cell, Double> cellToProb = Map.of(new Cell(row, column), 1.0);
+    for (int i = 0; i < k; ++i) {
+      Map<Cell, Double> nextCellToProb = new HashMap<>();
+      for (Cell cell : cellToProb.keySet()) {
+        for (int j = 0; j < R_OFFSETS.length; ++j) {
+          int nextR = cell.r() + R_OFFSETS[j];
+          int nextC = cell.c() + C_OFFSETS[j];
+          if (nextR >= 0 && nextR < n && nextC >= 0 && nextC < n) {
+            Cell nextCell = new Cell(nextR, nextC);
+            nextCellToProb.put(
+                nextCell,
+                nextCellToProb.getOrDefault(nextCell, 0.0)
+                    + cellToProb.get(cell) / R_OFFSETS.length);
           }
         }
       }
-      square2prob = nextSquare2prob;
+
+      cellToProb = nextCellToProb;
     }
-    return square2prob.values().stream().mapToDouble(x -> x).sum();
+
+    return cellToProb.values().stream().mapToDouble(Double::doubleValue).sum();
   }
 }
 
-class Square {
-  int r;
-  int c;
-
-  Square(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-
-  @Override
-  public int hashCode() {
-    return r * c;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    Square other = (Square) obj;
-    return r == other.r && c == other.c;
-  }
-}
+record Cell(int r, int c) {}
