@@ -1,10 +1,12 @@
 import java.util.stream.IntStream;
 
 class Solution {
+  static final int LIMIT = 10_000_000;
+
   public int minSpeedOnTime(int[] dist, double hour) {
     int result = -1;
     int lower = 1;
-    int upper = 10_000_000;
+    int upper = LIMIT;
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
       if (check(dist, hour, middle)) {
