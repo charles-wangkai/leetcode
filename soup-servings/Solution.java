@@ -2,63 +2,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Solution {
-  Map<State, Double> cache;
+  Map<State, Double> cache = new HashMap<>();
 
-  public double soupServings(int N) {
-    if (N >= 6000) {
+  public double soupServings(int n) {
+    if (n >= 6000) {
       return 1;
     }
 
-    int m = N / 25 + (N % 25 == 0 ? 0 : 1);
+    int rest = (n + 24) / 25;
 
-    cache = new HashMap<>();
-    return search(m, m);
+    return search(rest, rest);
   }
 
-  double search(int remainA, int remainB) {
-    if (remainA <= 0) {
-      if (remainB <= 0) {
-        return 0.5;
-      } else {
-        return 1;
-      }
-    } else if (remainB <= 0) {
+  double search(int restA, int restB) {
+    if (restA <= 0) {
+      return (restB <= 0) ? 0.5 : 1;
+    } else if (restB <= 0) {
       return 0;
     }
 
-    State state = new State(remainA, remainB);
-    if (cache.containsKey(state)) {
-      return cache.get(state);
+    State state = new State(restA, restB);
+    if (!cache.containsKey(state)) {
+      cache.put(
+          state,
+          0.25
+              * (search(restA - 4, restB)
+                  + search(restA - 3, restB - 1)
+                  + search(restA - 2, restB - 2)
+                  + search(restA - 1, restB - 3)));
     }
 
-    double result =
-        0.25
-            * (search(remainA - 4, remainB)
-                + search(remainA - 3, remainB - 1)
-                + search(remainA - 2, remainB - 2)
-                + search(remainA - 1, remainB - 3));
-    cache.put(state, result);
-    return result;
+    return cache.get(state);
   }
 }
 
-class State {
-  int remainA;
-  int remainB;
-
-  State(int remainA, int remainB) {
-    this.remainA = remainA;
-    this.remainB = remainB;
-  }
-
-  @Override
-  public int hashCode() {
-    return remainA * remainB;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    State other = (State) obj;
-    return remainA == other.remainA && remainB == other.remainB;
-  }
-}
+record State(int restA, int restB) {}
