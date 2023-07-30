@@ -1,31 +1,26 @@
-public class Solution {
-	static final int LIMIT = 100;
+class Solution {
+  public int strangePrinter(String s) {
+    int[][] dp = new int[s.length()][s.length()];
+    for (int length = 1; length <= s.length(); ++length) {
+      for (int beginIndex = 0; beginIndex + length <= s.length(); ++beginIndex) {
+        int endIndex = beginIndex + length - 1;
 
-	int[][] cache;
+        dp[beginIndex][endIndex] = getValue(dp, beginIndex, endIndex - 1) + 1;
+        for (int i = beginIndex; i < endIndex; ++i) {
+          if (s.charAt(i) == s.charAt(endIndex)) {
+            dp[beginIndex][endIndex] =
+                Math.min(
+                    dp[beginIndex][endIndex],
+                    getValue(dp, beginIndex, i) + getValue(dp, i + 1, endIndex - 1));
+          }
+        }
+      }
+    }
 
-	public int strangePrinter(String s) {
-		cache = new int[LIMIT][LIMIT];
+    return dp[0][s.length() - 1];
+  }
 
-		return search(s, 0, s.length() - 1);
-	}
-
-	int search(String s, int left, int right) {
-		if (left > right) {
-			return 0;
-		}
-
-		if (cache[left][right] != 0) {
-			return cache[left][right];
-		}
-
-		int result = search(s, left, right - 1) + 1;
-		for (int i = left; i < right; i++) {
-			if (s.charAt(i) == s.charAt(right)) {
-				result = Math.min(result, search(s, left, i) + search(s, i + 1, right - 1));
-			}
-		}
-
-		cache[left][right] = result;
-		return result;
-	}
+  int getValue(int[][] dp, int beginIndex, int endIndex) {
+    return (beginIndex <= endIndex) ? dp[beginIndex][endIndex] : 0;
+  }
 }
