@@ -1,7 +1,6 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -24,21 +23,21 @@ class TreeNode {
 
 class Solution {
   public List<TreeNode> generateTrees(int n) {
-    return buildTrees(IntStream.rangeClosed(1, n).toArray(), 0, n - 1);
+    return buildTrees(1, n);
   }
 
-  List<TreeNode> buildTrees(int[] values, int begin, int end) {
-    if (begin > end) {
-      return Collections.singletonList(null);
+  List<TreeNode> buildTrees(int beginValue, int endValue) {
+    if (beginValue > endValue) {
+      return Arrays.asList((TreeNode) null);
     }
 
     List<TreeNode> roots = new ArrayList<>();
-    for (int i = begin; i <= end; ++i) {
-      List<TreeNode> lefts = buildTrees(values, begin, i - 1);
-      List<TreeNode> rights = buildTrees(values, i + 1, end);
+    for (int i = beginValue; i <= endValue; ++i) {
+      List<TreeNode> lefts = buildTrees(beginValue, i - 1);
+      List<TreeNode> rights = buildTrees(i + 1, endValue);
       for (TreeNode left : lefts) {
         for (TreeNode right : rights) {
-          roots.add(new TreeNode(values[i], left, right));
+          roots.add(new TreeNode(i, left, right));
         }
       }
     }
