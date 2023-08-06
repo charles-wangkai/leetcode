@@ -1,34 +1,25 @@
-public class Solution {
-	static final int MOD_DIVISOR = 1_000_000_007;
+class Solution {
+  static final int MODULUS = 1_000_000_007;
 
-	public int numMusicPlaylists(int N, int L, int K) {
-		int[][] ways = new int[N + 1][L + 1];
-		for (int i = 0; i <= N; i++) {
-			for (int j = 0; j <= L; j++) {
-				if (j == 0) {
-					if (i == 0) {
-						ways[i][j] = 1;
-					} else {
-						ways[i][j] = 0;
-					}
-				} else {
-					if (i == 0) {
-						ways[i][j] = 0;
-					} else {
-						ways[i][j] = addMod(multiplyMod(ways[i - 1][j - 1], i),
-								multiplyMod(ways[i][j - 1], Math.max(0, i - K)));
-					}
-				}
-			}
-		}
-		return ways[N][L];
-	}
+  public int numMusicPlaylists(int n, int goal, int k) {
+    int[][] dp = new int[goal + 1][n + 1];
+    dp[0][0] = 1;
 
-	int addMod(int x, int y) {
-		return (x + y) % MOD_DIVISOR;
-	}
+    for (int i = 1; i <= goal; ++i) {
+      for (int j = 1; j <= n; ++j) {
+        dp[i][j] =
+            addMod(multiplyMod(dp[i - 1][j - 1], j), multiplyMod(dp[i - 1][j], Math.max(0, j - k)));
+      }
+    }
 
-	int multiplyMod(int x, int y) {
-		return (int) ((long) x * y % MOD_DIVISOR);
-	}
+    return dp[goal][n];
+  }
+
+  int addMod(int x, int y) {
+    return Math.floorMod(x + y, MODULUS);
+  }
+
+  int multiplyMod(int x, int y) {
+    return Math.floorMod((long) x * y, MODULUS);
+  }
 }
