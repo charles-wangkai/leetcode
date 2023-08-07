@@ -3,9 +3,8 @@ import java.util.Arrays;
 class Solution {
   public boolean searchMatrix(int[][] matrix, int target) {
     int rowIndex = findIndex(Arrays.stream(matrix).mapToInt(row -> row[0]).toArray(), target);
-    int colIndex = findIndex(matrix[rowIndex], target);
 
-    return matrix[rowIndex][colIndex] == target;
+    return matrix[rowIndex][findIndex(matrix[rowIndex], target)] == target;
   }
 
   int findIndex(int[] a, int target) {
