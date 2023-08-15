@@ -20,35 +20,25 @@ class Solution {
     ListNode tempLeftHead = new ListNode();
     ListNode tempRightHead = new ListNode();
 
-    ListNode p = head;
-    while (p != null) {
-      ListNode next = p.next;
+    while (head != null) {
+      ListNode next = head.next;
 
-      if (p.val < x) {
-        p.next = tempLeftHead.next;
-        tempLeftHead.next = p;
-      } else {
-        p.next = tempRightHead.next;
-        tempRightHead.next = p;
-      }
+      ListNode targetHead = (head.val < x) ? tempLeftHead : tempRightHead;
+      head.next = targetHead.next;
+      targetHead.next = head;
 
-      p = next;
+      head = next;
     }
 
     ListNode tempHead = new ListNode();
-    while (tempRightHead.next != null) {
-      ListNode node = tempRightHead.next;
-      tempRightHead.next = node.next;
+    for (ListNode halfHead : new ListNode[] {tempRightHead, tempLeftHead}) {
+      while (halfHead.next != null) {
+        ListNode node = halfHead.next;
+        halfHead.next = node.next;
 
-      node.next = tempHead.next;
-      tempHead.next = node;
-    }
-    while (tempLeftHead.next != null) {
-      ListNode node = tempLeftHead.next;
-      tempLeftHead.next = node.next;
-
-      node.next = tempHead.next;
-      tempHead.next = node;
+        node.next = tempHead.next;
+        tempHead.next = node;
+      }
     }
 
     return tempHead.next;
