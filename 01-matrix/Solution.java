@@ -29,11 +29,10 @@ class Solution {
       Point head = queue.poll();
 
       for (int i = 0; i < R_OFFSETS.length; ++i) {
-        int adjR = head.r + R_OFFSETS[i];
-        int adjC = head.c + C_OFFSETS[i];
-
+        int adjR = head.r() + R_OFFSETS[i];
+        int adjC = head.c() + C_OFFSETS[i];
         if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n && result[adjR][adjC] == -1) {
-          result[adjR][adjC] = result[head.r][head.c] + 1;
+          result[adjR][adjC] = result[head.r()][head.c()] + 1;
           queue.offer(new Point(adjR, adjC));
         }
       }
@@ -43,12 +42,4 @@ class Solution {
   }
 }
 
-class Point {
-  int r;
-  int c;
-
-  Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-}
+record Point(int r, int c) {}
