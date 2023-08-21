@@ -1,25 +1,13 @@
 class Solution {
-	public boolean repeatedSubstringPattern(String s) {
-		for (int patternLength = 1; patternLength * 2 <= s.length(); ++patternLength) {
-			if (isRepeat(s, patternLength)) {
-				return true;
-			}
-		}
+  public boolean repeatedSubstringPattern(String s) {
+    for (int i = 1; i * i <= s.length(); ++i) {
+      if (s.length() % i == 0
+          && (s.length() != 1 && s.equals(s.substring(0, i).repeat(s.length() / i))
+              || (i != 1 && s.equals(s.substring(0, s.length() / i).repeat(i))))) {
+        return true;
+      }
+    }
 
-		return false;
-	}
-
-	boolean isRepeat(String str, int patternLength) {
-		if (str.length() % patternLength != 0) {
-			return false;
-		}
-
-		for (int i = 0; i < str.length(); ++i) {
-			if (str.charAt(i) != str.charAt(i % patternLength)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
+    return false;
+  }
 }
