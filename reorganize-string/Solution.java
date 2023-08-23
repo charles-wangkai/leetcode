@@ -1,55 +1,39 @@
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Solution {
-  public String reorganizeString(String S) {
-    Map<Character, Integer> ch2count = new HashMap<>();
-    for (char ch : S.toCharArray()) {
-      ch2count.put(ch, ch2count.getOrDefault(ch, 0) + 1);
+class Solution {
+  public String reorganizeString(String s) {
+    Map<Character, Integer> letterToCount = new HashMap<>();
+    for (char letter : s.toCharArray()) {
+      letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
     }
 
-    List<Element> elements =
-        ch2count.entrySet().stream()
-            .map(entry -> new Element(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
-    Collections.sort(elements, (e1, e2) -> Integer.compare(e2.count, e1.count));
+    Element[] elements =
+        letterToCount.keySet().stream()
+            .map(letter -> new Element(letter, letterToCount.get(letter)))
+            .sorted(Comparator.comparing(Element::count).reversed())
+            .toArray(Element[]::new);
 
-    char[] chs = new char[S.length()];
+    char[] result = new char[s.length()];
+    int[] indices =
+        IntStream.concat(
+                IntStream.range(0, s.length()).filter(i -> i % 2 == 0),
+                IntStream.range(0, s.length()).filter(i -> i % 2 == 1))
+            .toArray();
     int index = 0;
-    int offset = 2;
     for (Element element : elements) {
-      for (int i = 0; i < element.count; i++) {
-        while (!(index < chs.length && chs[index] == 0)) {
-          if (index >= chs.length) {
-            index = 0;
-            offset = 1;
-          } else {
-            index += offset;
-          }
-        }
-
-        chs[index] = element.ch;
+      for (int i = 0; i < element.count(); ++i) {
+        result[indices[index]] = element.letter();
+        ++index;
       }
     }
 
-    if (IntStream.range(0, chs.length - 1).allMatch(i -> chs[i] != chs[i + 1])) {
-      return new String(chs);
-    } else {
-      return "";
-    }
+    return (IntStream.range(0, result.length - 1).allMatch(i -> result[i] != result[i + 1]))
+        ? new String(result)
+        : "";
   }
 }
 
-class Element {
-  char ch;
-  int count;
-
-  Element(char ch, int count) {
-    this.ch = ch;
-    this.count = count;
-  }
-}
+record Element(char letter, int count) {}
