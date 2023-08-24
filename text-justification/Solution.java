@@ -1,16 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-  public List<String> fullJustify(String[] words, int L) {
+class Solution {
+  public List<String> fullJustify(String[] words, int maxWidth) {
     List<String> lines = new ArrayList<>();
     List<String> lineWords = new ArrayList<>();
     List<Integer> spaces = new ArrayList<>();
     int length = 0;
     int index = 0;
-    while (index < words.length) {
-      int nextLength = length + (length == 0 ? 0 : 1) + words[index].length();
-      if (nextLength <= L) {
+    while (index != words.length) {
+      int nextLength = length + ((length == 0) ? 0 : 1) + words[index].length();
+      if (nextLength <= maxWidth) {
         if (length != 0) {
           spaces.add(1);
         }
@@ -20,9 +20,9 @@ public class Solution {
         ++index;
       } else {
         if (lineWords.size() > 1) {
-          packExtraSpaces(spaces, L - length);
+          packExtraSpaces(spaces, maxWidth - length);
         } else {
-          appendSpaces(lineWords, spaces, L - length);
+          spaces.add(maxWidth - length);
         }
         lines.add(combineLine(lineWords, spaces));
 
@@ -31,41 +31,32 @@ public class Solution {
         length = 0;
       }
     }
-    if (!lineWords.isEmpty()) {
-      appendSpaces(lineWords, spaces, L - length);
-      lines.add(combineLine(lineWords, spaces));
-    }
+
+    spaces.add(maxWidth - length);
+    lines.add(combineLine(lineWords, spaces));
+
     return lines;
   }
 
   void packExtraSpaces(List<Integer> spaces, int spacesLeft) {
     int extra = spacesLeft / spaces.size();
     spacesLeft -= extra * spaces.size();
-    for (int i = 0; i < spaces.size(); i++) {
-      spaces.set(i, spaces.get(i) + extra + (i < spacesLeft ? 1 : 0));
-    }
-  }
-
-  void appendSpaces(List<String> lineWords, List<Integer> spaces, int spacesLeft) {
-    if (spacesLeft > 0) {
-      if (lineWords.size() > spaces.size()) {
-        spaces.add(spacesLeft);
-      } else {
-        spaces.set(spaces.size() - 1, spaces.get(spaces.size() - 1) + spacesLeft);
-      }
+    for (int i = 0; i < spaces.size(); ++i) {
+      spaces.set(i, spaces.get(i) + extra + ((i < spacesLeft) ? 1 : 0));
     }
   }
 
   String combineLine(List<String> lineWords, List<Integer> spaces) {
-    StringBuilder line = new StringBuilder();
-    for (int i = 0; i < lineWords.size(); i++) {
-      line.append(lineWords.get(i));
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < Math.max(lineWords.size(), spaces.size()); ++i) {
+      if (i < lineWords.size()) {
+        result.append(lineWords.get(i));
+      }
       if (i < spaces.size()) {
-        for (int j = 0; j < spaces.get(i); j++) {
-          line.append(' ');
-        }
+        result.append(" ".repeat(spaces.get(i)));
       }
     }
-    return line.toString();
+
+    return result.toString();
   }
 }
