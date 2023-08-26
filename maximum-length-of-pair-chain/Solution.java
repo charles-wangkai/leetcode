@@ -1,20 +1,20 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
-public class Solution {
-	public int findLongestChain(int[][] pairs) {
-		Arrays.sort(pairs, (p1, p2) -> p1[0] - p2[0]);
+class Solution {
+  public int findLongestChain(int[][] pairs) {
+    Arrays.sort(pairs, Comparator.comparing(pair -> pair[0]));
 
-		int maxChain = 0;
-		int[] chains = new int[pairs.length];
-		Arrays.fill(chains, 1);
-		for (int i = 0; i < chains.length; i++) {
-			for (int j = 0; j < i; j++) {
-				if (pairs[j][1] < pairs[i][0]) {
-					chains[i] = Math.max(chains[i], chains[j] + 1);
-				}
-			}
-			maxChain = Math.max(maxChain, chains[i]);
-		}
-		return maxChain;
-	}
+    int[] dp = new int[pairs.length];
+    Arrays.fill(dp, 1);
+    for (int i = 0; i < dp.length; ++i) {
+      for (int j = 0; j < i; ++j) {
+        if (pairs[j][1] < pairs[i][0]) {
+          dp[i] = Math.max(dp[i], dp[j] + 1);
+        }
+      }
+    }
+
+    return Arrays.stream(dp).max().getAsInt();
+  }
 }
