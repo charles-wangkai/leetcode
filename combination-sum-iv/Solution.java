@@ -4,7 +4,6 @@ import java.util.Map;
 class Solution {
   public int combinationSum4(int[] nums, int target) {
     int result = 0;
-
     Map<Integer, Integer> sumToCount = Map.of(0, 1);
     while (!sumToCount.isEmpty()) {
       Map<Integer, Integer> nextSumToCount = new HashMap<>();
