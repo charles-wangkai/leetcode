@@ -5,8 +5,8 @@ import java.util.TreeMap;
 class Solution {
   public int minDeletions(String s) {
     int[] freqs = new int[26];
-    for (char ch : s.toCharArray()) {
-      ++freqs[ch - 'a'];
+    for (char c : s.toCharArray()) {
+      ++freqs[c - 'a'];
     }
 
     SortedMap<Integer, Integer> freqToCount = new TreeMap<>();
