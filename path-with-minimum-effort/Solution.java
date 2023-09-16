@@ -40,7 +40,6 @@ class Solution {
     for (int i = 0; i < R_OFFSETS.length; ++i) {
       int adjR = r + R_OFFSETS[i];
       int adjC = c + C_OFFSETS[i];
-
       if (adjR >= 0
           && adjR < row
           && adjC >= 0
