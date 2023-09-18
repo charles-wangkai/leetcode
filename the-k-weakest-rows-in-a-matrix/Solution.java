@@ -10,9 +10,10 @@ class Solution {
     return IntStream.range(0, mat.length)
         .boxed()
         .sorted(
-            Comparator.comparing((Integer i) -> oneCounts[i]).thenComparing(Function.identity()))
+            Comparator.<Integer, Integer>comparing(i -> oneCounts[i])
+                .thenComparing(Function.identity()))
         .limit(k)
-        .mapToInt(x -> x)
+        .mapToInt(Integer::intValue)
         .toArray();
   }
 }
