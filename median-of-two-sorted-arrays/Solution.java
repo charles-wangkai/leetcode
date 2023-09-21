@@ -1,51 +1,53 @@
 import java.util.Arrays;
 
-public class Solution {
-  public double findMedianSortedArrays(int[] A, int[] B) {
-    int totalLength = A.length + B.length;
-    if (totalLength % 2 == 0) {
-      return (findKthElement(A, 0, A.length - 1, B, 0, B.length - 1, totalLength / 2)
-              + findKthElement(A, 0, A.length - 1, B, 0, B.length - 1, totalLength / 2 + 1))
-          / 2.0;
-    } else {
-      return findKthElement(A, 0, A.length - 1, B, 0, B.length - 1, totalLength / 2 + 1);
-    }
+class Solution {
+  public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int totalLength = nums1.length + nums2.length;
+
+    return (totalLength % 2 == 0)
+        ? ((findKthValue(nums1, 0, nums1.length - 1, nums2, 0, nums2.length - 1, totalLength / 2)
+                + findKthValue(
+                    nums1, 0, nums1.length - 1, nums2, 0, nums2.length - 1, totalLength / 2 + 1))
+            / 2.0)
+        : findKthValue(nums1, 0, nums1.length - 1, nums2, 0, nums2.length - 1, totalLength / 2 + 1);
   }
 
-  int findKthElement(
-      int[] A, int beginIndexA, int endIndexA, int[] B, int beginIndexB, int endIndexB, int k) {
-    if (beginIndexA > endIndexA) {
-      return B[beginIndexB + (k - 1)];
+  int findKthValue(
+      int[] nums1,
+      int beginIndex1,
+      int endIndex1,
+      int[] nums2,
+      int beginIndex2,
+      int endIndex2,
+      int k) {
+    if (beginIndex1 > endIndex1) {
+      return nums2[beginIndex2 + (k - 1)];
     }
-    if (beginIndexB > endIndexB) {
-      return A[beginIndexA + (k - 1)];
-    }
-
-    int middleIndexA = (beginIndexA + endIndexA) / 2;
-    int foundIndexB = Arrays.binarySearch(B, beginIndexB, endIndexB + 1, A[middleIndexA]);
-    if (foundIndexB < 0) {
-      foundIndexB = -1 - foundIndexB - 1;
-    }
-
-    if (middleIndexA == endIndexA && foundIndexB == endIndexB) {
-      if (k == 1 + (endIndexB - beginIndexB + 1)) {
-        return A[middleIndexA];
-      } else {
-        return B[beginIndexB + (k - 1)];
-      }
+    if (beginIndex2 > endIndex2) {
+      return nums1[beginIndex1 + (k - 1)];
     }
 
-    if (k <= (middleIndexA - beginIndexA + 1) + (foundIndexB - beginIndexB + 1)) {
-      return findKthElement(A, beginIndexA, middleIndexA, B, beginIndexB, foundIndexB, k);
-    } else {
-      return findKthElement(
-          A,
-          middleIndexA + 1,
-          endIndexA,
-          B,
-          foundIndexB + 1,
-          endIndexB,
-          k - (middleIndexA - beginIndexA + 1) - (foundIndexB - beginIndexB + 1));
+    int middleIndex1 = (beginIndex1 + endIndex1) / 2;
+    int foundIndex2 = Arrays.binarySearch(nums2, beginIndex2, endIndex2 + 1, nums1[middleIndex1]);
+    if (foundIndex2 < 0) {
+      foundIndex2 = -1 - foundIndex2 - 1;
     }
+
+    if (middleIndex1 == endIndex1 && foundIndex2 == endIndex2) {
+      return (k == 1 + (endIndex2 - beginIndex2 + 1))
+          ? nums1[middleIndex1]
+          : nums2[beginIndex2 + (k - 1)];
+    }
+
+    return (k <= (middleIndex1 - beginIndex1 + 1) + (foundIndex2 - beginIndex2 + 1))
+        ? findKthValue(nums1, beginIndex1, middleIndex1, nums2, beginIndex2, foundIndex2, k)
+        : findKthValue(
+            nums1,
+            middleIndex1 + 1,
+            endIndex1,
+            nums2,
+            foundIndex2 + 1,
+            endIndex2,
+            k - (middleIndex1 - beginIndex1 + 1) - (foundIndex2 - beginIndex2 + 1));
   }
 }
