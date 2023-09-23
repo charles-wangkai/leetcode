@@ -24,19 +24,13 @@ class Solution {
       return false;
     }
 
-    boolean inserted = false;
     int index1 = 0;
-    for (int index2 = 0; index1 < word1.length() && index2 < word2.length(); ++index2) {
-      if (word1.charAt(index1) == word2.charAt(index2)) {
+    for (int index2 = 0; index2 < word2.length(); ++index2) {
+      if (index1 != word1.length() && word1.charAt(index1) == word2.charAt(index2)) {
         ++index1;
-      } else {
-        if (inserted) {
-          return false;
-        }
-        inserted = true;
       }
     }
 
-    return true;
+    return index1 == word1.length();
   }
 }
