@@ -1,36 +1,31 @@
 class Solution {
-  public String decodeAtIndex(String S, int K) {
-    long[] lengths = buildLengths(S);
+  public String decodeAtIndex(String s, int k) {
+    long[] lengths = buildLengths(s);
 
-    return String.valueOf(search(S, lengths, S.length() - 1, K));
+    return String.valueOf(search(s, lengths, s.length() - 1, k));
   }
 
-  char search(String S, long[] lengths, int index, long sequence) {
-    char ch = S.charAt(index);
-    if (Character.isLetter(ch)) {
+  char search(String s, long[] lengths, int index, long sequence) {
+    char c = s.charAt(index);
+    if (Character.isLetter(c)) {
       if (sequence == lengths[index]) {
-        return ch;
+        return c;
       }
 
-      return search(S, lengths, index - 1, sequence);
-    } else {
-      long nextSequence = sequence % lengths[index - 1];
-      if (nextSequence == 0) {
-        nextSequence = lengths[index - 1];
-      }
-
-      return search(S, lengths, index - 1, nextSequence);
+      return search(s, lengths, index - 1, sequence);
     }
+
+    return search(s, lengths, index - 1, (sequence - 1) % lengths[index - 1] + 1);
   }
 
-  long[] buildLengths(String S) {
-    long[] lengths = new long[S.length()];
+  long[] buildLengths(String s) {
+    long[] lengths = new long[s.length()];
     long length = 0;
     for (int i = 0; i < lengths.length; ++i) {
-      if (Character.isLetter(S.charAt(i))) {
+      if (Character.isLetter(s.charAt(i))) {
         ++length;
       } else {
-        length *= S.charAt(i) - '0';
+        length *= s.charAt(i) - '0';
       }
 
       lengths[i] = length;
