@@ -6,7 +6,7 @@ class Solution {
     return Arrays.stream(nums)
         .boxed()
         .sorted(Comparator.comparing(x -> x % 2))
-        .mapToInt(x -> x)
+        .mapToInt(Integer::intValue)
         .toArray();
   }
 }
