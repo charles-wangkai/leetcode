@@ -1,8 +1,8 @@
 import java.util.stream.IntStream;
 
-public class Solution {
-	public boolean isMonotonic(int[] A) {
-		return IntStream.range(0, A.length - 1).allMatch(i -> A[i] <= A[i + 1])
-				|| IntStream.range(0, A.length - 1).allMatch(i -> A[i] >= A[i + 1]);
-	}
+class Solution {
+  public boolean isMonotonic(int[] nums) {
+    return IntStream.range(0, nums.length - 1).allMatch(i -> nums[i] <= nums[i + 1])
+        || IntStream.range(0, nums.length - 1).allMatch(i -> nums[i] >= nums[i + 1]);
+  }
 }
