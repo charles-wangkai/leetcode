@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 class Solution {
   public int minOperations(int[] nums) {
-    int[] sorted = Arrays.stream(nums).boxed().sorted().distinct().mapToInt(x -> x).toArray();
+    int[] sorted = Arrays.stream(nums).sorted().distinct().toArray();
 
     int result = nums.length;
     int endIndex = 0;
