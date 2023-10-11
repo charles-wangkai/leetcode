@@ -1,35 +1,32 @@
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.stream.IntStream;
 
 class Solution {
-  public int[] fullBloomFlowers(int[][] flowers, int[] persons) {
-    int[] result = new int[persons.length];
+  public int[] fullBloomFlowers(int[][] flowers, int[] people) {
+    Arrays.sort(flowers, Comparator.comparing(flower -> flower[0]));
 
-    PriorityQueue<Integer> rightFlowerIndices =
-        new PriorityQueue<>(Comparator.comparing(i -> flowers[i][0]));
-    for (int i = 0; i < flowers.length; ++i) {
-      rightFlowerIndices.offer(i);
-    }
-    PriorityQueue<Integer> middleFlowerIndices =
-        new PriorityQueue<>(Comparator.comparing(i -> flowers[i][1]));
-    int[] sortedIndices =
-        IntStream.range(0, persons.length)
+    int[] result = new int[people.length];
+    int flowerIndex = 0;
+    PriorityQueue<Integer> flowerEndTimes = new PriorityQueue<>();
+    int[] sortedPersonIndices =
+        IntStream.range(0, people.length)
             .boxed()
-            .sorted(Comparator.comparing(i -> persons[i]))
-            .mapToInt(x -> x)
+            .sorted(Comparator.comparing(i -> people[i]))
+            .mapToInt(Integer::intValue)
             .toArray();
-    for (int index : sortedIndices) {
-      while (!rightFlowerIndices.isEmpty()
-          && flowers[rightFlowerIndices.peek()][0] <= persons[index]) {
-        middleFlowerIndices.offer(rightFlowerIndices.poll());
-      }
-      while (!middleFlowerIndices.isEmpty()
-          && flowers[middleFlowerIndices.peek()][1] < persons[index]) {
-        middleFlowerIndices.poll();
+    for (int personIndex : sortedPersonIndices) {
+      while (flowerIndex != flowers.length && flowers[flowerIndex][0] <= people[personIndex]) {
+        flowerEndTimes.offer(flowers[flowerIndex][1]);
+        ++flowerIndex;
       }
 
-      result[index] = middleFlowerIndices.size();
+      while (!flowerEndTimes.isEmpty() && flowerEndTimes.peek() < people[personIndex]) {
+        flowerEndTimes.poll();
+      }
+
+      result[personIndex] = flowerEndTimes.size();
     }
 
     return result;
