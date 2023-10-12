@@ -1,74 +1,73 @@
 // This is MountainArray's API interface.
 // You should not implement it, or speculate about its implementation
 interface MountainArray {
-	public int get(int index);
+  public int get(int index);
 
-	public int length();
+  public int length();
 }
 
-public class Solution {
-	public int findInMountainArray(int target, MountainArray mountainArr) {
-		int topIndex = findTop(mountainArr);
+class Solution {
+  public int findInMountainArray(int target, MountainArray mountainArr) {
+    int topIndex = findTop(mountainArr);
 
-		int leftIndex = findInAscending(target, mountainArr, 0, topIndex);
-		if (leftIndex >= 0) {
-			return leftIndex;
-		}
+    int leftIndex = findInAscending(target, mountainArr, 0, topIndex);
+    if (leftIndex >= 0) {
+      return leftIndex;
+    }
 
-		return findInDescending(target, mountainArr, topIndex + 1, mountainArr.length() - 1);
-	}
+    return findInDescending(target, mountainArr, topIndex + 1, mountainArr.length() - 1);
+  }
 
-	int findTop(MountainArray mountainArr) {
-		int topIndex = -1;
-		int lowerIndex = 0;
-		int upperIndex = mountainArr.length() - 1;
+  int findTop(MountainArray mountainArr) {
+    int topIndex = -1;
+    int lowerIndex = 1;
+    int upperIndex = mountainArr.length() - 2;
+    while (lowerIndex <= upperIndex) {
+      int middleIndex = (lowerIndex + upperIndex) / 2;
+      if (mountainArr.get(middleIndex) > mountainArr.get(middleIndex - 1)) {
+        topIndex = middleIndex;
+        lowerIndex = middleIndex + 1;
+      } else {
+        upperIndex = middleIndex - 1;
+      }
+    }
 
-		while (lowerIndex <= upperIndex) {
-			int middleIndex = (lowerIndex + upperIndex) / 2;
+    return topIndex;
+  }
 
-			if (middleIndex == 0 || mountainArr.get(middleIndex) > mountainArr.get(middleIndex - 1)) {
-				topIndex = middleIndex;
+  int findInAscending(int target, MountainArray mountainArr, int beginIndex, int endIndex) {
+    if (beginIndex > endIndex) {
+      return -1;
+    }
 
-				lowerIndex = middleIndex + 1;
-			} else {
-				upperIndex = middleIndex - 1;
-			}
-		}
+    int middleIndex = (beginIndex + endIndex) / 2;
+    int middleValue = mountainArr.get(middleIndex);
 
-		return topIndex;
-	}
+    if (middleValue < target) {
+      return findInAscending(target, mountainArr, middleIndex + 1, endIndex);
+    }
+    if (middleValue > target) {
+      return findInAscending(target, mountainArr, beginIndex, middleIndex - 1);
+    }
 
-	int findInAscending(int target, MountainArray mountainArr, int beginIndex, int endIndex) {
-		if (beginIndex > endIndex) {
-			return -1;
-		}
+    return middleIndex;
+  }
 
-		int middleIndex = (beginIndex + endIndex) / 2;
-		int middleValue = mountainArr.get(middleIndex);
+  int findInDescending(int target, MountainArray mountainArr, int beginIndex, int endIndex) {
+    if (beginIndex > endIndex) {
+      return -1;
+    }
 
-		if (middleValue < target) {
-			return findInAscending(target, mountainArr, middleIndex + 1, endIndex);
-		} else if (middleValue > target) {
-			return findInAscending(target, mountainArr, beginIndex, middleIndex - 1);
-		} else {
-			return middleIndex;
-		}
-	}
+    int middleIndex = (beginIndex + endIndex) / 2;
+    int middleValue = mountainArr.get(middleIndex);
 
-	int findInDescending(int target, MountainArray mountainArr, int beginIndex, int endIndex) {
-		if (beginIndex > endIndex) {
-			return -1;
-		}
+    if (middleValue < target) {
+      return findInDescending(target, mountainArr, beginIndex, middleIndex - 1);
+    }
+    if (middleValue > target) {
+      return findInDescending(target, mountainArr, middleIndex + 1, endIndex);
+    }
 
-		int middleIndex = (beginIndex + endIndex) / 2;
-		int middleValue = mountainArr.get(middleIndex);
-
-		if (middleValue < target) {
-			return findInDescending(target, mountainArr, beginIndex, middleIndex - 1);
-		} else if (middleValue > target) {
-			return findInDescending(target, mountainArr, middleIndex + 1, endIndex);
-		} else {
-			return middleIndex;
-		}
-	}
+    return middleIndex;
+  }
 }
