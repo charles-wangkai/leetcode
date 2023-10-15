@@ -1,28 +1,28 @@
-public class Solution {
-	static final int MODULUS = 1_000_000_007;
+class Solution {
+  static final int MODULUS = 1_000_000_007;
 
-	public int numWays(int steps, int arrLen) {
-		int[] wayNums = new int[Math.min(arrLen, steps / 2 + 1)];
-		wayNums[0] = 1;
+  public int numWays(int steps, int arrLen) {
+    int[] dp = new int[Math.min(arrLen, steps / 2 + 1)];
+    dp[0] = 1;
 
-		for (int step = 0; step < steps; step++) {
-			int[] nextWayNums = new int[wayNums.length];
-			for (int i = 0; i < nextWayNums.length; i++) {
-				for (int offset = -1; offset <= 1; offset++) {
-					int prevIndex = i + offset;
-					if (prevIndex >= 0 && prevIndex < wayNums.length) {
-						nextWayNums[i] = addMod(nextWayNums[i], wayNums[prevIndex]);
-					}
-				}
-			}
+    for (int step = 0; step < steps; ++step) {
+      int[] nextDp = new int[dp.length];
+      for (int i = 0; i < nextDp.length; ++i) {
+        for (int offset = -1; offset <= 1; ++offset) {
+          int prevIndex = i + offset;
+          if (prevIndex >= 0 && prevIndex < dp.length) {
+            nextDp[i] = addMod(nextDp[i], dp[prevIndex]);
+          }
+        }
+      }
 
-			wayNums = nextWayNums;
-		}
+      dp = nextDp;
+    }
 
-		return wayNums[0];
-	}
+    return dp[0];
+  }
 
-	int addMod(int x, int y) {
-		return (x + y) % MODULUS;
-	}
+  int addMod(int x, int y) {
+    return Math.floorMod(x + y, MODULUS);
+  }
 }
