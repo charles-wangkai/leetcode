@@ -1,50 +1,48 @@
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
 
 class Solution {
   public int minimumTime(int n, int[][] relations, int[] time) {
     @SuppressWarnings("unchecked")
-    List<Integer>[] nexts = new List[n];
-    for (int i = 0; i < nexts.length; ++i) {
-      nexts[i] = new ArrayList<>();
+    List<Integer>[] adjLists = new List[n];
+    for (int i = 0; i < adjLists.length; ++i) {
+      adjLists[i] = new ArrayList<>();
     }
-    int[] prevCounts = new int[n];
     for (int[] relation : relations) {
-      nexts[relation[0] - 1].add(relation[1] - 1);
-      ++prevCounts[relation[1] - 1];
+      adjLists[relation[0] - 1].add(relation[1] - 1);
     }
 
-    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(e -> e.startTime));
-    for (int i = 0; i < prevCounts.length; ++i) {
-      if (prevCounts[i] == 0) {
-        pq.offer(new Element(0, i));
+    List<Integer> sortedNodes = new ArrayList<>();
+    boolean[] visited = new boolean[n];
+    for (int i = 0; i < visited.length; ++i) {
+      if (!visited[i]) {
+        search(adjLists, sortedNodes, visited, i);
+      }
+    }
+    Collections.reverse(sortedNodes);
+
+    int[] dp = new int[n];
+    for (int node : sortedNodes) {
+      dp[node] += time[node];
+      for (int adj : adjLists[node]) {
+        dp[adj] = Math.max(dp[adj], dp[node]);
       }
     }
 
-    int result = 0;
-    while (!pq.isEmpty()) {
-      Element head = pq.poll();
-      --prevCounts[head.course];
-      if (prevCounts[head.course] <= 0) {
-        result = Math.max(result, head.startTime + time[head.course]);
-        for (int next : nexts[head.course]) {
-          pq.offer(new Element(head.startTime + time[head.course], next));
-        }
-      }
-    }
-
-    return result;
+    return Arrays.stream(dp).max().getAsInt();
   }
-}
 
-class Element {
-  int startTime;
-  int course;
+  void search(List<Integer>[] adjLists, List<Integer> sortedNodes, boolean[] visited, int node) {
+    visited[node] = true;
 
-  Element(int startTime, int course) {
-    this.startTime = startTime;
-    this.course = course;
+    for (int adj : adjLists[node]) {
+      if (!visited[adj]) {
+        search(adjLists, sortedNodes, visited, adj);
+      }
+    }
+
+    sortedNodes.add(node);
   }
 }
