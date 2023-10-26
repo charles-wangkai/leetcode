@@ -47,13 +47,8 @@ class Solution {
   }
 
   TreeNode remove(TreeNode invalidNode, TreeNode node) {
-    if (node == null || node == invalidNode) {
-      return null;
-    }
-
-    node.left = remove(invalidNode, node.left);
-    node.right = remove(invalidNode, node.right);
-
-    return node;
+    return (node == null || node == invalidNode)
+        ? null
+        : new TreeNode(node.val, remove(invalidNode, node.left), remove(invalidNode, node.right));
   }
 }
