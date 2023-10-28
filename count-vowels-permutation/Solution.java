@@ -7,7 +7,6 @@ class Solution {
     int countI = 1;
     int countO = 1;
     int countU = 1;
-
     for (int i = 0; i < n - 1; ++i) {
       int nextCountA = addMod(addMod(countE, countI), countU);
       int nextCountE = addMod(countA, countI);
