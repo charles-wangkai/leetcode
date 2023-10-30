@@ -1,11 +1,12 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
-public class Solution {
-    public int[] sortByBits(int[] arr) {
-        return Arrays.stream(arr).boxed()
-                .sorted((x, y) -> (Integer.bitCount(x) != Integer.bitCount(y))
-                        ? Integer.compare(Integer.bitCount(x), Integer.bitCount(y))
-                        : Integer.compare(x, y))
-                .mapToInt(x -> x).toArray();
-    }
+class Solution {
+  public int[] sortByBits(int[] arr) {
+    return Arrays.stream(arr)
+        .boxed()
+        .sorted(Comparator.comparing(Integer::bitCount).thenComparing(x -> x))
+        .mapToInt(Integer::intValue)
+        .toArray();
+  }
 }
