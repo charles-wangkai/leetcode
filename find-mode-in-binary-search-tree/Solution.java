@@ -7,29 +7,33 @@ class TreeNode {
   TreeNode left;
   TreeNode right;
 
-  TreeNode(int x) {
-    val = x;
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
   }
 }
 
 public class Solution {
-  List<Integer> modes;
+  List<Integer> modes = new ArrayList<>();
   int modeFreq;
   Integer current;
   int currentFreq;
 
   public int[] findMode(TreeNode root) {
-    if (root == null) {
-      return new int[0];
-    }
-
     modeFreq = 0;
     current = null;
 
     search(root);
     updateModes();
 
-    return modes.stream().mapToInt(x -> x).toArray();
+    return modes.stream().mapToInt(Integer::intValue).toArray();
   }
 
   void search(TreeNode node) {
@@ -38,7 +42,7 @@ public class Solution {
     }
 
     if (current != null && node.val == current) {
-      currentFreq++;
+      ++currentFreq;
     } else {
       if (current != null) {
         updateModes();
@@ -54,13 +58,13 @@ public class Solution {
   }
 
   void updateModes() {
-    if (currentFreq > modeFreq) {
-      modes = new ArrayList<>();
+    if (currentFreq >= modeFreq) {
+      if (currentFreq > modeFreq) {
+        modes.clear();
+      }
       modes.add(current);
 
       modeFreq = currentFreq;
-    } else if (currentFreq == modeFreq) {
-      modes.add(current);
     }
   }
 }
