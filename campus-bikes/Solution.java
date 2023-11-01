@@ -1,22 +1,20 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
 class Solution {
   public int[] assignBikes(int[][] workers, int[][] bikes) {
-    int n = workers.length;
-    int m = bikes.length;
-
-    int[] result = new int[n];
+    int[] result = new int[workers.length];
     Arrays.fill(result, -1);
 
-    boolean[] bikeUsed = new boolean[m];
+    boolean[] bikeUsed = new boolean[bikes.length];
 
     Element[] sortedElements =
-        IntStream.range(0, n)
+        IntStream.range(0, workers.length)
             .boxed()
             .flatMap(
                 workerIndex ->
-                    IntStream.range(0, m)
+                    IntStream.range(0, bikes.length)
                         .mapToObj(
                             bikeIndex ->
                                 new Element(
@@ -24,21 +22,15 @@ class Solution {
                                     bikeIndex,
                                     computeDistance(workers[workerIndex], bikes[bikeIndex]))))
             .sorted(
-                (e1, e2) -> {
-                  if (e1.distance != e2.distance) {
-                    return Integer.compare(e1.distance, e2.distance);
-                  } else if (e1.workerIndex != e2.workerIndex) {
-                    return Integer.compare(e1.workerIndex, e2.workerIndex);
-                  } else {
-                    return Integer.compare(e1.bikeIndex, e2.bikeIndex);
-                  }
-                })
+                Comparator.comparing(Element::distance)
+                    .thenComparing(Element::workerIndex)
+                    .thenComparing(Element::bikeIndex))
             .toArray(Element[]::new);
 
     for (Element element : sortedElements) {
-      if (result[element.workerIndex] == -1 && !bikeUsed[element.bikeIndex]) {
-        result[element.workerIndex] = element.bikeIndex;
-        bikeUsed[element.bikeIndex] = true;
+      if (result[element.workerIndex()] == -1 && !bikeUsed[element.bikeIndex()]) {
+        result[element.workerIndex()] = element.bikeIndex();
+        bikeUsed[element.bikeIndex()] = true;
       }
     }
 
@@ -50,14 +42,4 @@ class Solution {
   }
 }
 
-class Element {
-  int workerIndex;
-  int bikeIndex;
-  int distance;
-
-  Element(int workerIndex, int bikeIndex, int distance) {
-    this.workerIndex = workerIndex;
-    this.bikeIndex = bikeIndex;
-    this.distance = distance;
-  }
-}
+record Element(int workerIndex, int bikeIndex, int distance) {}
