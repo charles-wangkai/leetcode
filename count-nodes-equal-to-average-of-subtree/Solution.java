@@ -19,7 +19,7 @@ class TreeNode {
 
 class Solution {
   public int averageOfSubtree(TreeNode root) {
-    return search(root).sameValueAsAvgNum;
+    return search(root).sameValueAsAvgNum();
   }
 
   Outcome search(TreeNode node) {
@@ -30,25 +30,15 @@ class Solution {
     Outcome leftOutcome = search(node.left);
     Outcome rightOutcome = search(node.right);
 
-    int sum = node.val + leftOutcome.sum + rightOutcome.sum;
-    int count = 1 + leftOutcome.count + rightOutcome.count;
+    int sum = node.val + leftOutcome.sum() + rightOutcome.sum();
+    int count = 1 + leftOutcome.count() + rightOutcome.count();
     int sameValueAsAvgNum =
         ((node.val == sum / count) ? 1 : 0)
-            + leftOutcome.sameValueAsAvgNum
-            + rightOutcome.sameValueAsAvgNum;
+            + leftOutcome.sameValueAsAvgNum()
+            + rightOutcome.sameValueAsAvgNum();
 
     return new Outcome(sum, count, sameValueAsAvgNum);
   }
 }
 
-class Outcome {
-  int sum;
-  int count;
-  int sameValueAsAvgNum;
-
-  Outcome(int sum, int count, int sameValueAsAvgNum) {
-    this.sum = sum;
-    this.count = count;
-    this.sameValueAsAvgNum = sameValueAsAvgNum;
-  }
-}
+record Outcome(int sum, int count, int sameValueAsAvgNum) {}
