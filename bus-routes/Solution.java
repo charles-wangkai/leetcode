@@ -1,51 +1,44 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class Solution {
-  public int numBusesToDestination(int[][] routes, int S, int T) {
-    Map<Integer, List<Integer>> stop2routes = new HashMap<>();
-    for (int i = 0; i < routes.length; i++) {
+class Solution {
+  public int numBusesToDestination(int[][] routes, int source, int target) {
+    Map<Integer, List<Integer>> stopToRoutes = new HashMap<>();
+    for (int i = 0; i < routes.length; ++i) {
       for (int stop : routes[i]) {
-        if (!stop2routes.containsKey(stop)) {
-          stop2routes.put(stop, new ArrayList<>());
-        }
-
-        stop2routes.get(stop).add(i);
+        stopToRoutes.putIfAbsent(stop, new ArrayList<>());
+        stopToRoutes.get(stop).add(i);
       }
     }
 
-    Map<Integer, Integer> stop2distance = new HashMap<>();
-    stop2distance.put(S, 0);
-    Queue<Integer> queue = new LinkedList<>();
-    queue.offer(S);
+    Map<Integer, Integer> stopToDistance = new HashMap<>();
+    stopToDistance.put(source, 0);
+    Queue<Integer> queue = new ArrayDeque<>();
+    queue.offer(source);
     Set<Integer> usedRoutes = new HashSet<>();
     while (!queue.isEmpty()) {
       int stop = queue.poll();
 
-      if (stop == T) {
-        return stop2distance.get(stop);
-      }
+      for (int route : stopToRoutes.get(stop)) {
+        if (!usedRoutes.contains(route)) {
+          usedRoutes.add(route);
 
-      for (int route : stop2routes.get(stop)) {
-        if (usedRoutes.contains(route)) {
-          continue;
-        }
-        usedRoutes.add(route);
-
-        for (int adjStop : routes[route]) {
-          if (!stop2distance.containsKey(adjStop)) {
-            stop2distance.put(adjStop, stop2distance.get(stop) + 1);
-            queue.offer(adjStop);
+          for (int adjStop : routes[route]) {
+            if (!stopToDistance.containsKey(adjStop)) {
+              stopToDistance.put(adjStop, stopToDistance.get(stop) + 1);
+              queue.offer(adjStop);
+            }
           }
         }
       }
     }
-    return -1;
+
+    return stopToDistance.getOrDefault(target, -1);
   }
 }
