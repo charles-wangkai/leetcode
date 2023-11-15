@@ -1,29 +1,25 @@
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 class MovingAverage {
-	Queue<Integer> numbers;
-	int sum;
-	int size;
+  Queue<Integer> values = new ArrayDeque<>();
+  int sum;
+  int size;
 
-	/** Initialize your data structure here. */
-	public MovingAverage(int size) {
-		numbers = new LinkedList<>();
-		sum = 0;
-		this.size = size;
-	}
+  public MovingAverage(int size) {
+    this.size = size;
+  }
 
-	public double next(int val) {
-		numbers.offer(val);
-		sum += val;
+  public double next(int val) {
+    values.offer(val);
+    sum += val;
 
-		if (numbers.size() == size + 1) {
-			sum -= numbers.poll();
-		}
+    if (values.size() == size + 1) {
+      sum -= values.poll();
+    }
 
-		return (double) sum / numbers.size();
-	}
-
+    return (double) sum / values.size();
+  }
 }
 
 // Your MovingAverage object will be instantiated and called as such:
