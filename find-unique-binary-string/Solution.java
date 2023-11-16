@@ -12,8 +12,10 @@ class Solution {
 
     for (int i = 0; ; ++i) {
       if (!seen.contains(i)) {
-        return String.format(String.format("%%1$%ds", nums.length), Integer.toBinaryString(i))
-            .replace(' ', '0');
+        String result = Integer.toBinaryString(i);
+        result = "0".repeat(nums.length - result.length()) + result;
+
+        return result;
       }
     }
   }
