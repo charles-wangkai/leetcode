@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 class Solution {
   public int maxFrequency(int[] nums, int k) {
-    nums = Arrays.stream(nums).boxed().sorted().mapToInt(x -> x).toArray();
+    Arrays.sort(nums);
 
     int result = -1;
     int lower = 1;
@@ -21,15 +21,16 @@ class Solution {
   }
 
   boolean check(int[] nums, int k, int frequency) {
+    long operationNum = 0;
     for (int i = 0; i < nums.length; ++i) {
       if (i >= frequency) {
-        k += nums[i - 1] - nums[i - frequency];
+        operationNum -= nums[i - 1] - nums[i - frequency];
       }
       if (i != 0) {
-        k -= (nums[i] - nums[i - 1]) * Math.min(i, frequency - 1);
+        operationNum += (nums[i] - nums[i - 1]) * Math.min(i, frequency - 1L);
       }
 
-      if (i >= frequency - 1 && k >= 0) {
+      if (i >= frequency - 1 && operationNum <= k) {
         return true;
       }
     }
