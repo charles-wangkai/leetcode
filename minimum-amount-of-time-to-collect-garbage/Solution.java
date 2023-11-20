@@ -14,6 +14,6 @@ class Solution {
     }
 
     return Arrays.stream(garbage).mapToInt(String::length).sum()
-        + typeToTravelTime.values().stream().mapToInt(x -> x).sum();
+        + typeToTravelTime.values().stream().mapToInt(Integer::intValue).sum();
   }
 }
