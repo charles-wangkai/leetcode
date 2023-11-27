@@ -1,32 +1,32 @@
 import java.util.Arrays;
 
-public class Solution {
-  static final int MOD_DIVISOR = 1000000007;
+class Solution {
+  static final int MODULUS = 1000000007;
 
-  public int knightDialer(int N) {
-    int[] ways = new int[10];
-    Arrays.fill(ways, 1);
+  public int knightDialer(int n) {
+    int[] dp = new int[10];
+    Arrays.fill(dp, 1);
 
-    for (int i = 0; i < N - 1; i++) {
-      int[] nextWays = new int[10];
-      nextWays[0] = addMod(ways[4], ways[6]);
-      nextWays[1] = addMod(ways[6], ways[8]);
-      nextWays[2] = addMod(ways[7], ways[9]);
-      nextWays[3] = addMod(ways[4], ways[8]);
-      nextWays[4] = addMod(addMod(ways[0], ways[3]), ways[9]);
-      nextWays[5] = 0;
-      nextWays[6] = addMod(addMod(ways[0], ways[1]), ways[7]);
-      nextWays[7] = addMod(ways[2], ways[6]);
-      nextWays[8] = addMod(ways[1], ways[3]);
-      nextWays[9] = addMod(ways[2], ways[4]);
+    for (int i = 0; i < n - 1; i++) {
+      int[] nextDp = new int[10];
+      nextDp[0] = addMod(dp[4], dp[6]);
+      nextDp[1] = addMod(dp[6], dp[8]);
+      nextDp[2] = addMod(dp[7], dp[9]);
+      nextDp[3] = addMod(dp[4], dp[8]);
+      nextDp[4] = addMod(addMod(dp[0], dp[3]), dp[9]);
+      nextDp[5] = 0;
+      nextDp[6] = addMod(addMod(dp[0], dp[1]), dp[7]);
+      nextDp[7] = addMod(dp[2], dp[6]);
+      nextDp[8] = addMod(dp[1], dp[3]);
+      nextDp[9] = addMod(dp[2], dp[4]);
 
-      ways = nextWays;
+      dp = nextDp;
     }
 
-    return Arrays.stream(ways).reduce(0, this::addMod);
+    return Arrays.stream(dp).reduce(this::addMod).getAsInt();
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MOD_DIVISOR;
+    return Math.floorMod(x + y, MODULUS);
   }
 }
