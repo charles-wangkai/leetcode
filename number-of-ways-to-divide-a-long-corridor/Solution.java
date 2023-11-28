@@ -2,7 +2,7 @@ class Solution {
   static final int MODULUS = 1_000_000_007;
 
   public int numberOfWays(String corridor) {
-    int seatNum = (int) corridor.chars().filter(ch -> ch == 'S').count();
+    int seatNum = (int) corridor.chars().filter(c -> c == 'S').count();
     if (seatNum <= 1 || seatNum % 2 != 0) {
       return 0;
     }
@@ -13,7 +13,7 @@ class Solution {
     for (int i = corridor.indexOf('S'); i < corridor.length(); ++i) {
       if (corridor.charAt(i) == 'S') {
         ++seatCount;
-        if (seatCount % 2 != 0) {
+        if (seatCount % 2 == 1) {
           result = multiplyMod(result, plantCount + 1);
         }
         plantCount = 0;
@@ -25,7 +25,7 @@ class Solution {
     return result;
   }
 
-  static int multiplyMod(int x, int y) {
-    return (int) ((long) x * y % MODULUS);
+  int multiplyMod(int x, int y) {
+    return Math.floorMod((long) x * y, MODULUS);
   }
 }
