@@ -1,12 +1,13 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class Solution {
   Map<State, Element> cache = new HashMap<>();
 
   public int minimumOneBitOperations(int n) {
-    int[] digits = Integer.toBinaryString(n).chars().map(ch -> ch - '0').toArray();
+    int[] digits = Integer.toBinaryString(n).chars().map(c -> c - '0').toArray();
 
     int result = 0;
     for (int i = 0; i < digits.length; ++i) {
@@ -38,50 +39,20 @@ class Solution {
 
     Element element = cache.get(state);
     for (int i = index; i < digits.length; ++i) {
-      digits[i] = element.suffix.charAt(i - index) - '0';
+      digits[i] = element.suffix().charAt(i - index) - '0';
     }
 
-    return element.step;
+    return element.step();
   }
 
   String buildSuffix(int[] digits, int index) {
-    StringBuilder result = new StringBuilder();
-    for (int i = index; i < digits.length; ++i) {
-      result.append(digits[i]);
-    }
-
-    return result.toString();
+    return IntStream.range(index, digits.length)
+        .map(i -> digits[i])
+        .mapToObj(String::valueOf)
+        .collect(Collectors.joining());
   }
 }
 
-class State {
-  String suffix;
-  int target;
+record State(String suffix, int target) {}
 
-  State(String suffix, int target) {
-    this.suffix = suffix;
-    this.target = target;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(suffix, target);
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    State other = (State) obj;
-
-    return Objects.equals(suffix, other.suffix) && target == other.target;
-  }
-}
-
-class Element {
-  String suffix;
-  int step;
-
-  Element(String suffix, int step) {
-    this.suffix = suffix;
-    this.step = step;
-  }
-}
+record Element(String suffix, int step) {}
