@@ -25,7 +25,7 @@ class FoodRatings {
       cuisineToSortedIndices.putIfAbsent(
           cuisines[i],
           new TreeSet<>(
-              Comparator.comparing((Integer j) -> ratings[j])
+              Comparator.<Integer, Integer>comparing(j -> ratings[j])
                   .reversed()
                   .thenComparing(j -> foods[j])));
       cuisineToSortedIndices.get(cuisines[i]).add(i);
