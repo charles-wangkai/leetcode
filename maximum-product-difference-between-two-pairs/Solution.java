@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 class Solution {
   public int maxProductDifference(int[] nums) {
-    int[] sorted = Arrays.stream(nums).boxed().sorted().mapToInt(x -> x).toArray();
+    Arrays.sort(nums);
 
-    return sorted[sorted.length - 1] * sorted[sorted.length - 2] - sorted[0] * sorted[1];
+    return nums[nums.length - 1] * nums[nums.length - 2] - nums[0] * nums[1];
   }
 }
