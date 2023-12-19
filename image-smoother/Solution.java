@@ -1,35 +1,35 @@
-public class Solution {
-	static final int[] R_OFFSETS = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
-	static final int[] C_OFFSETS = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+class Solution {
+  public int[][] imageSmoother(int[][] img) {
+    int m = img.length;
+    int n = img[0].length;
 
-	public int[][] imageSmoother(int[][] M) {
-		int row = M.length;
-		int col = M[0].length;
+    int[][] result = new int[m][n];
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
+        result[r][c] = smooth(img, r, c);
+      }
+    }
 
-		int[][] smoothed = new int[row][col];
-		for (int r = 0; r < row; r++) {
-			for (int c = 0; c < col; c++) {
-				smoothed[r][c] = smooth(M, r, c);
-			}
-		}
-		return smoothed;
-	}
+    return result;
+  }
 
-	static int smooth(int[][] M, int r, int c) {
-		int row = M.length;
-		int col = M[0].length;
+  int smooth(int[][] img, int r, int c) {
+    int m = img.length;
+    int n = img[0].length;
 
-		int sum = 0;
-		int count = 0;
-		for (int i = 0; i < R_OFFSETS.length; i++) {
-			int adjR = r + R_OFFSETS[i];
-			int adjC = c + C_OFFSETS[i];
+    int sum = 0;
+    int count = 0;
+    for (int dr = -1; dr <= 1; ++dr) {
+      for (int dc = -1; dc <= 1; ++dc) {
+        int adjR = r + dr;
+        int adjC = c + dc;
+        if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n) {
+          sum += img[adjR][adjC];
+          ++count;
+        }
+      }
+    }
 
-			if (adjR >= 0 && adjR < row && adjC >= 0 && adjC < col) {
-				sum += M[adjR][adjC];
-				count++;
-			}
-		}
-		return sum / count;
-	}
+    return sum / count;
+  }
 }
