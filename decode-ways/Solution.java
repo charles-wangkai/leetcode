@@ -1,24 +1,20 @@
 class Solution {
   public int numDecodings(String s) {
-    int prev = -1;
-    int curr = 1;
-    for (int i = 0; i < s.length(); ++i) {
-      int next = 0;
-      int oneDigit = Integer.parseInt(s.substring(i, i + 1));
-      if (oneDigit >= 1 && oneDigit <= 9) {
-        next += curr;
+    int[] dp = new int[s.length() + 1];
+    dp[0] = 1;
+    for (int i = 1; i < dp.length; ++i) {
+      if (s.charAt(i - 1) != '0') {
+        dp[i] += dp[i - 1];
       }
-      if (i != 0) {
-        int twoDigit = Integer.parseInt(s.substring(i - 1, i + 1));
+
+      if (i != 1) {
+        int twoDigit = Integer.parseInt(s.substring(i - 2, i));
         if (twoDigit >= 10 && twoDigit <= 26) {
-          next += prev;
+          dp[i] += dp[i - 2];
         }
       }
-
-      prev = curr;
-      curr = next;
     }
 
-    return curr;
+    return dp[dp.length - 1];
   }
 }
