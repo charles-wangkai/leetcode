@@ -4,7 +4,7 @@ class Solution {
     int costSum = 0;
     int maxCost = 0;
     for (int i = 0; i <= colors.length(); ++i) {
-      if (i != colors.length() && (i == 0 || colors.charAt(i) == colors.charAt(i - 1))) {
+      if (i != colors.length() && i != 0 && colors.charAt(i) == colors.charAt(i - 1)) {
         costSum += neededTime[i];
         maxCost = Math.max(maxCost, neededTime[i]);
       } else {
