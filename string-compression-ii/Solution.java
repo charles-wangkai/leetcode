@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 class Solution {
   static final int ALPHABET_SIZE = 26;
@@ -35,7 +34,7 @@ class Solution {
                   nextDp[i][j][c + 1] =
                       Math.min(
                           nextDp[i][j][c + 1],
-                          dp[i][j][c] + computeCountLength(c + 1) - computeCountLength(c));
+                          dp[i][j][c] - computeCountLength(c) + computeCountLength(c + 1));
                 }
               } else {
                 nextDp[i][value][1] = Math.min(nextDp[i][value][1], dp[i][j][c] + 1);
@@ -48,11 +47,14 @@ class Solution {
       dp = nextDp;
     }
 
-    int[][][] dp_ = dp;
-    return IntStream.rangeClosed(0, ALPHABET_SIZE)
-        .map(i -> Arrays.stream(dp_[0][i]).min().getAsInt())
-        .min()
-        .getAsInt();
+    int result = Integer.MAX_VALUE;
+    for (int i = 0; i <= ALPHABET_SIZE; ++i) {
+      for (int j = 0; j <= s.length(); ++j) {
+        result = Math.min(result, dp[0][i][j]);
+      }
+    }
+
+    return result;
   }
 
   int computeCountLength(int count) {
