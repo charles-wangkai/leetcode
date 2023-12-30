@@ -1,11 +1,13 @@
 import java.util.Arrays;
 
 class Solution {
+  static final int ALPHABET_SIZE = 26;
+
   public boolean makeEqual(String[] words) {
-    int[] counts = new int[26];
+    int[] counts = new int[ALPHABET_SIZE];
     for (String word : words) {
-      for (char ch : word.toCharArray()) {
-        ++counts[ch - 'a'];
+      for (char c : word.toCharArray()) {
+        ++counts[c - 'a'];
       }
     }
 
