@@ -1,28 +1,22 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 
-public class Solution {
+class Solution {
   public int findContentChildren(int[] g, int[] s) {
-    List<Integer> sizes = new ArrayList<>();
-    for (int size : s) {
-      sizes.add(size);
-    }
+    Arrays.sort(g);
+    Arrays.sort(s);
 
-    Collections.sort(sizes);
-
-    int contentNum = 0;
-    for (int greed : g) {
-      int index = Collections.binarySearch(sizes, greed);
-      if (index < 0) {
-        index = -1 - index;
+    int result = 0;
+    int sIndex = 0;
+    for (int gi : g) {
+      while (sIndex != s.length && s[sIndex] < gi) {
+        ++sIndex;
       }
-
-      if (index < sizes.size()) {
-        sizes.remove(index);
-        contentNum++;
+      if (sIndex != s.length) {
+        ++result;
+        ++sIndex;
       }
     }
-    return contentNum;
+
+    return result;
   }
 }
