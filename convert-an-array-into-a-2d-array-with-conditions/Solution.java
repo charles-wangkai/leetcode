@@ -7,24 +7,19 @@ class Solution {
   public List<List<Integer>> findMatrix(int[] nums) {
     Map<Integer, Integer> valueToCount = new HashMap<>();
     for (int num : nums) {
-      updateMap(valueToCount, num, 1);
+      valueToCount.put(num, valueToCount.getOrDefault(num, 0) + 1);
     }
 
     List<List<Integer>> result = new ArrayList<>();
-    while (!valueToCount.isEmpty()) {
-      List<Integer> row = List.copyOf(valueToCount.keySet());
-      for (int value : row) {
-        updateMap(valueToCount, value, -1);
+    for (int value : valueToCount.keySet()) {
+      for (int i = 0; i < valueToCount.get(value); ++i) {
+        if (i == result.size()) {
+          result.add(new ArrayList<>());
+        }
+        result.get(i).add(value);
       }
-
-      result.add(row);
     }
 
     return result;
-  }
-
-  void updateMap(Map<Integer, Integer> valueToCount, int value, int delta) {
-    valueToCount.put(value, valueToCount.getOrDefault(value, 0) + delta);
-    valueToCount.remove(value, 0);
   }
 }
