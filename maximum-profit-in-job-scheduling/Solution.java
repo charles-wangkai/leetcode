@@ -7,34 +7,32 @@ class Solution {
         IntStream.range(0, startTime.length)
             .boxed()
             .sorted(Comparator.comparing(i -> endTime[i]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
 
-    int[] maxProfits = new int[sortedJobIndices.length + 1];
-    for (int i = 1; i < maxProfits.length; ++i) {
-      maxProfits[i] =
+    int[] dp = new int[sortedJobIndices.length + 1];
+    for (int i = 1; i < dp.length; ++i) {
+      dp[i] =
           Math.max(
-              maxProfits[i - 1],
+              dp[i - 1],
               profit[sortedJobIndices[i - 1]]
-                  + maxProfits[findIndex(startTime, endTime, sortedJobIndices, i - 1) + 1]);
+                  + dp[findIndex(startTime, endTime, sortedJobIndices, i - 1) + 1]);
     }
 
-    return maxProfits[maxProfits.length - 1];
+    return dp[dp.length - 1];
   }
 
   int findIndex(int[] startTime, int[] endTime, int[] sortedJobIndices, int lastIndex) {
     int result = -1;
-    int lowerIndex = 0;
-    int upperIndex = lastIndex - 1;
-    while (lowerIndex <= upperIndex) {
-      int middleIndex = (lowerIndex + upperIndex) / 2;
-
-      if (endTime[sortedJobIndices[middleIndex]] <= startTime[sortedJobIndices[lastIndex]]) {
-        result = middleIndex;
-
-        lowerIndex = middleIndex + 1;
+    int lower = 0;
+    int upper = lastIndex - 1;
+    while (lower <= upper) {
+      int middle = (lower + upper) / 2;
+      if (endTime[sortedJobIndices[middle]] <= startTime[sortedJobIndices[lastIndex]]) {
+        result = middle;
+        lower = middle + 1;
       } else {
-        upperIndex = middleIndex - 1;
+        upper = middle - 1;
       }
     }
 
