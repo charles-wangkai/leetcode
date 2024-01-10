@@ -1,7 +1,5 @@
-import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 // Definition for a binary tree node.
 class TreeNode {
@@ -26,35 +24,29 @@ class Solution {
   public int amountOfTime(TreeNode root, int start) {
     Map<Integer, TreeNode> valueToNode = new HashMap<>();
     Map<Integer, TreeNode> valueToParent = new HashMap<>();
-    search(valueToNode, valueToParent, null, root);
+    search1(valueToNode, valueToParent, null, root);
 
     Map<Integer, Integer> valueToDistance = new HashMap<>();
-    valueToDistance.put(start, 0);
-    Queue<Integer> queue = new ArrayDeque<>();
-    queue.offer(start);
-    while (!queue.isEmpty()) {
-      int head = queue.poll();
+    search2(valueToDistance, valueToParent, 0, valueToNode.get(start));
 
-      for (TreeNode next :
-          new TreeNode[] {
-            valueToParent.get(head), valueToNode.get(head).left, valueToNode.get(head).right
-          }) {
-        addNext(valueToDistance, queue, next, valueToDistance.get(head) + 1);
+    return valueToDistance.values().stream().mapToInt(Integer::intValue).max().getAsInt();
+  }
+
+  void search2(
+      Map<Integer, Integer> valueToDistance,
+      Map<Integer, TreeNode> valueToParent,
+      int distance,
+      TreeNode node) {
+    valueToDistance.put(node.val, distance);
+
+    for (TreeNode adj : new TreeNode[] {valueToParent.get(node.val), node.left, node.right}) {
+      if (adj != null && !valueToDistance.containsKey(adj.val)) {
+        search2(valueToDistance, valueToParent, distance + 1, adj);
       }
     }
-
-    return valueToDistance.values().stream().mapToInt(x -> x).max().getAsInt();
   }
 
-  void addNext(
-      Map<Integer, Integer> valueToDistance, Queue<Integer> queue, TreeNode next, int distance) {
-    if (next != null && !valueToDistance.containsKey(next.val)) {
-      valueToDistance.put(next.val, distance);
-      queue.offer(next.val);
-    }
-  }
-
-  void search(
+  void search1(
       Map<Integer, TreeNode> valueToNode,
       Map<Integer, TreeNode> valueToParent,
       TreeNode parent,
@@ -63,8 +55,8 @@ class Solution {
       valueToNode.put(node.val, node);
       valueToParent.put(node.val, parent);
 
-      search(valueToNode, valueToParent, node, node.left);
-      search(valueToNode, valueToParent, node, node.right);
+      search1(valueToNode, valueToParent, node, node.left);
+      search1(valueToNode, valueToParent, node, node.right);
     }
   }
 }
