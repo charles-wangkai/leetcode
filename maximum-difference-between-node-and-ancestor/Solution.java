@@ -31,7 +31,7 @@ class Solution {
     int nextMaxAncestor = Math.max(maxAncestor, node.val);
 
     return Math.max(
-        Math.max(Math.abs(minAncestor - node.val), Math.abs(maxAncestor - node.val)),
+        nextMaxAncestor - nextMinAncestor,
         Math.max(
             search(node.left, nextMinAncestor, nextMaxAncestor),
             search(node.right, nextMinAncestor, nextMaxAncestor)));
