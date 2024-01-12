@@ -5,6 +5,6 @@ class Solution {
   }
 
   int computeVowelNum(String str) {
-    return str.toLowerCase().replaceAll("[^aeiou]", "").length();
+    return (int) str.toLowerCase().chars().filter(c -> "aeiou".indexOf(c) != -1).count();
   }
 }
