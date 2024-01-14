@@ -9,8 +9,8 @@ class Solution {
 
     return letterToCount1.keySet().equals(letterToCount2.keySet())
         && Arrays.equals(
-            letterToCount1.values().stream().mapToInt(x -> x).sorted().toArray(),
-            letterToCount2.values().stream().mapToInt(x -> x).sorted().toArray());
+            letterToCount1.values().stream().mapToInt(Integer::intValue).sorted().toArray(),
+            letterToCount2.values().stream().mapToInt(Integer::intValue).sorted().toArray());
   }
 
   Map<Character, Integer> buildletterToCount(String word) {
