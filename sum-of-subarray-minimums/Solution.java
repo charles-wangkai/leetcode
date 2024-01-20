@@ -9,7 +9,7 @@ class Solution {
     int[] leftIndices = new int[arr.length];
     Deque<Integer> leftAscendingIndices = new ArrayDeque<>();
     for (int i = 0; i < leftIndices.length; ++i) {
-      while (!leftAscendingIndices.isEmpty() && arr[i] <= arr[leftAscendingIndices.peek()]) {
+      while (!leftAscendingIndices.isEmpty() && arr[i] < arr[leftAscendingIndices.peek()]) {
         leftAscendingIndices.pop();
       }
 
@@ -20,7 +20,7 @@ class Solution {
     int[] rightIndices = new int[arr.length];
     Deque<Integer> rightAscendingIndices = new ArrayDeque<>();
     for (int i = rightIndices.length - 1; i >= 0; --i) {
-      while (!rightAscendingIndices.isEmpty() && arr[i] < arr[rightAscendingIndices.peek()]) {
+      while (!rightAscendingIndices.isEmpty() && arr[i] <= arr[rightAscendingIndices.peek()]) {
         rightAscendingIndices.pop();
       }
 
