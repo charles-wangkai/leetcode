@@ -1,27 +1,30 @@
 import java.util.List;
 
 class Solution {
-  public int maxLength(List<String> arr) {
-    return search(arr, new boolean[26], 0, 0);
-  }
+  static final int ALPHABET_SIZE = 26;
 
-  int search(List<String> arr, boolean[] used, int index, int length) {
-    if (index == arr.size()) {
-      return length;
+  public int maxLength(List<String> arr) {
+    int result = -1;
+    for (int mask = 0; mask < 1 << arr.size(); ++mask) {
+      result = Math.max(result, computeSeenCount(arr, mask));
     }
 
-    int result = search(arr, used, index + 1, length);
+    return result;
+  }
 
-    String s = arr.get(index);
-    if (s.chars().distinct().count() == s.length() && s.chars().allMatch(c -> !used[c - 'a'])) {
-      for (char c : s.toCharArray()) {
-        used[c - 'a'] = true;
-      }
-
-      result = Math.max(result, search(arr, used, index + 1, length + s.length()));
-
-      for (char c : s.toCharArray()) {
-        used[c - 'a'] = false;
+  int computeSeenCount(List<String> arr, int mask) {
+    boolean[] seens = new boolean[ALPHABET_SIZE];
+    int result = 0;
+    for (int i = 0; i < arr.size(); ++i) {
+      if (((mask >> i) & 1) == 1) {
+        for (char c : arr.get(i).toCharArray()) {
+          if (seens[c - 'a']) {
+            return -1;
+          } else {
+            seens[c - 'a'] = true;
+            ++result;
+          }
+        }
       }
     }
 
