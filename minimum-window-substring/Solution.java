@@ -8,15 +8,17 @@ class Solution {
       letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
     }
 
-    String result = null;
+    int minLength = Integer.MAX_VALUE;
+    int startForMinLength = -1;
     int beginIndex = 0;
     for (int i = 0; i < s.length(); ++i) {
       char letter = s.charAt(i);
       if (letterToCount.containsKey(letter)) {
         letterToCount.put(letter, letterToCount.get(letter) - 1);
         while (letterToCount.values().stream().allMatch(count -> count <= 0)) {
-          if (result == null || i - beginIndex + 1 < result.length()) {
-            result = s.substring(beginIndex, i + 1);
+          if (i - beginIndex + 1 < minLength) {
+            minLength = i - beginIndex + 1;
+            startForMinLength = beginIndex;
           }
 
           char beginLetter = s.charAt(beginIndex);
@@ -28,6 +30,8 @@ class Solution {
       }
     }
 
-    return (result == null) ? "" : result;
+    return (minLength == Integer.MAX_VALUE)
+        ? ""
+        : s.substring(startForMinLength, startForMinLength + minLength);
   }
 }
