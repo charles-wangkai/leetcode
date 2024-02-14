@@ -7,7 +7,7 @@ class Solution {
     int[] negatives = Arrays.stream(nums).filter(x -> x < 0).toArray();
 
     return IntStream.range(0, nums.length)
-        .map(i -> (i % 2 == 0) ? positives[i / 2] : negatives[i / 2])
+        .map(i -> ((i % 2 == 0) ? positives : negatives)[i / 2])
         .toArray();
   }
 }
