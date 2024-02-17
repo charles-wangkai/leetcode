@@ -26,7 +26,8 @@ class Solution {
             .boxed()
             .sorted(Collections.reverseOrder())
             .skip(ladders)
-            .mapToLong(x -> x)
+            .mapToInt(Integer::intValue)
+            .asLongStream()
             .sum()
         <= bricks;
   }
