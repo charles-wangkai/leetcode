@@ -1,19 +1,19 @@
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
 class Solution {
   public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
     @SuppressWarnings("unchecked")
-    Map<Integer, Integer>[] edgeLists = new Map[n];
+    List<Integer>[] edgeLists = new List[n];
     for (int i = 0; i < edgeLists.length; ++i) {
-      edgeLists[i] = new HashMap<>();
+      edgeLists[i] = new ArrayList<>();
     }
-    for (int[] flight : flights) {
-      edgeLists[flight[0]].put(flight[1], flight[2]);
+    for (int i = 0; i < flights.length; ++i) {
+      edgeLists[flights[i][0]].add(i);
     }
 
     @SuppressWarnings("unchecked")
@@ -22,7 +22,7 @@ class Solution {
       stopCountSeens[i] = new HashSet<>();
     }
     PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::cost));
-    pq.add(new Element(src, 0, -1));
+    pq.add(new Element(src, -1, 0));
     while (!pq.isEmpty()) {
       Element head = pq.poll();
       if (head.city() == dst) {
@@ -33,10 +33,10 @@ class Solution {
         stopCountSeens[head.city()].add(head.stopCount());
 
         if (head.stopCount() + 1 <= k) {
-          for (int to : edgeLists[head.city()].keySet()) {
+          for (int edge : edgeLists[head.city()]) {
             pq.offer(
                 new Element(
-                    to, head.cost() + edgeLists[head.city()].get(to), head.stopCount() + 1));
+                    flights[edge][1], head.stopCount() + 1, head.cost() + flights[edge][2]));
           }
         }
       }
@@ -46,4 +46,4 @@ class Solution {
   }
 }
 
-record Element(int city, int cost, int stopCount) {}
+record Element(int city, int stopCount, int cost) {}
