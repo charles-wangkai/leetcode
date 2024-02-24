@@ -34,8 +34,7 @@ class Solution {
 
       todoIndices.clear();
       for (int i = beginIndex; i <= endIndex; ++i) {
-        if ((secrets[meetings[i][0]] && !secrets[meetings[i][1]])
-            || (!secrets[meetings[i][0]] && secrets[meetings[i][1]])) {
+        if (secrets[meetings[i][0]] ^ secrets[meetings[i][1]]) {
           todoIndices.push(i);
         }
       }
