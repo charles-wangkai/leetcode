@@ -52,9 +52,8 @@ class Solution {
       return node;
     }
 
-    int root = findRoot(parents, parents[node]);
-    parents[node] = root;
+    parents[node] = findRoot(parents, parents[node]);
 
-    return root;
+    return parents[node];
   }
 }
