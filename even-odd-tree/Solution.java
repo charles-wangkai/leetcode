@@ -36,7 +36,7 @@ class Solution {
     if (depth == lasts.size()) {
       lasts.add(node.val);
     } else if ((depth % 2 == 0 && node.val <= lasts.get(depth))
-        || (depth % 2 != 0 && node.val >= lasts.get(depth))) {
+        || (depth % 2 == 1 && node.val >= lasts.get(depth))) {
       return false;
     } else {
       lasts.set(depth, node.val);
