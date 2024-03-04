@@ -10,7 +10,7 @@ class Solution {
       sum += tokens[endIndex + 1];
       ++endIndex;
     }
-    int maxPoint = endIndex + 1;
+    int result = endIndex + 1;
 
     int p = power;
     for (int i = 0, j = tokens.length - 1; i < j && p >= tokens[i]; ++i, --j) {
@@ -26,9 +26,9 @@ class Solution {
         ++endIndex;
       }
 
-      maxPoint = Math.max(maxPoint, endIndex - i);
+      result = Math.max(result, endIndex - i);
     }
 
-    return maxPoint;
+    return result;
   }
 }
