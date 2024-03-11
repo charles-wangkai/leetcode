@@ -1,28 +1,17 @@
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class Solution {
-  public String customSortString(String order, String str) {
-    Map<Character, Integer> letterToCount = new HashMap<>();
-    for (char letter : str.toCharArray()) {
-      letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
-    }
+  public String customSortString(String order, String s) {
+    Map<Character, Integer> letterToIndex =
+        IntStream.range(0, order.length()).boxed().collect(Collectors.toMap(order::charAt, i -> i));
 
-    StringBuilder result = new StringBuilder();
-    for (char letter : order.toCharArray()) {
-      for (int i = 0; i < letterToCount.getOrDefault(letter, 0); ++i) {
-        result.append(letter);
-      }
-    }
-
-    for (char letter : letterToCount.keySet()) {
-      if (order.indexOf(letter) == -1) {
-        for (int i = 0; i < letterToCount.get(letter); ++i) {
-          result.append(letter);
-        }
-      }
-    }
-
-    return result.toString();
+    return s.chars()
+        .mapToObj(c -> (char) c)
+        .sorted(Comparator.comparing(c -> letterToIndex.getOrDefault(c, Integer.MAX_VALUE)))
+        .map(String::valueOf)
+        .collect(Collectors.joining());
   }
 }
