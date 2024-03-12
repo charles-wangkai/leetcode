@@ -10,12 +10,19 @@ class ListNode {
   int val;
   ListNode next;
 
-  ListNode(int x) {
-    val = x;
+  ListNode() {}
+
+  ListNode(int val) {
+    this.val = val;
+  }
+
+  ListNode(int val, ListNode next) {
+    this.val = val;
+    this.next = next;
   }
 }
 
-public class Solution {
+class Solution {
   public ListNode removeZeroSumSublists(ListNode head) {
     List<Integer> sums = new ArrayList<>();
     sums.add(0);
@@ -30,7 +37,7 @@ public class Solution {
       sum += node.val;
       if (sumToLength.containsKey(sum)) {
         int length = sumToLength.get(sum);
-        while (length != sums.size() - 1) {
+        while (sums.size() != length + 1) {
           stack.pop();
 
           sumToLength.remove(sums.get(sums.size() - 1));
