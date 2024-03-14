@@ -1,28 +1,25 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int numSubarraysWithSum(int[] A, int S) {
-		List<Integer> zeroNums = new ArrayList<>();
-		int zeroNum = 0;
-		for (int element : A) {
-			if (element == 0) {
-				zeroNum++;
-			} else {
-				zeroNums.add(zeroNum);
-				zeroNum = 0;
-			}
-		}
-		zeroNums.add(zeroNum);
+class Solution {
+  public int numSubarraysWithSum(int[] nums, int goal) {
+    List<Integer> zeroNums = new ArrayList<>();
+    int zeroNum = 0;
+    for (int num : nums) {
+      if (num == 0) {
+        ++zeroNum;
+      } else {
+        zeroNums.add(zeroNum);
+        zeroNum = 0;
+      }
+    }
+    zeroNums.add(zeroNum);
 
-		if (S == 0) {
-			return zeroNums.stream().mapToInt(x -> x * (x + 1) / 2).sum();
-		}
-
-		int result = 0;
-		for (int i = 0; i + S < zeroNums.size(); i++) {
-			result += (zeroNums.get(i) + 1) * (zeroNums.get(i + S) + 1);
-		}
-		return result;
-	}
+    return (goal == 0)
+        ? zeroNums.stream().mapToInt(x -> x * (x + 1) / 2).sum()
+        : IntStream.range(0, zeroNums.size() - goal)
+            .map(i -> (zeroNums.get(i) + 1) * (zeroNums.get(i + goal) + 1))
+            .sum();
+  }
 }
