@@ -8,7 +8,7 @@ class Solution {
     boolean used = false;
     while (index != intervals.length || !used) {
       int[] selected;
-      if (index != intervals.length && (used || intervals[index][0] <= newInterval[0])) {
+      if (used || (index != intervals.length && intervals[index][0] <= newInterval[0])) {
         selected = intervals[index];
         ++index;
       } else {
