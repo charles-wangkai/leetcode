@@ -10,7 +10,6 @@ class Solution {
     for (int i = 1; i < points.length; ++i) {
       if (points[i][0] > end) {
         ++result;
-
         end = points[i][1];
       } else {
         end = Math.min(end, points[i][1]);
