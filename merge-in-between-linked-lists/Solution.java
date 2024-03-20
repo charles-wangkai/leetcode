@@ -38,11 +38,11 @@ class Solution {
   }
 
   int getLength(ListNode list) {
-    int length = 0;
+    int result = 0;
     for (ListNode node = list; node != null; node = node.next) {
-      ++length;
+      ++result;
     }
 
-    return length;
+    return result;
   }
 }
