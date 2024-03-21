@@ -2,10 +2,9 @@ import java.util.Arrays;
 
 class Solution {
   public int maximizeSquareHoleArea(int n, int m, int[] hBars, int[] vBars) {
-    int hGap = computeMaxGap(hBars);
-    int vGap = computeMaxGap(vBars);
+    int gap = Math.min(computeMaxGap(hBars), computeMaxGap(vBars));
 
-    return Math.min(hGap, vGap) * Math.min(hGap, vGap);
+    return gap * gap;
   }
 
   int computeMaxGap(int[] bars) {
