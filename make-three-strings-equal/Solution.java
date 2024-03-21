@@ -1,11 +1,11 @@
 class Solution {
   public int findMinimumOperations(String s1, String s2, String s3) {
     int length = 0;
-    while (length + 1 <= s1.length()
-        && length + 1 <= s2.length()
-        && length + 1 <= s3.length()
-        && s1.substring(0, length + 1).equals(s2.substring(0, length + 1))
-        && s2.substring(0, length + 1).equals(s3.substring(0, length + 1))) {
+    while (length != s1.length()
+        && length != s2.length()
+        && length != s3.length()
+        && s1.charAt(length) == s2.charAt(length)
+        && s2.charAt(length) == s3.charAt(length)) {
       ++length;
     }
 
