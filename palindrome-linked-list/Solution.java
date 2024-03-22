@@ -23,7 +23,7 @@ class Solution {
   ListNode findRightHalf(ListNode head) {
     int length = computeLength(head);
     ListNode rightHead = head;
-    for (int i = 0; i < (length + 1) / 2; ++i) {
+    for (int i = 0; i < length / 2; ++i) {
       rightHead = rightHead.next;
     }
 
@@ -31,12 +31,12 @@ class Solution {
   }
 
   int computeLength(ListNode head) {
-    int length = 0;
+    int result = 0;
     for (ListNode node = head; node != null; node = node.next) {
-      ++length;
+      ++result;
     }
 
-    return length;
+    return result;
   }
 
   ListNode reverse(ListNode head) {
