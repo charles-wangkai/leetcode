@@ -38,12 +38,12 @@ class Solution {
   }
 
   int computeLength(ListNode head) {
-    int length = 0;
+    int result = 0;
     for (ListNode node = head; node != null; node = node.next) {
-      ++length;
+      ++result;
     }
 
-    return length;
+    return result;
   }
 
   ListNode reverse(ListNode head) {
