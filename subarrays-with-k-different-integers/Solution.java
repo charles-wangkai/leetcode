@@ -1,59 +1,53 @@
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class Solution {
-	public int subarraysWithKDistinct(int[] A, int K) {
-		Map<Integer, Queue<Integer>> valueToIndices = new HashMap<>();
+class Solution {
+  public int subarraysWithKDistinct(int[] nums, int k) {
+    int result = 0;
+    Map<Integer, Queue<Integer>> valueToIndices = new HashMap<>();
+    int minIndex = -1;
+    int endIndex = -1;
+    for (int beginIndex = 0; beginIndex < nums.length; ++beginIndex) {
+      while (endIndex != nums.length - 1
+          && (valueToIndices.size() != k || valueToIndices.containsKey(nums[endIndex + 1]))) {
+        ++endIndex;
+        add(valueToIndices, nums[endIndex], endIndex);
 
-		int minIndex = -1;
-		int endIndex = -1;
-		int result = 0;
-		for (int beginIndex = 0; beginIndex < A.length; beginIndex++) {
-			if (beginIndex != 0) {
-				removeValueToIndices(valueToIndices, A[beginIndex - 1]);
+        if (valueToIndices.size() == k && minIndex == -1) {
+          minIndex = endIndex;
+        }
+      }
 
-				if (valueToIndices.containsKey(A[beginIndex - 1])) {
-					minIndex = Math.max(minIndex, valueToIndices.get(A[beginIndex - 1]).peek());
-				} else {
-					minIndex = -1;
-				}
-			}
+      if (minIndex == -1) {
+        break;
+      }
 
-			while (endIndex + 1 < A.length
-					&& (valueToIndices.size() < K || valueToIndices.containsKey(A[endIndex + 1]))) {
-				endIndex++;
+      result += endIndex - minIndex + 1;
 
-				addValueToIndices(valueToIndices, A[endIndex], endIndex);
+      remove(valueToIndices, nums[beginIndex]);
 
-				if (valueToIndices.size() == K && minIndex < 0) {
-					minIndex = endIndex;
-				}
-			}
+      if (valueToIndices.containsKey(nums[beginIndex])) {
+        minIndex = Math.max(minIndex, valueToIndices.get(nums[beginIndex]).peek());
+      } else {
+        minIndex = -1;
+      }
+    }
 
-			if (minIndex < 0) {
-				break;
-			}
+    return result;
+  }
 
-			result += endIndex - minIndex + 1;
-		}
-		return result;
-	}
+  void add(Map<Integer, Queue<Integer>> valueToIndices, int value, int index) {
+    valueToIndices.putIfAbsent(value, new ArrayDeque<>());
+    valueToIndices.get(value).offer(index);
+  }
 
-	void addValueToIndices(Map<Integer, Queue<Integer>> valueToIndices, int value, int index) {
-		if (!valueToIndices.containsKey(value)) {
-			valueToIndices.put(value, new LinkedList<>());
-		}
+  void remove(Map<Integer, Queue<Integer>> valueToIndices, int value) {
+    valueToIndices.get(value).poll();
 
-		valueToIndices.get(value).offer(index);
-	}
-
-	void removeValueToIndices(Map<Integer, Queue<Integer>> valueToIndices, int value) {
-		valueToIndices.get(value).poll();
-
-		if (valueToIndices.get(value).isEmpty()) {
-			valueToIndices.remove(value);
-		}
-	}
+    if (valueToIndices.get(value).isEmpty()) {
+      valueToIndices.remove(value);
+    }
+  }
 }
