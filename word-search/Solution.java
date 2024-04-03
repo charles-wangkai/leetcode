@@ -32,17 +32,14 @@ class Solution {
       return false;
     }
 
-    boolean result = false;
     visited[r][c] = true;
     for (int i = 0; i < R_OFFSETS.length; ++i) {
       if (check(board, word, visited, r + R_OFFSETS[i], c + C_OFFSETS[i], index + 1)) {
-        result = true;
-
-        break;
+        return true;
       }
     }
     visited[r][c] = false;
 
-    return result;
+    return false;
   }
 }
