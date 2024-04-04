@@ -2,11 +2,11 @@ class Solution {
   public int maxDepth(String s) {
     int result = 0;
     int depth = 0;
-    for (char ch : s.toCharArray()) {
-      if (ch == '(') {
+    for (char c : s.toCharArray()) {
+      if (c == '(') {
         ++depth;
         result = Math.max(result, depth);
-      } else if (ch == ')') {
+      } else if (c == ')') {
         --depth;
       }
     }
