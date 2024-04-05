@@ -1,8 +1,5 @@
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
-import java.util.List;
 import java.util.stream.Collectors;
 
 class Solution {
@@ -18,9 +15,8 @@ class Solution {
       }
     }
 
-    List<Character> result = new ArrayList<>(stack);
-    Collections.reverse(result);
-
-    return result.stream().map(String::valueOf).collect(Collectors.joining());
+    return new StringBuilder(stack.stream().map(String::valueOf).collect(Collectors.joining()))
+        .reverse()
+        .toString();
   }
 }
