@@ -8,11 +8,11 @@ class Solution {
     boolean[] kept = new boolean[s.length()];
     Deque<Integer> stack = new ArrayDeque<>();
     for (int i = 0; i < s.length(); ++i) {
-      char ch = s.charAt(i);
+      char c = s.charAt(i);
 
-      if (ch == '(') {
+      if (c == '(') {
         stack.push(i);
-      } else if (ch == ')') {
+      } else if (c == ')') {
         if (!stack.isEmpty()) {
           kept[stack.pop()] = true;
           kept[i] = true;
@@ -24,7 +24,8 @@ class Solution {
 
     return IntStream.range(0, s.length())
         .filter(i -> kept[i])
-        .mapToObj(i -> String.valueOf(s.charAt(i)))
+        .mapToObj(s::charAt)
+        .map(String::valueOf)
         .collect(Collectors.joining());
   }
 }
