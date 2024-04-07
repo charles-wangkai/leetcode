@@ -1,18 +1,16 @@
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Solution {
+class Solution {
   public boolean checkValidString(String s) {
-    Set<Integer> depths = new HashSet<>();
-    depths.add(0);
-    for (char ch : s.toCharArray()) {
-      if (ch == '(') {
+    Set<Integer> depths = Set.of(0);
+    for (char c : s.toCharArray()) {
+      if (c == '(') {
         depths = shift(depths, 1);
-      } else if (ch == ')') {
+      } else if (c == ')') {
         depths = shift(depths, -1);
-      } else if (ch == '*') {
+      } else {
         depths = union(depths, union(shift(depths, 1), shift(depths, -1)));
       }
     }
@@ -22,7 +20,7 @@ public class Solution {
 
   Set<Integer> shift(Set<Integer> depths, int delta) {
     return depths.stream()
-        .map(number -> number + delta)
+        .map(depth -> depth + delta)
         .filter(x -> x >= 0)
         .collect(Collectors.toSet());
   }
