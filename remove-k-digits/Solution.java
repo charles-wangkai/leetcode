@@ -1,40 +1,42 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 class Solution {
   public String removeKdigits(String num, int k) {
-    num += '0';
+    if (k == num.length()) {
+      return "0";
+    }
 
-    int[] digitCounts = new int[10];
-    for (int i = 0; i < k + 1; ++i) {
-      ++digitCounts[num.charAt(i) - '0'];
+    @SuppressWarnings("unchecked")
+    Queue<Integer>[] indexQueues = new Queue[10];
+    for (int i = 0; i < indexQueues.length; ++i) {
+      indexQueues[i] = new ArrayDeque<>();
+    }
+    for (int i = 0; i < num.length(); ++i) {
+      indexQueues[num.charAt(i) - '0'].offer(i);
     }
 
     StringBuilder result = new StringBuilder();
-    int endIndex = k + 1;
-    for (int i = 0; i < num.length() - 1; ++i) {
-      int minDigit = findMinDigit(digitCounts);
-
-      int digit = num.charAt(i) - '0';
-      if (digit == minDigit) {
-        if (digit != 0 || result.length() != 0) {
-          result.append(digit);
+    int beginIndex = 0;
+    for (int i = 0; i < num.length() - k; ++i) {
+      for (int d = 0; ; ++d) {
+        while (!indexQueues[d].isEmpty() && indexQueues[d].peek() < beginIndex) {
+          indexQueues[d].poll();
         }
 
-        if (endIndex != num.length()) {
-          ++digitCounts[num.charAt(endIndex) - '0'];
-          ++endIndex;
+        if (!indexQueues[d].isEmpty()
+            && num.length() - indexQueues[d].peek() >= num.length() - k - i) {
+          if (d != 0 || !result.isEmpty()) {
+            result.append(d);
+          }
+
+          beginIndex = indexQueues[d].poll() + 1;
+
+          break;
         }
       }
-
-      --digitCounts[digit];
     }
 
-    return (result.length() == 0) ? "0" : result.toString();
-  }
-
-  int findMinDigit(int[] digitCounts) {
-    for (int i = 0; ; ++i) {
-      if (digitCounts[i] != 0) {
-        return i;
-      }
-    }
+    return result.isEmpty() ? "0" : result.toString();
   }
 }
