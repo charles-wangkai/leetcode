@@ -5,40 +5,36 @@ import java.util.Deque;
 class Solution {
   public int maximalRectangle(char[][] matrix) {
     int row = matrix.length;
-    if (row == 0) {
-      return 0;
-    }
     int col = matrix[0].length;
 
-    int maxArea = 0;
+    int result = 0;
     int[] heights = new int[col];
     for (int r = 0; r < row; ++r) {
-      updateHeights(heights, matrix[r]);
-      maxArea = Math.max(maxArea, largestRectangleInHistogram(heights));
-    }
-
-    return maxArea;
-  }
-
-  void updateHeights(int[] heights, char[] line) {
-    for (int c = 0; c < heights.length; ++c) {
-      if (line[c] == '1') {
-        ++heights[c];
-      } else {
-        heights[c] = 0;
+      for (int c = 0; c < heights.length; ++c) {
+        if (matrix[r][c] == '1') {
+          ++heights[c];
+        } else {
+          heights[c] = 0;
+        }
       }
+
+      result = Math.max(result, computeLargestRectangleInHistogram(heights));
     }
+
+    return result;
   }
 
-  int largestRectangleInHistogram(int[] heights) {
+  int computeLargestRectangleInHistogram(int[] heights) {
     heights = Arrays.copyOf(heights, heights.length + 1);
-    Deque<Integer> indices = new ArrayDeque<>();
+
     int result = 0;
+    Deque<Integer> indices = new ArrayDeque<>();
     for (int i = 0; i < heights.length; ++i) {
       while (!indices.isEmpty() && heights[i] <= heights[indices.peek()]) {
         int h = heights[indices.pop()];
-        result = Math.max(result, h * (i - (indices.isEmpty() ? 0 : (indices.peek() + 1))));
+        result = Math.max(result, h * (i - (indices.isEmpty() ? -1 : indices.peek()) - 1));
       }
+
       indices.push(i);
     }
 
