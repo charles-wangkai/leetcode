@@ -32,15 +32,13 @@ class Solution {
     if (d == depth) {
       parent.left = new TreeNode(val, parent.left, null);
       parent.right = new TreeNode(val, null, parent.right);
-
-      return;
-    }
-
-    if (parent.left != null) {
-      insert(val, depth, parent.left, d + 1);
-    }
-    if (parent.right != null) {
-      insert(val, depth, parent.right, d + 1);
+    } else {
+      if (parent.left != null) {
+        insert(val, depth, parent.left, d + 1);
+      }
+      if (parent.right != null) {
+        insert(val, depth, parent.right, d + 1);
+      }
     }
   }
 }
