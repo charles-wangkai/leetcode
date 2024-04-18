@@ -6,23 +6,21 @@ class Solution {
     int row = grid.length;
     int col = grid[0].length;
 
-    int perimeter = 0;
+    int result = 0;
     for (int r = 0; r < row; ++r) {
       for (int c = 0; c < col; ++c) {
         if (grid[r][c] == 1) {
           for (int i = 0; i < R_OFFSETS.length; ++i) {
-            int neighborR = r + R_OFFSETS[i];
-            int neighborC = c + C_OFFSETS[i];
-
-            if (!(neighborR >= 0 && neighborR < row && neighborC >= 0 && neighborC < col)
-                || grid[neighborR][neighborC] == 0) {
-              ++perimeter;
+            int adjR = r + R_OFFSETS[i];
+            int adjC = c + C_OFFSETS[i];
+            if (!(adjR >= 0 && adjR < row && adjC >= 0 && adjC < col) || grid[adjR][adjC] == 0) {
+              ++result;
             }
           }
         }
       }
     }
 
-    return perimeter;
+    return result;
   }
 }
