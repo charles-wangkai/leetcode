@@ -6,17 +6,17 @@ class Solution {
     int m = grid.length;
     int n = grid[0].length;
 
-    int islandNum = 0;
+    int result = 0;
     for (int r = 0; r < m; ++r) {
       for (int c = 0; c < n; ++c) {
         if (grid[r][c] == '1') {
           flood(grid, r, c);
-          ++islandNum;
+          ++result;
         }
       }
     }
 
-    return islandNum;
+    return result;
   }
 
   void flood(char[][] grid, int r, int c) {
