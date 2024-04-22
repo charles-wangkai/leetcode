@@ -16,14 +16,14 @@ class Solution {
       return -1;
     }
 
-    Map<String, Integer> wheelToMove = new HashMap<>();
-    wheelToMove.put(INITIAL_WHEEL, 0);
+    Map<String, Integer> wheelToDistance = new HashMap<>();
+    wheelToDistance.put(INITIAL_WHEEL, 0);
     Queue<String> queue = new ArrayDeque<>();
     queue.offer(INITIAL_WHEEL);
     while (!queue.isEmpty()) {
       String wheel = queue.poll();
       if (wheel.equals(target)) {
-        return wheelToMove.get(wheel);
+        return wheelToDistance.get(wheel);
       }
 
       for (int i = 0; i < target.length(); ++i) {
@@ -32,11 +32,11 @@ class Solution {
               String.format(
                   "%s%d%s",
                   wheel.substring(0, i),
-                  (wheel.charAt(i) - '0' + offset + 10) % 10,
+                  Math.floorMod(wheel.charAt(i) - '0' + offset, 10),
                   wheel.substring(i + 1));
 
-          if (!deads.contains(nextWheel) && !wheelToMove.containsKey(nextWheel)) {
-            wheelToMove.put(nextWheel, wheelToMove.get(wheel) + 1);
+          if (!deads.contains(nextWheel) && !wheelToDistance.containsKey(nextWheel)) {
+            wheelToDistance.put(nextWheel, wheelToDistance.get(wheel) + 1);
             queue.offer(nextWheel);
           }
         }
