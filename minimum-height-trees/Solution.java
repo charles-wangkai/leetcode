@@ -3,7 +3,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class Solution {
   public List<Integer> findMinHeightTrees(int n, int[][] edges) {
@@ -38,14 +37,11 @@ class Solution {
       restNum -= removedNodes.size();
     }
 
-    return degreeToNodes.values().stream().flatMap(Set::stream).collect(Collectors.toList());
+    return degreeToNodes.values().stream().flatMap(Set::stream).toList();
   }
 
   void addInMap(Map<Integer, Set<Integer>> degreeToNodes, int degree, int node) {
-    if (!degreeToNodes.containsKey(degree)) {
-      degreeToNodes.put(degree, new HashSet<>());
-    }
-
+    degreeToNodes.putIfAbsent(degree, new HashSet<>());
     degreeToNodes.get(degree).add(node);
   }
 }
