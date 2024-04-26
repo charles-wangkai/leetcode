@@ -1,24 +1,25 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int minFallingPathSum(int[][] arr) {
-		int size = arr.length;
+class Solution {
+  public int minFallingPathSum(int[][] grid) {
+    int n = grid.length;
 
-		int[] minSums = arr[0];
-		for (int i = 1; i < size; i++) {
-			int[] nextMinSums = new int[size];
-			for (int j = 0; j < nextMinSums.length; j++) {
-				nextMinSums[j] = Integer.MAX_VALUE;
-				for (int k = 0; k < size; k++) {
-					if (k != j) {
-						nextMinSums[j] = Math.min(nextMinSums[j], minSums[k] + arr[i][j]);
-					}
-				}
-			}
+    int[] dp = grid[0];
+    for (int r = 1; r < n; ++r) {
+      int[] nextDp = new int[n];
+      Arrays.fill(nextDp, Integer.MAX_VALUE);
 
-			minSums = nextMinSums;
-		}
+      for (int c = 0; c < nextDp.length; ++c) {
+        for (int prevC = 0; prevC < dp.length; ++prevC) {
+          if (prevC != c) {
+            nextDp[c] = Math.min(nextDp[c], dp[prevC] + grid[r][c]);
+          }
+        }
+      }
 
-		return Arrays.stream(minSums).min().getAsInt();
-	}
+      dp = nextDp;
+    }
+
+    return Arrays.stream(dp).min().getAsInt();
+  }
 }
