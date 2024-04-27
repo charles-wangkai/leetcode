@@ -1,27 +1,31 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int findRotateSteps(String ring, String key) {
-		int[][] steps = new int[key.length() + 1][ring.length()];
-		for (int i = 0; i < steps.length; i++) {
-			Arrays.fill(steps[i], -1);
-		}
+class Solution {
+  public int findRotateSteps(String ring, String key) {
+    int[] dp = new int[ring.length()];
+    Arrays.fill(dp, Integer.MAX_VALUE);
+    dp[0] = 0;
 
-		steps[0][0] = 0;
+    for (char c : key.toCharArray()) {
+      int[] nextDp = new int[dp.length];
+      Arrays.fill(nextDp, Integer.MAX_VALUE);
 
-		for (int i = 1; i <= key.length(); i++) {
-			for (int j = 0; j < ring.length(); j++) {
-				if (ring.charAt(j) == key.charAt(i - 1)) {
-					for (int k = 0; k < ring.length(); k++) {
-						if (steps[i - 1][k] >= 0) {
-							steps[i][j] = Math.min(steps[i][j] < 0 ? Integer.MAX_VALUE : steps[i][j],
-									steps[i - 1][k] + Math.min(Math.abs(j - k), ring.length() - Math.abs(j - k)) + 1);
-						}
-					}
-				}
-			}
-		}
+      for (int i = 0; i < nextDp.length; ++i) {
+        if (ring.charAt(i) == c) {
+          for (int k = 0; k < dp.length; ++k) {
+            if (dp[k] != Integer.MAX_VALUE) {
+              nextDp[i] =
+                  Math.min(
+                      nextDp[i],
+                      dp[k] + Math.min(Math.abs(i - k), ring.length() - Math.abs(i - k)) + 1);
+            }
+          }
+        }
+      }
 
-		return Arrays.stream(steps[key.length()]).filter(step -> step >= 0).min().getAsInt();
-	}
+      dp = nextDp;
+    }
+
+    return Arrays.stream(dp).min().getAsInt();
+  }
 }
