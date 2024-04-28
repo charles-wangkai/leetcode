@@ -5,9 +5,8 @@ WITH t AS (
     RANK() OVER (
       PARTITION BY server_id
       ORDER BY
-        status_time,
-        session_status
-    ) AS r
+        status_time
+    ) AS rk
   FROM
     Servers
 )
@@ -16,12 +15,12 @@ SELECT
 FROM
   (
     SELECT
-      TIMESTAMPDIFF(SECOND, a.status_time, b.status_time) AS duration
+      TIMESTAMPDIFF(SECOND, t1.status_time, t2.status_time) AS duration
     FROM
-      t a,
-      t b
+      t t1,
+      t t2
     WHERE
-      a.server_id = b.server_id
-      AND a.session_status = 'start'
-      AND a.r = b.r - 1
+      t1.server_id = t2.server_id
+      AND t1.session_status = 'start'
+      AND t1.rk + 1 = t2.rk
   ) t
