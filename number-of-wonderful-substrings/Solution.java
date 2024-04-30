@@ -6,8 +6,8 @@ class Solution {
     int[] counts = new int[1 << ALPHABET_SIZE];
     counts[0] = 1;
     int mask = 0;
-    for (char ch : word.toCharArray()) {
-      mask ^= 1 << (ch - 'a');
+    for (char c : word.toCharArray()) {
+      mask ^= 1 << (c - 'a');
 
       result += counts[mask];
       for (int i = 0; i < ALPHABET_SIZE; ++i) {
