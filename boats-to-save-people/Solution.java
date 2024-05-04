@@ -8,9 +8,9 @@ class Solution {
       update(weightToCount, weight, 1);
     }
 
-    int boatNum = 0;
+    int result = 0;
     while (!weightToCount.isEmpty()) {
-      ++boatNum;
+      ++result;
 
       int maxWeight = weightToCount.lastKey();
       update(weightToCount, maxWeight, -1);
@@ -21,7 +21,7 @@ class Solution {
       }
     }
 
-    return boatNum;
+    return result;
   }
 
   void update(NavigableMap<Integer, Integer> weightToCount, int weight, int delta) {
