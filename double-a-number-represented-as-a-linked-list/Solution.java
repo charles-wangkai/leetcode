@@ -18,11 +18,8 @@ class ListNode {
 class Solution {
   public ListNode doubleIt(ListNode head) {
     int carry = update(head);
-    if (carry == 1) {
-      head = new ListNode(1, head);
-    }
 
-    return head;
+    return (carry == 1) ? new ListNode(1, head) : head;
   }
 
   int update(ListNode node) {
