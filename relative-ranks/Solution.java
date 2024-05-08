@@ -1,38 +1,34 @@
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public String[] findRelativeRanks(int[] nums) {
-		Element[] elements = new Element[nums.length];
-		for (int i = 0; i < elements.length; i++) {
-			elements[i] = new Element(i, nums[i]);
-		}
+class Solution {
+  public String[] findRelativeRanks(int[] score) {
+    int[] sortedIndices =
+        IntStream.range(0, score.length)
+            .boxed()
+            .sorted(Comparator.<Integer, Integer>comparing(i -> score[i]).reversed())
+            .mapToInt(Integer::intValue)
+            .toArray();
 
-		Arrays.sort(elements, (e1, e2) -> e2.score - e1.score);
+    String[] result = new String[score.length];
+    for (int i = 0; i < sortedIndices.length; ++i) {
+      result[sortedIndices[i]] = toRank(i);
+    }
 
-		String[] ranks = new String[elements.length];
-		for (int i = 0; i < elements.length; i++) {
-			String rank;
-			if (i == 0) {
-				rank = "Gold Medal";
-			} else if (i == 1) {
-				rank = "Silver Medal";
-			} else if (i == 2) {
-				rank = "Bronze Medal";
-			} else {
-				rank = String.valueOf(i + 1);
-			}
-			ranks[elements[i].index] = rank;
-		}
-		return ranks;
-	}
-}
+    return result;
+  }
 
-class Element {
-	int index;
-	int score;
+  String toRank(int pos) {
+    if (pos == 0) {
+      return "Gold Medal";
+    }
+    if (pos == 1) {
+      return "Silver Medal";
+    }
+    if (pos == 2) {
+      return "Bronze Medal";
+    }
 
-	Element(int index, int score) {
-		this.index = index;
-		this.score = score;
-	}
+    return String.valueOf(pos + 1);
+  }
 }
