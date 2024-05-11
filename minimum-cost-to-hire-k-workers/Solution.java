@@ -1,43 +1,34 @@
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
-		Worker[] workers = IntStream.range(0, quality.length).mapToObj(i -> new Worker(quality[i], wage[i]))
-				.toArray(Worker[]::new);
+class Solution {
+  public double mincostToHireWorkers(int[] quality, int[] wage, int k) {
+    int[] sortedWorkerIndices =
+        IntStream.range(0, quality.length)
+            .boxed()
+            .sorted((i1, i2) -> Integer.compare(wage[i1] * quality[i2], wage[i2] * quality[i1]))
+            .mapToInt(Integer::intValue)
+            .toArray();
 
-		Arrays.sort(workers,
-				(worker1, worker2) -> Integer.compare(worker1.wage * worker2.quality, worker2.wage * worker1.quality));
+    double result = Double.MAX_VALUE;
+    PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
+    int qualitySum = 0;
+    for (int workerIndex : sortedWorkerIndices) {
+      if (pq.size() == k && quality[workerIndex] < pq.peek()) {
+        qualitySum -= pq.poll();
+      }
 
-		double minCost = Double.MAX_VALUE;
-		PriorityQueue<Worker> group = new PriorityQueue<>(
-				(worker1, worker2) -> Integer.compare(worker2.quality, worker1.quality));
-		int qualitySum = 0;
-		for (Worker worker : workers) {
-			if (group.size() == K && worker.quality < group.peek().quality) {
-				qualitySum -= group.poll().quality;
-			}
+      if (pq.size() != k) {
+        pq.offer(quality[workerIndex]);
+        qualitySum += quality[workerIndex];
+      }
 
-			if (group.size() < K) {
-				group.offer(worker);
-				qualitySum += worker.quality;
-			}
+      if (pq.size() == k) {
+        result = Math.min(result, (double) qualitySum * wage[workerIndex] / quality[workerIndex]);
+      }
+    }
 
-			if (group.size() == K) {
-				minCost = Math.min(minCost, (double) qualitySum * worker.wage / worker.quality);
-			}
-		}
-		return minCost;
-	}
-}
-
-class Worker {
-	int quality;
-	int wage;
-
-	Worker(int quality, int wage) {
-		this.quality = quality;
-		this.wage = wage;
-	}
+    return result;
+  }
 }
