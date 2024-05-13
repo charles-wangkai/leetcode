@@ -1,47 +1,47 @@
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int matrixScore(int[][] A) {
-		int row = A.length;
-		int col = A[0].length;
+class Solution {
+  public int matrixScore(int[][] grid) {
+    int m = grid.length;
+    int n = grid[0].length;
 
-		for (int r = 0; r < row; r++) {
-			if (A[r][0] == 0) {
-				flipRow(A, r);
-			}
-		}
+    for (int r = 0; r < m; ++r) {
+      if (grid[r][0] == 0) {
+        flipRow(grid, r);
+      }
+    }
 
-		for (int c = 0; c < col; c++) {
-			int oneCount = countOneInColumn(A, c);
-			if (oneCount < row - oneCount) {
-				flipCol(A, c);
-			}
-		}
+    for (int c = 0; c < n; ++c) {
+      int c_ = c;
+      int oneCount = IntStream.range(0, m).map(r -> grid[r][c_]).sum();
 
-		return IntStream.range(0, row).map(r -> convertToNumber(A, r)).sum();
-	}
+      if (oneCount < m - oneCount) {
+        flipCol(grid, c);
+      }
+    }
 
-	int countOneInColumn(int[][] A, int c) {
-		return (int) IntStream.range(0, A.length).filter(r -> A[r][c] == 1).count();
-	}
+    return Arrays.stream(grid).mapToInt(this::toValue).sum();
+  }
 
-	int convertToNumber(int[][] A, int r) {
-		int number = 0;
-		for (int c = 0; c < A[0].length; c++) {
-			number = number * 2 + A[r][c];
-		}
-		return number;
-	}
+  int toValue(int[] line) {
+    int result = 0;
+    for (int b : line) {
+      result = result * 2 + b;
+    }
 
-	void flipRow(int[][] A, int r) {
-		for (int c = 0; c < A[0].length; c++) {
-			A[r][c] = 1 - A[r][c];
-		}
-	}
+    return result;
+  }
 
-	void flipCol(int[][] A, int c) {
-		for (int r = 0; r < A.length; r++) {
-			A[r][c] = 1 - A[r][c];
-		}
-	}
+  void flipRow(int[][] grid, int r) {
+    for (int c = 0; c < grid[r].length; ++c) {
+      grid[r][c] = 1 - grid[r][c];
+    }
+  }
+
+  void flipCol(int[][] grid, int c) {
+    for (int r = 0; r < grid.length; ++r) {
+      grid[r][c] = 1 - grid[r][c];
+    }
+  }
 }
