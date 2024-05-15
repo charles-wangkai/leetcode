@@ -8,6 +8,8 @@ class Solution {
   static final int[] C_OFFSETS = {0, 1, 0, -1};
 
   public int maximumSafenessFactor(List<List<Integer>> grid) {
+    int n = grid.size();
+
     int[][] distances = buildDistances(grid);
 
     int result = -1;
@@ -15,7 +17,7 @@ class Solution {
     int upper = grid.size();
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
-      if (check(distances, middle)) {
+      if (search(distances, middle, new boolean[n][n], 0, 0)) {
         result = middle;
         lower = middle + 1;
       } else {
@@ -24,10 +26,6 @@ class Solution {
     }
 
     return result;
-  }
-
-  boolean check(int[][] distances, int safeness) {
-    return search(distances, safeness, new boolean[distances.length][distances.length], 0, 0);
   }
 
   boolean search(int[][] distances, int safeness, boolean[][] visited, int r, int c) {
