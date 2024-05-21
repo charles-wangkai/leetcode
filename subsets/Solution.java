@@ -7,7 +7,7 @@ class Solution {
         .mapToObj(
             mask ->
                 IntStream.range(0, nums.length)
-                    .filter(i -> (mask & (1 << i)) != 0)
+                    .filter(i -> ((mask >> i) & 1) == 1)
                     .map(i -> nums[i])
                     .boxed()
                     .toList())
