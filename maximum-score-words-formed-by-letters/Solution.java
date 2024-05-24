@@ -1,53 +1,34 @@
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int maxScoreWords(String[] words, char[] letters, int[] score) {
-		int[] counts = new int[26];
-		for (char letter : letters) {
-			counts[letter - 'a']++;
-		}
+class Solution {
+  public int maxScoreWords(String[] words, char[] letters, int[] score) {
+    int[] counts = new int[26];
+    for (char letter : letters) {
+      ++counts[letter - 'a'];
+    }
 
-		int result = 0;
-		for (int code = 0; code < 1 << words.length; code++) {
-			int[] remains = Arrays.copyOf(counts, counts.length);
-			int sum = 0;
-			boolean valid = true;
-			boolean[] used = decode(words.length, code);
-			for (int i = 0; i < used.length; i++) {
-				if (used[i]) {
-					for (char ch : words[i].toCharArray()) {
-						if (remains[ch - 'a'] == 0) {
-							valid = false;
+    return IntStream.range(0, 1 << words.length)
+        .map(mask -> computeScore(words, counts, score, mask))
+        .max()
+        .getAsInt();
+  }
 
-							break;
-						}
+  int computeScore(String[] words, int[] counts, int[] score, int mask) {
+    int result = 0;
+    int[] rests = counts.clone();
+    for (int i = 0; i < words.length; ++i) {
+      if (((mask >> i) & 1) == 1) {
+        for (char letter : words[i].toCharArray()) {
+          if (rests[letter - 'a'] == 0) {
+            return 0;
+          }
 
-						remains[ch - 'a']--;
-						sum += score[ch - 'a'];
-					}
+          --rests[letter - 'a'];
+          result += score[letter - 'a'];
+        }
+      }
+    }
 
-					if (!valid) {
-						break;
-					}
-				}
-			}
-
-			if (valid) {
-				result = Math.max(result, sum);
-			}
-		}
-
-		return result;
-	}
-
-	boolean[] decode(int size, int code) {
-		boolean[] result = new boolean[size];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = (code & 1) != 0;
-
-			code >>= 1;
-		}
-
-		return result;
-	}
+    return result;
+  }
 }
