@@ -3,7 +3,7 @@ import java.util.stream.IntStream;
 
 class Solution {
   public int specialArray(int[] nums) {
-    return IntStream.rangeClosed(0, 100)
+    return IntStream.rangeClosed(0, nums.length)
         .filter(x -> Arrays.stream(nums).filter(num -> num >= x).count() == x)
         .findAny()
         .orElse(-1);
