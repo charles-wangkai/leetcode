@@ -4,11 +4,10 @@ import java.util.Set;
 class Solution {
   public boolean checkSubarraySum(int[] nums, int k) {
     Set<Integer> seen = new HashSet<>();
-
     int curr = 0;
     int prev = 0;
-    for (int i = 0; i < nums.length; ++i) {
-      curr = addMod(curr, nums[i], k);
+    for (int num : nums) {
+      curr = addMod(curr, num, k);
       if (seen.contains(curr)) {
         return true;
       }
