@@ -1,16 +1,18 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int minIncrementForUnique(int[] A) {
-		Arrays.sort(A);
+class Solution {
+  public int minIncrementForUnique(int[] nums) {
+    Arrays.sort(nums);
 
-		int result = 0;
-		int lower = 0;
-		for (int a : A) {
-			lower = Math.max(lower, a);
-			result += lower - a;
-			lower++;
-		}
-		return result;
-	}
+    int result = 0;
+    int lower = Integer.MIN_VALUE;
+    for (int num : nums) {
+      lower = Math.max(lower, num);
+      result += lower - num;
+
+      ++lower;
+    }
+
+    return result;
+  }
 }
