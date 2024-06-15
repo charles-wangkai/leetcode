@@ -1,28 +1,29 @@
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.stream.IntStream;
 
 class Solution {
   public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
-    PriorityQueue<Integer> restProjects =
-        new PriorityQueue<>(Comparator.comparing(i -> capital[i]));
-    for (int i = 0; i < profits.length; ++i) {
-      restProjects.add(i);
-    }
-
-    PriorityQueue<Integer> readyProjects =
-        new PriorityQueue<>(Comparator.comparing((Integer i) -> profits[i]).reversed());
+    int[] sortedIndices =
+        IntStream.range(0, profits.length)
+            .boxed()
+            .sorted(Comparator.comparing(i -> capital[i]))
+            .mapToInt(Integer::intValue)
+            .toArray();
 
     int result = w;
-    for (int i = 0; i < Math.min(k, profits.length); ++i) {
-      while (!restProjects.isEmpty() && capital[restProjects.peek()] <= result) {
-        readyProjects.add(restProjects.poll());
+    int index = 0;
+    PriorityQueue<Integer> readyProfits = new PriorityQueue<>(Comparator.reverseOrder());
+    for (int i = 0; i < k; ++i) {
+      while (index != sortedIndices.length && capital[sortedIndices[index]] <= result) {
+        readyProfits.offer(profits[sortedIndices[index]]);
+        ++index;
       }
-
-      if (readyProjects.isEmpty()) {
+      if (readyProfits.isEmpty()) {
         break;
       }
 
-      result += profits[readyProjects.poll()];
+      result += readyProfits.poll();
     }
 
     return result;
