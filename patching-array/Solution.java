@@ -1,14 +1,14 @@
 class Solution {
   public int minPatches(int[] nums, int n) {
-    long miss = 1;
     int result = 0;
+    long next = 1;
     int index = 0;
-    while (miss <= n) {
-      if (index != nums.length && nums[index] <= miss) {
-        miss += nums[index];
+    while (next <= n) {
+      if (index != nums.length && nums[index] <= next) {
+        next += nums[index];
         ++index;
       } else {
-        miss += miss;
+        next += next;
         ++result;
       }
     }
