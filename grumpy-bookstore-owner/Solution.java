@@ -1,28 +1,25 @@
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int maxSatisfied(int[] customers, int[] grumpy, int X) {
-		int satisfiedNum = IntStream.range(0, customers.length).map(i -> customers[i] * (1 - grumpy[i])).sum();
-		for (int i = 0; i < X; i++) {
-			if (grumpy[i] == 1) {
-				satisfiedNum += customers[i];
-			}
-		}
+class Solution {
+  public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+    int satisfiedNum =
+        IntStream.range(0, customers.length)
+            .filter(i -> i < minutes || grumpy[i] == 0)
+            .map(i -> customers[i])
+            .sum();
 
-		int maxSatisfiedNum = satisfiedNum;
-		int beginIndex = 0;
-		for (int endIndex = X; endIndex < customers.length; endIndex++) {
-			if (grumpy[endIndex] == 1) {
-				satisfiedNum += customers[endIndex];
-			}
+    int result = satisfiedNum;
+    for (int endIndex = minutes; endIndex < customers.length; ++endIndex) {
+      if (grumpy[endIndex] == 1) {
+        satisfiedNum += customers[endIndex];
+      }
+      if (grumpy[endIndex - minutes] == 1) {
+        satisfiedNum -= customers[endIndex - minutes];
+      }
 
-			if (grumpy[beginIndex] == 1) {
-				satisfiedNum -= customers[beginIndex];
-			}
-			beginIndex++;
+      result = Math.max(result, satisfiedNum);
+    }
 
-			maxSatisfiedNum = Math.max(maxSatisfiedNum, satisfiedNum);
-		}
-		return maxSatisfiedNum;
-	}
+    return result;
+  }
 }
