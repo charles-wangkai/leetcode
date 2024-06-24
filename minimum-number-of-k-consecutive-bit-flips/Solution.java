@@ -1,23 +1,24 @@
-public class Solution {
-	public int minKBitFlips(int[] A, int K) {
-		int flipNum = 0;
-		boolean[] flipped = new boolean[A.length];
-		boolean currentFlipped = false;
-		for (int i = 0; i < A.length; i++) {
-			if (i >= K && flipped[i - K]) {
-				currentFlipped = !currentFlipped;
-			}
+class Solution {
+  public int minKBitFlips(int[] nums, int k) {
+    int result = 0;
+    boolean[] flipped = new boolean[nums.length];
+    boolean currentFlipped = false;
+    for (int i = 0; i < nums.length; ++i) {
+      if (i >= k && flipped[i - k]) {
+        currentFlipped ^= true;
+      }
 
-			if ((A[i] == 0 && !currentFlipped) || (A[i] == 1 && currentFlipped)) {
-				if (i + K > A.length) {
-					return -1;
-				}
+      if ((nums[i] == 1) == currentFlipped) {
+        if (i + k > nums.length) {
+          return -1;
+        }
 
-				flipped[i] = true;
-				currentFlipped = !currentFlipped;
-				flipNum++;
-			}
-		}
-		return flipNum;
-	}
+        flipped[i] = true;
+        currentFlipped ^= true;
+        ++result;
+      }
+    }
+
+    return result;
+  }
 }
