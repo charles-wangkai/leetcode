@@ -3,14 +3,13 @@ import java.util.stream.IntStream;
 
 class Solution {
   public long maximumImportance(int n, int[][] roads) {
-    int[] counts = new int[n];
+    int[] degrees = new int[n];
     for (int[] road : roads) {
-      ++counts[road[0]];
-      ++counts[road[1]];
+      ++degrees[road[0]];
+      ++degrees[road[1]];
     }
+    Arrays.sort(degrees);
 
-    int[] sorted = Arrays.stream(counts).boxed().sorted().mapToInt(x -> x).toArray();
-
-    return IntStream.range(0, n).mapToLong(i -> (i + 1L) * sorted[i]).sum();
+    return IntStream.range(0, n).mapToLong(i -> (i + 1L) * degrees[i]).sum();
   }
 }
