@@ -43,7 +43,6 @@ class Solution {
         search(sorted, adjLists, visited, i);
       }
     }
-
     Collections.reverse(sorted);
 
     return sorted;
