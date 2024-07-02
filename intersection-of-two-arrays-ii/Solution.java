@@ -5,25 +5,27 @@ import java.util.Map;
 
 class Solution {
   public int[] intersect(int[] nums1, int[] nums2) {
-    Map<Integer, Integer> numToCount1 = buildNumToCount(nums1);
-    Map<Integer, Integer> numToCount2 = buildNumToCount(nums2);
+    Map<Integer, Integer> valueToCount1 = buildValueToCount(nums1);
+    Map<Integer, Integer> valueToCount2 = buildValueToCount(nums2);
 
     List<Integer> result = new ArrayList<>();
-    for (int num : numToCount1.keySet()) {
-      for (int i = Math.min(numToCount1.get(num), numToCount2.getOrDefault(num, 0)); i >= 1; --i) {
-        result.add(num);
+    for (int value : valueToCount1.keySet()) {
+      for (int i = Math.min(valueToCount1.get(value), valueToCount2.getOrDefault(value, 0));
+          i >= 1;
+          --i) {
+        result.add(value);
       }
     }
 
-    return result.stream().mapToInt(x -> x).toArray();
+    return result.stream().mapToInt(Integer::intValue).toArray();
   }
 
-  Map<Integer, Integer> buildNumToCount(int[] nums) {
-    Map<Integer, Integer> numToCount = new HashMap<>();
+  Map<Integer, Integer> buildValueToCount(int[] nums) {
+    Map<Integer, Integer> valueToCount = new HashMap<>();
     for (int num : nums) {
-      numToCount.put(num, numToCount.getOrDefault(num, 0) + 1);
+      valueToCount.put(num, valueToCount.getOrDefault(num, 0) + 1);
     }
 
-    return numToCount;
+    return valueToCount;
   }
 }
