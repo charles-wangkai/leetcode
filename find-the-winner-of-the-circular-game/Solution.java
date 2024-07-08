@@ -4,13 +4,13 @@ import java.util.stream.IntStream;
 
 class Solution {
   public int findTheWinner(int n, int k) {
-    List<Integer> friends = IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList());
+    List<Integer> rest = IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList());
     int index = 0;
-    while (friends.size() != 1) {
-      index = (index + k - 1) % friends.size();
-      friends.remove(index);
+    while (rest.size() != 1) {
+      index = (index + k - 1) % rest.size();
+      rest.remove(index);
     }
 
-    return friends.get(0);
+    return rest.get(0);
   }
 }
