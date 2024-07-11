@@ -1,28 +1,22 @@
-public class Solution {
-	public String reverseParentheses(String s) {
-		StringBuilder result = new StringBuilder();
-		int depth = 0;
-		int beginIndex = -1;
-		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
+import java.util.ArrayDeque;
+import java.util.Deque;
 
-			if (ch == '(') {
-				if (depth == 0) {
-					beginIndex = i;
-				}
+class Solution {
+  public String reverseParentheses(String s) {
+    Deque<StringBuilder> stack = new ArrayDeque<>();
+    stack.push(new StringBuilder());
 
-				depth++;
-			} else if (ch == ')') {
-				depth--;
+    for (char c : s.toCharArray()) {
+      if (c == '(') {
+        stack.push(new StringBuilder());
+      } else if (c == ')') {
+        StringBuilder top = stack.pop();
+        stack.peek().append(top.reverse());
+      } else {
+        stack.peek().append(c);
+      }
+    }
 
-				if (depth == 0) {
-					result.append(new StringBuilder(reverseParentheses(s.substring(beginIndex + 1, i))).reverse());
-				}
-			} else if (depth == 0) {
-				result.append(ch);
-			}
-		}
-
-		return result.toString();
-	}
+    return stack.peek().toString();
+  }
 }
