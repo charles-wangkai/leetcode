@@ -9,14 +9,14 @@ class Solution {
     int result = 0;
     for (int i = 0; i < substrings.length; ++i) {
       StringBuilder sb = new StringBuilder();
-      for (char ch : s.toCharArray()) {
-        if (ch == substrings[i].charAt(1)
-            && sb.length() != 0
+      for (char c : s.toCharArray()) {
+        if (c == substrings[i].charAt(1)
+            && !sb.isEmpty()
             && sb.charAt(sb.length() - 1) == substrings[i].charAt(0)) {
           sb.deleteCharAt(sb.length() - 1);
           result += scores[i];
         } else {
-          sb.append(ch);
+          sb.append(c);
         }
       }
 
