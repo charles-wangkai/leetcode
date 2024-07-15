@@ -27,33 +27,31 @@ class TreeNode {
 
 class Solution {
   public TreeNode createBinaryTree(int[][] descriptions) {
-    Map<Integer, List<int[]>> parentToDescriptions = new HashMap<>();
-    for (int[] description : descriptions) {
-      if (!parentToDescriptions.containsKey(description[0])) {
-        parentToDescriptions.put(description[0], new ArrayList<>());
-      }
-      parentToDescriptions.get(description[0]).add(description);
+    Map<Integer, List<Integer>> parentToDescriptions = new HashMap<>();
+    for (int i = 0; i < descriptions.length; ++i) {
+      parentToDescriptions.putIfAbsent(descriptions[i][0], new ArrayList<>());
+      parentToDescriptions.get(descriptions[i][0]).add(i);
     }
 
     Set<Integer> children =
         Arrays.stream(descriptions).map(description -> description[1]).collect(Collectors.toSet());
-
     int root =
         parentToDescriptions.keySet().stream()
             .filter(parent -> !children.contains(parent))
             .findAny()
             .get();
 
-    return buildNode(parentToDescriptions, root);
+    return buildNode(descriptions, parentToDescriptions, root);
   }
 
-  TreeNode buildNode(Map<Integer, List<int[]>> parentToDescriptions, int value) {
+  TreeNode buildNode(
+      int[][] descriptions, Map<Integer, List<Integer>> parentToDescriptions, int value) {
     TreeNode node = new TreeNode(value);
-    for (int[] description : parentToDescriptions.getOrDefault(value, List.of())) {
-      if (description[2] == 1) {
-        node.left = buildNode(parentToDescriptions, description[1]);
+    for (int d : parentToDescriptions.getOrDefault(value, List.of())) {
+      if (descriptions[d][2] == 1) {
+        node.left = buildNode(descriptions, parentToDescriptions, descriptions[d][1]);
       } else {
-        node.right = buildNode(parentToDescriptions, description[1]);
+        node.right = buildNode(descriptions, parentToDescriptions, descriptions[d][1]);
       }
     }
 
