@@ -6,43 +6,52 @@ import java.util.stream.Collectors;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
-		List<TreeNode> roots = new ArrayList<>();
-		Set<Integer> toDeleteSet = Arrays.stream(to_delete).boxed().collect(Collectors.toSet());
-		search(roots, toDeleteSet, root, true);
+class Solution {
+  public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+    List<TreeNode> roots = new ArrayList<>();
+    Set<Integer> deletingValues = Arrays.stream(to_delete).boxed().collect(Collectors.toSet());
+    search(roots, deletingValues, root, true);
 
-		return roots;
-	}
+    return roots;
+  }
 
-	TreeNode search(List<TreeNode> roots, Set<Integer> toDeleteSet, TreeNode node, boolean isRoot) {
-		if (node == null) {
-			return null;
-		}
+  TreeNode search(
+      List<TreeNode> roots, Set<Integer> deletingValues, TreeNode node, boolean isRoot) {
+    if (node == null) {
+      return null;
+    }
 
-		if (toDeleteSet.contains(node.val)) {
-			search(roots, toDeleteSet, node.left, true);
-			search(roots, toDeleteSet, node.right, true);
+    if (deletingValues.contains(node.val)) {
+      search(roots, deletingValues, node.left, true);
+      search(roots, deletingValues, node.right, true);
 
-			return null;
-		} else {
-			if (isRoot) {
-				roots.add(node);
-			}
+      return null;
+    }
 
-			node.left = search(roots, toDeleteSet, node.left, false);
-			node.right = search(roots, toDeleteSet, node.right, false);
+    if (isRoot) {
+      roots.add(node);
+    }
 
-			return node;
-		}
-	}
+    node.left = search(roots, deletingValues, node.left, false);
+    node.right = search(roots, deletingValues, node.right, false);
+
+    return node;
+  }
 }
