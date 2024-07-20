@@ -6,7 +6,7 @@ class Solution {
     int row = rowSum.length;
     int col = colSum.length;
 
-    Comparator<Element> elementComparator = (e1, e2) -> Integer.compare(e1.sum, e2.sum);
+    Comparator<Element> elementComparator = Comparator.comparing(element -> element.sum);
 
     PriorityQueue<Element> rowElements = new PriorityQueue<>(elementComparator);
     for (int r = 0; r < row; ++r) {
