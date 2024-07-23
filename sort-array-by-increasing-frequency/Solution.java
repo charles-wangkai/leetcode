@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +13,9 @@ class Solution {
     return Arrays.stream(nums)
         .boxed()
         .sorted(
-            (num1, num2) -> {
-              int count1 = valueToCount.get(num1);
-              int count2 = valueToCount.get(num2);
-
-              return (count1 != count2)
-                  ? Integer.compare(count1, count2)
-                  : -Integer.compare(num1, num2);
-            })
-        .mapToInt(x -> x)
+            Comparator.<Integer, Integer>comparing(valueToCount::get)
+                .thenComparing(Comparator.reverseOrder()))
+        .mapToInt(Integer::intValue)
         .toArray();
   }
 }
