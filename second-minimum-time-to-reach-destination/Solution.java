@@ -31,10 +31,12 @@ class Solution {
       }
     }
 
-    int edgeNum = distances[n - 1] + (canExtendOne(adjList, distances, n - 1) ? 1 : 2);
+    int edgeNum =
+        distances[n - 1] + (canExtendOne(new Boolean[n], adjList, distances, n - 1) ? 1 : 2);
+
     int result = 0;
     for (int i = 0; i < edgeNum; ++i) {
-      if (result / change % 2 != 0) {
+      if (result / change % 2 == 1) {
         result += change - result % change;
       }
       result += time;
@@ -43,18 +45,19 @@ class Solution {
     return result;
   }
 
-  boolean canExtendOne(List<Integer>[] adjList, int[] distances, int node) {
-    if (node == 0) {
-      return false;
+  boolean canExtendOne(
+      Boolean[] oneExtendables, List<Integer>[] adjList, int[] distances, int node) {
+    if (oneExtendables[node] == null) {
+      oneExtendables[node] =
+          node != 0
+              && adjList[node].stream()
+                  .anyMatch(
+                      adj ->
+                          distances[adj] == distances[node]
+                              || (distances[adj] == distances[node] - 1
+                                  && canExtendOne(oneExtendables, adjList, distances, adj)));
     }
 
-    for (int adj : adjList[node]) {
-      if (distances[adj] == distances[node]
-          || (distances[adj] == distances[node] - 1 && canExtendOne(adjList, distances, adj))) {
-        return true;
-      }
-    }
-
-    return false;
+    return oneExtendables[node];
   }
 }
