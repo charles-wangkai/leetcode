@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class Solution {
+class Solution {
   static final String[] TRUNK_WORDS = {"", "Thousand", "Million", "Billion"};
   static final String[] TEN_WORDS = {
     null, null, "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
@@ -29,7 +27,7 @@ public class Solution {
       return DIGIT_WORDS[0];
     }
 
-    List<String> words = new LinkedList<>();
+    List<String> words = new ArrayList<>();
     int trunkWordIndex = 0;
     while (num != 0) {
       int chunk = num % 1000;
@@ -40,31 +38,31 @@ public class Solution {
       }
 
       num /= 1000;
-      trunkWordIndex++;
+      ++trunkWordIndex;
     }
-    return String.join(
-        " ", words.stream().filter(word -> !word.isEmpty()).collect(Collectors.toList()));
+    return String.join(" ", words.stream().filter(word -> !word.isEmpty()).toList());
   }
 
   List<String> translateChunk(int chunk) {
-    List<String> translated = new ArrayList<>();
+    List<String> result = new ArrayList<>();
     int hundred = chunk / 100;
     if (hundred != 0) {
-      translated.add(DIGIT_WORDS[hundred]);
-      translated.add("Hundred");
+      result.add(DIGIT_WORDS[hundred]);
+      result.add("Hundred");
     }
     int ten = chunk % 100 / 10;
     int one = chunk % 10;
     if (ten == 1) {
-      translated.add(TEEN_WORDS[one]);
+      result.add(TEEN_WORDS[one]);
     } else {
       if (ten != 0) {
-        translated.add(TEN_WORDS[ten]);
+        result.add(TEN_WORDS[ten]);
       }
       if (one != 0) {
-        translated.add(DIGIT_WORDS[one]);
+        result.add(DIGIT_WORDS[one]);
       }
     }
-    return translated;
+
+    return result;
   }
 }
