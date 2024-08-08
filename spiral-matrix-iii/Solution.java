@@ -1,43 +1,39 @@
-public class Solution {
-	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
-	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
+import java.util.ArrayList;
+import java.util.List;
 
-	public int[][] spiralMatrixIII(int R, int C, int r0, int c0) {
-		int[][] result = new int[R * C][2];
-		int index = 0;
+class Solution {
+  static final int[] R_OFFSETS = {-1, 0, 1, 0};
+  static final int[] C_OFFSETS = {0, 1, 0, -1};
 
-		int maxStep = 1;
-		int maxStepCount = 0;
-		int direction = 1;
-		int step = 0;
-		int row = r0;
-		int col = c0;
-		while (true) {
-			if (row >= 0 && row < R && col >= 0 && col < C) {
-				result[index][0] = row;
-				result[index][1] = col;
+  public int[][] spiralMatrixIII(int rows, int cols, int rStart, int cStart) {
+    List<int[]> result = new ArrayList<>();
+    int maxStep = 1;
+    int maxStepCount = 0;
+    int direction = 1;
+    int step = 0;
+    int r = rStart;
+    int c = cStart;
+    while (result.size() != rows * cols) {
+      if (r >= 0 && r < rows && c >= 0 && c < cols) {
+        result.add(new int[] {r, c});
+      }
 
-				index++;
-				if (index == result.length) {
-					break;
-				}
-			}
+      if (step == maxStep) {
+        step = 0;
+        direction = (direction + 1) % R_OFFSETS.length;
 
-			if (step == maxStep) {
-				step = 0;
-				direction = (direction + 1) % R_OFFSETS.length;
+        ++maxStepCount;
+        if (maxStepCount == 2) {
+          maxStepCount = 0;
+          ++maxStep;
+        }
+      }
 
-				maxStepCount++;
-				if (maxStepCount == 2) {
-					maxStepCount = 0;
-					maxStep++;
-				}
-			}
+      ++step;
+      r += R_OFFSETS[direction];
+      c += C_OFFSETS[direction];
+    }
 
-			step++;
-			row += R_OFFSETS[direction];
-			col += C_OFFSETS[direction];
-		}
-		return result;
-	}
+    return result.toArray(int[][]::new);
+  }
 }
