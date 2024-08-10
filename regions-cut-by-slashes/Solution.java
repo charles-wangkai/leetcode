@@ -1,108 +1,94 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
-	public int regionsBySlashes(String[] grid) {
-		int size = grid.length;
+class Solution {
+  public int regionsBySlashes(String[] grid) {
+    int n = grid.length;
 
-		@SuppressWarnings("unchecked")
-		List<Integer>[] adjacentLists = new List[size * size * 4];
-		for (int i = 0; i < adjacentLists.length; i++) {
-			adjacentLists[i] = new ArrayList<>();
-		}
+    @SuppressWarnings("unchecked")
+    List<Integer>[] adjLists = new List[n * n * 4];
+    for (int i = 0; i < adjLists.length; ++i) {
+      adjLists[i] = new ArrayList<>();
+    }
 
-		for (int r = 0; r < size; r++) {
-			for (int c = 0; c < size; c++) {
-				if (r != 0) {
-					connect(adjacentLists, new Location(size, r, c, Direction.UP),
-							new Location(size, r - 1, c, Direction.DOWN));
-				}
-				if (c != size - 1) {
-					connect(adjacentLists, new Location(size, r, c, Direction.RIGHT),
-							new Location(size, r, c + 1, Direction.LEFT));
-				}
-				if (r != size - 1) {
-					connect(adjacentLists, new Location(size, r, c, Direction.DOWN),
-							new Location(size, r + 1, c, Direction.UP));
-				}
-				if (c != 0) {
-					connect(adjacentLists, new Location(size, r, c, Direction.LEFT),
-							new Location(size, r, c - 1, Direction.RIGHT));
-				}
+    for (int r = 0; r < n; ++r) {
+      for (int c = 0; c < n; ++c) {
+        if (r != 0) {
+          connect(
+              adjLists, new Point(n, r, c, Direction.UP), new Point(n, r - 1, c, Direction.DOWN));
+        }
+        if (c != n - 1) {
+          connect(
+              adjLists,
+              new Point(n, r, c, Direction.RIGHT),
+              new Point(n, r, c + 1, Direction.LEFT));
+        }
+        if (r != n - 1) {
+          connect(
+              adjLists, new Point(n, r, c, Direction.DOWN), new Point(n, r + 1, c, Direction.UP));
+        }
+        if (c != 0) {
+          connect(
+              adjLists,
+              new Point(n, r, c, Direction.LEFT),
+              new Point(n, r, c - 1, Direction.RIGHT));
+        }
 
-				char cell = grid[r].charAt(c);
-				if (cell == '/') {
-					connect(adjacentLists, new Location(size, r, c, Direction.UP),
-							new Location(size, r, c, Direction.LEFT));
-					connect(adjacentLists, new Location(size, r, c, Direction.RIGHT),
-							new Location(size, r, c, Direction.DOWN));
-				} else if (cell == '\\') {
-					connect(adjacentLists, new Location(size, r, c, Direction.UP),
-							new Location(size, r, c, Direction.RIGHT));
-					connect(adjacentLists, new Location(size, r, c, Direction.DOWN),
-							new Location(size, r, c, Direction.LEFT));
-				} else {
-					connect(adjacentLists, new Location(size, r, c, Direction.UP),
-							new Location(size, r, c, Direction.RIGHT));
-					connect(adjacentLists, new Location(size, r, c, Direction.RIGHT),
-							new Location(size, r, c, Direction.DOWN));
-					connect(adjacentLists, new Location(size, r, c, Direction.DOWN),
-							new Location(size, r, c, Direction.LEFT));
-					connect(adjacentLists, new Location(size, r, c, Direction.LEFT),
-							new Location(size, r, c, Direction.UP));
-				}
-			}
-		}
+        char square = grid[r].charAt(c);
+        if (square == '/') {
+          connect(adjLists, new Point(n, r, c, Direction.UP), new Point(n, r, c, Direction.LEFT));
+          connect(
+              adjLists, new Point(n, r, c, Direction.RIGHT), new Point(n, r, c, Direction.DOWN));
+        } else if (square == '\\') {
+          connect(adjLists, new Point(n, r, c, Direction.UP), new Point(n, r, c, Direction.RIGHT));
+          connect(adjLists, new Point(n, r, c, Direction.DOWN), new Point(n, r, c, Direction.LEFT));
+        } else {
+          connect(adjLists, new Point(n, r, c, Direction.UP), new Point(n, r, c, Direction.RIGHT));
+          connect(
+              adjLists, new Point(n, r, c, Direction.RIGHT), new Point(n, r, c, Direction.DOWN));
+          connect(adjLists, new Point(n, r, c, Direction.DOWN), new Point(n, r, c, Direction.LEFT));
+          connect(adjLists, new Point(n, r, c, Direction.LEFT), new Point(n, r, c, Direction.UP));
+        }
+      }
+    }
 
-		int regionNum = 0;
-		boolean[] visited = new boolean[adjacentLists.length];
-		for (int i = 0; i < visited.length; i++) {
-			if (!visited[i]) {
-				dfs(adjacentLists, visited, i);
+    int result = 0;
+    boolean[] visited = new boolean[adjLists.length];
+    for (int i = 0; i < visited.length; ++i) {
+      if (!visited[i]) {
+        dfs(adjLists, visited, i);
+        ++result;
+      }
+    }
 
-				regionNum++;
-			}
-		}
-		return regionNum;
-	}
+    return result;
+  }
 
-	void dfs(List<Integer>[] adjacentLists, boolean[] visited, int node) {
-		visited[node] = true;
+  void dfs(List<Integer>[] adjLists, boolean[] visited, int node) {
+    visited[node] = true;
 
-		for (int adjacent : adjacentLists[node]) {
-			if (!visited[adjacent]) {
-				dfs(adjacentLists, visited, adjacent);
-			}
-		}
-	}
+    for (int adj : adjLists[node]) {
+      if (!visited[adj]) {
+        dfs(adjLists, visited, adj);
+      }
+    }
+  }
 
-	void connect(List<Integer>[] adjacentLists, Location loc1, Location loc2) {
-		int id1 = loc1.getId();
-		int id2 = loc2.getId();
-
-		adjacentLists[id1].add(id2);
-		adjacentLists[id2].add(id1);
-	}
+  void connect(List<Integer>[] adjLists, Point p1, Point p2) {
+    adjLists[p1.getId()].add(p2.getId());
+    adjLists[p2.getId()].add(p1.getId());
+  }
 }
 
 enum Direction {
-	UP, RIGHT, DOWN, LEFT
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT
 }
 
-class Location {
-	int size;
-	int r;
-	int c;
-	Direction direction;
-
-	Location(int size, int r, int c, Direction direction) {
-		this.size = size;
-		this.r = r;
-		this.c = c;
-		this.direction = direction;
-	}
-
-	int getId() {
-		return (r * size + c) * 4 + direction.ordinal();
-	}
+record Point(int n, int r, int c, Direction direction) {
+  int getId() {
+    return (r * n + c) * 4 + direction.ordinal();
+  }
 }
