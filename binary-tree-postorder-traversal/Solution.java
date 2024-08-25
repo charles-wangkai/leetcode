@@ -3,18 +3,26 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-// Definition for binary tree
+// Definition for a binary tree node.
 class TreeNode {
   int val;
   TreeNode left;
   TreeNode right;
 
-  TreeNode(int x) {
-    val = x;
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
   }
 }
 
-public class Solution {
+class Solution {
   public List<Integer> postorderTraversal(TreeNode root) {
     List<Integer> result = new ArrayList<>();
     Deque<Object> stack = new ArrayDeque<>();
@@ -23,9 +31,6 @@ public class Solution {
     }
     while (!stack.isEmpty()) {
       Object element = stack.pop();
-      if (element == null) {
-        continue;
-      }
       if (element instanceof Integer value) {
         result.add(value);
       } else {
@@ -39,6 +44,7 @@ public class Solution {
         }
       }
     }
+
     return result;
   }
 }
