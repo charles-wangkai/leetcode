@@ -1,6 +1,5 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
@@ -17,10 +16,10 @@ class Node {
   }
 }
 
-public class Solution {
+class Solution {
   public List<Integer> postorder(Node root) {
     if (root == null) {
-      return Collections.emptyList();
+      return List.of();
     }
 
     List<Integer> result = new ArrayList<>();
@@ -28,16 +27,16 @@ public class Solution {
     stack.push(root);
     while (!stack.isEmpty()) {
       Object top = stack.pop();
-
       if (top instanceof Node node) {
         stack.push(node.val);
-        for (int i = node.children.size() - 1; i >= 0; i--) {
+        for (int i = node.children.size() - 1; i >= 0; --i) {
           stack.push(node.children.get(i));
         }
       } else {
-        result.add((Integer) top);
+        result.add((int) top);
       }
     }
+
     return result;
   }
 }
