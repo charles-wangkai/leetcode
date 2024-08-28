@@ -17,7 +17,7 @@ class Solution {
           List<Point> island = new ArrayList<>();
           search(island, grid2, visited, r, c);
 
-          if (island.stream().allMatch(p -> grid1[p.r][p.c] == 1)) {
+          if (island.stream().allMatch(p -> grid1[p.r()][p.c()] == 1)) {
             ++result;
           }
         }
@@ -49,12 +49,4 @@ class Solution {
   }
 }
 
-class Point {
-  int r;
-  int c;
-
-  Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-}
+record Point(int r, int c) {}
