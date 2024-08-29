@@ -25,19 +25,19 @@ class Solution {
       if (visited[i]) {
         ++result;
       } else {
-        search(stones, adjLists, visited, i);
+        search(adjLists, visited, i);
       }
     }
 
     return result;
   }
 
-  void search(int[][] stones, List<Integer>[] adjLists, boolean[] visited, int index) {
-    visited[index] = true;
+  void search(List<Integer>[] adjLists, boolean[] visited, int node) {
+    visited[node] = true;
 
-    for (int adj : adjLists[index]) {
+    for (int adj : adjLists[node]) {
       if (!visited[adj]) {
-        search(stones, adjLists, visited, adj);
+        search(adjLists, visited, adj);
       }
     }
   }
