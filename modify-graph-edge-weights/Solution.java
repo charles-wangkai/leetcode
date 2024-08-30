@@ -45,14 +45,14 @@ class Solution {
 
   int[] computeDistances(int n, int[][] edges, int source, int destination) {
     @SuppressWarnings("unchecked")
-    List<Integer>[] adjEdges = new List[n];
-    for (int i = 0; i < adjEdges.length; ++i) {
-      adjEdges[i] = new ArrayList<>();
+    List<Integer>[] edgeLists = new List[n];
+    for (int i = 0; i < edgeLists.length; ++i) {
+      edgeLists[i] = new ArrayList<>();
     }
     for (int i = 0; i < edges.length; ++i) {
       if (edges[i][2] != -1) {
-        adjEdges[edges[i][0]].add(i);
-        adjEdges[edges[i][1]].add(i);
+        edgeLists[edges[i][0]].add(i);
+        edgeLists[edges[i][1]].add(i);
       }
     }
 
@@ -64,7 +64,7 @@ class Solution {
       Element head = pq.poll();
       if (distances[head.node()] == Integer.MAX_VALUE) {
         distances[head.node()] = head.distance();
-        for (int e : adjEdges[head.node()]) {
+        for (int e : edgeLists[head.node()]) {
           int other = (edges[e][0] == head.node()) ? edges[e][1] : edges[e][0];
           if (distances[other] == Integer.MAX_VALUE) {
             pq.offer(new Element(other, distances[head.node()] + edges[e][2]));
