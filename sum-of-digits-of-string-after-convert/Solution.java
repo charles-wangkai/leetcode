@@ -1,19 +1,14 @@
+import java.util.stream.Collectors;
+
 class Solution {
   public int getLucky(String s, int k) {
-    int result =
-        s.chars()
-            .map(
-                ch -> {
-                  int pos = ch - 'a' + 1;
+    String value =
+        s.chars().map(c -> c - 'a' + 1).mapToObj(String::valueOf).collect(Collectors.joining());
 
-                  return pos / 10 + pos % 10;
-                })
-            .sum();
-
-    for (int i = 0; i < k - 1; ++i) {
-      result = String.valueOf(result).chars().map(ch -> ch - '0').sum();
+    for (int i = 0; i < k; ++i) {
+      value = String.valueOf(value.chars().map(c -> c - '0').sum());
     }
 
-    return result;
+    return Integer.parseInt(value);
   }
 }
