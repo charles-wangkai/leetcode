@@ -1,21 +1,12 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 class Solution {
   public int[] missingRolls(int[] rolls, int mean, int n) {
     int total = mean * (rolls.length + n) - Arrays.stream(rolls).sum();
-    if (total < n || total > n * 6) {
-      return new int[0];
-    }
 
-    int[] result = new int[n];
-    Arrays.fill(result, 1);
-    int rest = total - n;
-    for (int i = 0; i < result.length; ++i) {
-      int delta = Math.min(5, rest);
-      result[i] += delta;
-      rest -= delta;
-    }
-
-    return result;
+    return (total >= n && total <= n * 6)
+        ? IntStream.range(0, n).map(i -> total / n + ((i < total % n) ? 1 : 0)).toArray()
+        : new int[0];
   }
 }
