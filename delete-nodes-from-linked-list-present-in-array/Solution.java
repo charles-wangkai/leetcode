@@ -1,9 +1,8 @@
-// Definition for singly-linked list.
-
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// Definition for singly-linked list.
 class ListNode {
   int val;
   ListNode next;
