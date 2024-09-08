@@ -17,28 +17,25 @@ class ListNode {
 
 class Solution {
   public ListNode[] splitListToParts(ListNode head, int k) {
+    ListNode[] result = new ListNode[k];
     int length = getLength(head);
-    int averageLength = length / k;
-    int extraPartNum = length % k;
-
-    ListNode[] parts = new ListNode[k];
-    for (int i = 0; i < parts.length; ++i) {
+    for (int i = 0; i < result.length; ++i) {
       ListNode tempHead = new ListNode();
-      head = retrieve(head, tempHead, averageLength + ((i < extraPartNum) ? 1 : 0));
-      parts[i] = tempHead.next;
+      head = retrieve(head, tempHead, length / k + ((i < length % k) ? 1 : 0));
+      result[i] = tempHead.next;
     }
 
-    return parts;
+    return result;
   }
 
   ListNode retrieve(ListNode head, ListNode tempHead, int partLength) {
-    ListNode prev = tempHead;
+    ListNode tail = tempHead;
     for (int i = 0; i < partLength; ++i) {
       ListNode node = head;
       head = head.next;
       node.next = null;
-      prev.next = node;
-      prev = node;
+      tail.next = node;
+      tail = node;
     }
 
     return head;
