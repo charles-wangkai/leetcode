@@ -4,8 +4,8 @@ import java.util.List;
 
 class Solution {
   public List<Integer> minAvailableDuration(int[][] slots1, int[][] slots2, int duration) {
-    sortSlots(slots1);
-    sortSlots(slots2);
+    Arrays.sort(slots1, Comparator.comparing(slot -> slot[0]));
+    Arrays.sort(slots2, Comparator.comparing(slot -> slot[0]));
 
     int index1 = 0;
     int index2 = 0;
@@ -27,9 +27,5 @@ class Solution {
     }
 
     return List.of();
-  }
-
-  void sortSlots(int[][] slots) {
-    Arrays.sort(slots, Comparator.comparing(slot -> slot[0]));
   }
 }
