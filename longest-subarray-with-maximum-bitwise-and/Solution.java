@@ -7,7 +7,7 @@ class Solution {
     int result = 0;
     int length = 0;
     for (int num : nums) {
-      if ((num & max) == max) {
+      if (num == max) {
         ++length;
         result = Math.max(result, length);
       } else {
