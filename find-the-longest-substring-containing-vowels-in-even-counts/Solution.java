@@ -1,88 +1,33 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 class Solution {
-    public int findTheLongestSubstring(String s) {
-        int[][][][][] rightLengths = buildRightLengths(s);
+  static final char[] VOWELS = {'a', 'e', 'i', 'o', 'u'};
+  static final Map<Character, Integer> VOWEL_TO_MASK =
+      IntStream.range(0, VOWELS.length)
+          .boxed()
+          .collect(Collectors.toMap(i -> VOWELS[i], i -> 1 << i));
 
-        int totalA = count(s, 'a');
-        int totalE = count(s, 'e');
-        int totalI = count(s, 'i');
-        int totalO = count(s, 'o');
-        int totalU = count(s, 'u');
+  public int findTheLongestSubstring(String s) {
+    Map<Integer, Integer> maskToMinLength = new HashMap<>();
+    maskToMinLength.put(0, 0);
 
-        int a = 0;
-        int e = 0;
-        int i = 0;
-        int o = 0;
-        int u = 0;
-        int result = s.length() - rightLengths[totalA][totalE][totalI][totalO][totalU];
-        for (int j = 0; j < s.length(); ++j) {
-            char ch = s.charAt(j);
-            if (ch == 'a') {
-                a = 1 - a;
-            } else if (ch == 'e') {
-                e = 1 - e;
-            } else if (ch == 'i') {
-                i = 1 - i;
-            } else if (ch == 'o') {
-                o = 1 - o;
-            } else if (ch == 'u') {
-                u = 1 - u;
-            }
+    int result = 0;
+    int mask = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      if (VOWEL_TO_MASK.containsKey(s.charAt(i))) {
+        mask ^= VOWEL_TO_MASK.get(s.charAt(i));
+      }
 
-            int rightA = totalA ^ a;
-            int rightE = totalE ^ e;
-            int rightI = totalI ^ i;
-            int rightO = totalO ^ o;
-            int rightU = totalU ^ u;
-
-            result = Math.max(result, s.length() - (j + 1) - rightLengths[rightA][rightE][rightI][rightO][rightU]);
-        }
-
-        return result;
+      if (maskToMinLength.containsKey(mask)) {
+        result = Math.max(result, i + 1 - maskToMinLength.get(mask));
+      } else {
+        maskToMinLength.put(mask, i + 1);
+      }
     }
 
-    int count(String s, char target) {
-        return (int) (s.chars().filter(ch -> ch == target).count() % 2);
-    }
-
-    int[][][][][] buildRightLengths(String s) {
-        int[][][][][] rightLengths = new int[2][2][2][2][2];
-        for (int a = 0; a < 2; ++a) {
-            for (int e = 0; e < 2; ++e) {
-                for (int i = 0; i < 2; ++i) {
-                    for (int o = 0; o < 2; ++o) {
-                        for (int u = 0; u < 2; ++u) {
-                            rightLengths[a][e][i][o][u] = -1;
-                        }
-                    }
-                }
-            }
-        }
-        rightLengths[0][0][0][0][0] = 0;
-
-        int a = 0;
-        int e = 0;
-        int i = 0;
-        int o = 0;
-        int u = 0;
-        for (int j = s.length() - 1; j >= 0; --j) {
-            char ch = s.charAt(j);
-            if (ch == 'a') {
-                a = 1 - a;
-            } else if (ch == 'e') {
-                e = 1 - e;
-            } else if (ch == 'i') {
-                i = 1 - i;
-            } else if (ch == 'o') {
-                o = 1 - o;
-            } else if (ch == 'u') {
-                u = 1 - u;
-            }
-
-            if (rightLengths[a][e][i][o][u] == -1) {
-                rightLengths[a][e][i][o][u] = s.length() - j;
-            }
-        }
-
-        return rightLengths;
-    }
+    return result;
+  }
 }
