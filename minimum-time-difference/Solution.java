@@ -1,22 +1,20 @@
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class Solution {
-	public int findMinDifference(List<String> timePoints) {
-		int[] minutes = timePoints.stream().mapToInt(this::toMinute).sorted().toArray();
+class Solution {
+  public int findMinDifference(List<String> timePoints) {
+    int[] minutes = timePoints.stream().mapToInt(this::toMinute).sorted().toArray();
 
-		int minDifference = Integer.MAX_VALUE;
-		for (int i = 0; i < minutes.length; i++) {
-			int difference = (i == 0) ? (minutes[i] + 24 * 60 - minutes[minutes.length - 1])
-					: (minutes[i] - minutes[i - 1]);
-			minDifference = Math.min(minDifference, difference);
-		}
-		return minDifference;
-	}
+    return IntStream.range(0, minutes.length)
+        .map(
+            i -> ((i == minutes.length - 1) ? (minutes[0] + 24 * 60) : minutes[i + 1]) - minutes[i])
+        .min()
+        .getAsInt();
+  }
 
-	int toMinute(String timePoint) {
-		String[] fields = timePoint.split(":");
-		int hour = Integer.parseInt(fields[0]);
-		int minute = Integer.parseInt(fields[1]);
-		return hour * 60 + minute;
-	}
+  int toMinute(String timePoint) {
+    String[] parts = timePoint.split(":");
+
+    return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+  }
 }
