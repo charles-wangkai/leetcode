@@ -1,68 +1,64 @@
+import static java.util.Map.entry;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BinaryOperator;
 
-public class Solution {
-  @SuppressWarnings("unchecked")
-  public List<Integer> diffWaysToCompute(String input) {
-    List<Integer> numbers = new ArrayList<>();
+class Solution {
+  static final Map<Character, BinaryOperator<Integer>> OPERATOR_TO_FUNCTION =
+      Map.ofEntries(
+          entry('+', (x, y) -> x + y), entry('-', (x, y) -> x - y), entry('*', (x, y) -> x * y));
+
+  public List<Integer> diffWaysToCompute(String expression) {
+    List<Integer> values = new ArrayList<>();
     List<Character> operators = new ArrayList<>();
-    parse(input, numbers, operators);
+    parse(expression, values, operators);
 
-    int numberNum = numbers.size();
-    List<Integer>[][] results = new List[numberNum][];
-    for (int i = 0; i < results.length; i++) {
-      results[i] = new List[numberNum - i + 1];
-      for (int j = 0; j < results[i].length; j++) {
-        results[i][j] = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    List<Integer>[][] dp = new List[values.size()][values.size()];
+    for (int i = 0; i < values.size(); ++i) {
+      for (int j = 0; j < values.size(); ++j) {
+        dp[i][j] = new ArrayList<>();
       }
     }
-
-    for (int i = 0; i < results.length; i++) {
-      results[i][1].add(numbers.get(i));
+    for (int i = 0; i < values.size(); ++i) {
+      dp[i][i].add(values.get(i));
     }
-    for (int j = 2; j <= numberNum; j++) {
-      for (int i = 0; i <= numberNum - j; i++) {
-        for (int k = 1; k < j; k++) {
-          results[i][j].addAll(
-              merge(results[i][k], results[i + k][j - k], operators.get(i + k - 1)));
+
+    for (int length = 2; length <= values.size(); ++length) {
+      for (int beginIndex = 0; beginIndex + length <= values.size(); ++beginIndex) {
+        int endIndex = beginIndex + length - 1;
+        for (int k = beginIndex; k < endIndex; ++k) {
+          dp[beginIndex][endIndex].addAll(
+              merge(dp[beginIndex][k], dp[k + 1][endIndex], operators.get(k)));
         }
       }
     }
 
-    return results[0][numberNum];
+    return dp[0][values.size() - 1];
   }
 
-  List<Integer> merge(List<Integer> results1, List<Integer> results2, char operator) {
-    List<Integer> merged = new ArrayList<>();
-    for (int result1 : results1) {
-      for (int result2 : results2) {
-        merged.add(operate(result1, result2, operator));
-      }
-    }
-    return merged;
+  List<Integer> merge(List<Integer> operands1, List<Integer> operands2, char operator) {
+    return operands1.stream()
+        .flatMap(
+            operand1 ->
+                operands2.stream()
+                    .map(operand2 -> OPERATOR_TO_FUNCTION.get(operator).apply(operand1, operand2)))
+        .toList();
   }
 
-  int operate(int x, int y, char operator) {
-    if (operator == '+') {
-      return x + y;
-    } else if (operator == '-') {
-      return x - y;
-    } else { // operator == '*'
-      return x * y;
-    }
-  }
-
-  void parse(String input, List<Integer> numbers, List<Character> operators) {
-    int number = 0;
-    for (int i = 0; i <= input.length(); i++) {
-      if (i < input.length() && Character.isDigit(input.charAt(i))) {
-        number = number * 10 + (input.charAt(i) - '0');
+  void parse(String expression, List<Integer> values, List<Character> operators) {
+    int value = 0;
+    for (int i = 0; i <= expression.length(); ++i) {
+      if (i != expression.length() && Character.isDigit(expression.charAt(i))) {
+        value = value * 10 + (expression.charAt(i) - '0');
       } else {
-        numbers.add(number);
-        number = 0;
+        values.add(value);
+        value = 0;
 
-        if (i < input.length()) {
-          operators.add(input.charAt(i));
+        if (i != expression.length()) {
+          operators.add(expression.charAt(i));
         }
       }
     }
