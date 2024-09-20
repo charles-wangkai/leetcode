@@ -1,40 +1,28 @@
-public class Solution {
-	static final char SEPARATOR = 0;
+// https://leetcode.com/problems/shortest-palindrome/solutions/60113/clean-kmp-solution-with-super-detailed-explanation/
+// https://cp-algorithms.com/string/prefix-function.html
 
-	public String shortestPalindrome(String s) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(SEPARATOR);
-		for (int i = 0; i < s.length(); i++) {
-			sb.append(s.charAt(i));
-			sb.append(SEPARATOR);
-		}
+class Solution {
+  public String shortestPalindrome(String s) {
+    int[] pi = prefixFunction(s + "#" + new StringBuilder(s).reverse().toString());
+    String center = s.substring(0, pi[pi.length - 1]);
+    String tail = s.substring(pi[pi.length - 1]);
 
-		int[] p = new int[sb.length()];
-		int maxRight = -1;
-		int centreForMaxRight = -1;
-		for (int i = 0; i < p.length; i++) {
-			if (maxRight > i) {
-				p[i] = Math.min(p[centreForMaxRight * 2 - i], maxRight - i);
-			} else {
-				p[i] = 1;
-			}
-			while (i - p[i] >= 0 && i + p[i] < sb.length()
-					&& sb.charAt(i - p[i]) == sb.charAt(i + p[i])) {
-				p[i]++;
-			}
-			if (i + p[i] > maxRight) {
-				maxRight = i + p[i];
-				centreForMaxRight = i;
-			}
-		}
+    return new StringBuilder(tail).reverse().toString() + center + tail;
+  }
 
-		int frontPalindromeMaxLength = 0;
-		for (int i = 0; i < p.length; i++) {
-			if (i - p[i] == -1) {
-				frontPalindromeMaxLength = i;
-			}
-		}
-		return new StringBuilder(s.substring(frontPalindromeMaxLength))
-				.reverse().toString() + s;
-	}
+  int[] prefixFunction(String s) {
+    int[] pi = new int[s.length()];
+    for (int i = 1; i < pi.length; ++i) {
+      int j = pi[i - 1];
+      while (j > 0 && s.charAt(i) != s.charAt(j)) {
+        j = pi[j - 1];
+      }
+      if (s.charAt(i) == s.charAt(j)) {
+        ++j;
+      }
+      pi[i] = j;
+    }
+
+    return pi;
+  }
 }
