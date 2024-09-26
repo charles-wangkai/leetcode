@@ -6,18 +6,13 @@ class MyCalendar {
 
   public boolean book(int start, int end) {
     Event event = new Event(start, end);
-
-    if (events.stream().anyMatch(e -> isIntersect(e, event))) {
+    if (events.stream().anyMatch(e -> !(e.end() <= event.start() || e.start() >= event.end()))) {
       return false;
     }
 
     events.add(event);
 
     return true;
-  }
-
-  private boolean isIntersect(Event e1, Event e2) {
-    return !(e1.end() <= e2.start() || e1.start() >= e2.end());
   }
 }
 
