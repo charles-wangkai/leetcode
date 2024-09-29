@@ -7,18 +7,13 @@ class Trie {
   public void insert(String word) {
     Node node = root;
     for (char letter : word.toCharArray()) {
-      ++node.count;
-
-      if (!node.letterToChild.containsKey(letter)) {
-        node.letterToChild.put(letter, new Node());
-      }
+      node.letterToChild.putIfAbsent(letter, new Node());
       node = node.letterToChild.get(letter);
-    }
-    ++node.count;
 
-    if (!node.letterToChild.containsKey(null)) {
-      node.letterToChild.put(null, new Node());
+      ++node.count;
     }
+
+    node.letterToChild.putIfAbsent(null, new Node());
     ++node.letterToChild.get(null).count;
   }
 
@@ -51,11 +46,9 @@ class Trie {
   public void erase(String word) {
     Node node = root;
     for (char letter : word.toCharArray()) {
-      --node.count;
-
       node = node.letterToChild.get(letter);
+      --node.count;
     }
-    --node.count;
 
     --node.letterToChild.get(null).count;
   }
