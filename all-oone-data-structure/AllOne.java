@@ -1,155 +1,51 @@
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class AllOne {
-  Map<String, Integer> key2value;
-  Integer minValue;
-  Integer maxValue;
-  Map<Integer, Node> value2node;
+  Map<String, Integer> keyToCount = new HashMap<>();
+  SortedMap<Integer, Set<String>> countToKeys = new TreeMap<>();
 
-  /** Initialize your data structure here. */
-  public AllOne() {
-    key2value = new HashMap<>();
-    minValue = null;
-    maxValue = null;
-    value2node = new HashMap<>();
-  }
-
-  /** Inserts a new key <Key> with value 1. Or increments an existing key by 1. */
   public void inc(String key) {
-    int oldValue;
-    if (key2value.containsKey(key)) {
-      oldValue = key2value.get(key);
-    } else {
-      oldValue = 0;
+    int count = keyToCount.getOrDefault(key, 0);
+    if (count != 0) {
+      removeFromMap(countToKeys, count, key);
     }
-
-    insert(key, oldValue + 1);
-
-    if (oldValue != 0) {
-      remove(key, oldValue);
-    }
+    addToMap(countToKeys, count + 1, key);
+    keyToCount.put(key, count + 1);
   }
 
-  /** Decrements an existing key by 1. If Key's value is 1, remove it from the data structure. */
   public void dec(String key) {
-    if (!key2value.containsKey(key)) {
-      return;
+    int count = keyToCount.get(key);
+    removeFromMap(countToKeys, count, key);
+    if (count != 1) {
+      addToMap(countToKeys, count - 1, key);
     }
-
-    int oldValue = key2value.get(key);
-
-    if (oldValue != 1) {
-      insert(key, oldValue - 1);
-    }
-
-    remove(key, oldValue);
+    keyToCount.put(key, count - 1);
   }
 
-  /** Returns one of the keys with maximal value. */
   public String getMaxKey() {
-    if (maxValue == null) {
-      return "";
-    } else {
-      return value2node.get(maxValue).keys.iterator().next();
-    }
+    return countToKeys.isEmpty() ? "" : countToKeys.lastEntry().getValue().iterator().next();
   }
 
-  /** Returns one of the keys with Minimal value. */
   public String getMinKey() {
-    if (minValue == null) {
-      return "";
-    } else {
-      return value2node.get(minValue).keys.iterator().next();
-    }
+    return countToKeys.isEmpty() ? "" : countToKeys.firstEntry().getValue().iterator().next();
   }
 
-  private void remove(String key, int value) {
-    if (key2value.get(key) == value) {
-      key2value.remove(key);
-    }
-
-    Node node = value2node.get(value);
-    node.keys.remove(key);
-    if (node.keys.isEmpty()) {
-      if (minValue == value) {
-        minValue = node.next;
-      }
-      if (maxValue == value) {
-        maxValue = node.prev;
-      }
-
-      Integer prev = node.prev;
-      Integer next = node.next;
-      if (prev != null) {
-        value2node.get(prev).next = next;
-      }
-      if (next != null) {
-        value2node.get(next).prev = prev;
-      }
-
-      value2node.remove(value);
-    }
+  void addToMap(SortedMap<Integer, Set<String>> countToKeys, int count, String key) {
+    countToKeys.putIfAbsent(count, new HashSet<>());
+    countToKeys.get(count).add(key);
   }
 
-  private void insert(String key, int value) {
-    key2value.put(key, value);
-
-    if (value2node.containsKey(value)) {
-      value2node.get(value).keys.add(key);
-    } else {
-      Node node = new Node();
-
-      Set<String> keys = new HashSet<>(Arrays.asList(key));
-      node.keys = keys;
-
-      Integer prev;
-      if (value2node.containsKey(value - 1)) {
-        prev = value - 1;
-      } else if (value == 1) {
-        prev = null;
-      } else {
-        prev = value2node.get(value + 1).prev;
-      }
-
-      Integer next;
-      if (value2node.containsKey(value + 1)) {
-        next = value + 1;
-      } else if (value == 1) {
-        next = minValue;
-      } else {
-        next = value2node.get(value - 1).next;
-      }
-
-      node.prev = prev;
-      node.next = next;
-
-      if (prev != null) {
-        value2node.get(prev).next = value;
-      }
-      if (next != null) {
-        value2node.get(next).prev = value;
-      }
-
-      value2node.put(value, node);
-    }
-
-    if (minValue == null || value < minValue) {
-      minValue = value;
-    }
-    if (maxValue == null || value > maxValue) {
-      maxValue = value;
+  void removeFromMap(SortedMap<Integer, Set<String>> countToKeys, int count, String key) {
+    countToKeys.get(count).remove(key);
+    if (countToKeys.get(count).isEmpty()) {
+      countToKeys.remove(count);
     }
   }
-}
-
-class Node {
-  Set<String> keys;
-  Integer next;
-  Integer prev;
 }
 
 // Your AllOne object will be instantiated and called as such:
