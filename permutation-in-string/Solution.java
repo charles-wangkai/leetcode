@@ -9,27 +9,27 @@ class Solution {
 
     Map<Character, Integer> letterToCount = new HashMap<>();
     for (char letter : s1.toCharArray()) {
-      updateLetterToCount(letterToCount, letter, -1);
+      updateMap(letterToCount, letter, -1);
     }
 
     for (int i = 0; i < s1.length() - 1; ++i) {
-      updateLetterToCount(letterToCount, s2.charAt(i), 1);
+      updateMap(letterToCount, s2.charAt(i), 1);
     }
 
     for (int i = s1.length() - 1; i < s2.length(); ++i) {
-      updateLetterToCount(letterToCount, s2.charAt(i), 1);
+      updateMap(letterToCount, s2.charAt(i), 1);
 
       if (letterToCount.isEmpty()) {
         return true;
       }
 
-      updateLetterToCount(letterToCount, s2.charAt(i - s1.length() + 1), -1);
+      updateMap(letterToCount, s2.charAt(i - s1.length() + 1), -1);
     }
 
     return false;
   }
 
-  void updateLetterToCount(Map<Character, Integer> letterToCount, char letter, int delta) {
+  void updateMap(Map<Character, Integer> letterToCount, char letter, int delta) {
     letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + delta);
     letterToCount.remove(letter, 0);
   }
