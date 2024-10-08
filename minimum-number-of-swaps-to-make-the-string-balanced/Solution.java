@@ -1,32 +1,16 @@
 class Solution {
   public int minSwaps(String s) {
-    int result = 0;
-    char[] brackets = s.toCharArray();
-    int leftIndex = 0;
-    int rightIndex = s.length() - 1;
+    int minDepth = 0;
     int depth = 0;
-    for (int i = 0; i < brackets.length; ++i) {
-      if (brackets[i] == '[') {
+    for (char c : s.toCharArray()) {
+      if (c == '[') {
         ++depth;
-      } else if (depth != 0) {
-        --depth;
       } else {
-        while (brackets[leftIndex] == '[') {
-          ++leftIndex;
-        }
-        while (brackets[rightIndex] == ']') {
-          --rightIndex;
-        }
-        brackets[leftIndex] = '[';
-        brackets[rightIndex] = ']';
-        ++leftIndex;
-        --rightIndex;
-
-        ++depth;
-        ++result;
+        --depth;
+        minDepth = Math.min(minDepth, depth);
       }
     }
 
-    return result;
+    return Math.max(0, (-minDepth + 1) / 2);
   }
 }
