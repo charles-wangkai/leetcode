@@ -1,19 +1,18 @@
-public class Solution {
-	public int minAddToMakeValid(String S) {
-		int result = 0;
-		int depth = 0;
-		for (char ch : S.toCharArray()) {
-			if (ch == '(') {
-				depth++;
-			} else {
-				if (depth > 0) {
-					depth--;
-				} else {
-					result++;
-				}
-			}
-		}
-		result += depth;
-		return result;
-	}
+class Solution {
+  public int minAddToMakeValid(String s) {
+    int result = 0;
+    int depth = 0;
+    for (char c : s.toCharArray()) {
+      if (c == '(') {
+        ++depth;
+      } else if (depth == 0) {
+        ++result;
+      } else {
+        --depth;
+      }
+    }
+    result += depth;
+
+    return result;
+  }
 }
