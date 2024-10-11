@@ -1,22 +1,24 @@
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class Solution {
   public int smallestChair(int[][] times, int targetFriend) {
+    Event[] events =
+        IntStream.range(0, times.length)
+            .boxed()
+            .flatMap(
+                i -> Stream.of(new Event(times[i][0], true, i), new Event(times[i][1], false, i)))
+            .sorted(Comparator.comparing(Event::time).thenComparing(Event::arriveOrLeave))
+            .toArray(Event[]::new);
+
     PriorityQueue<Integer> unoccupied = new PriorityQueue<>();
     int minChairId = 0;
-    PriorityQueue<Element> pq =
-        new PriorityQueue<>(
-            Comparator.comparing((Element e) -> e.time).thenComparing(e -> e.arriveOrLeave));
-    for (int i = 0; i < times.length; ++i) {
-      pq.offer(new Element(times[i][0], true, i));
-      pq.offer(new Element(times[i][1], false, i));
-    }
 
     int[] chairs = new int[times.length];
-    while (true) {
-      Element head = pq.poll();
-      if (head.arriveOrLeave) {
+    for (int i = 0; ; ++i) {
+      if (events[i].arriveOrLeave()) {
         int chair;
         if (unoccupied.isEmpty()) {
           chair = minChairId;
@@ -25,26 +27,16 @@ class Solution {
           chair = unoccupied.poll();
         }
 
-        if (head.friend == targetFriend) {
+        if (events[i].friend() == targetFriend) {
           return chair;
         }
 
-        chairs[head.friend] = chair;
+        chairs[events[i].friend()] = chair;
       } else {
-        unoccupied.offer(chairs[head.friend]);
+        unoccupied.offer(chairs[events[i].friend()]);
       }
     }
   }
 }
 
-class Element {
-  int time;
-  boolean arriveOrLeave;
-  int friend;
-
-  Element(int time, boolean arriveOrLeave, int friend) {
-    this.time = time;
-    this.arriveOrLeave = arriveOrLeave;
-    this.friend = friend;
-  }
-}
+record Event(int time, boolean arriveOrLeave, int friend) {}
