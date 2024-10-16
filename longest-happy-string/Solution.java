@@ -1,46 +1,46 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 class Solution {
-    public String longestDiverseString(int a, int b, int c) {
-        StringBuilder result = new StringBuilder();
-        char prev = 0;
-        int count = -1;
-        while (true) {
-            boolean canA = !(prev == 'a' && count == 2);
-            boolean canB = !(prev == 'b' && count == 2);
-            boolean canC = !(prev == 'c' && count == 2);
+  public String longestDiverseString(int a, int b, int c) {
+    int[] counts = {a, b, c};
+    List<Element> elements = new ArrayList<>();
+    while (true) {
+      Optional<Integer> index =
+          IntStream.range(0, counts.length)
+              .filter(i -> counts[i] != 0 && (elements.isEmpty() || i != elements.getLast().index))
+              .boxed()
+              .max(Comparator.comparing(i -> counts[i]));
+      if (index.isEmpty()) {
+        break;
+      }
 
-            if (a != 0 && canA && (a >= b || !canB) && (a >= c || !canC)) {
-                result.append('a');
-                --a;
-
-                if (prev == 'a') {
-                    ++count;
-                } else {
-                    prev = 'a';
-                    count = 1;
-                }
-            } else if (b != 0 && canB && (b >= a || !canA) && (b >= c || !canC)) {
-                result.append('b');
-                --b;
-
-                if (prev == 'b') {
-                    ++count;
-                } else {
-                    prev = 'b';
-                    count = 1;
-                }
-            } else if (c != 0 && canC && (c >= a || !canA) && (c >= b || !canB)) {
-                result.append('c');
-                --c;
-
-                if (prev == 'c') {
-                    ++count;
-                } else {
-                    prev = 'c';
-                    count = 1;
-                }
-            } else {
-                return result.toString();
-            }
-        }
+      --counts[index.get()];
+      elements.add(new Element(index.get(), 1));
     }
+    for (Element element : elements) {
+      if (counts[element.index] != 0) {
+        --counts[element.index];
+        ++element.length;
+      }
+    }
+
+    return elements.stream()
+        .map(element -> String.valueOf((char) ('a' + element.index)).repeat(element.length))
+        .collect(Collectors.joining());
+  }
+}
+
+class Element {
+  int index;
+  int length;
+
+  Element(int index, int length) {
+    this.index = index;
+    this.length = length;
+  }
 }
