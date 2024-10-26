@@ -43,7 +43,7 @@ class Solution {
     int[] sortedValues =
         valueToHeight.keySet().stream()
             .sorted(Comparator.comparing(valueToHeight::get).reversed())
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
     for (int value : sortedValues) {
       TreeNode node = valueToNode.get(value);
@@ -81,9 +81,7 @@ class Solution {
       int height,
       TreeNode node) {
     valueToNode.put(node.val, node);
-
     valueToParent.put(node.val, parent);
-
     valueToHeight.put(node.val, height);
     if (node.left != null) {
       search(
