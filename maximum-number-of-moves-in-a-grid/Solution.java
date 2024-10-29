@@ -3,6 +3,7 @@ class Solution {
     int m = grid.length;
     int n = grid[0].length;
 
+    int result = 0;
     boolean[][] reachables = new boolean[m][n];
     for (int c = 0; c < n; ++c) {
       for (int r = 0; r < m; ++r) {
@@ -16,17 +17,9 @@ class Solution {
                 && reachables[prevR][c - 1]
                 && grid[r][c] > grid[prevR][c - 1]) {
               reachables[r][c] = true;
+              result = c;
             }
           }
-        }
-      }
-    }
-
-    int result = 0;
-    for (int c = 1; c < n; ++c) {
-      for (int r = 0; r < m; ++r) {
-        if (reachables[r][c]) {
-          result = c;
         }
       }
     }
