@@ -17,9 +17,9 @@ class Solution {
       for (int i = 0; i < dp.length; ++i) {
         if (dp[i] != Long.MAX_VALUE) {
           long sum = 0;
-          for (int j = 0; j < f[1] && i + j < robot.size(); ++j) {
-            sum += Math.abs(robot.get(i + j) - f[0]);
-            nextDp[i + j + 1] = Math.min(nextDp[i + j + 1], dp[i] + sum);
+          for (int j = 1; j <= f[1] && i + j <= robot.size(); ++j) {
+            sum += Math.abs(robot.get(i + j - 1) - f[0]);
+            nextDp[i + j] = Math.min(nextDp[i + j], dp[i] + sum);
           }
         }
       }
