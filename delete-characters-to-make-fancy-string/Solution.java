@@ -4,15 +4,13 @@ import java.util.stream.Collectors;
 
 class Solution {
   public String makeFancyString(String s) {
-    List<Character> deleted = new ArrayList<>();
-    for (char ch : s.toCharArray()) {
-      if (deleted.size() <= 1
-          || ch != deleted.get(deleted.size() - 2)
-          || ch != deleted.get(deleted.size() - 1)) {
-        deleted.add(ch);
+    List<Character> result = new ArrayList<>();
+    for (char c : s.toCharArray()) {
+      if (result.size() <= 1 || c != result.get(result.size() - 2) || c != result.getLast()) {
+        result.add(c);
       }
     }
 
-    return deleted.stream().map(String::valueOf).collect(Collectors.joining());
+    return result.stream().map(String::valueOf).collect(Collectors.joining());
   }
 }
