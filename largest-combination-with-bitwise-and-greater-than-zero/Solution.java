@@ -8,7 +8,7 @@ class Solution {
             i ->
                 (int)
                     Arrays.stream(candidates)
-                        .filter(candidate -> (candidate & (1 << i)) != 0)
+                        .filter(candidate -> ((candidate >> i) & 1) == 1)
                         .count())
         .max()
         .getAsInt();
