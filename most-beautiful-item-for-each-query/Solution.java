@@ -1,27 +1,30 @@
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Map.Entry;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.stream.IntStream;
 
 class Solution {
   public int[] maximumBeauty(int[][] items, int[] queries) {
     Arrays.sort(items, Comparator.comparing(item -> item[0]));
 
-    NavigableMap<Integer, Integer> priceToMaxBeauty = new TreeMap<>();
-    int maxBeauty = Integer.MIN_VALUE;
-    for (int[] item : items) {
-      maxBeauty = Math.max(maxBeauty, item[1]);
-      priceToMaxBeauty.put(item[0], maxBeauty);
+    int[] sortedQueryIndices =
+        IntStream.range(0, queries.length)
+            .boxed()
+            .sorted(Comparator.comparing(i -> queries[i]))
+            .mapToInt(Integer::intValue)
+            .toArray();
+
+    int[] result = new int[queries.length];
+    int itemIndex = -1;
+    int maxBeauty = 0;
+    for (int queryIndex : sortedQueryIndices) {
+      while (itemIndex != items.length - 1 && items[itemIndex + 1][0] <= queries[queryIndex]) {
+        ++itemIndex;
+        maxBeauty = Math.max(maxBeauty, items[itemIndex][1]);
+      }
+
+      result[queryIndex] = maxBeauty;
     }
 
-    return Arrays.stream(queries)
-        .map(
-            query -> {
-              Entry<Integer, Integer> entry = priceToMaxBeauty.floorEntry(query);
-
-              return (entry == null) ? 0 : entry.getValue();
-            })
-        .toArray();
+    return result;
   }
 }
