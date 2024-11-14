@@ -20,7 +20,8 @@ class Solution {
 
   boolean check(int n, int[] quantities, int maxProductNum) {
     return Arrays.stream(quantities)
-            .mapToLong(quantity -> (quantity + maxProductNum - 1) / maxProductNum)
+            .map(quantity -> (quantity + maxProductNum - 1) / maxProductNum)
+            .asLongStream()
             .sum()
         <= n;
   }
