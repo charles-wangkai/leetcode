@@ -1,6 +1,6 @@
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 class Solution {
   static final List<Character> LETTERS = List.of('a', 'b', 'c');
@@ -10,17 +10,18 @@ class Solution {
       return -1;
     }
 
-    Map<Character, Integer> letterToCount = new HashMap<>();
-    for (char letter : LETTERS) {
-      letterToCount.put(letter, 0);
-    }
+    @SuppressWarnings("unused")
+    Map<Character, Integer> letterToCount =
+        LETTERS.stream().collect(Collectors.toMap(letter -> letter, letter -> 0));
+
     int leftIndex = -1;
     while (letterToCount.values().stream().anyMatch(count -> count < k)) {
       ++leftIndex;
       letterToCount.put(s.charAt(leftIndex), letterToCount.get(s.charAt(leftIndex)) + 1);
     }
-    int rightIndex = s.length();
+
     int result = leftIndex + 1;
+    int rightIndex = s.length();
     while (leftIndex != -1) {
       letterToCount.put(s.charAt(leftIndex), letterToCount.get(s.charAt(leftIndex)) - 1);
       --leftIndex;
@@ -30,7 +31,7 @@ class Solution {
         letterToCount.put(s.charAt(rightIndex), letterToCount.get(s.charAt(rightIndex)) + 1);
       }
 
-      result = Math.min(result, leftIndex + 1 + s.length() - rightIndex);
+      result = Math.min(result, (leftIndex + 1) + (s.length() - rightIndex));
     }
 
     return result;
