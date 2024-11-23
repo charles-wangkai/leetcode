@@ -5,9 +5,9 @@ class Solution {
     int m = box.length;
     int n = box[0].length;
 
-    char[][] rotated = new char[n][m];
-    for (int r = 0; r < rotated.length; ++r) {
-      Arrays.fill(rotated[r], '.');
+    char[][] result = new char[n][m];
+    for (int r = 0; r < result.length; ++r) {
+      Arrays.fill(result[r], '.');
     }
     for (int r = 0; r < m; ++r) {
       int lastC = n - 1;
@@ -16,15 +16,15 @@ class Solution {
           while (box[r][lastC] == '*') {
             --lastC;
           }
-          rotated[lastC][m - 1 - r] = '#';
+          result[lastC][m - 1 - r] = '#';
           --lastC;
         } else if (box[r][c] == '*') {
-          rotated[c][m - 1 - r] = '*';
+          result[c][m - 1 - r] = '*';
           lastC = c;
         }
       }
     }
 
-    return rotated;
+    return result;
   }
 }
