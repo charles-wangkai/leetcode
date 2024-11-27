@@ -25,9 +25,7 @@ class Solution {
   }
 
   int computeMinDistance(List<Integer>[] adjLists) {
-    int n = adjLists.length;
-
-    int[] distances = new int[n];
+    int[] distances = new int[adjLists.length];
     Arrays.fill(distances, -1);
     distances[0] = 0;
 
@@ -44,6 +42,6 @@ class Solution {
       }
     }
 
-    return distances[n - 1];
+    return distances[distances.length - 1];
   }
 }
