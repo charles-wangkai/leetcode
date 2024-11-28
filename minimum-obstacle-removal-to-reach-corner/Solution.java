@@ -14,17 +14,18 @@ class Solution {
     for (int r = 0; r < distances.length; ++r) {
       Arrays.fill(distances[r], -1);
     }
+    distances[0][0] = 0;
 
     Deque<Point> deque = new ArrayDeque<>();
-    distances[0][0] = 0;
-    deque.offer(new Point(0, 0));
+    deque.offerFirst(new Point(0, 0));
+
     while (!deque.isEmpty()) {
       Point head = deque.pollFirst();
       for (int i = 0; i < R_OFFSETS.length; ++i) {
-        int adjR = head.r + R_OFFSETS[i];
-        int adjC = head.c + C_OFFSETS[i];
+        int adjR = head.r() + R_OFFSETS[i];
+        int adjC = head.c() + C_OFFSETS[i];
         if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n && distances[adjR][adjC] == -1) {
-          distances[adjR][adjC] = distances[head.r][head.c] + grid[adjR][adjC];
+          distances[adjR][adjC] = distances[head.r()][head.c()] + grid[adjR][adjC];
           if (grid[adjR][adjC] == 0) {
             deque.offerFirst(new Point(adjR, adjC));
           } else {
@@ -38,12 +39,4 @@ class Solution {
   }
 }
 
-class Point {
-  int r;
-  int c;
-
-  Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-}
+record Point(int r, int c) {}
