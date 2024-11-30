@@ -15,9 +15,7 @@ class Solution {
 
     Map<Integer, List<Integer>> fromToTos = new HashMap<>();
     for (int[] pair : pairs) {
-      if (!fromToTos.containsKey(pair[0])) {
-        fromToTos.put(pair[0], new ArrayList<>());
-      }
+      fromToTos.putIfAbsent(pair[0], new ArrayList<>());
       fromToTos.get(pair[0]).add(pair[1]);
     }
 
@@ -34,7 +32,7 @@ class Solution {
         current = stack.pop();
       } else {
         stack.push(current);
-        current = tos.remove(tos.size() - 1);
+        current = tos.removeLast();
       }
     }
     Collections.reverse(path);
