@@ -1,12 +1,13 @@
-class Solution {
-    public int isPrefixOfWord(String sentence, String searchWord) {
-        String[] words = sentence.split(" ");
-        for (int i = 0; i < words.length; ++i) {
-            if (words[i].startsWith(searchWord)) {
-                return i + 1;
-            }
-        }
+import java.util.stream.IntStream;
 
-        return -1;
-    }
+class Solution {
+  public int isPrefixOfWord(String sentence, String searchWord) {
+    String[] words = sentence.split(" ");
+
+    return IntStream.range(0, words.length)
+        .filter(i -> words[i].startsWith(searchWord))
+        .map(i -> i + 1)
+        .findFirst()
+        .orElse(-1);
+  }
 }
