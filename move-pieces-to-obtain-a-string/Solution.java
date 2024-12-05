@@ -12,9 +12,9 @@ class Solution {
             .allMatch(
                 i ->
                     start.charAt(startIndices[i]) == target.charAt(targetIndices[i])
-                            && (target.charAt(targetIndices[i]) == 'L'
+                        && ((target.charAt(targetIndices[i]) == 'L'
                                 && targetIndices[i] <= startIndices[i])
-                        || (target.charAt(targetIndices[i]) == 'R'
-                            && targetIndices[i] >= startIndices[i]));
+                            || (target.charAt(targetIndices[i]) == 'R'
+                                && targetIndices[i] >= startIndices[i])));
   }
 }
