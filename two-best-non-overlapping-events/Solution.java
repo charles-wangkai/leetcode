@@ -18,6 +18,7 @@ class Solution {
     int result = 0;
     for (int[] event : events) {
       result = Math.max(result, event[2]);
+
       Entry<Integer, Integer> entry = startTimeToMaxAfterValue.higherEntry(event[1]);
       if (entry != null) {
         result = Math.max(result, event[2] + entry.getValue());
