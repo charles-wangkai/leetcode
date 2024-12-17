@@ -1,8 +1,8 @@
-class Solution {
-  static final int ALPHABET_SIZE = 26;
+import java.util.stream.IntStream;
 
+class Solution {
   public String repeatLimitedString(String s, int repeatLimit) {
-    int[] counts = new int[ALPHABET_SIZE];
+    int[] counts = new int[26];
     for (char c : s.toCharArray()) {
       ++counts[c - 'a'];
     }
@@ -30,12 +30,12 @@ class Solution {
   }
 
   char findMax(int[] counts, char excluded) {
-    for (int i = counts.length - 1; i >= 0; --i) {
-      if (counts[i] != 0 && i != excluded - 'a') {
-        return (char) (i + 'a');
-      }
-    }
-
-    return 0;
+    return IntStream.range(0, counts.length)
+        .filter(i -> counts[i] != 0 && i != excluded - 'a')
+        .max()
+        .stream()
+        .mapToObj(i -> (char) (i + 'a'))
+        .findAny()
+        .orElse((char) 0);
   }
 }
