@@ -1,14 +1,14 @@
-public class Solution {
-	public int maxChunksToSorted(int[] arr) {
-		int chunkNum = 0;
-		int maxNumber = -1;
-		for (int i = 0; i < arr.length; i++) {
-			maxNumber = Math.max(maxNumber, arr[i]);
+class Solution {
+  public int maxChunksToSorted(int[] arr) {
+    int result = 0;
+    int maxValue = -1;
+    for (int i = 0; i < arr.length; ++i) {
+      maxValue = Math.max(maxValue, arr[i]);
+      if (maxValue == i) {
+        ++result;
+      }
+    }
 
-			if (maxNumber == i) {
-				chunkNum++;
-			}
-		}
-		return chunkNum;
-	}
+    return result;
+  }
 }
