@@ -24,7 +24,7 @@ class Solution {
   public TreeNode reverseOddLevels(TreeNode root) {
     List<TreeNode> level = List.of(root);
     for (int i = 0; level.get(0) != null; ++i) {
-      if (i % 2 != 0) {
+      if (i % 2 == 1) {
         for (int begin = 0, end = level.size() - 1; begin < end; ++begin, --end) {
           int temp = level.get(begin).val;
           level.get(begin).val = level.get(end).val;
