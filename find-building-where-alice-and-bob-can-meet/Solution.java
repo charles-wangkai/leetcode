@@ -18,9 +18,8 @@ class Solution {
     int index = 0;
     List<Integer> heightIndices = new ArrayList<>();
     for (int i = heights.length - 1; i >= 0; --i) {
-      while (!heightIndices.isEmpty()
-          && heights[i] >= heights[heightIndices.get(heightIndices.size() - 1)]) {
-        heightIndices.remove(heightIndices.size() - 1);
+      while (!heightIndices.isEmpty() && heights[i] >= heights[heightIndices.getLast()]) {
+        heightIndices.removeLast();
       }
       heightIndices.add(i);
 
