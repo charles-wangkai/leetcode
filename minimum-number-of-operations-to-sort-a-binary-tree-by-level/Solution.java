@@ -46,7 +46,7 @@ class Solution {
   }
 
   int computeOperationNum(List<Integer> level) {
-    int[] sorted = level.stream().sorted().mapToInt(x -> x).toArray();
+    int[] sorted = level.stream().sorted().mapToInt(Integer::intValue).toArray();
     Map<Integer, Integer> valueToIndex =
         IntStream.range(0, sorted.length).boxed().collect(Collectors.toMap(i -> sorted[i], i -> i));
 
