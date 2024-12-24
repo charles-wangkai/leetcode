@@ -36,16 +36,16 @@ class Solution {
     }
 
     int[] distances = new int[edges.length + 1];
-    search(distances, adjLists, 0, root, -1);
+    search(distances, adjLists, 0, -1, root);
 
     return distances;
   }
 
-  void search(int[] distances, List<Integer>[] adjLists, int distance, int node, int parent) {
+  void search(int[] distances, List<Integer>[] adjLists, int distance, int parent, int node) {
     distances[node] = distance;
     for (int adj : adjLists[node]) {
       if (adj != parent) {
-        search(distances, adjLists, distance + 1, adj, node);
+        search(distances, adjLists, distance + 1, node, adj);
       }
     }
   }
