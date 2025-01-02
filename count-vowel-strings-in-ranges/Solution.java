@@ -17,6 +17,6 @@ class Solution {
   }
 
   boolean isVowel(char c) {
-    return "aeiou".indexOf(c) >= 0;
+    return "aeiou".indexOf(c) != -1;
   }
 }
