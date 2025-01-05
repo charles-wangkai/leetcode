@@ -2,8 +2,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
-  static final int ALPHABET_SIZE = 26;
-
   public String shiftingLetters(String s, int[][] shifts) {
     int[] deltas = new int[s.length() + 1];
     for (int[] shift : shifts) {
@@ -24,7 +22,7 @@ class Solution {
     }
 
     return IntStream.range(0, s.length())
-        .mapToObj(i -> (char) (Math.floorMod(s.charAt(i) - 'a' + diffs[i], ALPHABET_SIZE) + 'a'))
+        .mapToObj(i -> (char) (Math.floorMod(s.charAt(i) - 'a' + diffs[i], 26) + 'a'))
         .map(String::valueOf)
         .collect(Collectors.joining());
   }
