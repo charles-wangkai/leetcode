@@ -8,6 +8,6 @@ class Solution {
       letterToCount.put(letter, letterToCount.getOrDefault(letter, 0) + 1);
     }
 
-    return letterToCount.values().stream().mapToInt(count -> (count - 1) % 2 + 1).sum();
+    return letterToCount.values().stream().mapToInt(count -> (count % 2 == 0) ? 2 : 1).sum();
   }
 }
