@@ -6,9 +6,9 @@ import java.util.List;
 class Solution {
   public int maximumInvitations(int[] favorite) {
     @SuppressWarnings("unchecked")
-    List<Integer>[] adjLists = new List[favorite.length];
-    for (int i = 0; i < adjLists.length; ++i) {
-      adjLists[i] = new ArrayList<>();
+    List<Integer>[] fromLists = new List[favorite.length];
+    for (int i = 0; i < fromLists.length; ++i) {
+      fromLists[i] = new ArrayList<>();
     }
 
     List<Pair> pairs = new ArrayList<>();
@@ -18,7 +18,7 @@ class Solution {
           pairs.add(new Pair(i, favorite[i]));
         }
       } else {
-        adjLists[favorite[i]].add(i);
+        fromLists[favorite[i]].add(i);
       }
     }
 
@@ -26,7 +26,8 @@ class Solution {
     boolean[] visited = new boolean[favorite.length];
     for (Pair pair : pairs) {
       chainSum +=
-          computeMaxChain(adjLists, visited, pair.v1) + computeMaxChain(adjLists, visited, pair.v2);
+          computeMaxChain(fromLists, visited, pair.v1())
+              + computeMaxChain(fromLists, visited, pair.v2());
     }
 
     int maxCircle = 0;
@@ -56,24 +57,16 @@ class Solution {
     return Math.max(chainSum, maxCircle);
   }
 
-  int computeMaxChain(List<Integer>[] adjLists, boolean[] visited, int v) {
+  int computeMaxChain(List<Integer>[] fromLists, boolean[] visited, int v) {
     visited[v] = true;
 
     int maxSubResult = 0;
-    for (int adj : adjLists[v]) {
-      maxSubResult = Math.max(maxSubResult, computeMaxChain(adjLists, visited, adj));
+    for (int from : fromLists[v]) {
+      maxSubResult = Math.max(maxSubResult, computeMaxChain(fromLists, visited, from));
     }
 
     return 1 + maxSubResult;
   }
 }
 
-class Pair {
-  int v1;
-  int v2;
-
-  Pair(int v1, int v2) {
-    this.v1 = v1;
-    this.v2 = v2;
-  }
-}
+record Pair(int v1, int v2) {}
