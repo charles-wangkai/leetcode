@@ -2,48 +2,27 @@ import java.util.Arrays;
 
 class Solution {
   public int[] findRedundantConnection(int[][] edges) {
-    for (int i = edges.length - 1; ; --i) {
-      if (isTree(edges, i)) {
-        return edges[i];
-      }
-    }
-  }
-
-  boolean isTree(int[][] edges, int redundantIndex) {
-    int n = edges.length;
-
-    int[] parents = new int[n];
+    int[] parents = new int[edges.length];
     Arrays.fill(parents, -1);
 
-    for (int i = 0; i < edges.length; ++i) {
-      if (i != redundantIndex) {
-        int root0 = findRoot(parents, edges[i][0] - 1);
-        int root1 = findRoot(parents, edges[i][1] - 1);
-        if (root0 == root1) {
-          return false;
-        }
-
-        parents[root1] = root0;
+    for (int i = 0; ; ++i) {
+      int root1 = findRoot(parents, edges[i][0] - 1);
+      int root2 = findRoot(parents, edges[i][1] - 1);
+      if (root1 == root2) {
+        return edges[i];
       }
-    }
 
-    return true;
+      parents[root2] = root1;
+    }
   }
 
   int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+    if (parents[node] == -1) {
+      return node;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parents[node] = findRoot(parents, parents[node]);
 
-      p = next;
-    }
-
-    return root;
+    return parents[node];
   }
 }
