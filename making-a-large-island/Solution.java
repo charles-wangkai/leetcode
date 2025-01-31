@@ -19,7 +19,6 @@ class Solution {
       for (int c = 0; c < n; ++c) {
         if (!visited[r][c] && grid[r][c] == 1) {
           fill(grid, visited, marks, areas, mark, r, c);
-
           ++mark;
         }
       }
@@ -32,17 +31,16 @@ class Solution {
           result = Math.max(result, areas[r][c]);
         } else {
           int totalArea = 1;
-          Set<Integer> usedMarks = new HashSet<>();
+          Set<Integer> seen = new HashSet<>();
           for (int i = 0; i < R_OFFSETS.length; ++i) {
             int adjR = r + R_OFFSETS[i];
             int adjC = c + C_OFFSETS[i];
-
             if (adjR >= 0
                 && adjR < n
                 && adjC >= 0
                 && adjC < n
-                && !usedMarks.contains(marks[adjR][adjC])) {
-              usedMarks.add(marks[adjR][adjC]);
+                && !seen.contains(marks[adjR][adjC])) {
+              seen.add(marks[adjR][adjC]);
               totalArea += areas[adjR][adjC];
             }
           }
@@ -67,8 +65,8 @@ class Solution {
     search(grid, visited, island, beginR, beginC);
 
     for (Point point : island) {
-      marks[point.r][point.c] = mark;
-      areas[point.r][point.c] = island.size();
+      marks[point.r()][point.c()] = mark;
+      areas[point.r()][point.c()] = island.size();
     }
   }
 
@@ -81,7 +79,6 @@ class Solution {
     for (int i = 0; i < R_OFFSETS.length; ++i) {
       int adjR = r + R_OFFSETS[i];
       int adjC = c + C_OFFSETS[i];
-
       if (adjR >= 0
           && adjR < n
           && adjC >= 0
@@ -94,12 +91,4 @@ class Solution {
   }
 }
 
-class Point {
-  int r;
-  int c;
-
-  Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-}
+record Point(int r, int c) {}
