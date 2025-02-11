@@ -6,7 +6,7 @@ class Solution {
         break;
       }
 
-      s = String.format("%s%s", s.substring(0, index), s.substring(index + part.length()));
+      s = s.substring(0, index) + s.substring(index + part.length());
     }
 
     return s;
