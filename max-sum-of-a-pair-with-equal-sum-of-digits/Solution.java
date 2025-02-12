@@ -17,7 +17,11 @@ class Solution {
         .filter(values -> values.size() >= 2)
         .mapToInt(
             values ->
-                values.stream().sorted(Comparator.reverseOrder()).limit(2).mapToInt(x -> x).sum())
+                values.stream()
+                    .sorted(Comparator.reverseOrder())
+                    .limit(2)
+                    .mapToInt(Integer::intValue)
+                    .sum())
         .max()
         .orElse(-1);
   }
