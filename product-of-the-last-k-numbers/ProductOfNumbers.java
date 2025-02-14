@@ -2,11 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ProductOfNumbers {
-  private List<Integer> prefixNonZeroProducts = new ArrayList<>();
-  private List<Integer> prefixZeroNums = new ArrayList<>();
+  private List<Integer> prefixNonZeroProducts;
+  private List<Integer> prefixZeroNums;
 
   ProductOfNumbers() {
+    prefixNonZeroProducts = new ArrayList<>();
     prefixNonZeroProducts.add(1);
+
+    prefixZeroNums = new ArrayList<>();
     prefixZeroNums.add(0);
   }
 
@@ -21,15 +24,13 @@ class ProductOfNumbers {
   }
 
   public int getProduct(int k) {
-    if (!getLast(prefixZeroNums, 1).equals(getLast(prefixZeroNums, k + 1))) {
-      return 0;
-    }
-
-    return getLast(prefixNonZeroProducts, 1) / getLast(prefixNonZeroProducts, k + 1);
+    return getLast(prefixZeroNums, 1) == getLast(prefixZeroNums, k + 1)
+        ? (getLast(prefixNonZeroProducts, 1) / getLast(prefixNonZeroProducts, k + 1))
+        : 0;
   }
 
-  private <T> T getLast(List<T> list, int k) {
-    return list.get(list.size() - k);
+  private int getLast(List<Integer> list, int d) {
+    return list.get(list.size() - d);
   }
 }
 
