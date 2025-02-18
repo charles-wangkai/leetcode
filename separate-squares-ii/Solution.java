@@ -86,7 +86,7 @@ class Solution {
     int prevX = -1;
     int eventIndex = 0;
     while (eventIndex != events.length) {
-      result += (long) query(0, ys.length - 2, segmentTree) * (events[eventIndex].x() - prevX);
+      result += (long) query(segmentTree) * (events[eventIndex].x() - prevX);
 
       prevX = events[eventIndex].x();
       while (eventIndex != events.length && events[eventIndex].x() == prevX) {
@@ -102,16 +102,8 @@ class Solution {
     return result;
   }
 
-  int query(int beginIndex, int endIndex, Node node) {
-    if (node.beginIndex > endIndex || node.endIndex < beginIndex) {
-      return 0;
-    }
-
-    if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-      return (node.count == 0) ? node.covered : node.length;
-    }
-
-    return query(beginIndex, endIndex, node.left) + query(beginIndex, endIndex, node.right);
+  int query(Node node) {
+    return (node.count == 0) ? node.covered : node.length;
   }
 
   void update(int beginIndex, int endIndex, int delta, Node node) {
@@ -122,9 +114,7 @@ class Solution {
         update(beginIndex, endIndex, delta, node.left);
         update(beginIndex, endIndex, delta, node.right);
 
-        node.covered =
-            query(node.beginIndex, node.endIndex, node.left)
-                + query(node.beginIndex, node.endIndex, node.right);
+        node.covered = query(node.left) + query(node.right);
       }
     }
   }
