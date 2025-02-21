@@ -3,37 +3,45 @@ import java.util.Set;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class FindElements {
-	Set<Integer> values = new HashSet<>();
+class FindElements {
+  Set<Integer> values = new HashSet<>();
 
-	public FindElements(TreeNode root) {
-		recover(root, 0);
-	}
+  public FindElements(TreeNode root) {
+    recover(root, 0);
+  }
 
-	void recover(TreeNode node, int value) {
-		if (node == null) {
-			return;
-		}
+  private void recover(TreeNode node, int value) {
+    if (node == null) {
+      return;
+    }
 
-		node.val = value;
-		values.add(value);
+    node.val = value;
+    values.add(value);
 
-		recover(node.left, 2 * value + 1);
-		recover(node.right, 2 * value + 2);
-	}
+    recover(node.left, 2 * value + 1);
+    recover(node.right, 2 * value + 2);
+  }
 
-	public boolean find(int target) {
-		return values.contains(target);
-	}
+  public boolean find(int target) {
+    return values.contains(target);
+  }
 }
 
 // Your FindElements object will be instantiated and called as such:
