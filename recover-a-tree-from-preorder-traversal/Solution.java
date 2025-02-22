@@ -3,69 +3,68 @@ import java.util.List;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	List<Element> elements;
-	int elementIndex;
+class Solution {
+  int elementIndex;
 
-	public TreeNode recoverFromPreorder(String S) {
-		buildElements(S);
-		elementIndex = 0;
+  public TreeNode recoverFromPreorder(String traversal) {
+    List<Element> elements = buildElements(traversal);
+    elementIndex = 0;
 
-		return buildNode(0);
-	}
+    return buildNode(elements, 0);
+  }
 
-	void buildElements(String S) {
-		elements = new ArrayList<>();
-		int depth = 0;
-		int val = 0;
-		for (int i = 0; i <= S.length(); i++) {
-			if (i != S.length() && S.charAt(i) != '-') {
-				val = val * 10 + (S.charAt(i) - '0');
-			} else if (i >= 1 && S.charAt(i - 1) == '-') {
-				depth++;
-			} else {
-				elements.add(new Element(depth, val));
+  List<Element> buildElements(String traversal) {
+    List<Element> result = new ArrayList<>();
+    int depth = 0;
+    int value = 0;
+    for (int i = 0; i <= traversal.length(); ++i) {
+      if (i == traversal.length() || traversal.charAt(i) == '-') {
+        if (value != 0) {
+          result.add(new Element(depth, value));
 
-				depth = 1;
-				val = 0;
-			}
-		}
-	}
+          depth = 0;
+          value = 0;
+        }
 
-	TreeNode buildNode(int depth) {
-		if (elementIndex == elements.size()) {
-			return null;
-		}
+        ++depth;
+      } else {
+        value = value * 10 + (traversal.charAt(i) - '0');
+      }
+    }
 
-		Element nextElement = elements.get(elementIndex);
-		if (depth != nextElement.depth) {
-			return null;
-		}
+    return result;
+  }
 
-		elementIndex++;
+  TreeNode buildNode(List<Element> elements, int depth) {
+    if (elementIndex == elements.size() || elements.get(elementIndex).depth() != depth) {
+      return null;
+    }
 
-		TreeNode node = new TreeNode(nextElement.val);
-		node.left = buildNode(depth + 1);
-		node.right = buildNode(depth + 1);
-		return node;
-	}
+    TreeNode node = new TreeNode(elements.get(elementIndex).value());
+    ++elementIndex;
+
+    node.left = buildNode(elements, depth + 1);
+    node.right = buildNode(elements, depth + 1);
+
+    return node;
+  }
 }
 
-class Element {
-	int depth;
-	int val;
-
-	Element(int depth, int val) {
-		this.depth = depth;
-		this.val = val;
-	}
-}
+record Element(int depth, int value) {}
