@@ -15,14 +15,9 @@ class Solution {
       adjLists[edge[0]].add(edge[1]);
       adjLists[edge[1]].add(edge[0]);
     }
-    @SuppressWarnings("unchecked")
-    List<Integer>[] childLists = new List[n];
-    for (int i = 0; i < childLists.length; ++i) {
-      childLists[i] = new ArrayList<>();
-    }
+
     int[] parents = new int[n];
-    Arrays.fill(parents, Integer.MAX_VALUE);
-    buildTree(adjLists, childLists, parents, -1, 0);
+    buildParents(adjLists, parents, -1, 0);
 
     int[] bobTimes = new int[n];
     Arrays.fill(bobTimes, Integer.MAX_VALUE);
@@ -30,39 +25,37 @@ class Solution {
       bobTimes[node] = bobTime;
     }
 
-    return search(amount, childLists, bobTimes, 0, 0, 0);
+    return search(amount, adjLists, bobTimes, 0, -1, 0);
   }
 
   int search(
-      int[] amount, List<Integer>[] childLists, int[] bobTimes, int time, int income, int node) {
-    if (bobTimes[node] > time) {
-      income += amount[node];
-    } else if (bobTimes[node] == time) {
-      income += amount[node] / 2;
+      int[] amount, List<Integer>[] adjLists, int[] bobTimes, int time, int parent, int node) {
+    int current;
+    if (time < bobTimes[node]) {
+      current = amount[node];
+    } else if (time == bobTimes[node]) {
+      current = amount[node] / 2;
+    } else {
+      current = 0;
     }
 
-    if (childLists[node].isEmpty()) {
-      return income;
+    int maxSubResult = Integer.MIN_VALUE;
+    for (int adj : adjLists[node]) {
+      if (adj != parent) {
+        maxSubResult =
+            Math.max(maxSubResult, search(amount, adjLists, bobTimes, time + 1, node, adj));
+      }
     }
 
-    int result = Integer.MIN_VALUE;
-    for (int child : childLists[node]) {
-      result = Math.max(result, search(amount, childLists, bobTimes, time + 1, income, child));
-    }
-
-    return result;
+    return current + ((maxSubResult == Integer.MIN_VALUE) ? 0 : maxSubResult);
   }
 
-  void buildTree(
-      List<Integer>[] adjLists, List<Integer>[] childLists, int[] parents, int parent, int node) {
-    if (parent != -1) {
-      childLists[parent].add(node);
-    }
+  void buildParents(List<Integer>[] adjLists, int[] parents, int parent, int node) {
     parents[node] = parent;
 
     for (int adj : adjLists[node]) {
-      if (parents[adj] == Integer.MAX_VALUE) {
-        buildTree(adjLists, childLists, parents, node, adj);
+      if (adj != parent) {
+        buildParents(adjLists, parents, node, adj);
       }
     }
   }
