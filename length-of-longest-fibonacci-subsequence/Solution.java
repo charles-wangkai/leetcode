@@ -2,33 +2,33 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Solution {
-	public int lenLongestFibSubseq(int[] A) {
-		Set<Integer> numbers = Arrays.stream(A).boxed().collect(Collectors.toSet());
+class Solution {
+  public int lenLongestFibSubseq(int[] arr) {
+    Set<Integer> values = Arrays.stream(arr).boxed().collect(Collectors.toSet());
 
-		int maxLength = 0;
-		for (int i = 0; i < A.length; i++) {
-			for (int j = i + 1; j < A.length; j++) {
-				int length = findLength(numbers, A[i], A[j]);
-				maxLength = Math.max(maxLength, length);
-			}
-		}
-		return maxLength;
-	}
+    int result = 0;
+    for (int i = 0; i < arr.length; ++i) {
+      for (int j = i + 1; j < arr.length; ++j) {
+        result = Math.max(result, computeLength(values, arr[i], arr[j]));
+      }
+    }
 
-	int findLength(Set<Integer> numbers, int prev, int current) {
-		int length = 2;
-		while (true) {
-			int next = prev + current;
+    return result;
+  }
 
-			if (!numbers.contains(next)) {
-				break;
-			}
+  int computeLength(Set<Integer> values, int prev, int curr) {
+    int length = 2;
+    while (true) {
+      int next = prev + curr;
+      if (!values.contains(next)) {
+        break;
+      }
 
-			length++;
-			prev = current;
-			current = next;
-		}
-		return length >= 3 ? length : 0;
-	}
+      ++length;
+      prev = curr;
+      curr = next;
+    }
+
+    return (length >= 3) ? length : 0;
+  }
 }
