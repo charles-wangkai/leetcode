@@ -1,45 +1,40 @@
-public class Solution {
-	public String shortestCommonSupersequence(String str1, String str2) {
-		int length1 = str1.length();
-		int length2 = str2.length();
+class Solution {
+  public String shortestCommonSupersequence(String str1, String str2) {
+    int[][] dp = new int[str1.length() + 1][str2.length() + 1];
+    for (int i = 0; i <= str1.length(); ++i) {
+      for (int j = 0; j <= str2.length(); ++j) {
+        if (i == 0) {
+          dp[i][j] = j;
+        } else if (j == 0) {
+          dp[i][j] = i;
+        } else if (str1.charAt(i - 1) == str2.charAt(j - 1)) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + 1;
+        }
+      }
+    }
 
-		int[][] minLengths = new int[length1 + 1][length2 + 1];
-		for (int i = 0; i <= length1; i++) {
-			for (int j = 0; j <= length2; j++) {
-				if (i == 0) {
-					minLengths[i][j] = j;
-				} else if (j == 0) {
-					minLengths[i][j] = i;
-				} else {
-					minLengths[i][j] = Math.min(Math.min(minLengths[i - 1][j], minLengths[i][j - 1]) + 1,
-							minLengths[i - 1][j - 1] + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 1 : 2));
-				}
-			}
-		}
+    StringBuilder result = new StringBuilder();
+    int length1 = str1.length();
+    int length2 = str2.length();
+    while (length1 != 0 || length2 != 0) {
+      if (length1 != 0 && dp[length1][length2] == dp[length1 - 1][length2] + 1) {
+        result.append(str1.charAt(length1 - 1));
 
-		StringBuilder result = new StringBuilder();
-		int r = length1;
-		int c = length2;
-		while (r != 0 || c != 0) {
-			if (r != 0 && minLengths[r][c] == minLengths[r - 1][c] + 1) {
-				result.append(str1.charAt(r - 1));
+        --length1;
+      } else if (length2 != 0 && dp[length1][length2] == dp[length1][length2 - 1] + 1) {
+        result.append(str2.charAt(length2 - 1));
 
-				r--;
-			} else if (c != 0 && minLengths[r][c] == minLengths[r][c - 1] + 1) {
-				result.append(str2.charAt(c - 1));
+        --length2;
+      } else {
+        result.append(str1.charAt(length1 - 1));
 
-				c--;
-			} else {
-				result.append(str1.charAt(r - 1));
-				if (str1.charAt(r - 1) != str2.charAt(c - 1)) {
-					result.append(str2.charAt(c - 1));
-				}
+        --length1;
+        --length2;
+      }
+    }
 
-				r--;
-				c--;
-			}
-		}
-
-		return result.reverse().toString();
-	}
+    return result.reverse().toString();
+  }
 }
