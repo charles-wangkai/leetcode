@@ -21,8 +21,8 @@ class Solution {
   }
 
   void merge(List<int[]> merged, int[] element) {
-    if (!merged.isEmpty() && merged.get(merged.size() - 1)[0] == element[0]) {
-      merged.get(merged.size() - 1)[1] += element[1];
+    if (!merged.isEmpty() && merged.getLast()[0] == element[0]) {
+      merged.getLast()[1] += element[1];
     } else {
       merged.add(element);
     }
