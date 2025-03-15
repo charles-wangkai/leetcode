@@ -19,14 +19,17 @@ class Solution {
   }
 
   boolean check(int[] nums, int k, int capability) {
-    int[] dp = new int[nums.length];
-    for (int i = 0; i < dp.length; ++i) {
-      dp[i] =
-          Math.max(
-              ((nums[i] <= capability) ? 1 : 0) + ((i >= 2) ? dp[i - 2] : 0),
-              (i >= 1) ? dp[i - 1] : 0);
+    int houseNum = 0;
+    int length = 0;
+    for (int i = 0; i <= nums.length; ++i) {
+      if (i != nums.length && nums[i] <= capability) {
+        ++length;
+      } else {
+        houseNum += (length + 1) / 2;
+        length = 0;
+      }
     }
 
-    return dp[dp.length - 1] >= k;
+    return houseNum >= k;
   }
 }
