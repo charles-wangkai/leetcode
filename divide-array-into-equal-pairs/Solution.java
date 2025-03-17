@@ -1,13 +1,10 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 class Solution {
   public boolean divideArray(int[] nums) {
-    Map<Integer, Integer> valueToCount = new HashMap<>();
-    for (int num : nums) {
-      valueToCount.put(num, valueToCount.getOrDefault(num, 0) + 1);
-    }
+    Arrays.sort(nums);
 
-    return valueToCount.values().stream().allMatch(count -> count % 2 == 0);
+    return IntStream.range(0, nums.length / 2).allMatch(i -> nums[i * 2] == nums[i * 2 + 1]);
   }
 }
