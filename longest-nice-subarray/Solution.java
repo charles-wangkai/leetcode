@@ -2,16 +2,15 @@ class Solution {
   public int longestNiceSubarray(int[] nums) {
     int result = 0;
     int endIndex = -1;
-    int sum = 0;
+    int or = 0;
     for (int beginIndex = 0; beginIndex < nums.length; ++beginIndex) {
-      while (endIndex + 1 != nums.length
-          && sum + nums[endIndex + 1] == (sum | nums[endIndex + 1])) {
+      while (endIndex + 1 != nums.length && (or & nums[endIndex + 1]) == 0) {
         ++endIndex;
-        sum += nums[endIndex];
+        or |= nums[endIndex];
       }
 
       result = Math.max(result, endIndex - beginIndex + 1);
-      sum -= nums[beginIndex];
+      or ^= nums[beginIndex];
     }
 
     return result;
