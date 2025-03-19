@@ -3,8 +3,8 @@ class Solution {
     int result = 0;
     for (int i = 0; i <= nums.length - 3; ++i) {
       if (nums[i] == 0) {
-        for (int j = i; j < i + 3; ++j) {
-          nums[j] = 1 - nums[j];
+        for (int j = 0; j < 3; ++j) {
+          nums[i + j] = 1 - nums[i + j];
         }
         ++result;
       }
