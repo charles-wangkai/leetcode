@@ -13,19 +13,15 @@ class Solution {
       int root2 = findRoot(parents, edge[1]);
       if (root1 != root2) {
         parents[root2] = root1;
-        subtreeAnds[root1] = and(subtreeAnds[root1], and(subtreeAnds[root2], edge[2]));
-      } else {
-        subtreeAnds[root1] = and(subtreeAnds[root1], edge[2]);
+        subtreeAnds[root1] = and(subtreeAnds[root1], subtreeAnds[root2]);
       }
+
+      subtreeAnds[root1] = and(subtreeAnds[root1], edge[2]);
     }
 
     return Arrays.stream(query)
         .mapToInt(
             q -> {
-              if (q[0] == q[1]) {
-                return 0;
-              }
-
               int root1 = findRoot(parents, q[0]);
               int root2 = findRoot(parents, q[1]);
 
