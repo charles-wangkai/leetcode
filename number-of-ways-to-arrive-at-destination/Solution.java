@@ -21,42 +21,34 @@ class Solution {
     long[] distances = new long[n];
     Arrays.fill(distances, -1);
 
-    int[] pathCounts = new int[n];
-    pathCounts[0] = 1;
+    int[] pathNums = new int[n];
+    pathNums[0] = 1;
 
-    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(e -> e.distance));
+    PriorityQueue<Element> pq = new PriorityQueue<>(Comparator.comparing(Element::distance));
     pq.offer(new Element(0, 0));
 
     while (!pq.isEmpty()) {
       Element head = pq.poll();
-      if (distances[head.node] == -1) {
-        distances[head.node] = head.distance;
+      if (distances[head.node()] == -1) {
+        distances[head.node()] = head.distance();
 
-        for (int edge : edgeLists[head.node]) {
-          int other = (roads[edge][0] == head.node) ? roads[edge][1] : roads[edge][0];
+        for (int edge : edgeLists[head.node()]) {
+          int other = (roads[edge][0] == head.node()) ? roads[edge][1] : roads[edge][0];
           if (distances[other] == -1) {
-            pq.offer(new Element(other, head.distance + roads[edge][2]));
-          } else if (distances[other] + roads[edge][2] == head.distance) {
-            pathCounts[head.node] = addMod(pathCounts[head.node], pathCounts[other]);
+            pq.offer(new Element(other, head.distance() + roads[edge][2]));
+          } else if (distances[other] + roads[edge][2] == head.distance()) {
+            pathNums[head.node()] = addMod(pathNums[head.node()], pathNums[other]);
           }
         }
       }
     }
 
-    return pathCounts[n - 1];
+    return pathNums[n - 1];
   }
 
-  static int addMod(int x, int y) {
-    return (x + y) % MODULUS;
-  }
-}
-
-class Element {
-  int node;
-  long distance;
-
-  Element(int node, long distance) {
-    this.node = node;
-    this.distance = distance;
+  int addMod(int x, int y) {
+    return Math.floorMod(x + y, MODULUS);
   }
 }
+
+record Element(int node, long distance) {}
