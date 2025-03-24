@@ -8,10 +8,7 @@ class Solution {
     int result = 0;
     int maxEnd = 0;
     for (int[] meeting : meetings) {
-      if (meeting[0] > maxEnd) {
-        result += meeting[0] - maxEnd - 1;
-      }
-
+      result += Math.max(0, meeting[0] - maxEnd - 1);
       maxEnd = Math.max(maxEnd, meeting[1]);
     }
     result += days - maxEnd;
