@@ -1,28 +1,15 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 
 class Solution {
   public int minOperations(int[][] grid, int x) {
-    int m = grid.length;
-    int n = grid[0].length;
-
-    List<Integer> elements = new ArrayList<>();
-    for (int r = 0; r < m; ++r) {
-      for (int c = 0; c < n; ++c) {
-        elements.add(grid[r][c]);
-      }
+    int[] values = Arrays.stream(grid).flatMapToInt(Arrays::stream).sorted().toArray();
+    if (Arrays.stream(values).map(value -> value % x).distinct().count() != 1) {
+      return -1;
     }
-    Collections.sort(elements);
 
     int result = 0;
-    for (int i = 0, j = elements.size() - 1; i < j; ++i, --j) {
-      int diff = elements.get(j) - elements.get(i);
-      if (diff % x != 0) {
-        return -1;
-      }
-
-      result += diff / x;
+    for (int i = 0, j = values.length - 1; i < j; ++i, --j) {
+      result += (values[j] - values[i]) / x;
     }
 
     return result;
