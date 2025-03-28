@@ -10,24 +10,27 @@ class Solution {
     int m = grid.length;
     int n = grid[0].length;
 
-    int[] result = new int[queries.length];
     int[] parents = new int[m * n];
     Arrays.fill(parents, -1);
+
     int[] sizes = new int[m * n];
+
     int[] sortedPoints =
-        IntStream.range(0, m)
-            .flatMap(r -> IntStream.range(0, n).map(c -> r * n + c))
+        IntStream.range(0, m * n)
             .boxed()
             .sorted(Comparator.comparing(i -> grid[i / n][i % n]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
     int sortedPointIndex = 0;
+
     int[] sortedQueryIndices =
         IntStream.range(0, queries.length)
             .boxed()
             .sorted(Comparator.comparing(i -> queries[i]))
-            .mapToInt(x -> x)
+            .mapToInt(Integer::intValue)
             .toArray();
+
+    int[] result = new int[queries.length];
     for (int queryIndex : sortedQueryIndices) {
       while (sortedPointIndex != sortedPoints.length
           && grid[sortedPoints[sortedPointIndex] / n][sortedPoints[sortedPointIndex] % n]
@@ -62,19 +65,12 @@ class Solution {
   }
 
   int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != root) {
-      root = parents[root];
+    if (parents[node] == node) {
+      return node;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parents[node] = findRoot(parents, parents[node]);
 
-      p = next;
-    }
-
-    return root;
+    return parents[node];
   }
 }
