@@ -61,17 +61,12 @@ class Solution {
   }
 
   int powMod(int base, int exponent) {
-    int result = 1;
-    while (exponent != 0) {
-      if (exponent % 2 == 1) {
-        result = multiplyMod(result, base);
-      }
-
-      base = multiplyMod(base, base);
-      exponent /= 2;
+    if (exponent == 0) {
+      return 1;
     }
 
-    return result;
+    return multiplyMod(
+        (exponent % 2 == 1) ? base : 1, powMod(multiplyMod(base, base), exponent / 2));
   }
 
   int multiplyMod(int x, int y) {
