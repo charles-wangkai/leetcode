@@ -1,25 +1,26 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Solution {
   public List<Integer> partitionLabels(String s) {
-    int[] lastIndices = new int[26];
+    Map<Character, Integer> letterToLastIndex = new HashMap<>();
     for (int i = 0; i < s.length(); ++i) {
-      lastIndices[s.charAt(i) - 'a'] = i;
+      letterToLastIndex.put(s.charAt(i), i);
     }
 
-    List<Integer> sizes = new ArrayList<>();
+    List<Integer> result = new ArrayList<>();
     int beginIndex = 0;
     int endIndex = -1;
     for (int i = 0; i < s.length(); ++i) {
-      endIndex = Math.max(endIndex, lastIndices[s.charAt(i) - 'a']);
-
+      endIndex = Math.max(endIndex, letterToLastIndex.get(s.charAt(i)));
       if (endIndex == i) {
-        sizes.add(endIndex - beginIndex + 1);
+        result.add(endIndex - beginIndex + 1);
         beginIndex = endIndex + 1;
       }
     }
 
-    return sizes;
+    return result;
   }
 }
