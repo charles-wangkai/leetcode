@@ -5,72 +5,75 @@ import java.util.Map;
 
 // Definition for a binary tree node.
 class TreeNode {
-	int val;
-	TreeNode left;
-	TreeNode right;
+  int val;
+  TreeNode left;
+  TreeNode right;
 
-	TreeNode(int x) {
-		val = x;
-	}
+  TreeNode() {}
+
+  TreeNode(int val) {
+    this.val = val;
+  }
+
+  TreeNode(int val, TreeNode left, TreeNode right) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-public class Solution {
-	Map<TreeNode, List<TreeNode>> nodeToPath;
-	int maxDepth;
-	List<TreeNode> leavesWithMaxDepth;
+class Solution {
+  Map<TreeNode, List<TreeNode>> nodeToPath;
+  int maxDepth;
+  List<TreeNode> leavesWithMaxDepth = new ArrayList<>();
 
-	public TreeNode lcaDeepestLeaves(TreeNode root) {
-		nodeToPath = new HashMap<>();
-		maxDepth = -1;
-		leavesWithMaxDepth = new ArrayList<>();
+  public TreeNode lcaDeepestLeaves(TreeNode root) {
+    nodeToPath = new HashMap<>();
+    maxDepth = -1;
+    leavesWithMaxDepth.clear();
+    search(root, new ArrayList<>());
 
-		search(root, new ArrayList<>());
+    return leavesWithMaxDepth.stream().reduce(this::findLca).get();
+  }
 
-		List<TreeNode> nodes = leavesWithMaxDepth;
-		while (nodes.size() > 1) {
-			TreeNode node1 = nodes.remove(nodes.size() - 1);
-			TreeNode node2 = nodes.remove(nodes.size() - 1);
+  void search(TreeNode node, List<TreeNode> path) {
+    if (node.left == null && node.right == null) {
+      int depth = path.size();
+      if (depth == maxDepth) {
+        leavesWithMaxDepth.add(node);
+      } else if (depth > maxDepth) {
+        maxDepth = depth;
 
-			nodes.add(findLca(node1, node2));
-		}
-		return nodes.get(0);
-	}
+        leavesWithMaxDepth.clear();
+        leavesWithMaxDepth.add(node);
+      }
+    }
 
-	void search(TreeNode node, List<TreeNode> path) {
-		if (node.left == null && node.right == null) {
-			int depth = path.size();
-			if (depth == maxDepth) {
-				leavesWithMaxDepth.add(node);
-			} else if (depth > maxDepth) {
-				maxDepth = depth;
+    path.add(node);
 
-				leavesWithMaxDepth.clear();
-				leavesWithMaxDepth.add(node);
-			}
-		}
+    nodeToPath.put(node, List.copyOf(path));
 
-		path.add(node);
+    if (node.left != null) {
+      search(node.left, path);
+    }
+    if (node.right != null) {
+      search(node.right, path);
+    }
 
-		nodeToPath.put(node, new ArrayList<>(path));
+    path.removeLast();
+  }
 
-		if (node.left != null) {
-			search(node.left, path);
-		}
-		if (node.right != null) {
-			search(node.right, path);
-		}
+  TreeNode findLca(TreeNode node1, TreeNode node2) {
+    List<TreeNode> path1 = nodeToPath.get(node1);
+    List<TreeNode> path2 = nodeToPath.get(node2);
 
-		path.remove(path.size() - 1);
-	}
+    int index = 0;
+    while (index != path1.size() - 1
+        && index != path2.size() - 1
+        && path1.get(index + 1) == path2.get(index + 1)) {
+      ++index;
+    }
 
-	TreeNode findLca(TreeNode node1, TreeNode node2) {
-		List<TreeNode> path1 = nodeToPath.get(node1);
-		List<TreeNode> path2 = nodeToPath.get(node2);
-
-		for (int i = 0;; i++) {
-			if (i == path1.size() || i == path2.size() || path1.get(i) != path2.get(i)) {
-				return path1.get(i - 1);
-			}
-		}
-	}
+    return path1.get(index);
+  }
 }
