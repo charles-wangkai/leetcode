@@ -8,7 +8,8 @@ class Solution {
                 IntStream.range(0, nums.length)
                     .filter(i -> ((mask >> i) & 1) == 1)
                     .map(i -> nums[i])
-                    .reduce(0, (acc, x) -> acc ^ x))
+                    .reduce((acc, x) -> acc ^ x)
+                    .orElse(0))
         .sum();
   }
 }
