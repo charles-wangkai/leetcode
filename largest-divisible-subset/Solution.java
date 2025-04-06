@@ -1,6 +1,6 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 class Solution {
   public List<Integer> largestDivisibleSubset(int[] nums) {
@@ -8,7 +8,7 @@ class Solution {
 
     int[] sizes = new int[nums.length];
     int[] prevIndices = new int[nums.length];
-    int lastIndex = -1;
+    int lastIndex = 0;
     for (int i = 0; i < nums.length; ++i) {
       sizes[i] = 1;
       prevIndices[i] = -1;
@@ -20,16 +20,14 @@ class Solution {
         }
       }
 
-      if (lastIndex == -1 || sizes[i] > sizes[lastIndex]) {
+      if (sizes[i] > sizes[lastIndex]) {
         lastIndex = i;
       }
     }
 
-    List<Integer> result = new ArrayList<>();
-    for (int i = lastIndex; i != -1; i = prevIndices[i]) {
-      result.add(nums[i]);
-    }
-
-    return result;
+    return IntStream.iterate(lastIndex, i -> i != -1, i -> prevIndices[i])
+        .map(i -> nums[i])
+        .boxed()
+        .toList();
   }
 }
