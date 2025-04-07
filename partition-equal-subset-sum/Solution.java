@@ -4,22 +4,18 @@ import java.util.Set;
 
 class Solution {
   public boolean canPartition(int[] nums) {
-    int sum = Arrays.stream(nums).sum();
-
-    Set<Integer> partialSums = new HashSet<>();
-    partialSums.add(0);
-
+    Set<Integer> dp = Set.of(0);
     for (int num : nums) {
-      Set<Integer> nextPartialSums = new HashSet<>();
-      nextPartialSums.addAll(partialSums);
-
-      for (int partialSum : partialSums) {
-        nextPartialSums.add(partialSum + num);
+      Set<Integer> nextDp = new HashSet<>(dp);
+      for (int prevSum : dp) {
+        nextDp.add(prevSum + num);
       }
 
-      partialSums = nextPartialSums;
+      dp = nextDp;
     }
 
-    return sum % 2 == 0 && partialSums.contains(sum / 2);
+    int sum = Arrays.stream(nums).sum();
+
+    return sum % 2 == 0 && dp.contains(sum / 2);
   }
 }
