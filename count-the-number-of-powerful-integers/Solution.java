@@ -25,7 +25,7 @@ class Solution {
   long findMinPrefix(int limit, String s, long start) {
     long result = -1;
     long lower = 0;
-    long upper = pow(limit + 1, String.valueOf(start).length() + 1 - s.length());
+    long upper = pow(limit + 1, String.valueOf(start).length() - s.length());
     while (lower <= upper) {
       long middle = (lower + upper) / 2;
       if (Long.parseLong(Long.toString(middle, limit + 1) + s) >= start) {
