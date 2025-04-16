@@ -10,7 +10,7 @@ class Solution {
     for (int i = 0; i < nums.length; ++i) {
       while (pairNum < k && endIndex + 1 != nums.length) {
         ++endIndex;
-        update(valueToCount, nums[endIndex], 1);
+        updateMap(valueToCount, nums[endIndex], 1);
 
         int count = valueToCount.get(nums[endIndex]);
         pairNum += countPairs(count) - countPairs(count - 1);
@@ -21,7 +21,7 @@ class Solution {
 
       result += nums.length - endIndex;
 
-      update(valueToCount, nums[i], -1);
+      updateMap(valueToCount, nums[i], -1);
 
       int count = valueToCount.get(nums[i]);
       pairNum += countPairs(count) - countPairs(count + 1);
@@ -30,7 +30,7 @@ class Solution {
     return result;
   }
 
-  void update(Map<Integer, Integer> valueToCount, int value, int delta) {
+  void updateMap(Map<Integer, Integer> valueToCount, int value, int delta) {
     valueToCount.put(value, valueToCount.getOrDefault(value, 0) + delta);
   }
 
