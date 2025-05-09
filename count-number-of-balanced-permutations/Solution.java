@@ -7,8 +7,8 @@ class Solution {
   static final int MODULUS = 1_000_000_007;
   static final int LIMIT = 40;
 
-  static int[] factorials;
-  static int[] factorialInvs;
+  int[] factorials;
+  int[] factorialInvs;
 
   public int countBalancedPermutations(String num) {
     precompute();
