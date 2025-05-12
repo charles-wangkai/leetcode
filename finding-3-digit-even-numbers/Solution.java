@@ -18,6 +18,6 @@ class Solution {
       }
     }
 
-    return values.stream().distinct().sorted().mapToInt(x -> x).toArray();
+    return values.stream().distinct().sorted().mapToInt(Integer::intValue).toArray();
   }
 }
