@@ -53,17 +53,17 @@ class Solution {
     int size = base.length;
 
     if (exponent == 0) {
-      int[][] result = new int[size][size];
-      for (int i = 0; i < size; ++i) {
-        result[i][i] = 1;
-      }
-
-      return result;
+      return buildIdentity(size);
     }
 
-    int[][] result = pow(multiply(base, base), exponent / 2);
-    if (exponent % 2 == 1) {
-      result = multiply(result, base);
+    return multiply(
+        (exponent % 2 == 0) ? buildIdentity(size) : base, pow(multiply(base, base), exponent / 2));
+  }
+
+  int[][] buildIdentity(int size) {
+    int[][] result = new int[size][size];
+    for (int i = 0; i < size; ++i) {
+      result[i][i] = 1;
     }
 
     return result;
