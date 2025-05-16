@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 class Solution {
-  public List<String> getWordsInLongestSubsequence(int n, String[] words, int[] groups) {
+  public List<String> getWordsInLongestSubsequence(String[] words, int[] groups) {
+    int n = words.length;
+
     int[] lengths = new int[n];
     Arrays.fill(lengths, 1);
+
     int[] prevIndices = new int[n];
     Arrays.fill(prevIndices, -1);
+
     for (int i = 0; i < n; ++i) {
       for (int j = 0; j < i; ++j) {
         if (words[j].length() == words[i].length()
