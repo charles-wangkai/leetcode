@@ -53,13 +53,7 @@ class Solution {
   }
 
   boolean isValid(int[] colors) {
-    for (int i = 0; i < colors.length - 1; ++i) {
-      if (colors[i] == colors[i + 1]) {
-        return false;
-      }
-    }
-
-    return true;
+    return IntStream.range(0, colors.length - 1).allMatch(i -> colors[i] != colors[i + 1]);
   }
 
   boolean check(int[] colors1, int[] colors2) {
@@ -73,6 +67,6 @@ class Solution {
   }
 
   int addMod(int x, int y) {
-    return (x + y) % MODULUS;
+    return Math.floorMod(x + y, MODULUS);
   }
 }
