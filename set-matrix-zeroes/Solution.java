@@ -23,16 +23,8 @@ class Solution {
     }
 
     for (int r = 1; r < m; ++r) {
-      if (matrix[r][0] == 0) {
-        for (int c = 0; c < n; ++c) {
-          matrix[r][c] = 0;
-        }
-      }
-    }
-
-    for (int c = 1; c < n; ++c) {
-      if (matrix[0][c] == 0) {
-        for (int r = 0; r < m; ++r) {
+      for (int c = 1; c < n; ++c) {
+        if (matrix[r][0] == 0 || matrix[0][c] == 0) {
           matrix[r][c] = 0;
         }
       }
