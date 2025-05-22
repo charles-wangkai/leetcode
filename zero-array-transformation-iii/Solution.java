@@ -26,11 +26,7 @@ class Solution {
       }
 
       while (chosenLastIndices.size() < nums[i]) {
-        while (!availableLastIndices.isEmpty() && availableLastIndices.peek() < i) {
-          availableLastIndices.poll();
-        }
-
-        if (availableLastIndices.isEmpty()) {
+        if (availableLastIndices.isEmpty() || availableLastIndices.peek() < i) {
           return -1;
         }
 
