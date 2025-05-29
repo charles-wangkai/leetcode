@@ -7,7 +7,8 @@ class Solution {
     boolean[] blackOrWhites2 = fill(edges2);
     int blackNum2 =
         (int) IntStream.range(0, blackOrWhites2.length).filter(i -> blackOrWhites2[i]).count();
-    int targetNum2 = Math.max(blackNum2, blackOrWhites2.length - blackNum2);
+    int whiteNum2 = blackOrWhites2.length - blackNum2;
+    int targetNum2 = Math.max(blackNum2, whiteNum2);
 
     boolean[] blackOrWhites1 = fill(edges1);
     int blackNum1 =
