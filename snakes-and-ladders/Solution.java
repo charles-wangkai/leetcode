@@ -17,16 +17,12 @@ class Solution {
         int next = (destinations[i] == -1) ? i : destinations[i];
         if (moveNums[next] == -1) {
           moveNums[next] = moveNums[current] + 1;
-          if (next == destinations.length - 1) {
-            return moveNums[next];
-          }
-
           queue.offer(next);
         }
       }
     }
 
-    return -1;
+    return moveNums[moveNums.length - 1];
   }
 
   int[] flatten(int[][] board) {
