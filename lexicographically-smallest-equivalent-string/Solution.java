@@ -28,19 +28,12 @@ class Solution {
   }
 
   char findRoot(Map<Character, Character> letterToParent, char letter) {
-    char root = letter;
-    while (letterToParent.get(root) != root) {
-      root = letterToParent.get(root);
+    if (letterToParent.get(letter) == letter) {
+      return letter;
     }
 
-    char p = letter;
-    while (p != root) {
-      char next = letterToParent.get(p);
-      letterToParent.put(p, root);
+    letterToParent.put(letter, findRoot(letterToParent, letterToParent.get(letter)));
 
-      p = next;
-    }
-
-    return root;
+    return letterToParent.get(letter);
   }
 }
