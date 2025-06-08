@@ -6,7 +6,7 @@ class Solution {
   public List<Integer> lexicalOrder(int n) {
     return IntStream.rangeClosed(1, n)
         .boxed()
-        .sorted(Comparator.comparing(x -> String.valueOf(x)))
+        .sorted(Comparator.comparing(String::valueOf))
         .toList();
   }
 }
