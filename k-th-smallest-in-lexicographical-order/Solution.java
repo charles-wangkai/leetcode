@@ -5,7 +5,7 @@ class Solution {
 
     while (k != 0) {
       int current = computeNumForPrefix(n, result);
-      if (k >= current) {
+      if (current <= k) {
         ++result;
         k -= current;
       } else {
