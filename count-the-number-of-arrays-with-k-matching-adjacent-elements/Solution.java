@@ -16,12 +16,12 @@ class Solution {
   }
 
   int powMod(int base, int exponent) {
-    int result = 1;
-    for (int i = 0; i < exponent; ++i) {
-      result = multiplyMod(result, base);
+    if (exponent == 0) {
+      return 1;
     }
 
-    return result;
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
   }
 
   int factorialMod(int x) {
