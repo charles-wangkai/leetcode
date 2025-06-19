@@ -2,11 +2,11 @@ import java.util.Arrays;
 
 class Solution {
   public int partitionArray(int[] nums, int k) {
-    int[] sorted = Arrays.stream(nums).boxed().sorted().mapToInt(x -> x).toArray();
+    Arrays.sort(nums);
 
     int result = 0;
     int limit = -1;
-    for (int x : sorted) {
+    for (int x : nums) {
       if (x > limit) {
         ++result;
         limit = x + k;
