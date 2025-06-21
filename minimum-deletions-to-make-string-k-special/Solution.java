@@ -2,10 +2,8 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 class Solution {
-  static final int ALPHABET_SIZE = 26;
-
   public int minimumDeletions(String word, int k) {
-    int[] counts = new int[ALPHABET_SIZE];
+    int[] counts = new int[26];
     for (char c : word.toCharArray()) {
       ++counts[c - 'a'];
     }
