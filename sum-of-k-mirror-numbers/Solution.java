@@ -1,8 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
-  static final int DIGITS_MAX_SIZE = 100;
-
-  int[] digits = new int[DIGITS_MAX_SIZE];
-
   public long kMirror(int k, int n) {
     long result = 0;
     for (int length = 1; ; ++length) {
@@ -28,15 +27,15 @@ class Solution {
   }
 
   boolean isPalindromeInBaseK(long value, int k) {
-    int size = 0;
+    List<Integer> digits = new ArrayList<>();
     while (value != 0) {
-      digits[size] = (int) (value % k);
-      ++size;
+      digits.add((int) (value % k));
+
       value /= k;
     }
 
-    for (int i = 0, j = size - 1; i < j; ++i, --j) {
-      if (digits[i] != digits[j]) {
+    for (int i = 0, j = digits.size() - 1; i < j; ++i, --j) {
+      if (!digits.get(i).equals(digits.get(j))) {
         return false;
       }
     }
@@ -44,9 +43,9 @@ class Solution {
     return true;
   }
 
-  int pow10(int x) {
+  int pow10(int exponent) {
     int result = 1;
-    for (int i = 0; i < x; ++i) {
+    for (int i = 0; i < exponent; ++i) {
       result *= 10;
     }
 
