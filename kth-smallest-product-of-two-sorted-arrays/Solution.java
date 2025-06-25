@@ -36,7 +36,7 @@ class Solution {
         }
 
         result += nums2.length - index;
-      } else if (num1 > 0) {
+      } else {
         int index = -1;
         int lowerIndex = 0;
         int upperIndex = nums2.length - 1;
@@ -51,8 +51,6 @@ class Solution {
         }
 
         result += index + 1;
-      } else if (target >= 0) {
-        result += nums2.length;
       }
     }
 
