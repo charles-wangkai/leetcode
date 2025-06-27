@@ -1,10 +1,11 @@
 // https://leetcode.com/problems/longest-subsequence-repeated-k-times/discuss/1471930/Python-Answer-is-not-so-long-explained
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 class Solution {
@@ -19,26 +20,25 @@ class Solution {
             .map(letter -> String.valueOf(letter).repeat(letterToCount.get(letter) / k))
             .collect(Collectors.joining());
 
-    List<String> candidates = new ArrayList<>();
+    Set<String> candidates = new HashSet<>();
     search(candidates, hot, 0, new StringBuilder());
 
-    candidates =
+    List<String> sortedCandidates =
         candidates.stream()
             .sorted(
                 Comparator.comparing(String::length)
                     .reversed()
-                    .thenComparing(Comparator.comparing((String c) -> c).reversed()))
-            .distinct()
+                    .thenComparing(Comparator.reverseOrder()))
             .collect(Collectors.toList());
 
     for (int i = 0; ; ++i) {
-      if (isSubsequence(candidates.get(i).repeat(k), s)) {
-        return candidates.get(i);
+      if (isSubsequence(s, sortedCandidates.get(i).repeat(k))) {
+        return sortedCandidates.get(i);
       }
     }
   }
 
-  void search(List<String> candidates, String hot, int index, StringBuilder current) {
+  void search(Set<String> candidates, String hot, int index, StringBuilder current) {
     if (index == hot.length()) {
       permute(candidates, current, 0);
 
@@ -52,7 +52,7 @@ class Solution {
     current.deleteCharAt(current.length() - 1);
   }
 
-  void permute(List<String> candidates, StringBuilder current, int index) {
+  void permute(Set<String> candidates, StringBuilder current, int index) {
     if (index == current.length()) {
       candidates.add(current.toString());
     }
@@ -70,7 +70,7 @@ class Solution {
     str.setCharAt(index2, temp);
   }
 
-  boolean isSubsequence(String sub, String s) {
+  boolean isSubsequence(String s, String sub) {
     int fromIndex = 0;
     for (char letter : sub.toCharArray()) {
       int index = s.indexOf(letter, fromIndex);
