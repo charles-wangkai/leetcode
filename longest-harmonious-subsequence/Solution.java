@@ -3,14 +3,14 @@ import java.util.Map;
 
 class Solution {
   public int findLHS(int[] nums) {
-    Map<Integer, Integer> numToCount = new HashMap<>();
+    Map<Integer, Integer> valueToCount = new HashMap<>();
     for (int num : nums) {
-      numToCount.put(num, numToCount.getOrDefault(num, 0) + 1);
+      valueToCount.put(num, valueToCount.getOrDefault(num, 0) + 1);
     }
 
-    return numToCount.keySet().stream()
-        .filter(num -> numToCount.containsKey(num + 1))
-        .mapToInt(num -> numToCount.get(num) + numToCount.get(num + 1))
+    return valueToCount.keySet().stream()
+        .filter(value -> valueToCount.containsKey(value + 1))
+        .mapToInt(value -> valueToCount.get(value) + valueToCount.get(value + 1))
         .max()
         .orElse(0);
   }
