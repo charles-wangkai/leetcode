@@ -23,7 +23,7 @@ class Solution {
 
       if (availables.isEmpty()) {
         EndEvent endEvent = endEvents.poll();
-        endEvents.add(new EndEvent(endEvent.time() + meeting[1] - meeting[0], endEvent.room()));
+        endEvents.add(new EndEvent(endEvent.time() + (meeting[1] - meeting[0]), endEvent.room()));
         ++counts[endEvent.room()];
       } else {
         int room = availables.first();
