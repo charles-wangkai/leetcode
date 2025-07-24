@@ -18,7 +18,7 @@ class Solution {
 
     int[] xors = new int[n];
     boolean[][] parents = new boolean[n][n];
-    search(nums, adjLists, xors, parents, new boolean[n], new ArrayList<>(), 0);
+    search(nums, adjLists, xors, parents, new ArrayList<>(), 0);
 
     int result = Integer.MAX_VALUE;
     for (int i = 1; i < n; ++i) {
@@ -47,10 +47,9 @@ class Solution {
       List<Integer>[] adjLists,
       int[] xors,
       boolean[][] parents,
-      boolean[] visited,
       List<Integer> path,
       int node) {
-    visited[node] = true;
+    int parent = path.isEmpty() ? -1 : path.getLast();
 
     for (int p : path) {
       parents[node][p] = true;
@@ -60,12 +59,12 @@ class Solution {
 
     xors[node] = nums[node];
     for (int adj : adjLists[node]) {
-      if (!visited[adj]) {
-        xors[node] ^= search(nums, adjLists, xors, parents, visited, path, adj);
+      if (adj != parent) {
+        xors[node] ^= search(nums, adjLists, xors, parents, path, adj);
       }
     }
 
-    path.remove(path.size() - 1);
+    path.removeLast();
 
     return xors[node];
   }
