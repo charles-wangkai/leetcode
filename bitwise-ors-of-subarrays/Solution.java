@@ -1,21 +1,21 @@
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Solution {
-	public int subarrayBitwiseORs(int[] A) {
-		Set<Integer> orResults = new HashSet<>();
-		Set<Integer> prevResults = Collections.emptySet();
-		for (int element : A) {
-			Set<Integer> currResults = new HashSet<>();
-			currResults.add(element);
-			for (int prevResult : prevResults) {
-				currResults.add(prevResult | element);
-			}
+class Solution {
+  public int subarrayBitwiseORs(int[] arr) {
+    Set<Integer> allOrs = new HashSet<>();
+    Set<Integer> prevOrs = Set.of();
+    for (int value : arr) {
+      Set<Integer> currOrs = new HashSet<>();
+      currOrs.add(value);
+      for (int prevOr : prevOrs) {
+        currOrs.add(prevOr | value);
+      }
 
-			orResults.addAll(currResults);
-			prevResults = currResults;
-		}
-		return orResults.size();
-	}
+      allOrs.addAll(currOrs);
+      prevOrs = currOrs;
+    }
+
+    return allOrs.size();
+  }
 }
