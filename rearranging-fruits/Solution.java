@@ -45,6 +45,8 @@ class Solution {
     for (int i = 0; i < rests1.size(); ++i) {
       if (commonCost <= Math.min(rests1.get(beginIndex1), rests2.get(beginIndex2))) {
         result += commonCost;
+        ++beginIndex1;
+        ++beginIndex2;
       } else if (rests1.get(beginIndex1) <= rests2.get(beginIndex2)) {
         result += rests1.get(beginIndex1);
         ++beginIndex1;
