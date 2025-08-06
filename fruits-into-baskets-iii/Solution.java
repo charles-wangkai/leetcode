@@ -5,8 +5,7 @@ class Solution {
     int result = 0;
     for (int fruit : fruits) {
       if (segmentTree.maxValue >= fruit) {
-        int index = findIndex(fruit, segmentTree);
-        update(index, 0, segmentTree);
+        update(findIndex(fruit, segmentTree), 0, segmentTree);
       } else {
         ++result;
       }
