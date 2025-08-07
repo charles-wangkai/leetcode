@@ -32,6 +32,7 @@ class Solution {
             prevMax = Math.max(prevMax, values[i - 1][j + d]);
           }
         }
+
         values[i][j] += prevMax;
       }
     }
