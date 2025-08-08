@@ -17,7 +17,8 @@ public class Solution {
   double search(int restA, int restB) {
     if (restA <= 0) {
       return (restB <= 0) ? 0.5 : 1;
-    } else if (restB <= 0) {
+    }
+    if (restB <= 0) {
       return 0;
     }
 
