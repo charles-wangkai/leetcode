@@ -2,19 +2,18 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Solution {
-  public boolean reorderedPowerOf2(int N) {
-    return IntStream.range(0, 30).anyMatch(i -> check(N, 1 << i));
-  }
+  public boolean reorderedPowerOf2(int n) {
+    String key = buildKey(n);
 
-  boolean check(int N, int power) {
-    return buildKey(N).equals(buildKey(power));
+    return IntStream.range(0, 30).anyMatch(i -> buildKey(1 << i).equals(key));
   }
 
   String buildKey(int x) {
     return String.valueOf(x)
         .chars()
         .sorted()
-        .mapToObj(c -> String.valueOf((char) c))
+        .mapToObj(c -> (char) c)
+        .map(String::valueOf)
         .collect(Collectors.joining());
   }
 }
