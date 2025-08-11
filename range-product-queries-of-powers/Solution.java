@@ -6,7 +6,7 @@ class Solution {
 
   public int[] productQueries(int n, int[][] queries) {
     int[] powers =
-        IntStream.rangeClosed(0, 30).map(i -> 1 << i).filter(x -> (n & x) != 0).toArray();
+        IntStream.rangeClosed(0, 30).filter(i -> ((n >> i) & 1) == 1).map(i -> 1 << i).toArray();
 
     return Arrays.stream(queries)
         .mapToInt(
