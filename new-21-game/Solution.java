@@ -19,9 +19,7 @@ class Solution {
         queueSum -= lastProbs.poll();
       }
 
-      if (!lastProbs.isEmpty()) {
-        probs[i] = queueSum / maxPts;
-      }
+      probs[i] = queueSum / maxPts;
     }
 
     return IntStream.rangeClosed(k, n).mapToDouble(i -> probs[i]).sum();
