@@ -15,13 +15,13 @@ class Solution {
     }
 
     int result = 0;
-    for (int i = 1; i <= m; ++i) {
-      for (int j = 1; j <= n; ++j) {
-        for (int size = 1; i + size - 1 <= m && j + size - 1 <= n; ++size) {
-          if (prefixSums[i + size - 1][j + size - 1]
-                  - prefixSums[i - 1][j + size - 1]
-                  - prefixSums[i + size - 1][j - 1]
-                  + prefixSums[i - 1][j - 1]
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
+        for (int size = 1; r + size <= m && c + size <= n; ++size) {
+          if (prefixSums[r + size][c + size]
+                  - prefixSums[r][c + size]
+                  - prefixSums[r + size][c]
+                  + prefixSums[r][c]
               == size * size) {
             ++result;
           }
