@@ -43,28 +43,28 @@ class Solution {
     }
     for (int beginR = 1; beginR <= row - 2; ++beginR) {
       Span span = null;
-      for (int r = beginR; r <= row - 2; ++r) {
+      for (int endR = beginR; endR <= row - 2; ++endR) {
         for (int c = 0; c < col; ++c) {
-          span = merge(span, (grid[r][c] == 1) ? new Span(r, r, c, c) : null);
+          span = merge(span, (grid[endR][c] == 1) ? new Span(endR, endR, c, c) : null);
         }
 
         result =
             Math.min(
                 result,
-                computeArea(topLefts[beginR - 1][col - 1], span, bottomLefts[r + 1][col - 1]));
+                computeArea(topLefts[beginR - 1][col - 1], span, bottomLefts[endR + 1][col - 1]));
       }
     }
     for (int beginC = 1; beginC <= col - 2; ++beginC) {
       Span span = null;
-      for (int c = beginC; c <= col - 2; ++c) {
+      for (int endC = beginC; endC <= col - 2; ++endC) {
         for (int r = 0; r < row; ++r) {
-          span = merge(span, (grid[r][c] == 1) ? new Span(r, r, c, c) : null);
+          span = merge(span, (grid[r][endC] == 1) ? new Span(r, r, endC, endC) : null);
         }
 
         result =
             Math.min(
                 result,
-                computeArea(topLefts[row - 1][beginC - 1], span, topRights[row - 1][c + 1]));
+                computeArea(topLefts[row - 1][beginC - 1], span, topRights[row - 1][endC + 1]));
       }
     }
 
