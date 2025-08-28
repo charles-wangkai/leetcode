@@ -20,15 +20,14 @@ class Solution {
   void sortDiagonal(int[][] grid, int beginR, int beginC, Comparator<Integer> comparator) {
     int n = grid.length;
 
-    List<Integer> values = new ArrayList<>();
+    List<Integer> sorted = new ArrayList<>();
     for (int r = beginR, c = beginC; r < n && c < n; ++r, ++c) {
-      values.add(grid[r][c]);
+      sorted.add(grid[r][c]);
     }
+    Collections.sort(sorted, comparator);
 
-    Collections.sort(values, comparator);
-
-    for (int i = 0, r = beginR, c = beginC; r < n && c < n; ++i, ++r, ++c) {
-      grid[r][c] = values.get(i);
+    for (int i = 0; i < sorted.size(); ++i) {
+      grid[beginR + i][beginC + i] = sorted.get(i);
     }
   }
 }
