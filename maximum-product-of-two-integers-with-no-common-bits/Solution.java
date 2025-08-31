@@ -10,8 +10,8 @@ class Solution {
       dp[num] = num;
     }
 
-    for (int b = 0; b < bitNum; ++b) {
-      for (int mask = 0; mask < 1 << bitNum; ++mask) {
+    for (int mask = 0; mask < 1 << bitNum; ++mask) {
+      for (int b = 0; b < bitNum; ++b) {
         if (((mask >> b) & 1) == 1) {
           dp[mask] = Math.max(dp[mask], dp[mask - (1 << b)]);
         }
