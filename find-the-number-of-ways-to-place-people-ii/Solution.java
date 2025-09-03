@@ -13,9 +13,9 @@ class Solution {
     int row = yValueToCompressed.size();
     int col = xValueToCompressed.size();
 
-    boolean[][] grids = new boolean[row][col];
+    boolean[][] grid = new boolean[row][col];
     for (int[] point : points) {
-      grids[yValueToCompressed.get(-point[1])][xValueToCompressed.get(point[0])] = true;
+      grid[yValueToCompressed.get(-point[1])][xValueToCompressed.get(point[0])] = true;
     }
 
     int[][] prefixSums = new int[row][col];
@@ -25,7 +25,7 @@ class Solution {
             prefixSums[r - 1][c]
                 + prefixSums[r][c - 1]
                 - prefixSums[r - 1][c - 1]
-                + (grids[r][c] ? 1 : 0);
+                + (grid[r][c] ? 1 : 0);
       }
     }
 
