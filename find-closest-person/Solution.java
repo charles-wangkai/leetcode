@@ -4,7 +4,8 @@ class Solution {
     int distance2 = Math.abs(y - z);
     if (distance1 < distance2) {
       return 1;
-    } else if (distance1 > distance2) {
+    }
+    if (distance1 > distance2) {
       return 2;
     }
 
