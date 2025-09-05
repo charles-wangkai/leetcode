@@ -1,14 +1,14 @@
 class Solution {
   public int makeTheIntegerZero(int num1, int num2) {
-    long value = num1;
-    for (int i = 1; ; ++i) {
-      value -= num2;
-      if (value < 0) {
+    long rest = num1;
+    for (int result = 1; ; ++result) {
+      rest -= num2;
+      if (rest < 0) {
         return -1;
       }
 
-      if (i >= Long.bitCount(value) && i <= value) {
-        return i;
+      if (result >= Long.bitCount(rest) && result <= rest) {
+        return result;
       }
     }
   }
