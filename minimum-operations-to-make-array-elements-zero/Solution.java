@@ -13,17 +13,17 @@ class Solution {
 
   static void precompute() {
     operationNumToRange = new HashMap<>();
-    int min = 1;
-    int max = 3;
+    int min = 0;
+    int max = 0;
     for (int operationNum = 1; ; ++operationNum) {
+      min = max + 1;
+      max = min * 4 - 1;
+
       operationNumToRange.put(operationNum, new Range(min, max));
 
       if (max >= LIMIT) {
         break;
       }
-
-      min = max + 1;
-      max = (max + 1) * 4 - 1;
     }
   }
 
