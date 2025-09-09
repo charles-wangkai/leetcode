@@ -6,6 +6,7 @@ class Solution {
   public int peopleAwareOfSecret(int n, int delay, int forget) {
     int[] counts = new int[forget];
     counts[0] = 1;
+
     for (int i = 1; i < n; ++i) {
       int[] nextCounts = new int[counts.length];
       for (int j = 0; j < counts.length; ++j) {
