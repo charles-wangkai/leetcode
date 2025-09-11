@@ -6,7 +6,7 @@ class Solution {
   public String sortVowels(String s) {
     int[] vowelIndices =
         IntStream.range(0, s.length())
-            .filter(i -> "aeiou".indexOf(Character.toLowerCase(s.charAt(i))) != -1)
+            .filter(i -> "aeiou".contains(String.valueOf(Character.toLowerCase(s.charAt(i)))))
             .toArray();
     List<Character> sortedVowels =
         Arrays.stream(vowelIndices).mapToObj(s::charAt).sorted().toList();
@@ -16,6 +16,6 @@ class Solution {
       letters[vowelIndices[i]] = sortedVowels.get(i);
     }
 
-    return new String(letters);
+    return String.valueOf(letters);
   }
 }
