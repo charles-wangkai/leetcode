@@ -1,5 +1,5 @@
 class Solution {
   public boolean doesAliceWin(String s) {
-    return s.chars().filter(c -> "aeiou".indexOf(c) != -1).count() != 0;
+    return s.chars().anyMatch(c -> "aeiou".contains(String.valueOf((char) c)));
   }
 }
