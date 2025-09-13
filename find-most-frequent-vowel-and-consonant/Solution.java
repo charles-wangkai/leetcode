@@ -23,6 +23,6 @@ class Solution {
   }
 
   boolean isVowel(char letter) {
-    return VOWELS.indexOf(letter) != -1;
+    return VOWELS.contains(String.valueOf(letter));
   }
 }
