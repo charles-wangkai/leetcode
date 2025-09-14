@@ -29,8 +29,8 @@ class Solution {
         .toArray(String[]::new);
   }
 
-  static String buildPattern(String word) {
-    return word.toLowerCase().replaceAll("[aeiou]", "*");
+  static String buildPattern(String s) {
+    return s.toLowerCase().replaceAll("[aeiou]", "?");
   }
 
   static String match(
