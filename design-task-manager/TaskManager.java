@@ -32,7 +32,7 @@ class TaskManager {
   }
 
   public void rmv(int taskId) {
-    int priority = taskIdToPriority.get(taskId);
+    int priority = taskIdToPriority.remove(taskId);
 
     priorityToTaskIds.get(priority).remove(taskId);
     if (priorityToTaskIds.get(priority).isEmpty()) {
@@ -40,7 +40,6 @@ class TaskManager {
     }
 
     taskIdToUserId.remove(taskId);
-    taskIdToPriority.remove(taskId);
   }
 
   public int execTop() {
