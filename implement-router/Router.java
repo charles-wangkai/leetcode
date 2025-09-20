@@ -29,9 +29,7 @@ class Router {
 
     queue.offer(packet);
     if (queue.size() == memoryLimit + 1) {
-      Packet p = queue.poll();
-      packets.remove(p);
-      destinationToRandomAccessQueue.get(p.destination()).poll();
+      remove();
     }
 
     return true;
@@ -42,9 +40,7 @@ class Router {
       return new int[0];
     }
 
-    Packet packet = queue.poll();
-    packets.remove(packet);
-    destinationToRandomAccessQueue.get(packet.destination()).poll();
+    Packet packet = remove();
 
     return new int[] {packet.source(), packet.destination(), packet.timestamp()};
   }
@@ -53,6 +49,14 @@ class Router {
     return destinationToRandomAccessQueue.containsKey(destination)
         ? destinationToRandomAccessQueue.get(destination).query(startTime, endTime)
         : 0;
+  }
+
+  private Packet remove() {
+    Packet packet = queue.poll();
+    packets.remove(packet);
+    destinationToRandomAccessQueue.get(packet.destination()).poll();
+
+    return packet;
   }
 }
 
