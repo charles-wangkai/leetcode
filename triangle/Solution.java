@@ -3,22 +3,20 @@ import java.util.List;
 
 class Solution {
   public int minimumTotal(List<List<Integer>> triangle) {
-    List<Integer> minSums = null;
-    for (List<Integer> row : triangle) {
-      List<Integer> nextMinSums = new ArrayList<>();
-      if (minSums == null) {
-        nextMinSums.add(row.get(0));
-      } else {
-        nextMinSums.add(minSums.get(0) + row.get(0));
-        for (int i = 0; i < minSums.size() - 1; ++i) {
-          nextMinSums.add(Math.min(minSums.get(i), minSums.get(i + 1)) + row.get(i + 1));
-        }
-        nextMinSums.add(minSums.get(minSums.size() - 1) + row.get(row.size() - 1));
-      }
+    List<Integer> dp = triangle.get(0);
+    for (int i = 1; i < triangle.size(); ++i) {
+      List<Integer> row = triangle.get(i);
 
-      minSums = nextMinSums;
+      List<Integer> nextDp = new ArrayList<>();
+      nextDp.add(dp.get(0) + row.get(0));
+      for (int j = 0; j < dp.size() - 1; ++j) {
+        nextDp.add(Math.min(dp.get(j), dp.get(j + 1)) + row.get(j + 1));
+      }
+      nextDp.add(dp.getLast() + row.getLast());
+
+      dp = nextDp;
     }
 
-    return minSums.stream().mapToInt(x -> x).min().getAsInt();
+    return dp.stream().mapToInt(Integer::intValue).min().getAsInt();
   }
 }
