@@ -22,7 +22,6 @@ class Solution {
       int middle = (lower + upper) / 2;
       if (nums[middle] < limit) {
         result = middle - fromIndex;
-
         lower = middle + 1;
       } else {
         upper = middle - 1;
