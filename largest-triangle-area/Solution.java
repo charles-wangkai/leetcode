@@ -1,27 +1,29 @@
-public class Solution {
-	public double largestTriangleArea(int[][] points) {
-		double maxArea = -1;
-		for (int i = 0; i < points.length; i++) {
-			for (int j = i + 1; j < points.length; j++) {
-				for (int k = j + 1; k < points.length; k++) {
-					maxArea = Math.max(maxArea, computeArea(computeDistance(points[i], points[j]),
-							computeDistance(points[j], points[k]), computeDistance(points[k], points[i])));
-				}
-			}
-		}
-		return maxArea;
-	}
+import java.util.stream.IntStream;
 
-	double computeDistance(int[] point1, int[] point2) {
-		return Math.sqrt(square(point1[0] - point2[0]) + square(point1[1] - point2[1]));
-	}
+class Solution {
+  public double largestTriangleArea(int[][] points) {
+    double result = -1;
+    for (int i = 0; i < points.length; ++i) {
+      for (int j = i + 1; j < points.length; ++j) {
+        for (int k = j + 1; k < points.length; ++k) {
+          result = Math.max(result, computeArea(points[i], points[j], points[k]));
+        }
+      }
+    }
 
-	int square(int x) {
-		return x * x;
-	}
+    return result;
+  }
 
-	double computeArea(double a, double b, double c) {
-		double p = (a + b + c) / 2;
-		return Math.sqrt(Math.max(0, p * (p - a) * (p - b) * (p - c)));
-	}
+  double computeArea(int[] p1, int[] p2, int[] p3) {
+    int[][] triangle = {p1, p2, p3};
+
+    return Math.abs(
+            IntStream.range(0, triangle.length)
+                .map(
+                    i ->
+                        triangle[i][0] * triangle[(i + 1) % triangle.length][1]
+                            - triangle[(i + 1) % triangle.length][0] * triangle[i][1])
+                .sum())
+        / 2.0;
+  }
 }
