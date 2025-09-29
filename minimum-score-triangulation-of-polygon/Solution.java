@@ -1,53 +1,34 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.stream.IntStream;
 
-public class Solution {
-	Map<State, Integer> cache;
+class Solution {
+  public int minScoreTriangulation(int[] values) {
+    return search(values, new HashMap<>(), 0, values.length - 2);
+  }
 
-	public int minScoreTriangulation(int[] A) {
-		cache = new HashMap<>();
-		return search(A, 0, A.length - 2);
-	}
+  int search(int[] values, Map<State, Integer> cache, int beginIndex, int endIndex) {
+    if (beginIndex == endIndex) {
+      return 0;
+    }
 
-	int search(int[] A, int beginIndex, int endIndex) {
-		if (beginIndex == endIndex) {
-			return 0;
-		}
+    State state = new State(beginIndex, endIndex);
+    if (!cache.containsKey(state)) {
+      int result =
+          IntStream.range(beginIndex, endIndex)
+              .map(
+                  i ->
+                      search(values, cache, beginIndex, i)
+                          + values[beginIndex] * values[i + 1] * values[endIndex + 1]
+                          + search(values, cache, i + 1, endIndex))
+              .min()
+              .getAsInt();
 
-		State state = new State(beginIndex, endIndex);
-		if (cache.containsKey(state)) {
-			return cache.get(state);
-		}
+      cache.put(state, result);
+    }
 
-		int result = Integer.MAX_VALUE;
-		for (int i = beginIndex; i < endIndex; i++) {
-			result = Math.min(result,
-					search(A, beginIndex, i) + A[beginIndex] * A[i + 1] * A[endIndex + 1] + search(A, i + 1, endIndex));
-		}
-
-		cache.put(state, result);
-		return result;
-	}
+    return cache.get(state);
+  }
 }
 
-class State {
-	int beginIndex;
-	int endIndex;
-
-	State(int beginIndex, int endIndex) {
-		this.beginIndex = beginIndex;
-		this.endIndex = endIndex;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(beginIndex, endIndex);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		State other = (State) obj;
-		return beginIndex == other.beginIndex && endIndex == other.endIndex;
-	}
-}
+record State(int beginIndex, int endIndex) {}
