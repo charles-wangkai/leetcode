@@ -1,65 +1,36 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int minimumCost(int N, int[][] connections) {
-		@SuppressWarnings("unchecked")
-		List<Edge>[] edgeLists = new List[N];
-		for (int i = 0; i < edgeLists.length; i++) {
-			edgeLists[i] = new ArrayList<>();
-		}
+class Solution {
+  public int minimumCost(int n, int[][] connections) {
+    Arrays.sort(connections, Comparator.comparing(connection -> connection[2]));
 
-		for (int[] connection : connections) {
-			Edge edge = new Edge(connection[0] - 1, connection[1] - 1, connection[2]);
+    int[] parents = new int[n];
+    Arrays.fill(parents, -1);
 
-			edgeLists[connection[0] - 1].add(edge);
-			edgeLists[connection[1] - 1].add(edge);
-		}
+    int costSum = 0;
+    for (int[] connection : connections) {
+      int root1 = findRoot(parents, connection[0] - 1);
+      int root2 = findRoot(parents, connection[1] - 1);
+      if (root1 != root2) {
+        parents[root2] = root1;
+        costSum += connection[2];
+      }
+    }
 
-		int minCost = 0;
-		boolean[] used = new boolean[N];
-		PriorityQueue<Edge> pq = new PriorityQueue<>((edge1, edge2) -> Integer.compare(edge1.cost, edge2.cost));
-		used[0] = true;
-		for (Edge edge : edgeLists[0]) {
-			pq.offer(edge);
-		}
+    return (IntStream.range(0, n).map(node -> findRoot(parents, node)).distinct().count() == 1)
+        ? costSum
+        : -1;
+  }
 
-		while (!pq.isEmpty()) {
-			Edge head = pq.poll();
-			if (used[head.from] && used[head.to]) {
-				continue;
-			}
+  int findRoot(int[] parents, int node) {
+    if (parents[node] == -1) {
+      return node;
+    }
 
-			minCost += head.cost;
+    parents[node] = findRoot(parents, parents[node]);
 
-			int node = !used[head.from] ? head.from : head.to;
-			used[node] = true;
-
-			for (Edge edge : edgeLists[node]) {
-				if (!used[edge.from] || !used[edge.to]) {
-					pq.offer(edge);
-				}
-			}
-		}
-
-		if (IntStream.range(0, N).anyMatch(i -> !used[i])) {
-			return -1;
-		}
-
-		return minCost;
-	}
-}
-
-class Edge {
-	int from;
-	int to;
-	int cost;
-
-	Edge(int from, int to, int cost) {
-		this.from = from;
-		this.to = to;
-		this.cost = cost;
-	}
+    return parents[node];
+  }
 }
