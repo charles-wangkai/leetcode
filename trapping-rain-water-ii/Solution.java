@@ -33,8 +33,7 @@ class Solution {
               && adjR < m
               && adjC >= 0
               && adjC < n
-              && levels[adjR][adjC] > levels[head.r()][head.c()]
-              && levels[adjR][adjC] != heightMap[adjR][adjC]) {
+              && levels[adjR][adjC] > Math.max(heightMap[adjR][adjC], levels[head.r()][head.c()])) {
             pq.offer(
                 new Element(
                     adjR, adjC, Math.max(heightMap[adjR][adjC], levels[head.r()][head.c()])));
