@@ -45,7 +45,6 @@ class Solution {
       for (int i = 0; i < R_OFFSETS.length; ++i) {
         int adjR = head.r() + R_OFFSETS[i];
         int adjC = head.c() + C_OFFSETS[i];
-
         if (adjR >= 0
             && adjR < m
             && adjC >= 0
