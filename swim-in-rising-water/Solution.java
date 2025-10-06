@@ -6,11 +6,15 @@ class Solution {
   static final int[] C_OFFSETS = {0, 1, 0, -1};
 
   public int swimInWater(int[][] grid) {
-    int N = grid.length;
+    int n = grid.length;
+
+    if (n == 1) {
+      return 0;
+    }
 
     int result = -1;
     int lower = grid[0][0];
-    int upper = N * N - 1;
+    int upper = n * n - 1;
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
       if (check(grid, middle)) {
@@ -25,9 +29,9 @@ class Solution {
   }
 
   boolean check(int[][] grid, int time) {
-    int N = grid.length;
+    int n = grid.length;
 
-    boolean[][] visited = new boolean[N][N];
+    boolean[][] visited = new boolean[n][n];
     visited[0][0] = true;
     Queue<Point> queue = new ArrayDeque<>();
     queue.offer(new Point(0, 0));
@@ -35,13 +39,12 @@ class Solution {
       Point head = queue.poll();
 
       for (int i = 0; i < R_OFFSETS.length; ++i) {
-        int adjR = head.r + R_OFFSETS[i];
-        int adjC = head.c + C_OFFSETS[i];
-
+        int adjR = head.r() + R_OFFSETS[i];
+        int adjC = head.c() + C_OFFSETS[i];
         if (adjR >= 0
-            && adjR < N
+            && adjR < n
             && adjC >= 0
-            && adjC < N
+            && adjC < n
             && !visited[adjR][adjC]
             && grid[adjR][adjC] <= time) {
           visited[adjR][adjC] = true;
@@ -50,16 +53,8 @@ class Solution {
       }
     }
 
-    return visited[N - 1][N - 1];
+    return visited[n - 1][n - 1];
   }
 }
 
-class Point {
-  int r;
-  int c;
-
-  Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-}
+record Point(int r, int c) {}
