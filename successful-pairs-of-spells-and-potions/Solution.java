@@ -8,19 +8,19 @@ class Solution {
   }
 
   int computePotionNum(int[] potions, long success, int spell) {
-    int index = potions.length;
+    int result = 0;
     int lowerIndex = 0;
     int upperIndex = potions.length - 1;
     while (lowerIndex <= upperIndex) {
       int middleIndex = (lowerIndex + upperIndex) / 2;
       if ((long) potions[middleIndex] * spell >= success) {
-        index = middleIndex;
+        result = potions.length - middleIndex;
         upperIndex = middleIndex - 1;
       } else {
         lowerIndex = middleIndex + 1;
       }
     }
 
-    return potions.length - index;
+    return result;
   }
 }
