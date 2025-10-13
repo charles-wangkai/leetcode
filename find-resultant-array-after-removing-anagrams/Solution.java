@@ -16,7 +16,8 @@ class Solution {
   String buildKey(String word) {
     return word.chars()
         .sorted()
-        .mapToObj(c -> String.valueOf((char) c))
+        .mapToObj(c -> (char) c)
+        .map(String::valueOf)
         .collect(Collectors.joining());
   }
 }
