@@ -6,9 +6,10 @@ class Solution {
     int[] increasingLengths = new int[nums.size()];
     for (int i = increasingLengths.length - 1; i >= 0; --i) {
       increasingLengths[i] =
-          (i == increasingLengths.length - 1 || nums.get(i) >= nums.get(i + 1))
-              ? 1
-              : (increasingLengths[i + 1] + 1);
+          ((i == increasingLengths.length - 1 || nums.get(i) >= nums.get(i + 1))
+                  ? 0
+                  : increasingLengths[i + 1])
+              + 1;
     }
 
     int result = -1;
