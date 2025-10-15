@@ -1,58 +1,45 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class Solution {
-  public List<Integer> cheapestJump(int[] A, int B) {
-    int length = A.length;
+class Solution {
+  public List<Integer> cheapestJump(int[] coins, int maxJump) {
+    int[] minCosts = new int[coins.length];
+    Arrays.fill(minCosts, Integer.MAX_VALUE);
 
-    int[] costs = new int[length];
-    @SuppressWarnings("unchecked")
-    List<Integer>[] paths = new List[length];
-
-    costs[0] = A[0];
-    paths[0] = new ArrayList<>();
-    paths[0].add(1);
-
-    for (int i = 1; i < length; i++) {
-      costs[i] = -1;
-      paths[i] = new ArrayList<>();
-
-      if (A[i] >= 0) {
-        for (int j = 1; j <= B && j <= i; j++) {
-          if (costs[i - j] >= 0
-              && (costs[i] < 0
-                  || costs[i - j] + A[i] < costs[i]
-                  || (costs[i - j] + A[i] == costs[i]
-                      && isLess(concat(paths[i - j], i + 1), paths[i])))) {
-            costs[i] = costs[i - j] + A[i];
-            paths[i] = concat(paths[i - j], i + 1);
-          }
-        }
-      }
-    }
-
-    return paths[length - 1];
-  }
-
-  List<Integer> concat(List<Integer> path, int sequence) {
-    List<Integer> result = new ArrayList<>(path);
-    result.add(sequence);
-    return result;
-  }
-
-  boolean isLess(List<Integer> path1, List<Integer> path2) {
-    for (int i = 0; ; i++) {
-      if (i < path1.size()) {
-        if (i < path2.size()) {
-          if (!path1.get(i).equals(path2.get(i))) {
-            return path1.get(i) < path2.get(i);
-          }
+    for (int i = minCosts.length - 1; i >= 0; --i) {
+      if (coins[i] != -1) {
+        if (i == minCosts.length - 1) {
+          minCosts[i] = coins[i];
         } else {
-          return false;
+          for (int j = i + 1; j <= i + maxJump && j < minCosts.length; ++j) {
+            if (minCosts[j] != Integer.MAX_VALUE) {
+              minCosts[i] = Math.min(minCosts[i], coins[i] + minCosts[j]);
+            }
+          }
         }
-      } else {
-        return true;
       }
     }
+
+    if (minCosts[0] == Integer.MAX_VALUE) {
+      return List.of();
+    }
+
+    List<Integer> result = new ArrayList<>();
+    result.add(1);
+    int index = 0;
+    while (index != minCosts.length - 1) {
+      for (int next = index + 1; ; ++next) {
+        if (minCosts[next] != Integer.MAX_VALUE
+            && coins[index] + minCosts[next] == minCosts[index]) {
+          index = next;
+          result.add(index + 1);
+
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 }
