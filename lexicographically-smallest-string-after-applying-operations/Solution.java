@@ -1,58 +1,37 @@
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class Solution {
   public String findLexSmallestString(String s, int a, int b) {
-    int[] result = s.chars().map(ch -> ch - '0').toArray();
+    Set<String> reaches = new HashSet<>();
+    search(reaches, a, b, s);
 
-    int[] digits = Arrays.copyOf(result, result.length);
-    for (int i = 0; i < s.length(); ++i) {
-      if (b % 2 == 0) {
-        for (int j = 0; j < 10; ++j) {
-          add(digits, a, 1);
-
-          if (isLess(digits, result)) {
-            result = Arrays.copyOf(digits, digits.length);
-          }
-        }
-      } else {
-        for (int j = 0; j < 10; ++j) {
-          add(digits, a, 0);
-          for (int k = 0; k < 10; ++k) {
-            add(digits, a, 1);
-
-            if (isLess(digits, result)) {
-              result = Arrays.copyOf(digits, digits.length);
-            }
-          }
-        }
-      }
-
-      rotate(digits, b);
-    }
-
-    return Arrays.stream(result).mapToObj(String::valueOf).collect(Collectors.joining());
+    return reaches.stream().min(Comparator.naturalOrder()).get();
   }
 
-  void add(int[] digits, int a, int beginIndex) {
-    for (int i = beginIndex; i < digits.length; i += 2) {
-      digits[i] = (digits[i] + a) % 10;
+  void search(Set<String> reaches, int a, int b, String current) {
+    if (!reaches.contains(current)) {
+      reaches.add(current);
+
+      search(reaches, a, b, add(current, a));
+      search(reaches, a, b, rotate(current, b));
     }
   }
 
-  void rotate(int[] digits, int b) {
-    int[] origin = Arrays.copyOf(digits, digits.length);
-    for (int i = 0; i < origin.length; ++i) {
-      digits[(i + b) % origin.length] = origin[i];
-    }
+  String add(String x, int a) {
+    return IntStream.range(0, x.length())
+        .map(i -> (x.charAt(i) - '0' + ((i % 2 == 0) ? 0 : a)) % 10)
+        .mapToObj(String::valueOf)
+        .collect(Collectors.joining());
   }
 
-  boolean isLess(int[] digits1, int[] digits2) {
-    int index = 0;
-    while (index != digits1.length && digits1[index] == digits2[index]) {
-      ++index;
-    }
-
-    return index != digits1.length && digits1[index] < digits2[index];
+  String rotate(String x, int b) {
+    return IntStream.range(0, x.length())
+        .mapToObj(i -> x.charAt(Math.floorMod(i - b, x.length())))
+        .map(String::valueOf)
+        .collect(Collectors.joining());
   }
 }
