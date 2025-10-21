@@ -12,24 +12,23 @@ class Solution {
     }
 
     int result = 0;
-    int lower = Arrays.stream(nums).min().getAsInt();
-    int upper = Arrays.stream(nums).max().getAsInt();
     int beginIndex = 0;
     int endIndex = -1;
-    for (int i = lower; i <= upper; ++i) {
-      while (beginIndex != nums.length && nums[beginIndex] < i - k) {
+    for (int value = nums[0]; value <= nums[nums.length - 1]; ++value) {
+      while (beginIndex != nums.length && nums[beginIndex] < value - k) {
         ++beginIndex;
       }
-      while (endIndex != nums.length - 1 && nums[endIndex + 1] <= i + k) {
+      while (endIndex != nums.length - 1 && nums[endIndex + 1] <= value + k) {
         ++endIndex;
       }
 
       result =
           Math.max(
               result,
-              valueToCount.getOrDefault(i, 0)
+              valueToCount.getOrDefault(value, 0)
                   + Math.min(
-                      numOperations, endIndex - beginIndex + 1 - valueToCount.getOrDefault(i, 0)));
+                      numOperations,
+                      endIndex - beginIndex + 1 - valueToCount.getOrDefault(value, 0)));
     }
 
     return result;
