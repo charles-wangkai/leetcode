@@ -1,28 +1,24 @@
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class SparseVector {
-    Map<Integer, Integer> indexToValue = new HashMap<>();
+  Map<Integer, Integer> indexToValue;
 
-    SparseVector(int[] nums) {
-        for (int i = 0; i < nums.length; ++i) {
-            if (nums[i] != 0) {
-                indexToValue.put(i, nums[i]);
-            }
-        }
-    }
+  SparseVector(int[] nums) {
+    indexToValue =
+        IntStream.range(0, nums.length)
+            .filter(i -> nums[i] != 0)
+            .boxed()
+            .collect(Collectors.toMap(i -> i, i -> nums[i]));
+  }
 
-    // Return the dotProduct of two sparse vectors
-    public int dotProduct(SparseVector vec) {
-        int result = 0;
-        for (int index : indexToValue.keySet()) {
-            if (vec.indexToValue.containsKey(index)) {
-                result += indexToValue.get(index) * vec.indexToValue.get(index);
-            }
-        }
-
-        return result;
-    }
+  // Return the dotProduct of two sparse vectors
+  public int dotProduct(SparseVector vec) {
+    return indexToValue.keySet().stream()
+        .mapToInt(index -> indexToValue.get(index) * vec.indexToValue.getOrDefault(index, 0))
+        .sum();
+  }
 }
 
 // Your SparseVector object will be instantiated and called as such:
