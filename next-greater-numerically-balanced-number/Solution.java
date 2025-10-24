@@ -2,17 +2,13 @@ import java.util.stream.IntStream;
 
 class Solution {
   public int nextBeautifulNumber(int n) {
-    for (int i = n + 1; ; ++i) {
-      if (check(i)) {
-        return i;
-      }
-    }
+    return IntStream.iterate(n + 1, x -> x + 1).filter(this::isBalanced).findFirst().getAsInt();
   }
 
-  boolean check(int x) {
+  boolean isBalanced(int x) {
     int[] counts = new int[10];
-    for (char ch : String.valueOf(x).toCharArray()) {
-      ++counts[ch - '0'];
+    for (char c : String.valueOf(x).toCharArray()) {
+      ++counts[c - '0'];
     }
 
     return IntStream.range(0, counts.length).allMatch(i -> counts[i] == 0 || counts[i] == i);
