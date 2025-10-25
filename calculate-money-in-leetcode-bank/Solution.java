@@ -1,19 +1,15 @@
 class Solution {
   public int totalMoney(int n) {
     int result = 0;
-    int lastMonday = 0;
-    int last = -1;
+    int money = 6;
     for (int i = 0; i < n; ++i) {
-      int current;
       if (i % 7 == 0) {
-        current = lastMonday + 1;
-        lastMonday = current;
+        money -= 5;
       } else {
-        current = last + 1;
+        ++money;
       }
 
-      result += current;
-      last = current;
+      result += money;
     }
 
     return result;
