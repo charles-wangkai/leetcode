@@ -6,7 +6,7 @@ class Bank {
   }
 
   public boolean transfer(int account1, int account2, long money) {
-    if (!isValidAccount(account1) || !isValidAccount(account2) || balance[account1 - 1] < money) {
+    if (!hasEnoughBalance(account1, money) || !isValidAccount(account2)) {
       return false;
     }
 
@@ -27,13 +27,17 @@ class Bank {
   }
 
   public boolean withdraw(int account, long money) {
-    if (!isValidAccount(account) || balance[account - 1] < money) {
+    if (!hasEnoughBalance(account, money)) {
       return false;
     }
 
     balance[account - 1] -= money;
 
     return true;
+  }
+
+  boolean hasEnoughBalance(int account, long money) {
+    return isValidAccount(account) && balance[account - 1] >= money;
   }
 
   boolean isValidAccount(int account) {
