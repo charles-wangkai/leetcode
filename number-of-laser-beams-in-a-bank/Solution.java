@@ -5,7 +5,7 @@ class Solution {
   public int numberOfBeams(String[] bank) {
     int[] counts =
         Arrays.stream(bank)
-            .mapToInt(r -> (int) r.chars().filter(c -> c == '1').count())
+            .mapToInt(line -> (int) line.chars().filter(c -> c == '1').count())
             .filter(count -> count != 0)
             .toArray();
 
