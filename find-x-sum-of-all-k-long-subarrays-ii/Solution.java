@@ -65,7 +65,7 @@ class State {
       chosenSum -= (long) v * valueToCount.get(v);
 
       backups.add(v);
-    } else if (chosen.size() < x && !backups.isEmpty()) {
+    } else if (chosen.size() != x && !backups.isEmpty()) {
       int v = backups.removeLast();
 
       chosen.add(v);
