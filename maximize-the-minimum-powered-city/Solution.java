@@ -24,26 +24,26 @@ class Solution {
   static boolean check(int[] stations, int r, int k, long power) {
     long needed = 0;
     Queue<Element> queue = new ArrayDeque<>();
-    long sum = 0;
+    long extraSum = 0;
     long rangeSum = IntStream.range(0, r).map(i -> stations[i]).asLongStream().sum();
     for (int i = 0; i < stations.length; ++i) {
       if (i + r < stations.length) {
         rangeSum += stations[i + r];
       }
 
-      while (!queue.isEmpty() && queue.peek().index() + r < i) {
-        sum -= queue.poll().stationNum();
+      if (!queue.isEmpty() && queue.peek().index() + r == i - 1) {
+        extraSum -= queue.poll().extraStationNum();
       }
 
-      long diff = power - (rangeSum + sum);
+      long diff = power - (rangeSum + extraSum);
       if (diff > 0) {
         queue.offer(new Element(Math.min(stations.length - 1, i + r), diff));
-        sum += diff;
+        extraSum += diff;
 
         needed += diff;
       }
 
-      if (i - r >= 0) {
+      if (i >= r) {
         rangeSum -= stations[i - r];
       }
     }
@@ -52,4 +52,4 @@ class Solution {
   }
 }
 
-record Element(int index, long stationNum) {}
+record Element(int index, long extraStationNum) {}
