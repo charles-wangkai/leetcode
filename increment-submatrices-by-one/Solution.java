@@ -4,10 +4,15 @@ class Solution {
     for (int r = 0; r < n; ++r) {
       int[] deltas = new int[n];
       for (int[] query : queries) {
-        if (r >= query[0] && r <= query[2]) {
-          ++deltas[query[1]];
-          if (query[3] != n - 1) {
-            --deltas[query[3] + 1];
+        int minR = query[0];
+        int minC = query[1];
+        int maxR = query[2];
+        int maxC = query[3];
+
+        if (r >= minR && r <= maxR) {
+          ++deltas[minC];
+          if (maxC != n - 1) {
+            --deltas[maxC + 1];
           }
         }
       }
