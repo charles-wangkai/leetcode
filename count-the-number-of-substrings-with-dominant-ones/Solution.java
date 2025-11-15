@@ -32,12 +32,10 @@ class Solution {
             ((endIndex == zeroIndices.length - 1) ? s.length() : zeroIndices[endIndex + 1])
                 - zeroIndices[endIndex]
                 - 1;
-        if (leftLength + rightLength >= oneExtra) {
-          for (int left = 0; left <= leftLength; ++left) {
-            for (int right = 0; right <= rightLength; ++right) {
-              if (left + right >= oneExtra) {
-                ++result;
-              }
+        for (int left = 0; left <= leftLength; ++left) {
+          for (int right = 0; right <= rightLength; ++right) {
+            if (left + right >= oneExtra) {
+              ++result;
             }
           }
         }
