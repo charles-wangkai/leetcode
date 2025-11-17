@@ -1,16 +1,10 @@
+import java.util.stream.IntStream;
+
 class Solution {
   public boolean kLengthApart(int[] nums, int k) {
-    int prevIndex = -1;
-    for (int i = 0; i < nums.length; ++i) {
-      if (nums[i] == 1) {
-        if (prevIndex != -1 && i - prevIndex - 1 < k) {
-          return false;
-        }
+    int[] oneIndices = IntStream.range(0, nums.length).filter(i -> nums[i] == 1).toArray();
 
-        prevIndex = i;
-      }
-    }
-
-    return true;
+    return !IntStream.range(0, oneIndices.length - 1)
+        .anyMatch(i -> oneIndices[i + 1] - oneIndices[i] < k + 1);
   }
 }
