@@ -25,7 +25,7 @@ class Solution {
     return dp[m - 1][n - 1][0];
   }
 
-  static int addMod(int x, int y) {
+  int addMod(int x, int y) {
     return Math.floorMod(x + y, MODULUS);
   }
 }
