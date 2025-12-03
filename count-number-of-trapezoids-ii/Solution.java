@@ -8,7 +8,7 @@ class Solution {
     Map<Slope, Integer> slopeToCount = new HashMap<>();
     Map<Line, Integer> lineToCount = new HashMap<>();
     Map<Midpoint, Integer> midpointToCount = new HashMap<>();
-    Map<MidpointLine, Integer> midpointLineToCount = new HashMap<>();
+    Map<MidpointAndLine, Integer> midpointAndLineToCount = new HashMap<>();
 
     for (int i = 0; i < points.length; ++i) {
       for (int j = i + 1; j < points.length; ++j) {
@@ -31,9 +31,9 @@ class Solution {
         Midpoint midpoint = new Midpoint(points[i][0] + points[j][0], points[i][1] + points[j][1]);
         midpointToCount.put(midpoint, midpointToCount.getOrDefault(midpoint, 0) + 1);
 
-        MidpointLine midpointLine = new MidpointLine(midpoint, line);
-        midpointLineToCount.put(
-            midpointLine, midpointLineToCount.getOrDefault(midpointLine, 0) + 1);
+        MidpointAndLine midpointAndLine = new MidpointAndLine(midpoint, line);
+        midpointAndLineToCount.put(
+            midpointAndLine, midpointAndLineToCount.getOrDefault(midpointAndLine, 0) + 1);
       }
     }
 
@@ -41,7 +41,7 @@ class Solution {
         ((slopeToCount.values().stream().mapToLong(this::computeNChoose2).sum()
                 - lineToCount.values().stream().mapToLong(this::computeNChoose2).sum())
             - (midpointToCount.values().stream().mapToLong(this::computeNChoose2).sum()
-                - midpointLineToCount.values().stream().mapToLong(this::computeNChoose2).sum()));
+                - midpointAndLineToCount.values().stream().mapToLong(this::computeNChoose2).sum()));
   }
 
   long computeNChoose2(int n) {
@@ -59,4 +59,4 @@ record Line(Slope slope, int intercept) {}
 
 record Midpoint(int sumX, int sumY) {}
 
-record MidpointLine(Midpoint midpoint, Line line) {}
+record MidpointAndLine(Midpoint midpoint, Line line) {}
