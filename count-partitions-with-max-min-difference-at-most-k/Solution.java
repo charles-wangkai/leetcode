@@ -13,16 +13,20 @@ class Solution {
     int sum = 0;
     for (int i = 0; i < nums.length; ++i) {
       while (!valueToCount.isEmpty()
-          && (Math.abs(nums[i] - valueToCount.firstKey()) > k
-              || Math.abs(nums[i] - valueToCount.lastKey()) > k)) {
-        sum = addMod(sum, -dp[beginIndex]);
+          && Math.max(
+                  Math.abs(nums[i] - valueToCount.firstKey()),
+                  Math.abs(nums[i] - valueToCount.lastKey()))
+              > k) {
         updateMap(valueToCount, nums[beginIndex], -1);
+        sum = addMod(sum, -dp[beginIndex]);
+
         ++beginIndex;
       }
 
-      dp[i + 1] = addMod(sum, dp[i]);
       updateMap(valueToCount, nums[i], 1);
       sum = addMod(sum, dp[i]);
+
+      dp[i + 1] = sum;
     }
 
     return dp[dp.length - 1];
