@@ -20,17 +20,10 @@ class Solution {
       rightValueToCount.put(nums[i], rightValueToCount.getOrDefault(nums[i], 0) + 1);
     }
 
-    return IntStream.range(0, nums.length)
-        .map(i -> multiplyMod(leftDoubleNums[i], rightDoubleNums[i]))
-        .reduce(this::addMod)
-        .getAsInt();
-  }
-
-  int addMod(int x, int y) {
-    return Math.floorMod(x + y, MODULUS);
-  }
-
-  int multiplyMod(int x, int y) {
-    return Math.floorMod((long) x * y, MODULUS);
+    return (int)
+        (IntStream.range(0, nums.length)
+                .mapToLong(i -> (long) (leftDoubleNums[i]) * rightDoubleNums[i])
+                .sum()
+            % MODULUS);
   }
 }
