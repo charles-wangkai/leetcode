@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 class Solution {
   static final Map<String, Integer> EVENT_TYPE_TO_ORDER =
@@ -23,26 +24,25 @@ class Solution {
       int timestamp = Integer.parseInt(event.get(1));
 
       if (event.get(0).equals("MESSAGE")) {
+        int[] ids;
         String mentions = event.get(2);
         if (mentions.equals("ALL")) {
-          for (int i = 0; i < result.length; ++i) {
-            ++result[i];
-          }
+          ids = IntStream.range(0, result.length).toArray();
         } else if (mentions.equals("HERE")) {
-          for (int i = 0; i < result.length; ++i) {
-            if (timestamp >= availableTimes[i]) {
-              ++result[i];
-            }
-          }
+          ids =
+              IntStream.range(0, result.length)
+                  .filter(i -> availableTimes[i] <= timestamp)
+                  .toArray();
         } else {
-          int[] ids =
+          ids =
               Arrays.stream(mentions.split(" "))
                   .map(s -> s.substring(2))
                   .mapToInt(Integer::parseInt)
                   .toArray();
-          for (int id : ids) {
-            ++result[id];
-          }
+        }
+
+        for (int id : ids) {
+          ++result[id];
         }
       } else {
         int id = Integer.parseInt(event.get(2));
