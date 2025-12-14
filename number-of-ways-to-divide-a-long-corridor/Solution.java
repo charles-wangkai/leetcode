@@ -3,7 +3,7 @@ class Solution {
 
   public int numberOfWays(String corridor) {
     int seatNum = (int) corridor.chars().filter(c -> c == 'S').count();
-    if (seatNum <= 1 || seatNum % 2 != 0) {
+    if (seatNum <= 1 || seatNum % 2 == 1) {
       return 0;
     }
 
@@ -16,6 +16,7 @@ class Solution {
         if (seatCount % 2 == 1) {
           result = multiplyMod(result, plantCount + 1);
         }
+
         plantCount = 0;
       } else {
         ++plantCount;
