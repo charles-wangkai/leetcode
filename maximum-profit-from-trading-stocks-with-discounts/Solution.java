@@ -16,15 +16,15 @@ class Solution {
     }
 
     int[][][] dp = new int[n][2][budget + 1];
-    search(dp, present, future, childLists, budget, 0);
+    search(dp, present, future, budget, childLists, 0);
 
     return Arrays.stream(dp[0][0]).max().getAsInt();
   }
 
   void search(
-      int[][][] dp, int[] present, int[] future, List<Integer>[] childLists, int budget, int node) {
+      int[][][] dp, int[] present, int[] future, int budget, List<Integer>[] childLists, int node) {
     for (int child : childLists[node]) {
-      search(dp, present, future, childLists, budget, child);
+      search(dp, present, future, budget, childLists, child);
     }
 
     for (int parentBought = 0; parentBought < 2; ++parentBought) {
