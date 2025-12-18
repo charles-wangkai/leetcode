@@ -4,33 +4,33 @@ class Solution {
   public long maxProfit(int[] prices, int[] strategy, int k) {
     int n = prices.length;
 
-    long[] originalPrefixSums = new long[n];
-    for (int i = 0; i < originalPrefixSums.length; ++i) {
-      originalPrefixSums[i] = ((i == 0) ? 0 : originalPrefixSums[i - 1]) + prices[i] * strategy[i];
-    }
-
-    long[] originalSuffixSums = new long[n];
-    for (int i = originalSuffixSums.length - 1; i >= 0; --i) {
-      originalSuffixSums[i] =
-          ((i == originalSuffixSums.length - 1) ? 0 : originalSuffixSums[i + 1])
-              + prices[i] * strategy[i];
-    }
-
-    long[] modifiedPrefixSums = new long[n];
-    for (int i = 0; i < modifiedPrefixSums.length; ++i) {
-      modifiedPrefixSums[i] = ((i == 0) ? 0 : modifiedPrefixSums[i - 1]) + prices[i];
-    }
+    long[] originalPrefixSums =
+        buildPrefixSums(IntStream.range(0, n).map(i -> prices[i] * strategy[i]).toArray());
+    long[] modifiedPrefixSums = buildPrefixSums(prices);
 
     return Math.max(
-        originalPrefixSums[n - 1],
+        computeRangeSum(originalPrefixSums, 1, n),
         IntStream.rangeClosed(0, n - k)
             .mapToLong(
                 beginIndex ->
-                    ((beginIndex == 0) ? 0 : originalPrefixSums[beginIndex - 1])
-                        + ((beginIndex + k == n) ? 0 : originalSuffixSums[beginIndex + k])
-                        + (modifiedPrefixSums[beginIndex + k - 1]
-                            - modifiedPrefixSums[beginIndex + k / 2 - 1]))
+                    computeRangeSum(originalPrefixSums, 1, beginIndex)
+                        + computeRangeSum(originalPrefixSums, beginIndex + k + 1, n)
+                        + computeRangeSum(
+                            modifiedPrefixSums, beginIndex + k / 2 + 1, beginIndex + k))
             .max()
             .getAsLong());
+  }
+
+  long[] buildPrefixSums(int[] values) {
+    long[] result = new long[values.length + 1];
+    for (int i = 1; i < result.length; ++i) {
+      result[i] = result[i - 1] + values[i - 1];
+    }
+
+    return result;
+  }
+
+  long computeRangeSum(long[] prefixSums, int beginLength, int endLength) {
+    return prefixSums[endLength] - prefixSums[beginLength - 1];
   }
 }
