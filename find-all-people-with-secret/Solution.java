@@ -21,15 +21,16 @@ class Solution {
 
     int beginIndex = 0;
     while (beginIndex != meetings.length) {
+      int time = meetings[beginIndex][2];
+
       int endIndex = beginIndex;
-      while (endIndex + 1 != meetings.length
-          && meetings[endIndex + 1][2] == meetings[beginIndex][2]) {
+      while (endIndex + 1 != meetings.length && meetings[endIndex + 1][2] == time) {
         ++endIndex;
       }
 
       for (int i = beginIndex; i <= endIndex; ++i) {
-        getIndexList(indexLists, times, meetings[i][0], meetings[beginIndex][2]).add(i);
-        getIndexList(indexLists, times, meetings[i][1], meetings[beginIndex][2]).add(i);
+        getIndexList(indexLists, times, meetings[i][0], time).add(i);
+        getIndexList(indexLists, times, meetings[i][1], time).add(i);
       }
 
       todoIndices.clear();
@@ -43,14 +44,12 @@ class Solution {
         int todoIndex = todoIndices.pop();
         if (secrets[meetings[todoIndex][0]] && !secrets[meetings[todoIndex][1]]) {
           secrets[meetings[todoIndex][1]] = true;
-          for (int index :
-              getIndexList(indexLists, times, meetings[todoIndex][1], meetings[beginIndex][2])) {
+          for (int index : getIndexList(indexLists, times, meetings[todoIndex][1], time)) {
             todoIndices.push(index);
           }
         } else if (!secrets[meetings[todoIndex][0]] && secrets[meetings[todoIndex][1]]) {
           secrets[meetings[todoIndex][0]] = true;
-          for (int index :
-              getIndexList(indexLists, times, meetings[todoIndex][0], meetings[beginIndex][2])) {
+          for (int index : getIndexList(indexLists, times, meetings[todoIndex][0], time)) {
             todoIndices.push(index);
           }
         }
