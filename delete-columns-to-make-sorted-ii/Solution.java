@@ -1,30 +1,25 @@
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class Solution {
-	public int minDeletionSize(String[] A) {
-		int deletionNum = 0;
-		int length = 0;
-		while (length != A[0].length()) {
-			if (isSorted(truncate(A, length + 1))) {
-				length++;
-			} else {
-				A = delete(A, length);
-				deletionNum++;
-			}
-		}
-		return deletionNum;
-	}
+class Solution {
+  public int minDeletionSize(String[] strs) {
+    int result = 0;
+    String[] rests = IntStream.range(0, strs.length).mapToObj(i -> "").toArray(String[]::new);
+    for (int c = 0; c < strs[0].length(); ++c) {
+      String[] rests_ = rests;
+      int c_ = c;
+      String[] appended =
+          IntStream.range(0, rests.length)
+              .mapToObj(i -> rests_[i] + strs[i].charAt(c_))
+              .toArray(String[]::new);
 
-	boolean isSorted(String[] truncated) {
-		return IntStream.range(0, truncated.length - 1).allMatch(i -> truncated[i].compareTo(truncated[i + 1]) <= 0);
-	}
+      if (IntStream.range(0, appended.length - 1)
+          .allMatch(i -> appended[i].compareTo(appended[i + 1]) <= 0)) {
+        rests = appended;
+      } else {
+        ++result;
+      }
+    }
 
-	String[] truncate(String[] A, int length) {
-		return Arrays.stream(A).map(s -> s.substring(0, length)).toArray(String[]::new);
-	}
-
-	String[] delete(String[] A, int index) {
-		return Arrays.stream(A).map(s -> s.substring(0, index) + s.substring(index + 1)).toArray(String[]::new);
-	}
+    return result;
+  }
 }
