@@ -1,20 +1,21 @@
 import java.util.Arrays;
 
-public class Solution {
-	public int minDeletionSize(String[] A) {
-		int[] maxLengths = new int[A[0].length()];
-		for (int i = 0; i < maxLengths.length; i++) {
-			maxLengths[i] = 1;
-			for (int j = 0; j < i; j++) {
-				if (canConcat(A, j, i)) {
-					maxLengths[i] = Math.max(maxLengths[i], maxLengths[j] + 1);
-				}
-			}
-		}
-		return maxLengths.length - Arrays.stream(maxLengths).max().getAsInt();
-	}
+class Solution {
+  public int minDeletionSize(String[] strs) {
+    int[] dp = new int[strs[0].length()];
+    for (int i = 0; i < dp.length; ++i) {
+      dp[i] = 1;
+      for (int j = 0; j < i; ++j) {
+        if (canConcat(strs, j, i)) {
+          dp[i] = Math.max(dp[i], dp[j] + 1);
+        }
+      }
+    }
 
-	boolean canConcat(String[] A, int lowerIndex, int upperIndex) {
-		return Arrays.stream(A).allMatch(s -> s.charAt(lowerIndex) <= s.charAt(upperIndex));
-	}
+    return dp.length - Arrays.stream(dp).max().getAsInt();
+  }
+
+  boolean canConcat(String[] strs, int index1, int index2) {
+    return Arrays.stream(strs).allMatch(s -> s.charAt(index1) <= s.charAt(index2));
+  }
 }
