@@ -21,16 +21,18 @@ class Solution {
         availables.add(endEvents.poll().room());
       }
 
+      int room;
       if (availables.isEmpty()) {
         EndEvent endEvent = endEvents.poll();
-        endEvents.add(new EndEvent(endEvent.time() + (meeting[1] - meeting[0]), endEvent.room()));
-        ++counts[endEvent.room()];
+        room = endEvent.room();
+        endEvents.add(new EndEvent(endEvent.time() + (meeting[1] - meeting[0]), room));
       } else {
-        int room = availables.first();
+        room = availables.first();
         availables.remove(room);
         endEvents.add(new EndEvent(meeting[1], room));
-        ++counts[room];
       }
+
+      ++counts[room];
     }
 
     int maxCount = Arrays.stream(counts).max().getAsInt();
