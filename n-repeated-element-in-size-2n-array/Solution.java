@@ -1,15 +1,15 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class Solution {
-	public int repeatedNTimes(int[] A) {
-		Set<Integer> history = new HashSet<>();
-		for (int i = 0;; i++) {
-			if (history.contains(A[i])) {
-				return A[i];
-			}
+class Solution {
+  public int repeatedNTimes(int[] nums) {
+    Set<Integer> seen = new HashSet<>();
+    for (int i = 0; ; ++i) {
+      if (seen.contains(nums[i])) {
+        return nums[i];
+      }
 
-			history.add(A[i]);
-		}
-	}
+      seen.add(nums[i]);
+    }
+  }
 }
