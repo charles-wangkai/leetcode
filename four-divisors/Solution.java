@@ -1,25 +1,31 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public int sumFourDivisors(int[] nums) {
-        return Arrays.stream(nums).map(this::computeSumForFourDivisors).sum();
+  public int sumFourDivisors(int[] nums) {
+    int result = 0;
+    for (int x : nums) {
+      List<Integer> divisors = buildDivisors(x);
+      if (divisors.size() == 4) {
+        result += divisors.stream().mapToInt(Integer::intValue).sum();
+      }
     }
 
-    int computeSumForFourDivisors(int n) {
-        int sum = 0;
-        int divisorCount = 0;
-        for (int i = 1; i * i <= n; ++i) {
-            if (n % i == 0) {
-                ++divisorCount;
-                sum += i;
+    return result;
+  }
 
-                if (n / i != i) {
-                    ++divisorCount;
-                    sum += n / i;
-                }
-            }
+  List<Integer> buildDivisors(int x) {
+    List<Integer> result = new ArrayList<>();
+    for (int i = 1; i * i <= x; ++i) {
+      if (x % i == 0) {
+        result.add(i);
+
+        if (x / i != i) {
+          result.add(x / i);
         }
-
-        return (divisorCount == 4) ? sum : 0;
+      }
     }
+
+    return result;
+  }
 }
