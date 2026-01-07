@@ -28,8 +28,7 @@ class Solution {
 
     int result = n;
     boolean[] visited = new boolean[n];
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
+    Dsu dsu = new Dsu(n);
     for (List<Integer> indices : valueToIndices.values()) {
       for (int index : indices) {
         visited[index] = true;
@@ -38,40 +37,63 @@ class Solution {
         for (int e : edgeLists[index]) {
           int other = (edges[e][0] == index) ? edges[e][1] : edges[e][0];
           if (visited[other]) {
-            int root1 = findRoot(parents, index);
-            int root2 = findRoot(parents, other);
-            if (root1 != root2) {
-              parents[root2] = root1;
-            }
+            dsu.union(index, other);
           }
         }
       }
-      Map<Integer, Integer> rootToCount = new HashMap<>();
+
+      Map<Integer, Integer> leaderToCount = new HashMap<>();
       for (int index : indices) {
-        int root = findRoot(parents, index);
-        rootToCount.put(root, rootToCount.getOrDefault(root, 0) + 1);
+        int leader = dsu.find(index);
+        leaderToCount.put(leader, leaderToCount.getOrDefault(leader, 0) + 1);
       }
 
-      result += rootToCount.values().stream().mapToInt(count -> count * (count - 1) / 2).sum();
+      result += leaderToCount.values().stream().mapToInt(count -> count * (count - 1) / 2).sum();
     }
 
     return result;
   }
+}
 
-  static int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-      p = next;
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
     }
 
-    return root;
+    return leaderToGroup;
   }
 }
