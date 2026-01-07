@@ -1,5 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -10,10 +16,7 @@ class Solution {
     int m = grid.length;
     int n = grid[0].length;
 
-    int[] parents = new int[m * n];
-    Arrays.fill(parents, -1);
-
-    int[] sizes = new int[m * n];
+    Dsu dsu = new Dsu(m * n);
 
     int[] sortedPoints =
         IntStream.range(0, m * n)
@@ -31,46 +34,74 @@ class Solution {
             .toArray();
 
     int[] result = new int[queries.length];
+    Set<Integer> seen = new HashSet<>();
     for (int queryIndex : sortedQueryIndices) {
       while (sortedPointIndex != sortedPoints.length
           && grid[sortedPoints[sortedPointIndex] / n][sortedPoints[sortedPointIndex] % n]
               < queries[queryIndex]) {
         int point = sortedPoints[sortedPointIndex];
-        parents[point] = point;
-        sizes[point] = 1;
+        seen.add(point);
 
         for (int i = 0; i < R_OFFSETS.length; ++i) {
           int adjR = point / n + R_OFFSETS[i];
           int adjC = point % n + C_OFFSETS[i];
           int adj = adjR * n + adjC;
-          if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n && parents[adj] != -1) {
-            int root1 = findRoot(parents, point);
-            int root2 = findRoot(parents, adj);
-            if (root1 != root2) {
-              parents[root2] = root1;
-              sizes[root1] += sizes[root2];
-            }
+          if (adjR >= 0 && adjR < m && adjC >= 0 && adjC < n && seen.contains(adj)) {
+            dsu.union(point, adj);
           }
         }
 
         ++sortedPointIndex;
       }
 
-      if (parents[0] != -1) {
-        result[queryIndex] = sizes[findRoot(parents, 0)];
+      if (seen.contains(0)) {
+        result[queryIndex] = dsu.getSize(0);
       }
     }
 
     return result;
   }
+}
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == node) {
-      return node;
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    parents[node] = findRoot(parents, parents[node]);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-    return parents[node];
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
