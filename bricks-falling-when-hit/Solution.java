@@ -1,114 +1,114 @@
-public class Solution {
-	static final Node TOP_NODE = new Node(-1, -1, null, 0);
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-	static final int[] R_OFFSETS = { -1, 0, 1, 0 };
-	static final int[] C_OFFSETS = { 0, 1, 0, -1 };
+class Solution {
+  static final int[] R_OFFSETS = {-1, 0, 1, 0};
+  static final int[] C_OFFSETS = {0, 1, 0, -1};
 
-	public int[] hitBricks(int[][] grid, int[][] hits) {
-		int row = grid.length;
-		int col = grid[0].length;
+  public int[] hitBricks(int[][] grid, int[][] hits) {
+    int m = grid.length;
+    int n = grid[0].length;
 
-		boolean[][] hitGrid = new boolean[row][col];
-		for (int[] hit : hits) {
-			hitGrid[hit[0]][hit[1]] = true;
-		}
+    Dsu dsu = new Dsu((m + 1) * n);
 
-		Node[][] nodes = new Node[row][col];
-		for (int r = 0; r < row; r++) {
-			for (int c = 0; c < col; c++) {
-				if (grid[r][c] == 1 && !hitGrid[r][c]) {
-					addNode(nodes, r, c);
-				}
-			}
-		}
+    for (int c = 0; c < n - 1; ++c) {
+      dsu.union(toIndex(n, 0, c), toIndex(n, 0, c + 1));
+    }
 
-		int[] dropNums = new int[hits.length];
-		for (int i = hits.length - 1; i >= 0; i--) {
-			int hitR = hits[i][0];
-			int hitC = hits[i][1];
+    Set<Integer> hitIndices =
+        Arrays.stream(hits).map(hit -> toIndex(n, hit[0] + 1, hit[1])).collect(Collectors.toSet());
+    boolean[][] visited = new boolean[m + 1][n];
+    Arrays.fill(visited[0], true);
+    for (int r = 0; r < m; ++r) {
+      for (int c = 0; c < n; ++c) {
+        if (grid[r][c] == 1 && !hitIndices.contains(toIndex(n, r + 1, c))) {
+          addBrick(dsu, visited, r + 1, c);
+        }
+      }
+    }
 
-			int dropNum;
-			if (grid[hitR][hitC] == 1) {
-				dropNum = addNode(nodes, hitR, hitC);
-			} else {
-				dropNum = 0;
-			}
+    int[] result = new int[hits.length];
+    for (int i = result.length - 1; i >= 0; --i) {
+      int hitR = hits[i][0];
+      int hitC = hits[i][1];
 
-			dropNums[i] = dropNum;
-		}
-		return dropNums;
-	}
+      if (grid[hitR][hitC] == 1) {
+        result[i] = addBrick(dsu, visited, hitR + 1, hitC);
+      }
+    }
 
-	int addNode(Node[][] nodes, int r, int c) {
-		int row = nodes.length;
-		int col = nodes[0].length;
+    return result;
+  }
 
-		int dropNum;
-		if (r == 0) {
-			nodes[r][c] = new Node(r, c, TOP_NODE, 1);
-			dropNum = 0;
-		} else {
-			nodes[r][c] = new Node(r, c, null, 1);
-			dropNum = -1;
-		}
+  int toIndex(int n, int r, int c) {
+    return r * n + c;
+  }
 
-		for (int j = 0; j < R_OFFSETS.length; j++) {
-			int adjR = r + R_OFFSETS[j];
-			int adjC = c + C_OFFSETS[j];
+  int addBrick(Dsu dsu, boolean[][] visited, int r, int c) {
+    int row = visited.length;
+    int col = visited[0].length;
+    int n = col;
 
-			if (adjR >= 0 && adjR < row && adjC >= 0 && adjC < col && nodes[adjR][adjC] != null) {
-				Node rootHit = findRoot(nodes[r][c]);
-				Node rootAdj = findRoot(nodes[adjR][adjC]);
+    visited[r][c] = true;
 
-				if (!rootHit.equals(rootAdj)) {
-					if (rootHit.equals(TOP_NODE)) {
-						rootAdj.parent = rootHit;
+    int oldTopSize = dsu.getSize(0);
 
-						dropNum += rootAdj.size;
-					} else {
-						rootHit.parent = rootAdj;
-						rootAdj.size += rootHit.size;
+    for (int i = 0; i < R_OFFSETS.length; ++i) {
+      int adjR = r + R_OFFSETS[i];
+      int adjC = c + C_OFFSETS[i];
+      if (adjR >= 0 && adjR < row && adjC >= 0 && adjC < col && visited[adjR][adjC]) {
+        dsu.union(toIndex(n, r, c), toIndex(n, adjR, adjC));
+      }
+    }
 
-						if (rootAdj.equals(TOP_NODE)) {
-							dropNum += rootHit.size;
-						}
-					}
-				}
-			}
-		}
-		return Math.max(0, dropNum);
-	}
-
-	Node findRoot(Node node) {
-		Node root = node;
-		while (root.parent != null) {
-			root = root.parent;
-		}
-		return root;
-	}
+    return Math.max(0, dsu.getSize(0) - oldTopSize - 1);
+  }
 }
 
-class Node {
-	int r;
-	int c;
-	Node parent;
-	int size;
+class Dsu {
+  int[] parentOrSizes;
 
-	Node(int r, int c, Node parent, int size) {
-		this.r = r;
-		this.c = c;
-		this.parent = parent;
-		this.size = size;
-	}
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
 
-	@Override
-	public int hashCode() {
-		return r * c;
-	}
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		Node other = (Node) obj;
-		return r == other.r && c == other.c;
-	}
+    parentOrSizes[a] = find(parentOrSizes[a]);
+
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
+  }
 }
