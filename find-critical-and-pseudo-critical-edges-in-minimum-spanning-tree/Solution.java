@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -30,42 +32,28 @@ class Solution {
             .mapToInt(Integer::intValue)
             .toArray();
 
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
-
     int result = 0;
+    Dsu dsu = new Dsu(n);
     if (requiredEdgeIndex != -1) {
-      result += union(parents, edges[requiredEdgeIndex]);
+      result += union(dsu, edges[requiredEdgeIndex]);
     }
     for (int sortedIndex : sortedIndices) {
-      result += union(parents, edges[sortedIndex]);
+      result += union(dsu, edges[sortedIndex]);
     }
 
-    return (IntStream.range(0, n).map(i -> findRoot(parents, i)).distinct().count() == 1)
-        ? result
-        : null;
+    return (dsu.buildLeaderToGroup().size() == 1) ? result : null;
   }
 
-  int union(int[] parents, int[] edge) {
-    int root1 = findRoot(parents, edge[0]);
-    int root2 = findRoot(parents, edge[1]);
-    if (root1 == root2) {
+  int union(Dsu dsu, int[] edge) {
+    int leader1 = dsu.find(edge[0]);
+    int leader2 = dsu.find(edge[1]);
+    if (leader1 == leader2) {
       return 0;
     }
 
-    parents[root2] = root1;
+    dsu.union(leader1, leader2);
 
     return edge[2];
-  }
-
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
-    }
-
-    parents[node] = findRoot(parents, parents[node]);
-
-    return parents[node];
   }
 
   boolean isCritical(int n, int[][] edges, int mstWeight, int edgeIndex) {
@@ -76,5 +64,48 @@ class Solution {
 
   boolean isPseudo(int n, int[][] edges, int mstWeight, int edgeIndex) {
     return computeMSTWeight(n, edges, -1, edgeIndex) == mstWeight;
+  }
+}
+
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
+    }
+
+    parentOrSizes[a] = find(parentOrSizes[a]);
+
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
