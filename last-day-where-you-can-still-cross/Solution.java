@@ -1,25 +1,20 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
   static final int[] R_OFFSETS = {-1, 0, 1, 0};
   static final int[] C_OFFSETS = {0, 1, 0, -1};
 
   public int latestDayToCross(int row, int col, int[][] cells) {
-    int[] parents = new int[row * col];
-    Arrays.fill(parents, -1);
+    Dsu dsu = new Dsu(row * col);
     for (int c = 0; c < col - 1; ++c) {
-      int root1 = findRoot(parents, c);
-      int root2 = findRoot(parents, c + 1);
-      if (root1 != root2) {
-        parents[root2] = root1;
-      }
+      dsu.union(c, c + 1);
     }
     for (int c = 0; c < col - 1; ++c) {
-      int root1 = findRoot(parents, (row - 1) * col + c);
-      int root2 = findRoot(parents, (row - 1) * col + c + 1);
-      if (root1 != root2) {
-        parents[root2] = root1;
-      }
+      dsu.union((row - 1) * col + c, (row - 1) * col + c + 1);
     }
 
     int[][] matrix = new int[row][col];
@@ -37,27 +32,56 @@ class Solution {
         int adjR = r + R_OFFSETS[j];
         int adjC = c + C_OFFSETS[j];
         if (adjR >= 0 && adjR < row && adjC >= 0 && adjC < col && matrix[adjR][adjC] == 0) {
-          int root1 = findRoot(parents, r * col + c);
-          int root2 = findRoot(parents, adjR * col + adjC);
-          if (root1 != root2) {
-            parents[root2] = root1;
-          }
+          dsu.union(r * col + c, adjR * col + adjC);
         }
       }
 
-      if (findRoot(parents, 0) == findRoot(parents, row * col - 1)) {
+      if (dsu.find(0) == dsu.find(row * col - 1)) {
         return i;
       }
     }
   }
+}
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    parents[node] = findRoot(parents, parents[node]);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-    return parents[node];
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
