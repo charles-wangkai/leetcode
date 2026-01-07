@@ -1,45 +1,64 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 class Solution {
   public List<Boolean> areConnected(int n, int threshold, int[][] queries) {
-    int[] parents = new int[n + 1];
-    Arrays.fill(parents, -1);
-
+    Dsu dsu = new Dsu(n + 1);
     for (int i = threshold + 1; i * 2 <= n; ++i) {
       for (int j = i; j + i <= n; j += i) {
-        union(parents, j, j + i);
+        dsu.union(j, j + i);
       }
     }
 
     return Arrays.stream(queries)
-        .map(query -> findRoot(parents, query[0]) == findRoot(parents, query[1]))
+        .map(query -> dsu.find(query[0]) == dsu.find(query[1]))
         .collect(Collectors.toList());
   }
+}
 
-  void union(int[] parents, int node1, int node2) {
-    int root1 = findRoot(parents, node1);
-    int root2 = findRoot(parents, node2);
-    if (root1 != root2) {
-      parents[root2] = root1;
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
+    }
+
+    parentOrSizes[a] = find(parentOrSizes[a]);
+
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
     }
   }
 
-  int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
-
-      p = next;
-    }
-
-    return root;
+    return leaderToGroup;
   }
 }
