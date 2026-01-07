@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Solution {
   public long countPaths(int n, int[][] edges) {
@@ -9,18 +11,10 @@ class Solution {
       centers[i] = isPrime(i + 1);
     }
 
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
-
-    int[] sizes = new int[n];
-    Arrays.fill(sizes, 1);
-
+    Dsu dsu = new Dsu(n);
     for (int[] edge : edges) {
       if (!centers[edge[0] - 1] && !centers[edge[1] - 1]) {
-        int root1 = findRoot(parents, edge[0] - 1);
-        int root2 = findRoot(parents, edge[1] - 1);
-        parents[root2] = root1;
-        sizes[root1] += sizes[root2];
+        dsu.union(edge[0] - 1, edge[1] - 1);
       }
     }
 
@@ -31,9 +25,9 @@ class Solution {
     }
     for (int[] edge : edges) {
       if (centers[edge[0] - 1] && !centers[edge[1] - 1]) {
-        adjSizeLists[edge[0] - 1].add(sizes[findRoot(parents, edge[1] - 1)]);
+        adjSizeLists[edge[0] - 1].add(dsu.getSize(edge[1] - 1));
       } else if (!centers[edge[0] - 1] && centers[edge[1] - 1]) {
-        adjSizeLists[edge[1] - 1].add(sizes[findRoot(parents, edge[0] - 1)]);
+        adjSizeLists[edge[1] - 1].add(dsu.getSize(edge[0] - 1));
       }
     }
 
@@ -51,16 +45,6 @@ class Solution {
     return result;
   }
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
-    }
-
-    parents[node] = findRoot(parents, parents[node]);
-
-    return parents[node];
-  }
-
   boolean isPrime(int x) {
     if (x == 1) {
       return false;
@@ -73,5 +57,48 @@ class Solution {
     }
 
     return true;
+  }
+}
+
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
+    }
+
+    parentOrSizes[a] = find(parentOrSizes[a]);
+
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
