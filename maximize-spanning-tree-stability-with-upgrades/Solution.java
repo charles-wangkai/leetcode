@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
   public int maxStability(int n, int[][] edges, int k) {
@@ -55,29 +58,56 @@ class Solution {
   }
 
   int computeComponentNum(int n, Pair[] pairs) {
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
-
+    Dsu dsu = new Dsu(n);
     for (Pair pair : pairs) {
-      int root1 = findRoot(parents, pair.node1());
-      int root2 = findRoot(parents, pair.node2());
-      if (root1 != root2) {
-        parents[root2] = root1;
-      }
+      dsu.union(pair.node1(), pair.node2());
     }
 
-    return (int) IntStream.range(0, n).map(i -> findRoot(parents, i)).distinct().count();
-  }
-
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
-    }
-
-    parents[node] = findRoot(parents, parents[node]);
-
-    return parents[node];
+    return dsu.buildLeaderToGroup().size();
   }
 }
 
 record Pair(int node1, int node2) {}
+
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
+    }
+
+    parentOrSizes[a] = find(parentOrSizes[a]);
+
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
+  }
+}
