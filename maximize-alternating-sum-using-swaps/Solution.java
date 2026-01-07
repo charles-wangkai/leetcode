@@ -7,31 +7,19 @@ import java.util.stream.IntStream;
 
 class Solution {
   public long maxAlternatingSum(int[] nums, int[][] swaps) {
-    int[] parents = new int[nums.length];
-    Arrays.fill(parents, -1);
-
+    Dsu dsu = new Dsu(nums.length);
     for (int[] swap : swaps) {
-      int root1 = findRoot(parents, swap[0]);
-      int root2 = findRoot(parents, swap[1]);
-      if (root1 != root2) {
-        parents[root2] = root1;
-      }
+      dsu.union(swap[0], swap[1]);
     }
 
-    Map<Integer, List<Integer>> rootToIndices = new HashMap<>();
-    for (int i = 0; i < nums.length; ++i) {
-      int root = findRoot(parents, i);
-      rootToIndices.putIfAbsent(root, new ArrayList<>());
-      rootToIndices.get(root).add(i);
-    }
+    Map<Integer, List<Integer>> leaderToGroup = dsu.buildLeaderToGroup();
 
-    return rootToIndices.values().stream()
+    return leaderToGroup.values().stream()
         .mapToLong(
-            indices -> {
-              int[] sortedValues =
-                  indices.stream().mapToInt(index -> nums[index]).sorted().toArray();
+            group -> {
+              int[] sortedValues = group.stream().mapToInt(index -> nums[index]).sorted().toArray();
               int[] sortedFactors =
-                  indices.stream().mapToInt(index -> (index % 2 == 0) ? 1 : -1).sorted().toArray();
+                  group.stream().mapToInt(index -> (index % 2 == 0) ? 1 : -1).sorted().toArray();
 
               return IntStream.range(0, sortedValues.length)
                   .map(i -> sortedValues[i] * sortedFactors[i])
@@ -40,14 +28,47 @@ class Solution {
             })
         .sum();
   }
+}
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    parents[node] = findRoot(parents, parents[node]);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-    return parents[node];
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
