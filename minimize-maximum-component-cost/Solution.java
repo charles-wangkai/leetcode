@@ -1,5 +1,9 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
   public int minCost(int n, int[][] edges, int k) {
@@ -10,13 +14,12 @@ class Solution {
     Arrays.sort(edges, Comparator.comparing(edge -> edge[2]));
 
     int componentNum = n;
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
+    Dsu dsu = new Dsu(n);
     for (int i = 0; ; ++i) {
-      int root1 = findRoot(parents, edges[i][0]);
-      int root2 = findRoot(parents, edges[i][1]);
-      if (root1 != root2) {
-        parents[root2] = root1;
+      int leader1 = dsu.find(edges[i][0]);
+      int leader2 = dsu.find(edges[i][1]);
+      if (leader1 != leader2) {
+        dsu.union(leader1, leader2);
         --componentNum;
       }
 
@@ -25,14 +28,47 @@ class Solution {
       }
     }
   }
+}
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    parents[node] = findRoot(parents, parents[node]);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-    return parents[node];
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
