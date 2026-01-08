@@ -7,9 +7,12 @@ class Solution {
   public int[] popcountDepth(long[] nums, long[][] queries) {
     int n = nums.length;
 
-    int[][] binaryIndexedTrees = new int[LIMIT + 1][Integer.highestOneBit(n) * 2 + 1];
+    FenwickTree[] fenwickTrees = new FenwickTree[LIMIT + 1];
+    for (int i = 0; i < fenwickTrees.length; ++i) {
+      fenwickTrees[i] = new FenwickTree(n);
+    }
     for (int i = 0; i < nums.length; ++i) {
-      update(binaryIndexedTrees[computeDepth(nums[i])], i + 1, 1);
+      fenwickTrees[computeDepth(nums[i])].add(i + 1, 1);
     }
 
     List<Integer> result = new ArrayList<>();
@@ -19,14 +22,14 @@ class Solution {
         int r = (int) query[2];
         int k = (int) query[3];
 
-        result.add(query(binaryIndexedTrees[k], r + 1) - query(binaryIndexedTrees[k], l));
+        result.add(fenwickTrees[k].computePrefixSum(r + 1) - fenwickTrees[k].computePrefixSum(l));
       } else {
         int idx = (int) query[1];
         long val = query[2];
 
-        update(binaryIndexedTrees[computeDepth(nums[idx])], idx + 1, -1);
+        fenwickTrees[computeDepth(nums[idx])].add(idx + 1, -1);
         nums[idx] = val;
-        update(binaryIndexedTrees[computeDepth(nums[idx])], idx + 1, 1);
+        fenwickTrees[computeDepth(nums[idx])].add(idx + 1, 1);
       }
     }
 
@@ -36,21 +39,29 @@ class Solution {
   int computeDepth(long x) {
     return (x == 1) ? 0 : (1 + computeDepth(Long.bitCount(x)));
   }
+}
 
-  int query(int[] binaryIndexedTree, int index) {
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
     int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
 
     return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 }
