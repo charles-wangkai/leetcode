@@ -13,37 +13,49 @@ class Solution {
             .toArray();
 
     long result = nums.length + sortedIndices[sortedIndices.length - 1];
-    int[] A = new int[Integer.highestOneBit(nums.length) * 2 + 1];
-    add(A, sortedIndices[0], 1);
+    FenwickTree fenwickTree = new FenwickTree(nums.length);
+    fenwickTree.add(sortedIndices[0] + 1, 1);
     for (int i = 1; i < sortedIndices.length; ++i) {
-      add(A, sortedIndices[i], 1);
+      fenwickTree.add(sortedIndices[i] + 1, 1);
 
       if (sortedIndices[i] < sortedIndices[i - 1]) {
-        result += rangeSum(A, sortedIndices[i], sortedIndices[i - 1]) - 1;
+        result +=
+            fenwickTree.computePrefixSum(sortedIndices[i - 1] + 1)
+                - fenwickTree.computePrefixSum(sortedIndices[i] + 1)
+                - 1;
       } else {
-        result += i - rangeSum(A, sortedIndices[i - 1], sortedIndices[i]);
+        result +=
+            i
+                - (fenwickTree.computePrefixSum(sortedIndices[i] + 1)
+                    - fenwickTree.computePrefixSum(sortedIndices[i - 1] + 1));
       }
     }
 
     return result;
   }
+}
 
-  int LSB(int i) {
-    return i & -i;
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
   }
 
-  void add(int[] A, int i, int delta) {
-    if (i == 0) {
-      A[0] += delta;
-      return;
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
     }
-    for (; i < A.length; i += LSB(i)) A[i] += delta;
   }
 
-  int rangeSum(int[] A, int i, int j) {
-    int sum = 0;
-    for (; j > i; j -= LSB(j)) sum += A[j];
-    for (; i > j; i -= LSB(i)) sum -= A[i];
-    return sum;
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
   }
 }
