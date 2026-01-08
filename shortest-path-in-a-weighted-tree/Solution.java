@@ -20,14 +20,14 @@ class Solution {
     time = 1;
     search(inTimes, outTimes, edges, edgeLists, -1, 0);
 
-    int[] binaryIndexedTree = new int[Integer.highestOneBit(2 * n) * 2 + 1];
+    FenwickTree fenwickTree = new FenwickTree(2 * n);
     int[] values = new int[n];
     for (int[] edge : edges) {
       int node = (inTimes[edge[0] - 1] < inTimes[edge[1] - 1]) ? (edge[1] - 1) : (edge[0] - 1);
 
       values[node] = edge[2];
-      update(binaryIndexedTree, inTimes[node], edge[2]);
-      update(binaryIndexedTree, outTimes[node], -edge[2]);
+      fenwickTree.add(inTimes[node], edge[2]);
+      fenwickTree.add(outTimes[node], -edge[2]);
     }
 
     List<Integer> result = new ArrayList<>();
@@ -40,34 +40,17 @@ class Solution {
         int node = (inTimes[u - 1] < inTimes[v - 1]) ? (v - 1) : (u - 1);
 
         int delta = w - values[node];
-        update(binaryIndexedTree, inTimes[node], delta);
-        update(binaryIndexedTree, outTimes[node], -delta);
+        fenwickTree.add(inTimes[node], delta);
+        fenwickTree.add(outTimes[node], -delta);
         values[node] = w;
       } else {
         int x = query[1];
 
-        result.add(query(binaryIndexedTree, inTimes[x - 1]));
+        result.add(fenwickTree.computePrefixSum(inTimes[x - 1]));
       }
     }
 
     return result.stream().mapToInt(Integer::intValue).toArray();
-  }
-
-  int query(int[] binaryIndexedTree, int index) {
-    int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
-    }
-
-    return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 
   void search(
@@ -89,5 +72,30 @@ class Solution {
 
     outTimes[node] = time;
     ++time;
+  }
+}
+
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
   }
 }
