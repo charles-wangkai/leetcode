@@ -11,41 +11,49 @@ class Solution {
             .boxed()
             .collect(Collectors.toMap(i -> sortedValues[i], i -> i + 1));
 
-    int[] binaryIndexedTree = new int[Integer.highestOneBit(sortedValues.length) * 2 + 1];
+    FenwickTree fenwickTree = new FenwickTree(sortedValues.length);
     long inversionNum = 0;
     for (int i = 0; i < k - 1; ++i) {
-      inversionNum += i - query(binaryIndexedTree, valueToCompressed.get(nums[i]));
-      update(binaryIndexedTree, valueToCompressed.get(nums[i]), 1);
+      inversionNum += i - fenwickTree.computePrefixSum(valueToCompressed.get(nums[i]));
+      fenwickTree.add(valueToCompressed.get(nums[i]), 1);
     }
 
     long result = Long.MAX_VALUE;
     for (int i = k - 1; i < nums.length; ++i) {
-      inversionNum += (k - 1) - query(binaryIndexedTree, valueToCompressed.get(nums[i]));
-      update(binaryIndexedTree, valueToCompressed.get(nums[i]), 1);
+      inversionNum += (k - 1) - fenwickTree.computePrefixSum(valueToCompressed.get(nums[i]));
+      fenwickTree.add(valueToCompressed.get(nums[i]), 1);
 
       result = Math.min(result, inversionNum);
 
-      update(binaryIndexedTree, valueToCompressed.get(nums[i - k + 1]), -1);
-      inversionNum -= query(binaryIndexedTree, valueToCompressed.get(nums[i - k + 1]) - 1);
+      fenwickTree.add(valueToCompressed.get(nums[i - k + 1]), -1);
+      inversionNum -= fenwickTree.computePrefixSum(valueToCompressed.get(nums[i - k + 1]) - 1);
     }
 
     return result;
   }
+}
 
-  int query(int[] binaryIndexedTree, int index) {
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
     int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
 
     return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 }
