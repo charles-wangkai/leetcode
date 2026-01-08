@@ -5,7 +5,7 @@ class BookMyShow {
   int n;
   int m;
   int[] segmentTree;
-  long[] A;
+  FenwickTree fenwickTree;
   SortedMap<Integer, Integer> rowToRest = new TreeMap<>();
 
   public BookMyShow(int n, int m) {
@@ -13,10 +13,10 @@ class BookMyShow {
     this.m = m;
 
     segmentTree = new int[Integer.highestOneBit(n) * 4];
-    A = new long[1 + Integer.highestOneBit(n) * 2];
+    fenwickTree = new FenwickTree(n);
     for (int r = 0; r < n; ++r) {
       updateSegmentTree(r, m, 0, n - 1, 0);
-      add(r, m);
+      fenwickTree.add(r + 1, m);
     }
 
     for (int r = 0; r < n; ++r) {
@@ -46,13 +46,13 @@ class BookMyShow {
     rowToRest.remove(row, 0);
 
     updateSegmentTree(row, rowToRest.getOrDefault(row, 0), 0, n - 1, 0);
-    add(row, -k);
+    fenwickTree.add(row + 1, -k);
 
     return new int[] {row, m - rowToRest.getOrDefault(row, 0) - k};
   }
 
   public boolean scatter(int k, int maxRow) {
-    if (prefixSum(maxRow) < k) {
+    if (fenwickTree.computePrefixSum(maxRow + 1) < k) {
       return false;
     }
 
@@ -64,7 +64,7 @@ class BookMyShow {
       rowToRest.remove(row, 0);
 
       updateSegmentTree(row, rowToRest.getOrDefault(row, 0), 0, n - 1, 0);
-      add(row, -delta);
+      fenwickTree.add(row + 1, -delta);
 
       k -= delta;
     }
@@ -113,27 +113,29 @@ class BookMyShow {
 
     return result;
   }
-
-  int LSB(int i) {
-    return i & -i;
-  }
-
-  long prefixSum(int i) {
-    long sum = A[0];
-    for (; i != 0; i -= LSB(i)) sum += A[i];
-    return sum;
-  }
-
-  void add(int i, int delta) {
-    if (i == 0) {
-      A[0] += delta;
-      return;
-    }
-    for (; i < A.length; i += LSB(i)) A[i] += delta;
-  }
 }
 
-// Your BookMyShow object will be instantiated and called as such:
-// BookMyShow obj = new BookMyShow(n, m);
-// int[] param_1 = obj.gather(k,maxRow);
-// boolean param_2 = obj.scatter(k,maxRow);
+class FenwickTree {
+  long[] a;
+
+  FenwickTree(int size) {
+    a = new long[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  long computePrefixSum(int pos) {
+    long result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
+  }
+}
