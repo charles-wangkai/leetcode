@@ -6,53 +6,63 @@ import java.util.Map;
 
 class Solution {
   public String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
-    int[] parents = new int[s.length()];
-    Arrays.fill(parents, -1);
-
+    Dsu dsu = new Dsu(s.length());
     for (List<Integer> pair : pairs) {
-      int a = pair.get(0);
-      int b = pair.get(1);
-
-      int rootA = findRoot(parents, a);
-      int rootB = findRoot(parents, b);
-      if (rootA != rootB) {
-        parents[rootB] = rootA;
-      }
-    }
-
-    Map<Integer, List<Integer>> rootToIndices = new HashMap<>();
-    for (int i = 0; i < s.length(); ++i) {
-      int root = findRoot(parents, i);
-      rootToIndices.putIfAbsent(root, new ArrayList<>());
-      rootToIndices.get(root).add(i);
+      dsu.union(pair.get(0), pair.get(1));
     }
 
     char[] result = new char[s.length()];
-    for (List<Integer> indices : rootToIndices.values()) {
-      List<Character> letters = indices.stream().map(s::charAt).sorted().toList();
+    for (List<Integer> group : dsu.buildLeaderToGroup().values()) {
+      List<Character> letters = group.stream().map(s::charAt).sorted().toList();
 
-      for (int i = 0; i < indices.size(); ++i) {
-        result[indices.get(i)] = letters.get(i);
+      for (int i = 0; i < group.size(); ++i) {
+        result[group.get(i)] = letters.get(i);
       }
     }
 
-    return new String(result);
+    return String.valueOf(result);
+  }
+}
+
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
   }
 
-  int findRoot(int[] parents, int node) {
-    int root = node;
-    while (parents[root] != -1) {
-      root = parents[root];
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    int p = node;
-    while (p != root) {
-      int next = parents[p];
-      parents[p] = root;
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-      p = next;
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
     }
 
-    return root;
+    return leaderToGroup;
   }
 }
