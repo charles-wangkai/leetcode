@@ -19,51 +19,59 @@ class Solution {
       toMaps[u].put(v, toMaps[u].getOrDefault(v, 0) + 1);
     }
 
-    int[] A = new int[edges.length];
+    FenwickTree fenwickTree = new FenwickTree(edges.length);
     for (int i = 0; i < degrees.length; ++i) {
-      add(A, degrees[i], 1);
+      fenwickTree.add(degrees[i] + 1, 1);
     }
 
     int[] result = new int[queries.length];
     for (int from = 0; from < n; ++from) {
-      add(A, degrees[from], -1);
+      fenwickTree.add(degrees[from] + 1, -1);
 
       for (int to : toMaps[from].keySet()) {
-        add(A, degrees[to], -1);
-        add(A, degrees[to] - toMaps[from].get(to), 1);
+        fenwickTree.add(degrees[to] + 1, -1);
+        fenwickTree.add(degrees[to] - toMaps[from].get(to) + 1, 1);
       }
 
       for (int i = 0; i < result.length; ++i) {
-        result[i] += n - 1 - from - prefixSum(A, queries[i] - degrees[from] + 1);
+        result[i] +=
+            n
+                - 1
+                - from
+                - fenwickTree.computePrefixSum(Math.max(0, queries[i] - degrees[from] + 1));
       }
 
       for (int to : toMaps[from].keySet()) {
-        add(A, degrees[to] - toMaps[from].get(to), -1);
-        add(A, degrees[to], 1);
+        fenwickTree.add(degrees[to] - toMaps[from].get(to) + 1, -1);
+        fenwickTree.add(degrees[to] + 1, 1);
       }
     }
 
     return result;
   }
+}
 
-  int LSBIT(int i) {
-    return i & -i;
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
   }
 
-  int prefixSum(int[] A, int i) {
-    int sum = 0;
-    while (i > 0) {
-      sum += A[i - 1];
-      i -= LSBIT(i);
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
     }
-
-    return sum;
   }
 
-  void add(int[] A, int i, int delta) {
-    while (i < A.length) {
-      A[i] += delta;
-      i += LSBIT(i + 1);
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
+
+    return result;
   }
 }
