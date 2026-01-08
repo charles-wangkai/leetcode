@@ -12,15 +12,15 @@ class Solution {
     }
 
     long result = 0;
-    int[] binaryIndexedTree = new int[Integer.highestOneBit(nums.length) * 2 + 1];
+    FenwickTree fenwickTree = new FenwickTree(nums.length);
     for (List<Integer> indices : valueToIndices.values()) {
       int length = -1;
       for (int i = 0; i < indices.size(); ++i) {
-        update(binaryIndexedTree, indices.get(i) + 1, 1);
+        fenwickTree.add(indices.get(i) + 1, 1);
 
         if (i != 0
-            && query(binaryIndexedTree, indices.get(i) + 1)
-                    - query(binaryIndexedTree, indices.get(i - 1) + 1)
+            && fenwickTree.computePrefixSum(indices.get(i) + 1)
+                    - fenwickTree.computePrefixSum(indices.get(i - 1) + 1)
                 == indices.get(i) - indices.get(i - 1)) {
           ++length;
         } else {
@@ -33,21 +33,29 @@ class Solution {
 
     return result;
   }
+}
 
-  int query(int[] binaryIndexedTree, int index) {
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
     int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
 
     return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 }
