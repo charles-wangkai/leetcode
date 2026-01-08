@@ -2,45 +2,47 @@
 
 class NumArray {
   int[] nums;
-  int[] A;
+  FenwickTree fenwickTree;
 
   public NumArray(int[] nums) {
     this.nums = nums;
-    A = new int[Integer.highestOneBit(nums.length) * 2 + 1];
+    fenwickTree = new FenwickTree(nums.length);
     for (int i = 0; i < nums.length; ++i) {
-      add(i, nums[i]);
+      fenwickTree.add(i + 1, nums[i]);
     }
   }
 
   public void update(int index, int val) {
-    add(index, val - nums[index]);
+    fenwickTree.add(index + 1, val - nums[index]);
     nums[index] = val;
   }
 
   public int sumRange(int left, int right) {
-    return prefix_sum(right) - ((left == 0) ? 0 : prefix_sum(left - 1));
-  }
-
-  int LSB(int i) {
-    return i & -i;
-  }
-
-  int prefix_sum(int i) {
-    int sum = A[0];
-    for (; i != 0; i -= LSB(i)) sum += A[i];
-    return sum;
-  }
-
-  void add(int i, int delta) {
-    if (i == 0) {
-      A[0] += delta;
-      return;
-    }
-    for (; i < A.length; i += LSB(i)) A[i] += delta;
+    return fenwickTree.computePrefixSum(right + 1) - fenwickTree.computePrefixSum(left);
   }
 }
 
-// Your NumArray object will be instantiated and called as such:
-// NumArray obj = new NumArray(nums);
-// obj.update(index,val);
-// int param_2 = obj.sumRange(left,right);
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
+  }
+}
