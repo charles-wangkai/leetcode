@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 class Solution {
   public int maxNumEdgesToRemove(int n, int[][] edges) {
@@ -25,17 +24,15 @@ class Solution {
   }
 
   int computeRemovedCommonEdgeNum(int n, List<int[]> commonEdges) {
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
-
     int result = 0;
+    Dsu dsu = new Dsu(n);
     for (int[] edge : commonEdges) {
-      int root1 = findRoot(parents, edge[1] - 1);
-      int root2 = findRoot(parents, edge[2] - 1);
-      if (root2 == root1) {
+      int leader1 = dsu.find(edge[1] - 1);
+      int leader2 = dsu.find(edge[2] - 1);
+      if (leader1 == leader2) {
         ++result;
       } else {
-        parents[root2] = root1;
+        dsu.union(leader1, leader2);
       }
     }
 
@@ -43,40 +40,66 @@ class Solution {
   }
 
   int computeRemovedEdgeNum(int n, List<int[]> commonEdges, List<int[]> onlyEdges) {
-    int[] parents = new int[n];
-    Arrays.fill(parents, -1);
+    Dsu dsu = new Dsu(n);
 
     for (int[] edge : commonEdges) {
-      int root1 = findRoot(parents, edge[1] - 1);
-      int root2 = findRoot(parents, edge[2] - 1);
-      if (root2 != root1) {
-        parents[root2] = root1;
-      }
+      dsu.union(edge[1] - 1, edge[2] - 1);
     }
 
     int result = 0;
     for (int[] edge : onlyEdges) {
-      int root1 = findRoot(parents, edge[1] - 1);
-      int root2 = findRoot(parents, edge[2] - 1);
-      if (root2 == root1) {
+      int leader1 = dsu.find(edge[1] - 1);
+      int leader2 = dsu.find(edge[2] - 1);
+      if (leader1 == leader2) {
         ++result;
       } else {
-        parents[root2] = root1;
+        dsu.union(leader1, leader2);
       }
     }
 
-    return (IntStream.range(0, n).map(i -> findRoot(parents, i)).distinct().count() == 1)
-        ? result
-        : -1;
+    return (dsu.buildLeaderToGroup().size() == 1) ? result : -1;
+  }
+}
+
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
   }
 
-  int findRoot(int[] parents, int node) {
-    if (parents[node] == -1) {
-      return node;
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    parents[node] = findRoot(parents, parents[node]);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-    return parents[node];
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
+    }
+
+    return leaderToGroup;
   }
 }
