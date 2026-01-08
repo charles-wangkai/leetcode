@@ -17,35 +17,17 @@ class Solution {
   int[] buildLeftSameNums(int[] nums1, int[] nums2) {
     int n = nums1.length;
 
-    int[] binaryIndexedTree = new int[Integer.highestOneBit(n) * 2 + 1];
-
+    FenwickTree fenwickTree = new FenwickTree(n);
     Map<Integer, Integer> valueToIndex =
         IntStream.range(0, n).boxed().collect(Collectors.toMap(i -> nums2[i], i -> i));
 
     int[] result = new int[n];
     for (int i = 0; i < result.length; ++i) {
-      result[i] = query(binaryIndexedTree, valueToIndex.get(nums1[i]) + 1);
-      update(binaryIndexedTree, valueToIndex.get(nums1[i]) + 1, 1);
+      result[i] = fenwickTree.computePrefixSum(valueToIndex.get(nums1[i]) + 1);
+      fenwickTree.add(valueToIndex.get(nums1[i]) + 1, 1);
     }
 
     return result;
-  }
-
-  int query(int[] binaryIndexedTree, int index) {
-    int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
-    }
-
-    return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 
   int[] buildRightSameNums(int[] nums1, int[] nums2) {
@@ -54,5 +36,30 @@ class Solution {
 
   int[] reverse(int[] a) {
     return IntStream.range(0, a.length).map(i -> a[a.length - 1 - i]).toArray();
+  }
+}
+
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
   }
 }
