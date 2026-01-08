@@ -46,31 +46,39 @@ class Array {
   static final int LIMIT = 100000;
 
   List<Integer> values = new ArrayList<>();
-  int[] binaryIndexedTree = new int[Integer.highestOneBit(LIMIT) * 2 + 1];
+  FenwickTree fenwickTree = new FenwickTree(LIMIT);
 
   int computeGreaterNum(int x) {
-    return values.size() - query(binaryIndexedTree, x);
+    return values.size() - fenwickTree.computePrefixSum(x);
   }
 
   void append(int value, int compressed) {
     values.add(value);
-    update(binaryIndexedTree, compressed, 1);
+    fenwickTree.add(compressed, 1);
+  }
+}
+
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
   }
 
-  int query(int[] binaryIndexedTree, int index) {
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
     int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
 
     return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 }
