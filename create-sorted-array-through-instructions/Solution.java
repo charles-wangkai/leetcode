@@ -6,37 +6,46 @@ class Solution {
 
   public int createSortedArray(int[] instructions) {
     int result = 0;
-    int[] A = new int[LIMIT + 1];
+    FenwickTree fenwickTree = new FenwickTree(LIMIT);
     for (int i = 0; i < instructions.length; ++i) {
-      result = addMod(result, Math.min(sum(A, instructions[i] - 1), i - sum(A, instructions[i])));
-      add(A, instructions[i], 1);
+      result =
+          addMod(
+              result,
+              Math.min(
+                  fenwickTree.computePrefixSum(instructions[i] - 1),
+                  i - fenwickTree.computePrefixSum(instructions[i])));
+      fenwickTree.add(instructions[i], 1);
     }
 
     return result;
   }
 
-  int LSB(int i) {
-    return i & -i;
-  }
-
-  int sum(int[] A, int i) {
-    int sum = 0;
-    while (i > 0) {
-      sum += A[i];
-      i -= LSB(i);
-    }
-
-    return sum;
-  }
-
-  void add(int[] A, int i, int k) {
-    while (i < A.length) {
-      A[i] += k;
-      i += LSB(i);
-    }
-  }
-
   int addMod(int x, int y) {
     return (x + y) % MODULUS;
+  }
+}
+
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
+    int result = 0;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
+    }
+
+    return result;
   }
 }
