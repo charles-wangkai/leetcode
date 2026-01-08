@@ -2,15 +2,15 @@ class Solution {
   static final int LIMIT = 100005;
 
   public long countMajoritySubarrays(int[] nums, int target) {
-    int[] binaryIndexedTree = new int[LIMIT * 2 + 1];
-    update(binaryIndexedTree, getIndex(0), 1);
+    FenwickTree fenwickTree = new FenwickTree(LIMIT * 2);
+    fenwickTree.add(getIndex(0), 1);
 
     long result = 0;
     int diff = 0;
     for (int num : nums) {
       diff += (num == target) ? 1 : -1;
-      result += query(binaryIndexedTree, getIndex(diff - 1));
-      update(binaryIndexedTree, getIndex(diff), 1);
+      result += fenwickTree.computePrefixSum(getIndex(diff - 1));
+      fenwickTree.add(getIndex(diff), 1);
     }
 
     return result;
@@ -19,21 +19,29 @@ class Solution {
   int getIndex(int diff) {
     return diff + LIMIT;
   }
+}
 
-  int query(int[] binaryIndexedTree, int index) {
+class FenwickTree {
+  int[] a;
+
+  FenwickTree(int size) {
+    a = new int[Integer.highestOneBit(size) * 2 + 1];
+  }
+
+  void add(int pos, int delta) {
+    while (pos < a.length) {
+      a[pos] += delta;
+      pos += pos & -pos;
+    }
+  }
+
+  int computePrefixSum(int pos) {
     int result = 0;
-    while (index != 0) {
-      result += binaryIndexedTree[index];
-      index -= index & -index;
+    while (pos != 0) {
+      result += a[pos];
+      pos -= pos & -pos;
     }
 
     return result;
-  }
-
-  void update(int[] binaryIndexedTree, int index, int delta) {
-    while (index < binaryIndexedTree.length) {
-      binaryIndexedTree[index] += delta;
-      index += index & -index;
-    }
   }
 }
