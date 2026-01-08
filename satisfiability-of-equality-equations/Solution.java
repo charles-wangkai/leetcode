@@ -1,21 +1,31 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class Solution {
   public boolean equationsPossible(String[] equations) {
-    Map<Character, Character> variableToParent = new HashMap<>();
+    Character[] variables =
+        Arrays.stream(equations)
+            .flatMap(equation -> Stream.of(equation.charAt(0), equation.charAt(3)))
+            .distinct()
+            .toArray(Character[]::new);
+    Map<Character, Integer> variableToIndex =
+        IntStream.range(0, variables.length)
+            .boxed()
+            .collect(Collectors.toMap(i -> variables[i], i -> i));
+
+    Dsu dsu = new Dsu(variables.length);
     for (String equation : equations) {
       if (equation.charAt(1) == '=') {
         char leftVariable = equation.charAt(0);
         char rightVariable = equation.charAt(3);
 
-        char leftRoot = findRoot(variableToParent, leftVariable);
-        char rightRoot = findRoot(variableToParent, rightVariable);
-
-        if (leftRoot != rightRoot) {
-          variableToParent.put(rightRoot, leftRoot);
-        }
+        dsu.union(variableToIndex.get(leftVariable), variableToIndex.get(rightVariable));
       }
     }
 
@@ -26,27 +36,51 @@ class Solution {
               char leftVariable = equation.charAt(0);
               char rightVariable = equation.charAt(3);
 
-              char leftRoot = findRoot(variableToParent, leftVariable);
-              char rightRoot = findRoot(variableToParent, rightVariable);
-
-              return leftRoot != rightRoot;
+              return dsu.find(variableToIndex.get(leftVariable))
+                  != dsu.find(variableToIndex.get(rightVariable));
             });
   }
+}
 
-  char findRoot(Map<Character, Character> variableToParent, char variable) {
-    char root = variable;
-    while (variableToParent.containsKey(root)) {
-      root = variableToParent.get(root);
+class Dsu {
+  int[] parentOrSizes;
+
+  Dsu(int n) {
+    parentOrSizes = new int[n];
+    Arrays.fill(parentOrSizes, -1);
+  }
+
+  int find(int a) {
+    if (parentOrSizes[a] < 0) {
+      return a;
     }
 
-    char p = variable;
-    while (p != root) {
-      char next = variableToParent.get(p);
-      variableToParent.put(p, root);
+    parentOrSizes[a] = find(parentOrSizes[a]);
 
-      p = next;
+    return parentOrSizes[a];
+  }
+
+  void union(int a, int b) {
+    int aLeader = find(a);
+    int bLeader = find(b);
+    if (aLeader != bLeader) {
+      parentOrSizes[aLeader] += parentOrSizes[bLeader];
+      parentOrSizes[bLeader] = aLeader;
+    }
+  }
+
+  int getSize(int a) {
+    return -parentOrSizes[find(a)];
+  }
+
+  Map<Integer, List<Integer>> buildLeaderToGroup() {
+    Map<Integer, List<Integer>> leaderToGroup = new HashMap<>();
+    for (int i = 0; i < parentOrSizes.length; ++i) {
+      int leader = find(i);
+      leaderToGroup.putIfAbsent(leader, new ArrayList<>());
+      leaderToGroup.get(leader).add(i);
     }
 
-    return root;
+    return leaderToGroup;
   }
 }
