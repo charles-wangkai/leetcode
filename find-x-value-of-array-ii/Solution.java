@@ -2,34 +2,48 @@
 
 class Solution {
   public int[] resultArray(int[] nums, int k, int[][] queries) {
-    Node segmentTree = buildNode(nums, k, 0, nums.length - 1);
-
     int[] result = new int[queries.length];
+    SegTree segTree = new SegTree(nums, k);
     for (int i = 0; i < result.length; ++i) {
-      update(queries[i][0], queries[i][1], segmentTree);
-      result[i] =
-          query(queries[i][2], nums.length - 1, segmentTree).prefixProductNums[queries[i][3]];
+      segTree.update(queries[i][0], queries[i][1]);
+      result[i] = segTree.query(queries[i][2], nums.length - 1).prefixProductNums[queries[i][3]];
     }
 
     return result;
   }
+}
 
-  Element query(int beginIndex, int endIndex, Node node) {
-    int k = node.element.prefixProductNums.length;
+class SegTree {
+  int k;
+  Node root;
 
-    if (node.beginIndex > endIndex || node.endIndex < beginIndex) {
-      return new Element(1, new int[k]);
-    }
-    if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-      return node.element;
-    }
-
-    return merge(query(beginIndex, endIndex, node.left), query(beginIndex, endIndex, node.right));
+  SegTree(int[] values, int k) {
+    this.k = k;
+    root = buildNode(values, 0, values.length - 1);
   }
 
-  void update(int index, int value, Node node) {
-    int k = node.element.prefixProductNums.length;
+  private Node buildNode(int[] values, int beginIndex, int endIndex) {
+    if (beginIndex == endIndex) {
+      int product = values[beginIndex] % k;
 
+      int[] prefixProductNums = new int[k];
+      prefixProductNums[product] = 1;
+
+      return new Node(beginIndex, endIndex, new Element(product, prefixProductNums), null, null);
+    }
+
+    int middleIndex = (beginIndex + endIndex) / 2;
+    Node left = buildNode(values, beginIndex, middleIndex);
+    Node right = buildNode(values, middleIndex + 1, endIndex);
+
+    return new Node(beginIndex, endIndex, Element.merge(left.element, right.element), left, right);
+  }
+
+  void update(int index, int value) {
+    update(index, value, root);
+  }
+
+  private void update(int index, int value, Node node) {
     if (node.beginIndex <= index && node.endIndex >= index) {
       if (node.beginIndex == node.endIndex) {
         int product = value % k;
@@ -42,65 +56,63 @@ class Solution {
         update(index, value, node.left);
         update(index, value, node.right);
 
-        node.element = merge(node.left.element, node.right.element);
+        node.element = Element.merge(node.left.element, node.right.element);
       }
     }
   }
 
-  Node buildNode(int[] nums, int k, int beginIndex, int endIndex) {
-    if (beginIndex == endIndex) {
-      int product = nums[beginIndex] % k;
+  public Element query(int beginIndex, int endIndex) {
+    return query(beginIndex, endIndex, root);
+  }
 
-      int[] prefixProductNums = new int[k];
-      prefixProductNums[product] = 1;
-
-      return new Node(beginIndex, endIndex, new Element(product, prefixProductNums), null, null);
+  private Element query(int beginIndex, int endIndex, Node node) {
+    if (node.beginIndex > endIndex || node.endIndex < beginIndex) {
+      return new Element(1, new int[k]);
+    }
+    if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
+      return node.element;
     }
 
-    int middleIndex = (beginIndex + endIndex) / 2;
-
-    Node left = buildNode(nums, k, beginIndex, middleIndex);
-    Node right = buildNode(nums, k, middleIndex + 1, endIndex);
-
-    return new Node(beginIndex, endIndex, merge(left.element, right.element), left, right);
+    return Element.merge(
+        query(beginIndex, endIndex, node.left), query(beginIndex, endIndex, node.right));
   }
 
-  Element merge(Element leftElement, Element rightElement) {
-    int k = leftElement.prefixProductNums.length;
+  static class Node {
+    int beginIndex;
+    int endIndex;
+    Element element;
+    Node left;
+    Node right;
 
-    int product = leftElement.product * rightElement.product % k;
+    Node(int beginIndex, int endIndex, Element element, Node left, Node right) {
+      this.beginIndex = beginIndex;
+      this.endIndex = endIndex;
+      this.element = element;
+      this.left = left;
+      this.right = right;
+    }
+  }
 
-    int[] prefixProductNums = leftElement.prefixProductNums.clone();
-    for (int i = 0; i < k; ++i) {
-      prefixProductNums[leftElement.product * i % k] += rightElement.prefixProductNums[i];
+  static class Element {
+    int product;
+    int[] prefixProductNums;
+
+    Element(int product, int[] prefixProductNums) {
+      this.product = product;
+      this.prefixProductNums = prefixProductNums;
     }
 
-    return new Element(product, prefixProductNums);
-  }
-}
+    static Element merge(Element leftElement, Element rightElement) {
+      int k = leftElement.prefixProductNums.length;
 
-class Node {
-  int beginIndex;
-  int endIndex;
-  Element element;
-  Node left;
-  Node right;
+      int product = leftElement.product * rightElement.product % k;
 
-  Node(int beginIndex, int endIndex, Element element, Node left, Node right) {
-    this.beginIndex = beginIndex;
-    this.endIndex = endIndex;
-    this.element = element;
-    this.left = left;
-    this.right = right;
-  }
-}
+      int[] prefixProductNums = leftElement.prefixProductNums.clone();
+      for (int i = 0; i < k; ++i) {
+        prefixProductNums[leftElement.product * i % k] += rightElement.prefixProductNums[i];
+      }
 
-class Element {
-  int product;
-  int[] prefixProductNums;
-
-  Element(int product, int[] prefixProductNums) {
-    this.product = product;
-    this.prefixProductNums = prefixProductNums;
+      return new Element(product, prefixProductNums);
+    }
   }
 }
