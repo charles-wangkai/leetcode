@@ -20,10 +20,10 @@ class Solution {
       }
     }
 
-    Node segmentTree = buildSegmentTree(0, nums.length - 1);
+    LazySegTree lazySegTree = new LazySegTree(nums.length);
 
     for (SortedSet<Integer> indices : primeToIndices.values()) {
-      update(indices.first() + 1, indices.last(), 1, segmentTree);
+      lazySegTree.update(indices.first() + 1, indices.last(), 1);
     }
 
     int[] result = new int[queries.length];
@@ -35,92 +35,34 @@ class Solution {
 
       if (primes[oldValue]) {
         SortedSet<Integer> indices = primeToIndices.get(oldValue);
-        update(indices.first() + 1, indices.last(), -1, segmentTree);
+        lazySegTree.update(indices.first() + 1, indices.last(), -1);
 
         indices.remove(index);
         if (indices.isEmpty()) {
           primeToIndices.remove(oldValue);
         } else {
           indices = primeToIndices.get(oldValue);
-          update(indices.first() + 1, indices.last(), 1, segmentTree);
+          lazySegTree.update(indices.first() + 1, indices.last(), 1);
         }
       }
 
       if (primes[newValue]) {
         if (primeToIndices.containsKey(newValue)) {
           SortedSet<Integer> indices = primeToIndices.get(newValue);
-          update(indices.first() + 1, indices.last(), -1, segmentTree);
+          lazySegTree.update(indices.first() + 1, indices.last(), -1);
         }
 
         primeToIndices.putIfAbsent(newValue, new TreeSet<>());
         primeToIndices.get(newValue).add(index);
 
         SortedSet<Integer> indices = primeToIndices.get(newValue);
-        update(indices.first() + 1, indices.last(), 1, segmentTree);
+        lazySegTree.update(indices.first() + 1, indices.last(), 1);
       }
 
-      result[i] = primeToIndices.size() + query(0, nums.length - 1, segmentTree);
+      result[i] = primeToIndices.size() + lazySegTree.query(0, nums.length - 1);
     }
 
     return result;
-  }
-
-  void update(int beginIndex, int endIndex, int delta, Node node) {
-    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
-      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-        node.delta += delta;
-      } else {
-        node.left.delta += node.delta;
-        node.right.delta += node.delta;
-        node.delta = 0;
-
-        update(beginIndex, endIndex, delta, node.left);
-        update(beginIndex, endIndex, delta, node.right);
-
-        node.max =
-            Math.max(
-                query(node.left.beginIndex, node.left.endIndex, node.left),
-                query(node.right.beginIndex, node.right.endIndex, node.right));
-      }
-    }
-  }
-
-  int query(int beginIndex, int endIndex, Node node) {
-    if (node.beginIndex > endIndex || node.endIndex < beginIndex) {
-      return 0;
-    }
-    if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-      return node.max + node.delta;
-    }
-
-    node.left.delta += node.delta;
-    node.right.delta += node.delta;
-    node.delta = 0;
-
-    node.max =
-        Math.max(
-            query(node.left.beginIndex, node.left.endIndex, node.left),
-            query(node.right.beginIndex, node.right.endIndex, node.right));
-
-    return Math.max(
-        query(beginIndex, endIndex, node.left), query(beginIndex, endIndex, node.right));
-  }
-
-  Node buildSegmentTree(int beginIndex, int endIndex) {
-    Node node = new Node(beginIndex, endIndex);
-    if (beginIndex != endIndex) {
-      int middleIndex = (beginIndex + endIndex) / 2;
-      node.left = buildSegmentTree(beginIndex, middleIndex);
-      node.right = buildSegmentTree(middleIndex + 1, endIndex);
-    }
-
-    return node;
-  }
-
-  void update(int[] extras, int beginIndex, int endIndex, int delta) {
-    for (int i = beginIndex; i <= endIndex; ++i) {
-      extras[i] += delta;
-    }
   }
 
   boolean[] buildPrimes() {
@@ -140,16 +82,95 @@ class Solution {
   }
 }
 
-class Node {
-  int beginIndex;
-  int endIndex;
-  int delta;
-  int max;
-  Node left;
-  Node right;
+class LazySegTree {
+  Node root;
 
-  Node(int beginIndex, int endIndex) {
-    this.beginIndex = beginIndex;
-    this.endIndex = endIndex;
+  LazySegTree(int n) {
+    root = buildNode(0, n - 1);
+  }
+
+  private Node buildNode(int beginIndex, int endIndex) {
+    Node node = new Node(beginIndex, endIndex);
+    if (beginIndex != endIndex) {
+      int middleIndex = (beginIndex + endIndex) / 2;
+      node.left = buildNode(beginIndex, middleIndex);
+      node.right = buildNode(middleIndex + 1, endIndex);
+    }
+
+    return node;
+  }
+
+  void update(int beginIndex, int endIndex, int delta) {
+    update(beginIndex, endIndex, delta, root);
+  }
+
+  private void update(int beginIndex, int endIndex, int delta, Node node) {
+    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
+      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
+        node.apply(delta);
+      } else {
+        node.pushDown();
+
+        update(beginIndex, endIndex, delta, node.left);
+        update(beginIndex, endIndex, delta, node.right);
+
+        node.pull();
+      }
+    }
+  }
+
+  int query(int beginIndex, int endIndex) {
+    return query(beginIndex, endIndex, root);
+  }
+
+  private int query(int beginIndex, int endIndex, Node node) {
+    if (node.beginIndex > endIndex || node.endIndex < beginIndex) {
+      return 0;
+    }
+    if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
+      return node.getComputedMax();
+    }
+
+    node.pushDown();
+
+    node.pull();
+
+    return Math.max(
+        query(beginIndex, endIndex, node.left), query(beginIndex, endIndex, node.right));
+  }
+
+  static class Node {
+    int beginIndex;
+    int endIndex;
+    int delta;
+    int max;
+    Node left;
+    Node right;
+
+    Node(int beginIndex, int endIndex) {
+      this.beginIndex = beginIndex;
+      this.endIndex = endIndex;
+    }
+
+    int getComputedMax() {
+      return max + delta;
+    }
+
+    void pushDown() {
+      if (delta != 0) {
+        left.apply(delta);
+        right.apply(delta);
+
+        delta = 0;
+      }
+    }
+
+    void apply(int d) {
+      delta += d;
+    }
+
+    void pull() {
+      max = Math.max(left.getComputedMax(), right.getComputedMax());
+    }
   }
 }
