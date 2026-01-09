@@ -19,28 +19,59 @@ class Solution {
       valueToIndices.get(nums[i]).add(i);
     }
 
-    Node segmentTree = buildNode(nums, 0, nums.length - 1);
+    SegTree segTree = new SegTree(nums);
 
-    long result = segmentTree.maxSum;
+    long result = segTree.root.maxSum;
     for (int value : valueToIndices.keySet()) {
       List<Integer> indices = valueToIndices.get(value);
       if (indices.size() != nums.length) {
         for (int index : indices) {
-          update(index, 0, segmentTree);
+          segTree.update(index, 0);
         }
 
-        result = Math.max(result, segmentTree.maxSum);
+        result = Math.max(result, segTree.root.maxSum);
 
         for (int index : indices) {
-          update(index, value, segmentTree);
+          segTree.update(index, value);
         }
       }
     }
 
     return result;
   }
+}
 
-  void update(int index, int value, Node node) {
+class SegTree {
+  Node root;
+
+  SegTree(int[] values) {
+    root = buildNode(values, 0, values.length - 1);
+  }
+
+  private Node buildNode(int[] values, int beginIndex, int endIndex) {
+    Node node = new Node(beginIndex, endIndex);
+
+    if (beginIndex == endIndex) {
+      node.totalSum = values[beginIndex];
+      node.maxPrefixSum = values[beginIndex];
+      node.maxSuffixSum = values[beginIndex];
+      node.maxSum = values[beginIndex];
+    } else {
+      int middleIndex = (beginIndex + endIndex) / 2;
+      node.left = buildNode(values, beginIndex, middleIndex);
+      node.right = buildNode(values, middleIndex + 1, endIndex);
+
+      node.pull();
+    }
+
+    return node;
+  }
+
+  void update(int index, int value) {
+    update(index, value, root);
+  }
+
+  private void update(int index, int value, Node node) {
     if (node.beginIndex <= index && node.endIndex >= index) {
       if (node.beginIndex == node.endIndex) {
         node.totalSum = value;
@@ -50,80 +81,33 @@ class Solution {
       } else {
         update(index, value, node.left);
         update(index, value, node.right);
-        merge(node);
+
+        node.pull();
       }
     }
   }
 
-  Node buildNode(int[] nums, int beginIndex, int endIndex) {
-    if (beginIndex == endIndex) {
-      return new Node(
-          beginIndex,
-          endIndex,
-          nums[beginIndex],
-          nums[beginIndex],
-          nums[beginIndex],
-          nums[beginIndex],
-          null,
-          null);
+  static class Node {
+    int beginIndex;
+    int endIndex;
+    long totalSum;
+    long maxPrefixSum;
+    long maxSuffixSum;
+    long maxSum;
+    Node left;
+    Node right;
+
+    Node(int beginIndex, int endIndex) {
+      this.beginIndex = beginIndex;
+      this.endIndex = endIndex;
     }
 
-    int middleIndex = (beginIndex + endIndex) / 2;
-
-    Node node =
-        new Node(
-            beginIndex,
-            endIndex,
-            -1,
-            -1,
-            -1,
-            -1,
-            buildNode(nums, beginIndex, middleIndex),
-            buildNode(nums, middleIndex + 1, endIndex));
-    merge(node);
-
-    return node;
-  }
-
-  void merge(Node node) {
-    node.totalSum = node.left.totalSum + node.right.totalSum;
-    node.maxPrefixSum =
-        Math.max(node.left.maxPrefixSum, node.left.totalSum + node.right.maxPrefixSum);
-    node.maxSuffixSum =
-        Math.max(node.right.maxSuffixSum, node.right.totalSum + node.left.maxSuffixSum);
-    node.maxSum =
-        Math.max(
-            Math.max(node.left.maxSum, node.right.maxSum),
-            node.left.maxSuffixSum + node.right.maxPrefixSum);
-  }
-}
-
-class Node {
-  int beginIndex;
-  int endIndex;
-  long totalSum;
-  long maxPrefixSum;
-  long maxSuffixSum;
-  long maxSum;
-  Node left;
-  Node right;
-
-  Node(
-      int beginIndex,
-      int endIndex,
-      long totalSum,
-      long maxPrefixSum,
-      long maxSuffixSum,
-      long maxSum,
-      Node left,
-      Node right) {
-    this.beginIndex = beginIndex;
-    this.endIndex = endIndex;
-    this.totalSum = totalSum;
-    this.maxPrefixSum = maxPrefixSum;
-    this.maxSuffixSum = maxSuffixSum;
-    this.maxSum = maxSum;
-    this.left = left;
-    this.right = right;
+    void pull() {
+      totalSum = left.totalSum + right.totalSum;
+      maxPrefixSum = Math.max(left.maxPrefixSum, left.totalSum + right.maxPrefixSum);
+      maxSuffixSum = Math.max(right.maxSuffixSum, right.totalSum + left.maxSuffixSum);
+      maxSum =
+          Math.max(Math.max(left.maxSum, right.maxSum), left.maxSuffixSum + right.maxPrefixSum);
+    }
   }
 }
