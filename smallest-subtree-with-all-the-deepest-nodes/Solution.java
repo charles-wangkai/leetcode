@@ -18,61 +18,59 @@ class TreeNode {
 }
 
 class Solution {
-  int maxDepth;
-  int leafNumWithMaxDepth;
-
-  TreeNode subtree;
-
   public TreeNode subtreeWithAllDeepest(TreeNode root) {
-    maxDepth = -1;
-    leafNumWithMaxDepth = -1;
-    searchMaxDepth(root, 0);
+    Outcome1 outcome1 = search1(root, 0);
 
-    subtree = null;
-    searchSubtree(root, 0);
-    return subtree;
+    return search2(outcome1.depth(), outcome1.count(), root, 0).subtree();
   }
 
-  void searchMaxDepth(TreeNode node, int depth) {
-    if (node == null) {
-      return;
+  Outcome1 search1(TreeNode node, int depth) {
+    Outcome1 result = new Outcome1(depth, 1);
+
+    if (node.left != null) {
+      result = Outcome1.merge(result, search1(node.left, depth + 1));
+    }
+    if (node.right != null) {
+      result = Outcome1.merge(result, search1(node.right, depth + 1));
     }
 
-    if (depth > maxDepth) {
-      maxDepth = depth;
-      leafNumWithMaxDepth = 1;
-    } else if (depth == maxDepth) {
-      ++leafNumWithMaxDepth;
-    }
-
-    searchMaxDepth(node.left, depth + 1);
-    searchMaxDepth(node.right, depth + 1);
+    return result;
   }
 
-  int searchSubtree(TreeNode node, int depth) {
-    int targetNum;
-    if (node.left == null) {
-      if (node.right == null) {
-        if (depth == maxDepth) {
-          targetNum = 1;
-        } else {
-          targetNum = 0;
-        }
-      } else {
-        targetNum = searchSubtree(node.right, depth + 1);
+  Outcome2 search2(int maxDepth, int leafCountWithMaxDepth, TreeNode node, int depth) {
+    int targetCount = (depth == maxDepth) ? 1 : 0;
+    if (node.left != null) {
+      Outcome2 outcome2 = search2(maxDepth, leafCountWithMaxDepth, node.left, depth + 1);
+      if (outcome2.subtree() != null) {
+        return outcome2;
       }
-    } else {
-      if (node.right == null) {
-        targetNum = searchSubtree(node.left, depth + 1);
-      } else {
-        targetNum = searchSubtree(node.left, depth + 1) + searchSubtree(node.right, depth + 1);
+
+      targetCount += outcome2.targetCount();
+    }
+    if (node.right != null) {
+      Outcome2 outcome2 = search2(maxDepth, leafCountWithMaxDepth, node.right, depth + 1);
+      if (outcome2.subtree() != null) {
+        return outcome2;
       }
+
+      targetCount += outcome2.targetCount();
     }
 
-    if (subtree == null && targetNum == leafNumWithMaxDepth) {
-      subtree = node;
-    }
-
-    return targetNum;
+    return new Outcome2((targetCount == leafCountWithMaxDepth) ? node : null, targetCount);
   }
 }
+
+record Outcome1(int depth, int count) {
+  static Outcome1 merge(Outcome1 o1, Outcome1 o2) {
+    if (o1.depth > o2.depth) {
+      return o1;
+    }
+    if (o2.depth > o1.depth) {
+      return o2;
+    }
+
+    return new Outcome1(o1.depth, o1.count + o2.count);
+  }
+}
+
+record Outcome2(TreeNode subtree, int targetCount) {}
