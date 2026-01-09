@@ -7,18 +7,18 @@ class Solution {
   public int longestBalanced(int[] nums) {
     int result = 0;
     Map<Integer, Integer> valueToPrevIndex = new HashMap<>();
-    Node segmentTree = buildNode(0, nums.length - 1);
+    LazySegTree lazySegTree = new LazySegTree(nums);
     for (int r = 0; r < nums.length; ++r) {
       int delta = (nums[r] % 2 == 0) ? 1 : -1;
 
       if (valueToPrevIndex.containsKey(nums[r])) {
-        update(0, valueToPrevIndex.get(nums[r]), -delta, segmentTree);
+        lazySegTree.update(0, valueToPrevIndex.get(nums[r]), -delta);
       }
-      update(0, r, delta, segmentTree);
+      lazySegTree.update(0, r, delta);
 
       valueToPrevIndex.put(nums[r], r);
 
-      int l = findLeftmostZero(segmentTree);
+      int l = lazySegTree.findLeftmostZero();
       if (l <= r) {
         result = Math.max(result, r - l + 1);
       }
@@ -26,70 +26,23 @@ class Solution {
 
     return result;
   }
+}
 
-  void pushDown(Node node) {
-    if (node.delta != 0) {
-      node.min += node.delta;
-      node.max += node.delta;
+class LazySegTree {
+  Node root;
 
-      if (node.beginIndex != node.endIndex) {
-        node.left.delta += node.delta;
-        node.right.delta += node.delta;
-      }
-
-      node.delta = 0;
-    }
+  LazySegTree(int[] values) {
+    root = buildNode(values, 0, values.length - 1);
   }
 
-  int findLeftmostZero(Node node) {
-    pushDown(node);
-
-    if (queryMin(node) > 0 || queryMax(node) < 0) {
-      return Integer.MAX_VALUE;
-    }
-
-    if (node.beginIndex == node.endIndex) {
-      return (queryMin(node) == 0) ? node.beginIndex : Integer.MAX_VALUE;
-    }
-
-    int result = findLeftmostZero(node.left);
-
-    return (result == Integer.MAX_VALUE) ? findLeftmostZero(node.right) : result;
-  }
-
-  void update(int beginIndex, int endIndex, int delta, Node node) {
-    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
-      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-        node.delta += delta;
-      } else {
-        pushDown(node);
-
-        update(beginIndex, endIndex, delta, node.left);
-        update(beginIndex, endIndex, delta, node.right);
-
-        node.min = Math.min(queryMin(node.left), queryMin(node.right));
-        node.max = Math.max(queryMax(node.left), queryMax(node.right));
-      }
-    }
-  }
-
-  int queryMax(Node node) {
-    return node.max + node.delta;
-  }
-
-  int queryMin(Node node) {
-    return node.min + node.delta;
-  }
-
-  Node buildNode(int beginIndex, int endIndex) {
+  private Node buildNode(int[] values, int beginIndex, int endIndex) {
     if (beginIndex == endIndex) {
       return new Node(beginIndex, endIndex, 0, 0, 0, null, null);
     }
 
     int middleIndex = (beginIndex + endIndex) / 2;
-
-    Node left = buildNode(beginIndex, middleIndex);
-    Node right = buildNode(middleIndex + 1, endIndex);
+    Node left = buildNode(values, beginIndex, middleIndex);
+    Node right = buildNode(values, middleIndex + 1, endIndex);
 
     return new Node(
         beginIndex,
@@ -100,24 +53,91 @@ class Solution {
         left,
         right);
   }
-}
 
-class Node {
-  int beginIndex;
-  int endIndex;
-  int delta;
-  int min;
-  int max;
-  Node left;
-  Node right;
+  void update(int beginIndex, int endIndex, int delta) {
+    update(beginIndex, endIndex, delta, root);
+  }
 
-  Node(int beginIndex, int endIndex, int delta, int min, int max, Node left, Node right) {
-    this.beginIndex = beginIndex;
-    this.endIndex = endIndex;
-    this.delta = delta;
-    this.min = min;
-    this.max = max;
-    this.left = left;
-    this.right = right;
+  private void update(int beginIndex, int endIndex, int delta, Node node) {
+    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
+      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
+        node.apply(delta);
+      } else {
+        node.pushDown();
+
+        update(beginIndex, endIndex, delta, node.left);
+        update(beginIndex, endIndex, delta, node.right);
+
+        node.pull();
+      }
+    }
+  }
+
+  int findLeftmostZero() {
+    return findLeftmostZero(root);
+  }
+
+  private int findLeftmostZero(Node node) {
+    if (node.getComputedMinValue() > 0 || node.getComputedMaxValue() < 0) {
+      return Integer.MAX_VALUE;
+    }
+
+    if (node.beginIndex == node.endIndex) {
+      return (node.getComputedMinValue() == 0) ? node.beginIndex : Integer.MAX_VALUE;
+    }
+
+    node.pushDown();
+
+    node.pull();
+
+    int result = findLeftmostZero(node.left);
+
+    return (result == Integer.MAX_VALUE) ? findLeftmostZero(node.right) : result;
+  }
+
+  static class Node {
+    int beginIndex;
+    int endIndex;
+    int delta;
+    int min;
+    int max;
+    Node left;
+    Node right;
+
+    Node(int beginIndex, int endIndex, int delta, int min, int max, Node left, Node right) {
+      this.beginIndex = beginIndex;
+      this.endIndex = endIndex;
+      this.delta = delta;
+      this.min = min;
+      this.max = max;
+      this.left = left;
+      this.right = right;
+    }
+
+    int getComputedMinValue() {
+      return min + delta;
+    }
+
+    int getComputedMaxValue() {
+      return max + delta;
+    }
+
+    void pushDown() {
+      if (delta != 0) {
+        left.apply(delta);
+        right.apply(delta);
+
+        delta = 0;
+      }
+    }
+
+    void apply(int d) {
+      delta += d;
+    }
+
+    void pull() {
+      min = Math.min(left.getComputedMinValue(), right.getComputedMinValue());
+      max = Math.max(left.getComputedMaxValue(), right.getComputedMaxValue());
+    }
   }
 }
