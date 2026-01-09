@@ -11,7 +11,7 @@ class Solution {
       if (query[0] == 1) {
         lazySegTree.update(query[1], query[2]);
       } else if (query[0] == 2) {
-        sum += (long) query[1] * lazySegTree.root.getComputedMinValue();
+        sum += (long) query[1] * lazySegTree.root.getComputedSum();
       } else {
         result.add(sum);
       }
@@ -68,7 +68,7 @@ class LazySegTree {
       return Integer.MAX_VALUE;
     }
     if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-      return node.getComputedMinValue();
+      return node.getComputedSum();
     }
 
     node.pushDown();
@@ -96,7 +96,7 @@ class LazySegTree {
       this.right = right;
     }
 
-    int getComputedMinValue() {
+    int getComputedSum() {
       return flipped ? (endIndex - beginIndex + 1 - sum) : sum;
     }
 
@@ -114,7 +114,7 @@ class LazySegTree {
     }
 
     void pull() {
-      sum = left.getComputedMinValue() + right.getComputedMinValue();
+      sum = left.getComputedSum() + right.getComputedSum();
     }
   }
 }
