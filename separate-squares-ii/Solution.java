@@ -64,7 +64,7 @@ class Solution {
   }
 
   long computeAboveArea(int[][] squares, int[] ys, Map<Integer, Integer> yToCompressed, int lineY) {
-    Node segmentTree = buildNode(ys, 0, ys.length - 2);
+    LazySegTree lazySegTree = new LazySegTree(ys);
 
     Event[] events =
         Arrays.stream(squares)
@@ -86,14 +86,14 @@ class Solution {
     int prevX = -1;
     int eventIndex = 0;
     while (eventIndex != events.length) {
-      result += (long) query(segmentTree) * (events[eventIndex].x() - prevX);
+      result += (long) lazySegTree.root.getComputed() * (events[eventIndex].x() - prevX);
 
       prevX = events[eventIndex].x();
       while (eventIndex != events.length && events[eventIndex].x() == prevX) {
         int beginIndex = yToCompressed.get(events[eventIndex].minY());
         int endIndex = yToCompressed.get(events[eventIndex].maxY()) - 1;
 
-        update(beginIndex, endIndex, events[eventIndex].addOrRemove() ? 1 : -1, segmentTree);
+        lazySegTree.update(beginIndex, endIndex, events[eventIndex].addOrRemove() ? 1 : -1);
 
         ++eventIndex;
       }
@@ -101,56 +101,77 @@ class Solution {
 
     return result;
   }
-
-  int query(Node node) {
-    return (node.count == 0) ? node.covered : node.length;
-  }
-
-  void update(int beginIndex, int endIndex, int delta, Node node) {
-    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
-      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
-        node.count += delta;
-      } else {
-        update(beginIndex, endIndex, delta, node.left);
-        update(beginIndex, endIndex, delta, node.right);
-
-        node.covered = query(node.left) + query(node.right);
-      }
-    }
-  }
-
-  Node buildNode(int[] ys, int beginIndex, int endIndex) {
-    if (beginIndex == endIndex) {
-      return new Node(beginIndex, endIndex, ys[beginIndex + 1] - ys[beginIndex], 0, 0, null, null);
-    }
-
-    int middleIndex = (beginIndex + endIndex) / 2;
-
-    Node left = buildNode(ys, beginIndex, middleIndex);
-    Node right = buildNode(ys, middleIndex + 1, endIndex);
-
-    return new Node(beginIndex, endIndex, left.length + right.length, 0, 0, left, right);
-  }
 }
 
 record Event(int x, boolean addOrRemove, int minY, int maxY) {}
 
-class Node {
-  int beginIndex;
-  int endIndex;
-  int length;
-  int count;
-  int covered;
-  Node left;
-  Node right;
+class LazySegTree {
+  Node root;
 
-  Node(int beginIndex, int endIndex, int length, int count, int covered, Node left, Node right) {
-    this.beginIndex = beginIndex;
-    this.endIndex = endIndex;
-    this.length = length;
-    this.count = count;
-    this.covered = covered;
-    this.left = left;
-    this.right = right;
+  LazySegTree(int[] values) {
+    root = buildNode(values, 0, values.length - 2);
+  }
+
+  private Node buildNode(int[] values, int beginIndex, int endIndex) {
+    Node node = new Node(beginIndex, endIndex, 0);
+
+    if (beginIndex == endIndex) {
+      node.length = values[beginIndex + 1] - values[beginIndex];
+      node.covered = 0;
+    } else {
+      int middleIndex = (beginIndex + endIndex) / 2;
+      node.left = buildNode(values, beginIndex, middleIndex);
+      node.right = buildNode(values, middleIndex + 1, endIndex);
+
+      node.pull();
+    }
+
+    return node;
+  }
+
+  void update(int beginIndex, int endIndex, int delta) {
+    update(beginIndex, endIndex, delta, root);
+  }
+
+  private void update(int beginIndex, int endIndex, int delta, Node node) {
+    if (!(node.beginIndex > endIndex || node.endIndex < beginIndex)) {
+      if (node.beginIndex >= beginIndex && node.endIndex <= endIndex) {
+        node.apply(delta);
+      } else {
+        update(beginIndex, endIndex, delta, node.left);
+        update(beginIndex, endIndex, delta, node.right);
+
+        node.pull();
+      }
+    }
+  }
+
+  static class Node {
+    int beginIndex;
+    int endIndex;
+    int count;
+    int length;
+    int covered;
+    Node left;
+    Node right;
+
+    Node(int beginIndex, int endIndex, int count) {
+      this.beginIndex = beginIndex;
+      this.endIndex = endIndex;
+      this.count = count;
+    }
+
+    int getComputed() {
+      return (count == 0) ? covered : length;
+    }
+
+    void apply(int delta) {
+      count += delta;
+    }
+
+    void pull() {
+      length = left.length + right.length;
+      covered = left.getComputed() + right.getComputed();
+    }
   }
 }
