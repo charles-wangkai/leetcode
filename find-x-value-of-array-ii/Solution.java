@@ -6,7 +6,7 @@ class Solution {
     SegTree segTree = new SegTree(nums, k);
     for (int i = 0; i < result.length; ++i) {
       segTree.update(queries[i][0], queries[i][1]);
-      result[i] = segTree.query(queries[i][2], nums.length - 1).prefixProductNums[queries[i][3]];
+      result[i] = segTree.query(queries[i][2], nums.length - 1).prefixProductNums()[queries[i][3]];
     }
 
     return result;
@@ -23,20 +23,24 @@ class SegTree {
   }
 
   private Node buildNode(int[] values, int beginIndex, int endIndex) {
+    Node node = new Node(beginIndex, endIndex);
+
     if (beginIndex == endIndex) {
       int product = values[beginIndex] % k;
 
       int[] prefixProductNums = new int[k];
       prefixProductNums[product] = 1;
 
-      return new Node(beginIndex, endIndex, new Element(product, prefixProductNums), null, null);
+      node.element = new Element(product, prefixProductNums);
+    } else {
+      int middleIndex = (beginIndex + endIndex) / 2;
+      node.left = buildNode(values, beginIndex, middleIndex);
+      node.right = buildNode(values, middleIndex + 1, endIndex);
+
+      node.element = Element.merge(node.left.element, node.right.element);
     }
 
-    int middleIndex = (beginIndex + endIndex) / 2;
-    Node left = buildNode(values, beginIndex, middleIndex);
-    Node right = buildNode(values, middleIndex + 1, endIndex);
-
-    return new Node(beginIndex, endIndex, Element.merge(left.element, right.element), left, right);
+    return node;
   }
 
   void update(int index, int value) {
@@ -84,24 +88,13 @@ class SegTree {
     Node left;
     Node right;
 
-    Node(int beginIndex, int endIndex, Element element, Node left, Node right) {
+    Node(int beginIndex, int endIndex) {
       this.beginIndex = beginIndex;
       this.endIndex = endIndex;
-      this.element = element;
-      this.left = left;
-      this.right = right;
     }
   }
 
-  static class Element {
-    int product;
-    int[] prefixProductNums;
-
-    Element(int product, int[] prefixProductNums) {
-      this.product = product;
-      this.prefixProductNums = prefixProductNums;
-    }
-
+  record Element(int product, int[] prefixProductNums) {
     static Element merge(Element leftElement, Element rightElement) {
       int k = leftElement.prefixProductNums.length;
 
