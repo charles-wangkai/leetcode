@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -10,13 +11,13 @@ class Solution {
             query -> {
               int modulus = (int) query[2];
 
+              ModInt modInt = new ModInt(modulus);
+
               int result = 1;
               for (int b = 0; b < BIT_NUM; ++b) {
                 result =
-                    multiplyMod(
-                        result,
-                        powMod(2, computeNumBetween(b, query[0], query[1]) * b, modulus),
-                        modulus);
+                    modInt.multiplyMod(
+                        result, modInt.powMod(2, computeNumBetween(b, query[0], query[1]) * b));
               }
 
               return result;
@@ -93,22 +94,41 @@ class Solution {
 
     return result;
   }
+}
 
-  int powMod(int base, long exponent, int modulus) {
-    int result = 1;
-    while (exponent != 0) {
-      if ((exponent & 1) == 1) {
-        result = multiplyMod(result, base, modulus);
-      }
+class ModInt {
+  int modulus;
 
-      base = multiplyMod(base, base, modulus);
-      exponent >>= 1;
-    }
-
-    return result;
+  ModInt(int modulus) {
+    this.modulus = modulus;
   }
 
-  int multiplyMod(int x, int y, int modulus) {
+  int mod(long x) {
+    return (int) (x % modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return Math.floorMod(x + y, modulus);
+  }
+
+  int multiplyMod(int x, int y) {
     return Math.floorMod((long) x * y, modulus);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
   }
 }
