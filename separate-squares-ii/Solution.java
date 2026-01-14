@@ -70,15 +70,14 @@ class Solution {
         Arrays.stream(squares)
             .filter(square -> square[1] + square[2] > lineY)
             .flatMap(
-                square ->
-                    Stream.of(
-                        new Event(
-                            square[0], true, Math.max(lineY, square[1]), square[1] + square[2]),
-                        new Event(
-                            square[0] + square[2],
-                            false,
-                            Math.max(lineY, square[1]),
-                            square[1] + square[2])))
+                square -> {
+                  int beginIndex = yToCompressed.get(Math.max(lineY, square[1]));
+                  int endIndex = yToCompressed.get(square[1] + square[2]) - 1;
+
+                  return Stream.of(
+                      new Event(square[0], true, beginIndex, endIndex),
+                      new Event(square[0] + square[2], false, beginIndex, endIndex));
+                })
             .sorted(Comparator.comparing(Event::x))
             .toArray(Event[]::new);
 
@@ -90,10 +89,10 @@ class Solution {
 
       prevX = events[eventIndex].x();
       while (eventIndex != events.length && events[eventIndex].x() == prevX) {
-        int beginIndex = yToCompressed.get(events[eventIndex].minY());
-        int endIndex = yToCompressed.get(events[eventIndex].maxY()) - 1;
-
-        lazySegTree.update(beginIndex, endIndex, events[eventIndex].addOrRemove() ? 1 : -1);
+        lazySegTree.update(
+            events[eventIndex].beginIndex(),
+            events[eventIndex].endIndex(),
+            events[eventIndex].addOrRemove() ? 1 : -1);
 
         ++eventIndex;
       }
@@ -103,7 +102,7 @@ class Solution {
   }
 }
 
-record Event(int x, boolean addOrRemove, int minY, int maxY) {}
+record Event(int x, boolean addOrRemove, int beginIndex, int endIndex) {}
 
 class LazySegTree {
   Node root;
