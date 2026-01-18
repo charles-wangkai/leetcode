@@ -29,22 +29,18 @@ class Solution {
       int[][] grid, int[][] rowPrefixSums, int[][] colPrefixSums, int minR, int minC, int size) {
     int diagonalSum1 = IntStream.range(0, size).map(i -> grid[minR + i][minC + i]).sum();
     int diagonalSum2 = IntStream.range(0, size).map(i -> grid[minR + i][minC + size - 1 - i]).sum();
-    if (diagonalSum1 != diagonalSum2) {
-      return false;
-    }
 
-    for (int r = minR; r < minR + size; ++r) {
-      if (computePrefixSum(rowPrefixSums, r, minC - 1, r, minC + size - 1) != diagonalSum1) {
-        return false;
-      }
-    }
-    for (int c = minC; c < minC + size; ++c) {
-      if (computePrefixSum(colPrefixSums, minR - 1, c, minR + size - 1, c) != diagonalSum1) {
-        return false;
-      }
-    }
-
-    return true;
+    return diagonalSum2 == diagonalSum1
+        && IntStream.range(minR, minR + size)
+            .allMatch(
+                r ->
+                    computePrefixSum(rowPrefixSums, r, minC - 1, r, minC + size - 1)
+                        == diagonalSum1)
+        && IntStream.range(minC, minC + size)
+            .allMatch(
+                c ->
+                    computePrefixSum(colPrefixSums, minR - 1, c, minR + size - 1, c)
+                        == diagonalSum1);
   }
 
   int computePrefixSum(int[][] prefixSums, int beginR, int beginC, int endR, int endC) {
