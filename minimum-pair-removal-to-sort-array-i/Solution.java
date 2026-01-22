@@ -19,9 +19,11 @@ class Solution {
               .get();
 
       nums =
-          IntStream.range(0, nums.length)
-              .filter(i -> i != index + 1)
-              .map(i -> (i == index) ? (nums_[i] + nums_[i + 1]) : nums_[i])
+          IntStream.concat(
+                  IntStream.concat(
+                      IntStream.range(0, index).map(i -> nums_[i]),
+                      IntStream.of(nums[index] + nums[index + 1])),
+                  IntStream.range(index + 2, nums.length).map(i -> nums_[i]))
               .toArray();
       ++result;
     }
