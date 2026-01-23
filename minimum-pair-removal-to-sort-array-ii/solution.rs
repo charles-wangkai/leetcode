@@ -9,14 +9,14 @@ impl Solution {
         let mut nodes: Vec<_> = (0..nums.len())
             .map(|i| Node {
                 value: nums[i] as i64,
-                prev: usize::MAX,
-                next: usize::MAX,
+                prev: if i == 0 { usize::MAX } else { i - 1 },
+                next: if i == nums.len() - 1 {
+                    usize::MAX
+                } else {
+                    i + 1
+                },
             })
             .collect();
-        for i in 0..nodes.len() - 1 {
-            nodes[i].next = i + 1;
-            nodes[i + 1].prev = i;
-        }
 
         let mut elements = BTreeSet::new();
         for i in 0..nodes.len() - 1 {
@@ -40,19 +40,17 @@ impl Solution {
                 inversion_num -= 1;
             }
 
+            elements.remove(&(nodes[curr].value + nodes[next].value, curr));
             if prev != usize::MAX {
                 elements.remove(&(nodes[prev].value + nodes[curr].value, prev));
             }
-            elements.remove(&(nodes[curr].value + nodes[next].value, curr));
             if next_next != usize::MAX {
                 elements.remove(&(nodes[next].value + nodes[next_next].value, next));
             }
 
             nodes[curr].value += nodes[next].value;
-            nodes[curr].next = usize::MAX;
-
+            nodes[curr].next = next_next;
             if next_next != usize::MAX {
-                nodes[curr].next = next_next;
                 nodes[next_next].prev = curr;
             }
 
