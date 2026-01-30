@@ -21,6 +21,7 @@ class Solution {
     long[] dp = new long[source.length() + 1];
     Arrays.fill(dp, Long.MAX_VALUE);
     dp[0] = 0;
+
     for (int i = 1; i < dp.length; ++i) {
       if (source.charAt(i - 1) == target.charAt(i - 1)) {
         dp[i] = Math.min(dp[i], dp[i - 1]);
@@ -51,7 +52,7 @@ class Solution {
     int[][] distances = new int[strToIndex.size()][strToIndex.size()];
     for (int i = 0; i < strToIndex.size(); ++i) {
       for (int j = 0; j < strToIndex.size(); ++j) {
-        distances[i][j] = (i == j) ? 0 : Integer.MAX_VALUE;
+        distances[i][j] = (j == i) ? 0 : Integer.MAX_VALUE;
       }
     }
     for (int i = 0; i < original.length; ++i) {
