@@ -4,20 +4,18 @@ import java.util.stream.IntStream;
 
 class Solution {
   public long maxSumTrionic(int[] nums) {
-    List<Range> ranges = buildRanges(nums);
-
-    return IntStream.range(0, ranges.size())
+    return buildRanges(nums).stream()
         .filter(
-            i ->
-                ranges.get(i).beginIndex >= 1
-                    && nums[ranges.get(i).beginIndex] > nums[ranges.get(i).beginIndex - 1]
-                    && ranges.get(i).endIndex <= nums.length - 2
-                    && nums[ranges.get(i).endIndex] < nums[ranges.get(i).endIndex + 1])
+            range ->
+                range.beginIndex >= 1
+                    && nums[range.beginIndex] > nums[range.beginIndex - 1]
+                    && range.endIndex <= nums.length - 2
+                    && nums[range.endIndex] < nums[range.endIndex + 1])
         .mapToLong(
-            i ->
-                computeMaxSuffixSum(nums, ranges.get(i).beginIndex - 1)
-                    + computeMaxPrefixSum(nums, ranges.get(i).endIndex + 1)
-                    + +IntStream.rangeClosed(ranges.get(i).beginIndex, ranges.get(i).endIndex)
+            range ->
+                computeMaxSuffixSum(nums, range.beginIndex - 1)
+                    + computeMaxPrefixSum(nums, range.endIndex + 1)
+                    + +IntStream.rangeClosed(range.beginIndex, range.endIndex)
                         .map(j -> nums[j])
                         .asLongStream()
                         .sum())
