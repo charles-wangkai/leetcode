@@ -1,16 +1,15 @@
 class Solution {
   public int minimumDeletions(String s) {
-    int aCount = (int) s.chars().filter(c -> c == 'a').count();
-    int result = aCount;
-    int bCount = 0;
+    int deleteCount = (int) s.chars().filter(c -> c == 'a').count();
+    int result = deleteCount;
     for (char c : s.toCharArray()) {
       if (c == 'a') {
-        --aCount;
+        --deleteCount;
       } else {
-        ++bCount;
+        ++deleteCount;
       }
 
-      result = Math.min(result, aCount + bCount);
+      result = Math.min(result, deleteCount);
     }
 
     return result;
