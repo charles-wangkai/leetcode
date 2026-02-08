@@ -19,18 +19,18 @@ class TreeNode {
 
 class Solution {
   public boolean isBalanced(TreeNode root) {
-    return findDepth(root) >= 0;
+    return computeDepth(root) != -1;
   }
 
-  int findDepth(TreeNode node) {
+  int computeDepth(TreeNode node) {
     if (node == null) {
       return 0;
     }
 
-    int leftDepth = findDepth(node.left);
-    int rightDepth = findDepth(node.right);
+    int leftDepth = computeDepth(node.left);
+    int rightDepth = computeDepth(node.right);
 
-    return (leftDepth >= 0 && rightDepth >= 0 && Math.abs(leftDepth - rightDepth) <= 1)
+    return (leftDepth != -1 && rightDepth != -1 && Math.abs(leftDepth - rightDepth) <= 1)
         ? (1 + Math.max(leftDepth, rightDepth))
         : -1;
   }
