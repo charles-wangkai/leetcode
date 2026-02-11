@@ -7,14 +7,10 @@ class Solution {
   public int longestBalanced(int[] nums) {
     int result = 0;
     Map<Integer, Integer> valueToPrevIndex = new HashMap<>();
-    LazySegTree lazySegTree = new LazySegTree(nums);
+    LazySegTree lazySegTree = new LazySegTree(nums.length);
     for (int r = 0; r < nums.length; ++r) {
-      int delta = (nums[r] % 2 == 0) ? 1 : -1;
-
-      if (valueToPrevIndex.containsKey(nums[r])) {
-        lazySegTree.update(0, valueToPrevIndex.get(nums[r]), -delta);
-      }
-      lazySegTree.update(0, r, delta);
+      lazySegTree.update(
+          valueToPrevIndex.getOrDefault(nums[r], -1) + 1, r, (nums[r] % 2 == 0) ? 1 : -1);
 
       valueToPrevIndex.put(nums[r], r);
 
@@ -31,27 +27,25 @@ class Solution {
 class LazySegTree {
   Node root;
 
-  LazySegTree(int[] values) {
-    root = buildNode(values, 0, values.length - 1);
+  LazySegTree(int size) {
+    root = buildNode(0, size - 1);
   }
 
-  private Node buildNode(int[] values, int beginIndex, int endIndex) {
+  private Node buildNode(int beginIndex, int endIndex) {
+    Node node = new Node(beginIndex, endIndex, 0);
+
     if (beginIndex == endIndex) {
-      return new Node(beginIndex, endIndex, 0, 0, 0, null, null);
+      node.min = 0;
+      node.max = 0;
+    } else {
+      int middleIndex = (beginIndex + endIndex) / 2;
+      node.left = buildNode(beginIndex, middleIndex);
+      node.right = buildNode(middleIndex + 1, endIndex);
+
+      node.pull();
     }
 
-    int middleIndex = (beginIndex + endIndex) / 2;
-    Node left = buildNode(values, beginIndex, middleIndex);
-    Node right = buildNode(values, middleIndex + 1, endIndex);
-
-    return new Node(
-        beginIndex,
-        endIndex,
-        0,
-        Math.min(left.min, right.min),
-        Math.max(left.max, right.max),
-        left,
-        right);
+    return node;
   }
 
   void update(int beginIndex, int endIndex, int delta) {
@@ -90,9 +84,9 @@ class LazySegTree {
 
     node.pull();
 
-    int result = findLeftmostZero(node.left);
+    int leftIndex = findLeftmostZero(node.left);
 
-    return (result == Integer.MAX_VALUE) ? findLeftmostZero(node.right) : result;
+    return (leftIndex == Integer.MAX_VALUE) ? findLeftmostZero(node.right) : leftIndex;
   }
 
   static class Node {
@@ -104,14 +98,10 @@ class LazySegTree {
     Node left;
     Node right;
 
-    Node(int beginIndex, int endIndex, int delta, int min, int max, Node left, Node right) {
+    Node(int beginIndex, int endIndex, int delta) {
       this.beginIndex = beginIndex;
       this.endIndex = endIndex;
       this.delta = delta;
-      this.min = min;
-      this.max = max;
-      this.left = left;
-      this.right = right;
     }
 
     int getComputedMinValue() {
