@@ -1,17 +1,12 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 class Solution {
   public int longestBalanced(String s) {
     int result = 0;
     for (int beginIndex = 0; beginIndex < s.length(); ++beginIndex) {
-      Map<Character, Integer> letterToCount = new HashMap<>();
+      int[] counts = new int[26];
       for (int endIndex = beginIndex; endIndex < s.length(); ++endIndex) {
-        letterToCount.put(
-            s.charAt(endIndex), letterToCount.getOrDefault(s.charAt(endIndex), 0) + 1);
+        ++counts[s.charAt(endIndex) - 'a'];
 
-        if (check(List.copyOf(letterToCount.values()))) {
+        if (check(counts)) {
           result = Math.max(result, endIndex - beginIndex + 1);
         }
       }
@@ -20,10 +15,15 @@ class Solution {
     return result;
   }
 
-  boolean check(List<Integer> counts) {
-    for (int i = 0; i < counts.size() - 1; ++i) {
-      if (!counts.get(i).equals(counts.get(i + 1))) {
-        return false;
+  boolean check(int[] counts) {
+    int target = -1;
+    for (int count : counts) {
+      if (count != 0) {
+        if (target == -1) {
+          target = count;
+        } else if (count != target) {
+          return false;
+        }
       }
     }
 
