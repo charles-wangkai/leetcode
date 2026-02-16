@@ -1,14 +1,7 @@
-public class Solution {
-	public int reverseBits(int n) {
-		int reversed = 0;
-		for (int i = 0; i < 32; i++) {
-			reversed <<= 1;
-			if ((n & 1) != 0) {
-				++reversed;
-			}
-			n >>= 1;
-		}
+class Solution {
+  public int reverseBits(int n) {
+    String s = new StringBuilder(Integer.toBinaryString(n)).reverse().toString();
 
-		return reversed;
-	}
+    return Integer.parseInt("%s%s".formatted(s, "0".repeat(32 - s.length())), 2);
+  }
 }
