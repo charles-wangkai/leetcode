@@ -1,8 +1,10 @@
 // https://leetcode.com/problems/minimum-stability-factor-of-array/solutions/6924155/binary-search-sparse-table-two-pointers-explained-easy-to-understand-clean-code/
 
+import java.util.function.BinaryOperator;
+
 class Solution {
   public int minStable(int[] nums, int maxC) {
-    int[][] sparseTable = buildSparseTable(nums);
+    SparseTable sparseTable = new SparseTable(nums, this::gcd);
 
     int result = -1;
     int lower = 0;
@@ -20,33 +22,12 @@ class Solution {
     return result;
   }
 
-  int[][] buildSparseTable(int[] nums) {
-    int[][] result = new int[nums.length][computeExponent(nums.length) + 1];
-    for (int i = 0; i < result.length; ++i) {
-      result[i][0] = nums[i];
-    }
-    for (int exponent = 1; exponent < result[0].length; ++exponent) {
-      for (int i = 0; i + (1 << exponent) <= result.length; ++i) {
-        result[i][exponent] =
-            gcd(result[i][exponent - 1], result[i + (1 << (exponent - 1))][exponent - 1]);
-      }
-    }
-
-    return result;
-  }
-
-  int computeExponent(int x) {
-    return 31 - Integer.numberOfLeadingZeros(x);
-  }
-
-  boolean check(int[] nums, int maxC, int[][] sparseTable, int lengthLimit) {
+  boolean check(int[] nums, int maxC, SparseTable sparseTable, int lengthLimit) {
     int changeCount = 0;
     int beginIndex = 0;
     for (int endIndex = 0; endIndex < nums.length; ++endIndex) {
-      int g = computeRangeGcd(sparseTable, beginIndex, endIndex);
-      while (beginIndex <= endIndex && g == 1) {
+      while (beginIndex <= endIndex && sparseTable.query(beginIndex, endIndex) == 1) {
         ++beginIndex;
-        g = computeRangeGcd(sparseTable, beginIndex, endIndex);
       }
 
       if (endIndex - beginIndex + 1 == lengthLimit + 1) {
@@ -58,18 +39,38 @@ class Solution {
     return changeCount <= maxC;
   }
 
-  int computeRangeGcd(int[][] sparseTable, int beginIndex, int endIndex) {
-    if (beginIndex > endIndex) {
-      return -1;
-    }
-
-    int exponent = computeExponent(endIndex - beginIndex + 1);
-
-    return gcd(
-        sparseTable[beginIndex][exponent], sparseTable[endIndex - (1 << exponent) + 1][exponent]);
-  }
-
   int gcd(int x, int y) {
     return (y == 0) ? x : gcd(y, x % y);
+  }
+}
+
+class SparseTable {
+  int[][] st;
+  BinaryOperator<Integer> binaryOperator;
+
+  SparseTable(int[] values, BinaryOperator<Integer> binaryOperator) {
+    st = new int[values.length][computeExponent(values.length) + 1];
+    for (int i = 0; i < st.length; ++i) {
+      st[i][0] = values[i];
+    }
+    for (int exponent = 1; exponent < st[0].length; ++exponent) {
+      for (int i = 0; i + (1 << exponent) <= st.length; ++i) {
+        st[i][exponent] =
+            binaryOperator.apply(st[i][exponent - 1], st[i + (1 << (exponent - 1))][exponent - 1]);
+      }
+    }
+
+    this.binaryOperator = binaryOperator;
+  }
+
+  int query(int beginIndex, int endIndex) {
+    int exponent = computeExponent(endIndex - beginIndex + 1);
+
+    return binaryOperator.apply(
+        st[beginIndex][exponent], st[endIndex - (1 << exponent) + 1][exponent]);
+  }
+
+  private int computeExponent(int x) {
+    return 31 - Integer.numberOfLeadingZeros(x);
   }
 }
