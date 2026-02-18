@@ -1,10 +1,11 @@
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.function.BinaryOperator;
 
 class Solution {
   public long maxTotalValue(int[] nums, int k) {
-    RangeQuerier minRangeQuerier = new RangeQuerier(nums, Math::min);
-    RangeQuerier maxRangeQuerier = new RangeQuerier(nums, Math::max);
+    SparseTable minSparseTable = new SparseTable(nums, Math::min);
+    SparseTable maxSparseTable = new SparseTable(nums, Math::max);
 
     PriorityQueue<Element> pq =
         new PriorityQueue<>(Comparator.comparing(Element::maxMinDiff).reversed());
@@ -13,8 +14,8 @@ class Solution {
           new Element(
               leftIndex,
               nums.length - 1,
-              maxRangeQuerier.query(leftIndex, nums.length - 1)
-                  - minRangeQuerier.query(leftIndex, nums.length - 1)));
+              maxSparseTable.query(leftIndex, nums.length - 1)
+                  - minSparseTable.query(leftIndex, nums.length - 1)));
     }
 
     long result = 0;
@@ -27,8 +28,8 @@ class Solution {
             new Element(
                 head.leftIndex(),
                 head.rightIndex() - 1,
-                maxRangeQuerier.query(head.leftIndex(), head.rightIndex() - 1)
-                    - minRangeQuerier.query(head.leftIndex(), head.rightIndex() - 1)));
+                maxSparseTable.query(head.leftIndex(), head.rightIndex() - 1)
+                    - minSparseTable.query(head.leftIndex(), head.rightIndex() - 1)));
       }
     }
 
@@ -38,38 +39,33 @@ class Solution {
 
 record Element(int leftIndex, int rightIndex, int maxMinDiff) {}
 
-class RangeQuerier {
-  Combiner combiner;
-  int[][] sparseTable;
+class SparseTable {
+  int[][] st;
+  BinaryOperator<Integer> binaryOperator;
 
-  RangeQuerier(int[] nums, Combiner combiner) {
-    this.combiner = combiner;
-
-    sparseTable = new int[nums.length][computeExponent(nums.length) + 1];
-    for (int i = 0; i < sparseTable.length; ++i) {
-      sparseTable[i][0] = nums[i];
+  SparseTable(int[] values, BinaryOperator<Integer> binaryOperator) {
+    st = new int[values.length][computeExponent(values.length) + 1];
+    for (int i = 0; i < st.length; ++i) {
+      st[i][0] = values[i];
     }
-    for (int exponent = 1; exponent < sparseTable[0].length; ++exponent) {
-      for (int i = 0; i + (1 << exponent) <= sparseTable.length; ++i) {
-        sparseTable[i][exponent] =
-            combiner.combine(
-                sparseTable[i][exponent - 1], sparseTable[i + (1 << (exponent - 1))][exponent - 1]);
+    for (int exponent = 1; exponent < st[0].length; ++exponent) {
+      for (int i = 0; i + (1 << exponent) <= st.length; ++i) {
+        st[i][exponent] =
+            binaryOperator.apply(st[i][exponent - 1], st[i + (1 << (exponent - 1))][exponent - 1]);
       }
     }
+
+    this.binaryOperator = binaryOperator;
   }
 
-  int computeExponent(int x) {
+  int query(int beginIndex, int endIndex) {
+    int exponent = computeExponent(endIndex - beginIndex + 1);
+
+    return binaryOperator.apply(
+        st[beginIndex][exponent], st[endIndex - (1 << exponent) + 1][exponent]);
+  }
+
+  private int computeExponent(int x) {
     return 31 - Integer.numberOfLeadingZeros(x);
   }
-
-  int query(int leftIndex, int rightIndex) {
-    int exponent = computeExponent(rightIndex - leftIndex + 1);
-
-    return combiner.combine(
-        sparseTable[leftIndex][exponent], sparseTable[rightIndex - (1 << exponent) + 1][exponent]);
-  }
-}
-
-interface Combiner {
-  int combine(int x, int y);
 }
