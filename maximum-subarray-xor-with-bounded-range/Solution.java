@@ -23,8 +23,8 @@ class Solution {
       }
     }
 
-    int[][] minSparseTable = buildSparseTable(nums, Math::min);
-    int[][] maxSparseTable = buildSparseTable(nums, Math::max);
+    SparseTable minSparseTable = new SparseTable(nums, Math::min);
+    SparseTable maxSparseTable = new SparseTable(nums, Math::max);
 
     int result = 0;
     int prefixXor = 0;
@@ -66,14 +66,13 @@ class Solution {
   }
 
   int findEndIndex(
-      int[] nums, int k, int[][] minSparseTable, int[][] maxSparseTable, int beginIndex) {
+      int[] nums, int k, SparseTable minSparseTable, SparseTable maxSparseTable, int beginIndex) {
     int result = -1;
     int lower = beginIndex;
     int upper = nums.length - 1;
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
-      if (computeRangeValue(maxSparseTable, beginIndex, middle, Math::max)
-              - computeRangeValue(minSparseTable, beginIndex, middle, Math::min)
+      if (maxSparseTable.query(beginIndex, middle) - minSparseTable.query(beginIndex, middle)
           <= k) {
         result = middle;
         lower = middle + 1;
@@ -84,32 +83,35 @@ class Solution {
 
     return result;
   }
+}
 
-  int computeRangeValue(
-      int[][] sparseTable, int beginIndex, int endIndex, BinaryOperator<Integer> binaryOperator) {
-    int exponent = computeExponent(endIndex - beginIndex + 1);
+class SparseTable {
+  int[][] st;
+  BinaryOperator<Integer> binaryOperator;
 
-    return binaryOperator.apply(
-        sparseTable[beginIndex][exponent], sparseTable[endIndex - (1 << exponent) + 1][exponent]);
-  }
-
-  int[][] buildSparseTable(int[] nums, BinaryOperator<Integer> binaryOperator) {
-    int[][] result = new int[nums.length][computeExponent(nums.length) + 1];
-    for (int i = 0; i < result.length; ++i) {
-      result[i][0] = nums[i];
+  SparseTable(int[] values, BinaryOperator<Integer> binaryOperator) {
+    st = new int[values.length][computeExponent(values.length) + 1];
+    for (int i = 0; i < st.length; ++i) {
+      st[i][0] = values[i];
     }
-    for (int exponent = 1; exponent < result[0].length; ++exponent) {
-      for (int i = 0; i + (1 << exponent) <= result.length; ++i) {
-        result[i][exponent] =
-            binaryOperator.apply(
-                result[i][exponent - 1], result[i + (1 << (exponent - 1))][exponent - 1]);
+    for (int exponent = 1; exponent < st[0].length; ++exponent) {
+      for (int i = 0; i + (1 << exponent) <= st.length; ++i) {
+        st[i][exponent] =
+            binaryOperator.apply(st[i][exponent - 1], st[i + (1 << (exponent - 1))][exponent - 1]);
       }
     }
 
-    return result;
+    this.binaryOperator = binaryOperator;
   }
 
-  int computeExponent(int x) {
+  int query(int beginIndex, int endIndex) {
+    int exponent = computeExponent(endIndex - beginIndex + 1);
+
+    return binaryOperator.apply(
+        st[beginIndex][exponent], st[endIndex - (1 << exponent) + 1][exponent]);
+  }
+
+  private int computeExponent(int x) {
     return 31 - Integer.numberOfLeadingZeros(x);
   }
 }
