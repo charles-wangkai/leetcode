@@ -20,7 +20,7 @@ class Solution {
             .boxed()
             .collect(Collectors.toMap(i -> sortedIndices[i], i -> i));
 
-    int[][] sparseTable = new int[n][computeExponent(n) + 2];
+    int[][] parents = new int[n][computeExponent(n) + 2];
     int maxIndex = 0;
     for (int i = 0; i < n; ++i) {
       while (maxIndex != n - 1
@@ -28,11 +28,11 @@ class Solution {
         ++maxIndex;
       }
 
-      sparseTable[i][0] = maxIndex;
+      parents[i][0] = maxIndex;
     }
-    for (int exponent = 1; exponent < sparseTable[0].length; ++exponent) {
+    for (int exponent = 1; exponent < parents[0].length; ++exponent) {
       for (int i = 0; i < n; ++i) {
-        sparseTable[i][exponent] = sparseTable[sparseTable[i][exponent - 1]][exponent - 1];
+        parents[i][exponent] = parents[parents[i][exponent - 1]][exponent - 1];
       }
     }
 
@@ -40,30 +40,30 @@ class Solution {
         .mapToInt(
             query ->
                 computeDistance(
-                    sparseTable,
+                    parents,
                     Math.min(indexToSortedOrder.get(query[0]), indexToSortedOrder.get(query[1])),
                     Math.max(indexToSortedOrder.get(query[0]), indexToSortedOrder.get(query[1]))))
         .toArray();
   }
 
-  int computeDistance(int[][] sparseTable, int fromIndex, int toIndex) {
+  int computeDistance(int[][] parents, int fromIndex, int toIndex) {
     if (fromIndex == toIndex) {
       return 0;
     }
-    if (sparseTable[fromIndex][0] >= toIndex) {
+    if (parents[fromIndex][0] >= toIndex) {
       return 1;
     }
 
-    if (sparseTable[fromIndex][sparseTable[0].length - 1] < toIndex) {
+    if (parents[fromIndex][parents[0].length - 1] < toIndex) {
       return -1;
     }
 
     int exponent = 0;
-    while (sparseTable[fromIndex][exponent + 1] < toIndex) {
+    while (parents[fromIndex][exponent + 1] < toIndex) {
       ++exponent;
     }
 
-    int subResult = computeDistance(sparseTable, sparseTable[fromIndex][exponent], toIndex);
+    int subResult = computeDistance(parents, parents[fromIndex][exponent], toIndex);
     if (subResult == -1) {
       return -1;
     }
