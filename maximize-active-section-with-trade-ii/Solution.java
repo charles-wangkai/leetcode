@@ -3,6 +3,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BinaryOperator;
+import java.util.stream.IntStream;
 
 class Solution {
   public List<Integer> maxActiveSectionsAfterTrade(String s, int[][] queries) {
@@ -17,19 +19,16 @@ class Solution {
       }
     }
 
-    int[][] sparseTable = new int[segments.size()][computeExponent(segments.size()) + 1];
-    for (int i = 0; i + 2 < sparseTable.length; ++i) {
-      if (s.charAt(segments.get(i).beginIndex()) == '0') {
-        sparseTable[i][0] = segments.get(i).length() + segments.get(i + 2).length();
-      }
-    }
-    for (int exponent = 1; exponent < sparseTable[0].length; ++exponent) {
-      for (int i = 0; i + (1 << exponent) <= sparseTable.length; ++i) {
-        sparseTable[i][exponent] =
-            Math.max(
-                sparseTable[i][exponent - 1], sparseTable[i + (1 << (exponent - 1))][exponent - 1]);
-      }
-    }
+    SparseTable sparseTable =
+        new SparseTable(
+            IntStream.range(0, segments.size())
+                .map(
+                    i ->
+                        (i + 2 < segments.size() && s.charAt(segments.get(i).beginIndex()) == '0')
+                            ? (segments.get(i).length() + segments.get(i + 2).length())
+                            : 0)
+                .toArray(),
+            Math::max);
 
     return Arrays.stream(queries)
         .map(
@@ -44,9 +43,12 @@ class Solution {
                 return totalOneCount;
               }
 
+              int begin = leftIndex + 1;
+              int end = rightIndex - 3;
+
               return totalOneCount
                   + Math.max(
-                      computeMaxInRange(sparseTable, leftIndex + 1, rightIndex - 3),
+                      (begin <= end) ? sparseTable.query(begin, end) : 0,
                       Math.max(
                           computeExtra(s, segments, left, right, leftIndex, rightIndex, leftIndex),
                           computeExtra(
@@ -104,21 +106,37 @@ class Solution {
 
     return result;
   }
-
-  int computeMaxInRange(int[][] sparseTable, int leftIndex, int rightIndex) {
-    if (leftIndex > rightIndex) {
-      return 0;
-    }
-
-    int exponent = computeExponent(rightIndex - leftIndex + 1);
-
-    return Math.max(
-        sparseTable[leftIndex][exponent], sparseTable[rightIndex - (1 << exponent) + 1][exponent]);
-  }
-
-  int computeExponent(int x) {
-    return 31 - Integer.numberOfLeadingZeros(x);
-  }
 }
 
 record Segment(int beginIndex, int length) {}
+
+class SparseTable {
+  int[][] st;
+  BinaryOperator<Integer> binaryOperator;
+
+  SparseTable(int[] values, BinaryOperator<Integer> binaryOperator) {
+    st = new int[values.length][computeExponent(values.length) + 1];
+    for (int i = 0; i < st.length; ++i) {
+      st[i][0] = values[i];
+    }
+    for (int exponent = 1; exponent < st[0].length; ++exponent) {
+      for (int i = 0; i + (1 << exponent) <= st.length; ++i) {
+        st[i][exponent] =
+            binaryOperator.apply(st[i][exponent - 1], st[i + (1 << (exponent - 1))][exponent - 1]);
+      }
+    }
+
+    this.binaryOperator = binaryOperator;
+  }
+
+  int query(int beginIndex, int endIndex) {
+    int exponent = computeExponent(endIndex - beginIndex + 1);
+
+    return binaryOperator.apply(
+        st[beginIndex][exponent], st[endIndex - (1 << exponent) + 1][exponent]);
+  }
+
+  private int computeExponent(int x) {
+    return 31 - Integer.numberOfLeadingZeros(x);
+  }
+}
