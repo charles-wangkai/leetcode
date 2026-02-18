@@ -1,16 +1,9 @@
-public class Solution {
-	public boolean hasAlternatingBits(int n) {
-		int prevBit = -1;
-		while (n != 0) {
-			int bit = n & 1;
+import java.util.stream.IntStream;
 
-			if (bit == prevBit) {
-				return false;
-			}
+class Solution {
+  public boolean hasAlternatingBits(int n) {
+    String s = Integer.toBinaryString(n);
 
-			prevBit = bit;
-			n >>= 1;
-		}
-		return true;
-	}
+    return IntStream.range(0, s.length() - 1).allMatch(i -> s.charAt(i) != s.charAt(i + 1));
+  }
 }
