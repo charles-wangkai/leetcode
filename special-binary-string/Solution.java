@@ -1,25 +1,22 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Solution {
-  public String makeLargestSpecial(String S) {
+class Solution {
+  public String makeLargestSpecial(String s) {
     List<String> parts = new ArrayList<>();
-    int count = 0;
-    int startIndex = 0;
-    for (int i = 0; i < S.length(); i++) {
-      if (S.charAt(i) == '1') {
-        count++;
-      } else {
-        count--;
-      }
+    int diff = 0;
+    int beginIndex = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      diff += (s.charAt(i) == '1') ? 1 : -1;
 
-      if (count == 0) {
-        parts.add('1' + makeLargestSpecial(S.substring(startIndex + 1, i)) + '0');
-        startIndex = i + 1;
+      if (diff == 0) {
+        parts.add("1%s0".formatted(makeLargestSpecial(s.substring(beginIndex + 1, i))));
+        beginIndex = i + 1;
       }
     }
-    Collections.sort(parts, Collections.reverseOrder());
-    return String.join("", parts);
+
+    return parts.stream().sorted(Comparator.reverseOrder()).collect(Collectors.joining());
   }
 }
