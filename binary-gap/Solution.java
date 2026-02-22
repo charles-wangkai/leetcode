@@ -1,19 +1,13 @@
-public class Solution {
-	public int binaryGap(int N) {
-		int maxDistance = 0;
-		int distance = -1;
-		while (N != 0) {
-			if (distance >= 0) {
-				distance++;
-			}
+import java.util.stream.IntStream;
 
-			if (N % 2 == 1) {
-				maxDistance = Math.max(maxDistance, distance);
-				distance = 0;
-			}
+class Solution {
+  public int binaryGap(int n) {
+    String s = Integer.toBinaryString(n);
+    int[] oneIndices = IntStream.range(0, s.length()).filter(i -> s.charAt(i) == '1').toArray();
 
-			N /= 2;
-		}
-		return maxDistance;
-	}
+    return IntStream.range(0, oneIndices.length - 1)
+        .map(i -> oneIndices[i + 1] - oneIndices[i])
+        .max()
+        .orElse(0);
+  }
 }
