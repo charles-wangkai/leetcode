@@ -22,17 +22,17 @@ class Solution {
     return search(root, 0);
   }
 
-  int search(TreeNode node, int parentNumber) {
+  int search(TreeNode node, int parentValue) {
     if (node == null) {
       return 0;
     }
 
-    int currentNumber = parentNumber * 2 + node.val;
+    int currentValue = parentValue * 2 + node.val;
 
     if (node.left == null && node.right == null) {
-      return currentNumber;
+      return currentValue;
     }
 
-    return search(node.left, currentNumber) + search(node.right, currentNumber);
+    return search(node.left, currentValue) + search(node.right, currentValue);
   }
 }
