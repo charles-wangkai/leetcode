@@ -10,7 +10,7 @@ class Solution {
     }
 
     if (index != 0) {
-      result += index + (int) IntStream.range(0, index).filter(i -> s.charAt(i) == '0').count() + 2;
+      result += index + IntStream.range(0, index).filter(i -> s.charAt(i) == '0').count() + 2;
     }
 
     return result;
