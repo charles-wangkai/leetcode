@@ -1,98 +1,142 @@
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 class Solution {
-  static final int MODULUS = 1_000_000_007;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
 
   public int[] assignEdgeWeights(int[][] edges, int[][] queries) {
-    int n = edges.length + 1;
+    Tree tree =
+        new Tree(
+            Arrays.stream(edges).mapToInt(edge -> edge[0] - 1).toArray(),
+            Arrays.stream(edges).mapToInt(edge -> edge[1] - 1).toArray());
 
-    int[] powers = new int[n];
+    int[] powers = new int[tree.n];
     powers[0] = 1;
     for (int i = 1; i < powers.length; ++i) {
-      powers[i] = multiplyMod(powers[i - 1], 2);
-    }
-
-    @SuppressWarnings("unchecked")
-    List<Integer>[] adjLists = new List[n];
-    for (int i = 0; i < adjLists.length; ++i) {
-      adjLists[i] = new ArrayList<>();
-    }
-    for (int[] edge : edges) {
-      adjLists[edge[0] - 1].add(edge[1] - 1);
-      adjLists[edge[1] - 1].add(edge[0] - 1);
-    }
-
-    int[] depths = new int[n];
-    int[][] parents = new int[n][Integer.toBinaryString(n).length()];
-    search(depths, parents, adjLists, 0, -1, 0);
-
-    for (int i = 1; i < parents[0].length; ++i) {
-      for (int node = 0; node < n; ++node) {
-        parents[node][i] = (parents[node][i - 1] == -1) ? -1 : parents[parents[node][i - 1]][i - 1];
-      }
+      powers[i] = MOD_INT.multiplyMod(powers[i - 1], 2);
     }
 
     return Arrays.stream(queries)
         .mapToInt(
             query -> {
               int distance =
-                  depths[query[0] - 1]
-                      + depths[query[1] - 1]
-                      - 2 * depths[findLca(depths, parents, query[0] - 1, query[1] - 1)];
+                  tree.depths[query[0] - 1]
+                      + tree.depths[query[1] - 1]
+                      - 2 * tree.depths[tree.findLca(query[0] - 1, query[1] - 1)];
 
               return (distance == 0) ? 0 : powers[distance - 1];
             })
         .toArray();
   }
+}
 
-  int findLca(int[] depths, int[][] parents, int node1, int node2) {
-    if (depths[node1] < depths[node2]) {
-      return findLca(depths, parents, node2, node1);
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
     }
 
-    int diff = depths[node1] - depths[node2];
-    for (int i = 0; diff != 0; ++i) {
-      if (((diff >> i) & 1) == 1) {
-        node1 = parents[node1][i];
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
+  }
+}
 
-        diff -= 1 << i;
+class Tree {
+  int n;
+  int[] u;
+  int[] v;
+  List<Integer>[] edgeLists;
+  int[] depths;
+  int[][] ancestors;
+
+  @SuppressWarnings("unchecked")
+  Tree(int[] u, int[] v) {
+    n = u.length + 1;
+
+    this.u = u;
+    this.v = v;
+
+    edgeLists = new List[n];
+    for (int i = 0; i < edgeLists.length; ++i) {
+      edgeLists[i] = new ArrayList<>();
+    }
+    for (int i = 0; i < u.length; ++i) {
+      edgeLists[u[i]].add(i);
+      edgeLists[v[i]].add(i);
+    }
+
+    depths = new int[n];
+    ancestors = new int[n][Integer.toBinaryString(n).length()];
+    init(0, -1, 0);
+  }
+
+  private void init(int depth, int parent, int node) {
+    depths[node] = depth;
+
+    ancestors[node][0] = parent;
+    for (int i = 1; i < ancestors[node].length; ++i) {
+      ancestors[node][i] =
+          (ancestors[node][i - 1] == -1) ? -1 : ancestors[ancestors[node][i - 1]][i - 1];
+    }
+
+    for (int edge : edgeLists[node]) {
+      int adj = (node == u[edge]) ? v[edge] : u[edge];
+      if (adj != parent) {
+        init(depth + 1, node, adj);
       }
     }
+  }
+
+  int findLca(int node1, int node2) {
+    if (depths[node1] < depths[node2]) {
+      return findLca(node2, node1);
+    }
+
+    for (int i = ancestors[node1].length - 1; i >= 0; --i) {
+      if (ancestors[node1][i] != -1 && depths[ancestors[node1][i]] >= depths[node2]) {
+        node1 = ancestors[node1][i];
+      }
+    }
+
     if (node1 == node2) {
       return node1;
     }
 
-    while (true) {
-      int index = -1;
-      while (parents[node1][index + 1] != parents[node2][index + 1]) {
-        ++index;
-      }
-      if (index == -1) {
-        break;
-      }
-
-      node1 = parents[node1][index];
-      node2 = parents[node2][index];
-    }
-
-    return parents[node1][0];
-  }
-
-  void search(
-      int[] depths, int[][] parents, List<Integer>[] adjLists, int depth, int parent, int node) {
-    depths[node] = depth;
-    parents[node][0] = parent;
-
-    for (int adj : adjLists[node]) {
-      if (adj != parent) {
-        search(depths, parents, adjLists, depth + 1, node, adj);
+    for (int i = ancestors[node1].length - 1; i >= 0; --i) {
+      if (ancestors[node1][i] != ancestors[node2][i]) {
+        node1 = ancestors[node1][i];
+        node2 = ancestors[node2][i];
       }
     }
-  }
 
-  int multiplyMod(int x, int y) {
-    return Math.floorMod((long) x * y, MODULUS);
+    return ancestors[node1][0];
   }
 }
