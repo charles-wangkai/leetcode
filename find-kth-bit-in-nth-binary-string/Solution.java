@@ -10,7 +10,7 @@ class Solution {
       return findKthBit(n - 1, k);
     }
     if (k > middle) {
-      int nextLength = (1 << (n - 1)) - 1;
+      int nextLength = (length - 1) / 2;
       int nextK = nextLength + 1 - (k - middle);
 
       return (char) ('0' + '1' - findKthBit(n - 1, nextK));
