@@ -1,82 +1,49 @@
+import java.util.stream.IntStream;
+
 class Solution {
   public int minFlips(String s) {
     int n = s.length();
 
-    int[][] leftEvenCounts = new int[n][2];
-    int[][] leftOddCounts = new int[n][2];
+    int[][][] leftCounts = new int[2][n + 2][2];
     for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < 2; ++j) {
-        leftEvenCounts[i][j] = getValue(leftEvenCounts, i - 1, j);
-        leftOddCounts[i][j] = getValue(leftOddCounts, i - 1, j);
+      for (int parity = 0; parity < 2; ++parity) {
+        for (int bit = 0; bit < 2; ++bit) {
+          leftCounts[parity][i + 1][bit] = leftCounts[parity][i][bit];
+        }
       }
 
-      if (i % 2 == 0) {
-        ++leftEvenCounts[i][s.charAt(i) - '0'];
-      } else {
-        ++leftOddCounts[i][s.charAt(i) - '0'];
-      }
-    }
-
-    int[][] rightEvenCounts = new int[n][2];
-    int[][] rightOddCounts = new int[n][2];
-    for (int i = n - 1; i >= 0; --i) {
-      for (int j = 0; j < 2; ++j) {
-        rightEvenCounts[i][j] = getValue(rightEvenCounts, i + 1, j);
-        rightOddCounts[i][j] = getValue(rightOddCounts, i + 1, j);
-      }
-
-      if (i % 2 == 0) {
-        ++rightEvenCounts[i][s.charAt(i) - '0'];
-      } else {
-        ++rightOddCounts[i][s.charAt(i) - '0'];
-      }
+      ++leftCounts[i % 2][i + 1][s.charAt(i) - '0'];
     }
 
     if (n % 2 == 0) {
       return Math.min(
-          leftEvenCounts[n - 1][1] + leftOddCounts[n - 1][0],
-          leftEvenCounts[n - 1][0] + leftOddCounts[n - 1][1]);
+          leftCounts[0][n][1] + leftCounts[1][n][0], leftCounts[0][n][0] + leftCounts[1][n][1]);
     }
 
-    int result = Integer.MAX_VALUE;
-    for (int i = 0; i < n; ++i) {
-      if (i % 2 == 0) {
-        result =
-            Math.min(
-                result,
-                Math.min(
-                    ((s.charAt(i) == '0') ? 0 : 1)
-                        + getValue(rightEvenCounts, i + 1, 1)
-                        + getValue(rightOddCounts, i + 1, 0)
-                        + getValue(leftEvenCounts, i - 1, 0)
-                        + getValue(leftOddCounts, i - 1, 1),
-                    ((s.charAt(i) == '1') ? 0 : 1)
-                        + getValue(rightEvenCounts, i + 1, 0)
-                        + getValue(rightOddCounts, i + 1, 1)
-                        + getValue(leftEvenCounts, i - 1, 1)
-                        + getValue(leftOddCounts, i - 1, 0)));
-      } else {
-        result =
-            Math.min(
-                result,
-                Math.min(
-                    ((s.charAt(i) == '0') ? 0 : 1)
-                        + getValue(rightEvenCounts, i + 1, 0)
-                        + getValue(rightOddCounts, i + 1, 1)
-                        + getValue(leftEvenCounts, i - 1, 1)
-                        + getValue(leftOddCounts, i - 1, 0),
-                    ((s.charAt(i) == '1') ? 0 : 1)
-                        + getValue(rightEvenCounts, i + 1, 1)
-                        + getValue(rightOddCounts, i + 1, 0)
-                        + getValue(leftEvenCounts, i - 1, 0)
-                        + getValue(leftOddCounts, i - 1, 1)));
+    int[][][] rightCounts = new int[2][n + 2][2];
+    for (int i = n - 1; i >= 0; --i) {
+      for (int parity = 0; parity < 2; ++parity) {
+        for (int bit = 0; bit < 2; ++bit) {
+          rightCounts[parity][i + 1][bit] = rightCounts[parity][i + 2][bit];
+        }
       }
+
+      ++rightCounts[i % 2][i + 1][s.charAt(i) - '0'];
     }
 
-    return result;
-  }
-
-  int getValue(int[][] values, int i, int j) {
-    return (i >= 0 && i < values.length) ? values[i][j] : 0;
+    return IntStream.range(0, n)
+        .flatMap(
+            i ->
+                IntStream.range(0, 2)
+                    .flatMap(
+                        bit ->
+                            IntStream.of(
+                                ((s.charAt(i) == bit + '0') ? 0 : 1)
+                                    + rightCounts[i % 2][i + 2][1 - bit]
+                                    + rightCounts[1 - i % 2][i + 2][bit]
+                                    + leftCounts[i % 2][i][bit]
+                                    + leftCounts[1 - i % 2][i][1 - bit])))
+        .min()
+        .getAsInt();
   }
 }
