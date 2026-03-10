@@ -1,7 +1,8 @@
+import java.math.BigInteger;
 import java.util.Arrays;
 
 class Solution {
-  static final int MODULUS = 1_000_000_007;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
 
   public int numberOfStableArrays(int zero, int one, int limit) {
     int[][][] dp = new int[zero + 1][one + 1][2];
@@ -16,32 +17,65 @@ class Solution {
           Arrays.fill(dp[c0][c1], 1);
         } else {
           dp[c0][c1][0] =
-              addMod(
-                  getValue(leftPrefixSums, c0, c1 - 1, 1),
-                  -getValue(leftPrefixSums, c0, c1 - Math.min(limit, c1) - 1, 1));
+              MOD_INT.addMod(
+                  getValue(upPrefixSums, c0 - 1, c1, 1),
+                  -getValue(upPrefixSums, c0 - Math.min(limit, c0) - 1, c1, 1));
           dp[c0][c1][1] =
-              addMod(
-                  getValue(upPrefixSums, c0 - 1, c1, 0),
-                  -getValue(upPrefixSums, c0 - Math.min(limit, c0) - 1, c1, 0));
+              MOD_INT.addMod(
+                  getValue(leftPrefixSums, c0, c1 - 1, 0),
+                  -getValue(leftPrefixSums, c0, c1 - Math.min(limit, c1) - 1, 0));
         }
 
         for (int d = 0; d <= 1; ++d) {
           upPrefixSums[c0][c1][d] =
-              addMod((c0 == 0) ? 0 : upPrefixSums[c0 - 1][c1][d], dp[c0][c1][d]);
+              MOD_INT.addMod((c0 == 0) ? 0 : upPrefixSums[c0 - 1][c1][d], dp[c0][c1][d]);
           leftPrefixSums[c0][c1][d] =
-              addMod((c1 == 0) ? 0 : leftPrefixSums[c0][c1 - 1][d], dp[c0][c1][d]);
+              MOD_INT.addMod((c1 == 0) ? 0 : leftPrefixSums[c0][c1 - 1][d], dp[c0][c1][d]);
         }
       }
     }
 
-    return addMod(dp[zero][one][0], dp[zero][one][1]);
+    return MOD_INT.addMod(dp[zero][one][0], dp[zero][one][1]);
   }
 
   int getValue(int[][][] a, int c0, int c1, int d) {
     return (c0 >= 0 && c1 >= 0) ? a[c0][c1][d] : 0;
   }
+}
+
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
 
   int addMod(int x, int y) {
-    return Math.floorMod(x + y, MODULUS);
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
   }
 }
