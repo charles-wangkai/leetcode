@@ -37,24 +37,21 @@ class Solution {
   }
 
   boolean check(int n, int[][] edges, int k, int strengthLimit) {
-    if (computeComponentNum(
-            n,
-            Arrays.stream(edges)
-                .filter(edge -> edge[3] == 1 || edge[2] * 2 >= strengthLimit)
-                .map(edge -> new Pair(edge[0], edge[1]))
-                .toArray(Pair[]::new))
-        != 1) {
-      return false;
-    }
-
     return computeComponentNum(
                 n,
                 Arrays.stream(edges)
-                    .filter(edge -> edge[3] == 1 || edge[2] >= strengthLimit)
+                    .filter(edge -> edge[3] == 1 || edge[2] * 2 >= strengthLimit)
                     .map(edge -> new Pair(edge[0], edge[1]))
                     .toArray(Pair[]::new))
-            - 1
-        <= k;
+            == 1
+        && computeComponentNum(
+                    n,
+                    Arrays.stream(edges)
+                        .filter(edge -> edge[3] == 1 || edge[2] >= strengthLimit)
+                        .map(edge -> new Pair(edge[0], edge[1]))
+                        .toArray(Pair[]::new))
+                - 1
+            <= k;
   }
 
   int computeComponentNum(int n, Pair[] pairs) {
