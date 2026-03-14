@@ -13,7 +13,7 @@ class Solution {
 
   void search(List<String> happys, char[] letters, int index) {
     if (index == letters.length) {
-      happys.add(new String(letters));
+      happys.add(String.valueOf(letters));
 
       return;
     }
