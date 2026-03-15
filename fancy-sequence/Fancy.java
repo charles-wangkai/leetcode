@@ -1,57 +1,31 @@
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 class Fancy {
-  static final int MODULUS = 1_000_000_007;
-  static final int LIMIT = 100000;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
 
-  int length = 0;
-  int base = 0;
-  int[] diffs = new int[LIMIT];
-  int[] prefixProducts = new int[LIMIT + 1];
-
-  public Fancy() {
-    prefixProducts[0] = 1;
-  }
+  int coefficient = 1;
+  int constant;
+  List<Integer> values = new ArrayList<>();
 
   public void append(int val) {
-    ++length;
-    diffs[length - 1] = subtractMod(val, base);
-    prefixProducts[length] = prefixProducts[length - 1];
+    values.add(MOD_INT.divideMod(MOD_INT.addMod(val, -constant), coefficient));
   }
 
   public void addAll(int inc) {
-    base = addMod(base, inc);
+    constant = MOD_INT.addMod(constant, inc);
   }
 
   public void multAll(int m) {
-    base = multiplyMod(base, m);
-
-    prefixProducts[length] = multiplyMod(prefixProducts[length], m);
+    coefficient = MOD_INT.multiplyMod(coefficient, m);
+    constant = MOD_INT.multiplyMod(constant, m);
   }
 
   public int getIndex(int idx) {
-    if (idx >= length) {
-      return -1;
-    }
-
-    return addMod(
-        base, multiplyMod(diffs[idx], divideMod(prefixProducts[length], prefixProducts[idx])));
-  }
-
-  private int addMod(int x, int y) {
-    return (x + y) % MODULUS;
-  }
-
-  private int subtractMod(int x, int y) {
-    return (x - y + MODULUS) % MODULUS;
-  }
-
-  private int multiplyMod(int x, int y) {
-    return (int) ((long) x * y % MODULUS);
-  }
-
-  private int divideMod(int x, int y) {
-    return multiplyMod(x, BigInteger.valueOf(y).modInverse(BigInteger.valueOf(MODULUS)).intValue());
+    return (idx < values.size())
+        ? MOD_INT.addMod(MOD_INT.multiplyMod(values.get(idx), coefficient), constant)
+        : -1;
   }
 }
 
@@ -61,3 +35,40 @@ class Fancy {
 // obj.addAll(inc);
 // obj.multAll(m);
 // int param_4 = obj.getIndex(idx);
+
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
+  }
+}
