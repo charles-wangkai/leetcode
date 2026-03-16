@@ -1,7 +1,6 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -9,7 +8,7 @@ class Solution {
     int m = grid.length;
     int n = grid[0].length;
 
-    SortedSet<Integer> sums = new TreeSet<>();
+    List<Integer> sums = new ArrayList<>();
     for (int r = 0; r < m; ++r) {
       for (int c = 0; c < n; ++c) {
         for (int size = 1; ; ++size) {
@@ -23,25 +22,21 @@ class Solution {
       }
     }
 
-    List<Integer> result = new ArrayList<>();
-    for (int i = 0; i < 3; ++i) {
-      if (!sums.isEmpty()) {
-        int max = sums.last();
-        result.add(max);
-        sums.remove(max);
-      }
-    }
-
-    return result.stream().mapToInt(x -> x).toArray();
+    return sums.stream()
+        .distinct()
+        .sorted(Comparator.reverseOrder())
+        .limit(3)
+        .mapToInt(Integer::intValue)
+        .toArray();
   }
 
   int computeSum(int[][] grid, int topR, int topC, int size) {
+    int m = grid.length;
+    int n = grid[0].length;
+
     if (size == 1) {
       return grid[topR][topC];
     }
-
-    int m = grid.length;
-    int n = grid[0].length;
 
     int rightR = topR + size - 1;
     int rightC = topC + size - 1;
