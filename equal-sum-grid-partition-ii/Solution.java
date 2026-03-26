@@ -22,21 +22,21 @@ class Solution {
     int row = m.length;
     int col = m[0].length;
 
-    Map<Long, Integer> valueToMinR = new HashMap<>();
-    Map<Long, Integer> valueToMaxR = new HashMap<>();
+    Map<Integer, Integer> valueToMinR = new HashMap<>();
+    Map<Integer, Integer> valueToMaxR = new HashMap<>();
     for (int r = 0; r < row; ++r) {
       for (int c = 0; c < col; ++c) {
-        if (!valueToMinR.containsKey((long) m[r][c])) {
-          valueToMinR.put((long) m[r][c], r);
+        if (!valueToMinR.containsKey(m[r][c])) {
+          valueToMinR.put(m[r][c], r);
         }
-        valueToMaxR.put((long) m[r][c], r);
+        valueToMaxR.put(m[r][c], r);
       }
     }
 
     long[] rowSums =
         Arrays.stream(m).mapToLong(line -> Arrays.stream(line).asLongStream().sum()).toArray();
-
     long total = Arrays.stream(rowSums).sum();
+
     long upSum = 0;
     for (int r = 0; r < row - 1; ++r) {
       upSum += rowSums[r];
@@ -55,7 +55,8 @@ class Solution {
           if (m[0][0] == diff || m[r][0] == diff) {
             return true;
           }
-        } else if (valueToMinR.getOrDefault(diff, Integer.MAX_VALUE) <= r) {
+        } else if (canCastToInt(diff)
+            && valueToMinR.getOrDefault((int) diff, Integer.MAX_VALUE) <= r) {
           return true;
         }
       } else if (r == row - 2) {
@@ -66,11 +67,16 @@ class Solution {
         if (m[row - 1][0] == diff || m[r + 1][0] == diff) {
           return true;
         }
-      } else if (valueToMaxR.getOrDefault(diff, Integer.MIN_VALUE) > r) {
+      } else if (canCastToInt(diff)
+          && valueToMaxR.getOrDefault((int) diff, Integer.MIN_VALUE) > r) {
         return true;
       }
     }
 
     return false;
+  }
+
+  boolean canCastToInt(long x) {
+    return x >= Integer.MIN_VALUE && x <= Integer.MAX_VALUE;
   }
 }
