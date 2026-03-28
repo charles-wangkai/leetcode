@@ -1,26 +1,20 @@
 import java.util.Arrays;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 class Solution {
-  static final char MAX_LETTER = 'z';
-
   public String findTheString(int[][] lcp) {
     int n = lcp.length;
 
     char[] letters = new char[n];
     char next = 'a';
     for (int i = 0; i < letters.length; ++i) {
-      boolean seen = false;
-      for (int j = 0; j < i; ++j) {
-        if (lcp[i][j] != 0) {
-          letters[i] = letters[j];
-          seen = true;
-
-          break;
-        }
-      }
-
-      if (!seen) {
-        if (next == MAX_LETTER + 1) {
+      int i_ = i;
+      OptionalInt index = IntStream.range(0, i).filter(j -> lcp[i_][j] != 0).findAny();
+      if (index.isPresent()) {
+        letters[i] = letters[index.getAsInt()];
+      } else {
+        if (next == 'z' + 1) {
           return "";
         }
 
@@ -29,7 +23,7 @@ class Solution {
       }
     }
 
-    return Arrays.deepEquals(lcp, buildExpectedLcp(letters)) ? new String(letters) : "";
+    return Arrays.deepEquals(lcp, buildExpectedLcp(letters)) ? String.valueOf(letters) : "";
   }
 
   int[][] buildExpectedLcp(char[] letters) {
