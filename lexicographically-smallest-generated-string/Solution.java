@@ -1,11 +1,12 @@
 // https://leetcode.com/problems/lexicographically-smallest-generated-string/solutions/6485228/c-o-nm-greedy-w-rolling-hash-explanation/
 
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.stream.IntStream;
 
 class Solution {
-  static final int MODULUS = 1_000_000_007;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
   static final int BASE = 31;
   static final int LIMIT = 500;
 
@@ -15,7 +16,7 @@ class Solution {
     basePowers = new int[LIMIT];
     basePowers[0] = 1;
     for (int i = 1; i < basePowers.length; ++i) {
-      basePowers[i] = multiplyMod(basePowers[i - 1], BASE);
+      basePowers[i] = MOD_INT.multiplyMod(basePowers[i - 1], BASE);
     }
   }
 
@@ -32,9 +33,9 @@ class Solution {
     if (IntStream.range(0, str1.length())
         .anyMatch(
             i ->
-                (str1.charAt(i) == 'T' && !new String(result, i, str2.length()).equals(str2))
+                (str1.charAt(i) == 'T' && !String.valueOf(result, i, str2.length()).equals(str2))
                     || (str1.charAt(i) == 'F'
-                        && new String(result, i, str2.length()).equals(str2)))) {
+                        && String.valueOf(result, i, str2.length()).equals(str2)))) {
       return "";
     }
 
@@ -43,11 +44,11 @@ class Solution {
     Queue<Integer> falseIndices = new ArrayDeque<>();
     for (int i = 0; i < result.length; ++i) {
       if (i < str1.length() && str1.charAt(i) == 'F') {
-        hashes[i] = computeHash(new String(result, i, str2.length()));
+        hashes[i] = computeHash(String.valueOf(result, i, str2.length()));
         falseIndices.offer(i);
       }
 
-      while (!falseIndices.isEmpty() && i >= falseIndices.peek() + str2.length()) {
+      while (!falseIndices.isEmpty() && falseIndices.peek() + str2.length() <= i) {
         falseIndices.poll();
       }
 
@@ -71,29 +72,58 @@ class Solution {
       }
     }
 
-    return new String(result);
+    return String.valueOf(result);
   }
 
   int updateHash(int oldHash, int index, char c) {
-    return addMod(oldHash, multiplyMod(c - 'a' + 1, basePowers[index]));
+    return MOD_INT.addMod(oldHash, MOD_INT.multiplyMod(c - 'a' + 1, basePowers[index]));
   }
 
   int computeHash(String s) {
     int result = 0;
     for (int i = 0; i < s.length(); ++i) {
       if (s.charAt(i) != 0) {
-        result = addMod(result, multiplyMod(s.charAt(i) - 'a' + 1, basePowers[i]));
+        result = MOD_INT.addMod(result, MOD_INT.multiplyMod(s.charAt(i) - 'a' + 1, basePowers[i]));
       }
     }
 
     return result;
   }
+}
 
-  static int addMod(int x, int y) {
-    return Math.floorMod(x + y, MODULUS);
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
   }
 
-  static int multiplyMod(int x, int y) {
-    return Math.floorMod((long) x * y, MODULUS);
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
   }
 }
