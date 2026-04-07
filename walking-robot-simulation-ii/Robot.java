@@ -14,7 +14,7 @@ class Robot {
     this.height = height;
   }
 
-  public void move(int num) {
+  public void step(int num) {
     num %= (width + height - 2) * 2;
 
     for (int i = 0; i < num; ++i) {
@@ -24,7 +24,7 @@ class Robot {
         x = nextX;
         y = nextY;
       } else {
-        directionIndex = (directionIndex - 1 + DIRECTIONS.length) % DIRECTIONS.length;
+        directionIndex = Math.floorMod(directionIndex - 1, DIRECTIONS.length);
         x += X_OFFSETS[directionIndex];
         y += Y_OFFSETS[directionIndex];
       }
@@ -46,6 +46,6 @@ class Robot {
 
 // Your Robot object will be instantiated and called as such:
 // Robot obj = new Robot(width, height);
-// obj.move(num);
+// obj.step(num);
 // int[] param_2 = obj.getPos();
 // String param_3 = obj.getDir();
