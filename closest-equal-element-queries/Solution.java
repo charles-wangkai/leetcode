@@ -28,7 +28,7 @@ class Solution {
                       ? (query + nums.length - indices.getLast())
                       : (query - indices.get(pos - 1)),
                   (pos == indices.size() - 1)
-                      ? (indices.get(0) + nums.length - query)
+                      ? (indices.getFirst() + nums.length - query)
                       : (indices.get(pos + 1) - query));
             })
         .boxed()
