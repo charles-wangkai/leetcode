@@ -3,7 +3,7 @@ class Solution {
     int result = 0;
     int index2 = 0;
     for (int index1 = 0; index1 < nums1.length; ++index1) {
-      while (index2 + 1 != nums2.length && nums1[index1] <= nums2[index2 + 1]) {
+      while (index2 + 1 != nums2.length && nums2[index2 + 1] >= nums1[index1]) {
         ++index2;
       }
 
