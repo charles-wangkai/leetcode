@@ -20,10 +20,10 @@ class Solution {
     for (int i = 0; i < visited.length; ++i) {
       if (!visited[i]) {
         List<Integer> group = new ArrayList<>();
-        search(adjLists, visited, group, i);
+        search(group, adjLists, visited, i);
 
-        Map<Integer, Integer> sourceValueToCount = buildValueToCount(source, group);
-        Map<Integer, Integer> targetValueToCount = buildValueToCount(target, group);
+        Map<Integer, Integer> sourceValueToCount = buildValueToCount(group, source);
+        Map<Integer, Integer> targetValueToCount = buildValueToCount(group, target);
         result +=
             group.size()
                 - sourceValueToCount.keySet().stream()
@@ -39,19 +39,18 @@ class Solution {
     return result;
   }
 
-  void search(List<Integer>[] adjLists, boolean[] visited, List<Integer> group, int node) {
-    if (visited[node]) {
-      return;
-    }
+  void search(List<Integer> group, List<Integer>[] adjLists, boolean[] visited, int node) {
     visited[node] = true;
     group.add(node);
 
     for (int adj : adjLists[node]) {
-      search(adjLists, visited, group, adj);
+      if (!visited[adj]) {
+        search(group, adjLists, visited, adj);
+      }
     }
   }
 
-  Map<Integer, Integer> buildValueToCount(int[] values, List<Integer> group) {
+  Map<Integer, Integer> buildValueToCount(List<Integer> group, int[] values) {
     Map<Integer, Integer> valueToCount = new HashMap<>();
     for (int index : group) {
       valueToCount.put(values[index], valueToCount.getOrDefault(values[index], 0) + 1);
