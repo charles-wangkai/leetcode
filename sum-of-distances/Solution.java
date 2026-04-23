@@ -1,43 +1,28 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 class Solution {
   public long[] distance(int[] nums) {
-    Map<Integer, List<Integer>> valueToIndices = new HashMap<>();
+    Map<Integer, Integer> valueToRightCount = new HashMap<>();
+    Map<Integer, Long> valueToRightIndexSum = new HashMap<>();
     for (int i = 0; i < nums.length; ++i) {
-      valueToIndices.putIfAbsent(nums[i], new ArrayList<>());
-      valueToIndices.get(nums[i]).add(i);
+      valueToRightCount.put(nums[i], valueToRightCount.getOrDefault(nums[i], 0) + 1);
+      valueToRightIndexSum.put(nums[i], valueToRightIndexSum.getOrDefault(nums[i], 0L) + i);
     }
 
-    Map<Integer, Long> valueToIndexTotal =
-        valueToIndices.keySet().stream()
-            .collect(
-                Collectors.toMap(
-                    value -> value,
-                    value ->
-                        valueToIndices.get(value).stream()
-                            .mapToInt(Integer::intValue)
-                            .asLongStream()
-                            .sum()));
-    Map<Integer, Integer> valueToLeftCount =
-        valueToIndices.keySet().stream().collect(Collectors.toMap(value -> value, value -> 0));
-    Map<Integer, Long> valueToLeftIndexSum =
-        valueToIndices.keySet().stream().collect(Collectors.toMap(value -> value, value -> 0L));
-
     long[] result = new long[nums.length];
+    Map<Integer, Integer> valueToLeftCount = new HashMap<>();
+    Map<Integer, Long> valueToLeftIndexSum = new HashMap<>();
     for (int i = 0; i < result.length; ++i) {
+      valueToRightCount.put(nums[i], valueToRightCount.get(nums[i]) - 1);
+      valueToRightIndexSum.put(nums[i], valueToRightIndexSum.get(nums[i]) - i);
+
+      valueToLeftCount.put(nums[i], valueToLeftCount.getOrDefault(nums[i], 0) + 1);
+      valueToLeftIndexSum.put(nums[i], valueToLeftIndexSum.getOrDefault(nums[i], 0L) + i);
+
       result[i] =
           ((long) i * valueToLeftCount.get(nums[i]) - valueToLeftIndexSum.get(nums[i]))
-              + (valueToIndexTotal.get(nums[i])
-                  - valueToLeftIndexSum.get(nums[i])
-                  - (long) i
-                      * (valueToIndices.get(nums[i]).size() - valueToLeftCount.get(nums[i])));
-
-      valueToLeftCount.put(nums[i], valueToLeftCount.get(nums[i]) + 1);
-      valueToLeftIndexSum.put(nums[i], valueToLeftIndexSum.get(nums[i]) + i);
+              + (valueToRightIndexSum.get(nums[i]) - (long) i * valueToRightCount.get(nums[i]));
     }
 
     return result;
