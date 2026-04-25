@@ -64,14 +64,9 @@ class Solution {
         if (head.length() + 1 >= length
             && computeDistance(points, sortedIndices[i], sortedIndices[head.beginIndex()])
                 >= distance) {
-          if (head.length() + 1 > length) {
-            length = head.length() + 1;
-            maxLength = Math.max(maxLength, length);
-
-            beginIndex = head.beginIndex();
-          } else {
-            beginIndex = Math.max(beginIndex, head.beginIndex());
-          }
+          length = head.length() + 1;
+          maxLength = Math.max(maxLength, length);
+          beginIndex = head.beginIndex();
         }
       }
 
