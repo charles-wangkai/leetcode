@@ -29,6 +29,7 @@ class Solution {
     }
     ListNode rightHead = leftTail.next;
     leftTail.next = null;
+
     ListNode rightTail = rightHead;
     while (rightTail.next != null) {
       rightTail = rightTail.next;
