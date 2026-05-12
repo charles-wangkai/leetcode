@@ -1,19 +1,20 @@
 import java.util.Arrays;
+import java.util.Comparator;
 
 class Solution {
   public int minimumEffort(int[][] tasks) {
     int[][] sortedTasks =
         Arrays.stream(tasks)
-            .sorted((t1, t2) -> -Integer.compare(t1[1] - t1[0], t2[1] - t2[0]))
+            .sorted(Comparator.<int[], Integer>comparing(task -> task[1] - task[0]).reversed())
             .toArray(int[][]::new);
 
     int result = 0;
-    int remain = 0;
+    int rest = 0;
     for (int[] task : sortedTasks) {
-      int delta = Math.max(0, task[1] - remain);
+      int delta = Math.max(0, task[1] - rest);
 
       result += delta;
-      remain = remain + delta - task[0];
+      rest += delta - task[0];
     }
 
     return result;
