@@ -1,3 +1,5 @@
+import java.util.stream.IntStream;
+
 class Solution {
   public int minMoves(int[] nums, int limit) {
     int sumLimit = limit * 2 + 1;
@@ -6,8 +8,7 @@ class Solution {
     int[] lowers = new int[sumLimit + 1];
     int[] uppers = new int[sumLimit + 1];
     for (int i = 0; i < nums.length / 2; ++i) {
-      int sum = nums[i] + nums[nums.length - 1 - i];
-      ++counts[sum];
+      ++counts[nums[i] + nums[nums.length - 1 - i]];
 
       ++lowers[Math.max(nums[i], nums[nums.length - 1 - i]) + limit + 1];
       ++uppers[Math.min(nums[i], nums[nums.length - 1 - i])];
@@ -20,11 +21,9 @@ class Solution {
       uppers[i] += uppers[i + 1];
     }
 
-    int result = Integer.MAX_VALUE;
-    for (int i = 0; i <= sumLimit; ++i) {
-      result = Math.min(result, nums.length / 2 - counts[i] + lowers[i] + uppers[i]);
-    }
-
-    return result;
+    return IntStream.rangeClosed(0, sumLimit)
+        .map(i -> nums.length / 2 - counts[i] + lowers[i] + uppers[i])
+        .min()
+        .getAsInt();
   }
 }
