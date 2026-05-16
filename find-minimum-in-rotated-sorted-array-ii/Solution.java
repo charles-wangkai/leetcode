@@ -9,6 +9,7 @@ class Solution {
     }
 
     int middle = (lower + upper) / 2;
+
     return Math.min(search(nums, lower, middle), search(nums, middle + 1, upper));
   }
 }
