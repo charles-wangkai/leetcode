@@ -14,12 +14,10 @@ class Solution {
         } else {
           lower = middle + 1;
         }
+      } else if (target > nums[middle] && target <= nums[upper]) {
+        lower = middle + 1;
       } else {
-        if (target > nums[middle] && target <= nums[upper]) {
-          lower = middle + 1;
-        } else {
-          upper = middle - 1;
-        }
+        upper = middle - 1;
       }
     }
 
