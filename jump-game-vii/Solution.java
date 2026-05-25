@@ -1,9 +1,11 @@
 class Solution {
   public boolean canReach(String s, int minJump, int maxJump) {
-    int[] prefixSums = new int[s.length() + 1];
     boolean[] reaches = new boolean[s.length()];
     reaches[0] = true;
+
+    int[] prefixSums = new int[s.length() + 1];
     prefixSums[1] = 1;
+
     for (int i = 1; i < reaches.length; ++i) {
       if (s.charAt(i) == '0' && hasPrevReach(prefixSums, i - maxJump, i - minJump)) {
         reaches[i] = true;
@@ -20,8 +22,6 @@ class Solution {
       return false;
     }
 
-    minIndex = Math.max(0, minIndex);
-
-    return prefixSums[maxIndex + 1] - prefixSums[minIndex] != 0;
+    return prefixSums[maxIndex + 1] - prefixSums[Math.max(0, minIndex)] != 0;
   }
 }
