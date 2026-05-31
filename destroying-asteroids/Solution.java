@@ -2,10 +2,11 @@ import java.util.Arrays;
 
 class Solution {
   public boolean asteroidsDestroyed(int mass, int[] asteroids) {
+    Arrays.sort(asteroids);
+
     long current = mass;
-    int[] sorted = Arrays.stream(asteroids).boxed().sorted().mapToInt(x -> x).toArray();
-    for (int asteroid : sorted) {
-      if (current < asteroid) {
+    for (int asteroid : asteroids) {
+      if (asteroid > current) {
         return false;
       }
 
