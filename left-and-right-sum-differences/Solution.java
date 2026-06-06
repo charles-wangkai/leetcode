@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 class Solution {
-  public int[] leftRigthDifference(int[] nums) {
+  public int[] leftRightDifference(int[] nums) {
     int[] result = new int[nums.length];
     int leftSum = 0;
     int rightSum = Arrays.stream(nums).sum();
