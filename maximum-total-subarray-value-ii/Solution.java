@@ -10,12 +10,7 @@ class Solution {
     PriorityQueue<Element> pq =
         new PriorityQueue<>(Comparator.comparing(Element::maxMinDiff).reversed());
     for (int leftIndex = 0; leftIndex < nums.length; ++leftIndex) {
-      pq.offer(
-          new Element(
-              leftIndex,
-              nums.length - 1,
-              maxSparseTable.query(leftIndex, nums.length - 1)
-                  - minSparseTable.query(leftIndex, nums.length - 1)));
+      addElement(pq, minSparseTable, maxSparseTable, leftIndex, nums.length - 1);
     }
 
     long result = 0;
@@ -24,16 +19,25 @@ class Solution {
       result += head.maxMinDiff();
 
       if (head.rightIndex() != head.leftIndex()) {
-        pq.offer(
-            new Element(
-                head.leftIndex(),
-                head.rightIndex() - 1,
-                maxSparseTable.query(head.leftIndex(), head.rightIndex() - 1)
-                    - minSparseTable.query(head.leftIndex(), head.rightIndex() - 1)));
+        addElement(pq, minSparseTable, maxSparseTable, head.leftIndex(), head.rightIndex() - 1);
       }
     }
 
     return result;
+  }
+
+  void addElement(
+      PriorityQueue<Element> pq,
+      SparseTable minSparseTable,
+      SparseTable maxSparseTable,
+      int leftIndex,
+      int rightIndex) {
+    pq.offer(
+        new Element(
+            leftIndex,
+            rightIndex,
+            maxSparseTable.query(leftIndex, rightIndex)
+                - minSparseTable.query(leftIndex, rightIndex)));
   }
 }
 
