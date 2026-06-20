@@ -1,35 +1,46 @@
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class Solution {
   public int maxBuilding(int n, int[][] restrictions) {
-    restrictions = Arrays.copyOf(restrictions, restrictions.length + 1);
-    restrictions[restrictions.length - 1] = new int[] {1, 0};
-    Arrays.sort(restrictions, Comparator.comparing(r -> r[0]));
-    if (restrictions[restrictions.length - 1][0] != n) {
-      restrictions = Arrays.copyOf(restrictions, restrictions.length + 1);
-      restrictions[restrictions.length - 1] = new int[] {n, Integer.MAX_VALUE};
+    List<Restriction> restrs =
+        Stream.concat(
+                Stream.of(new Restriction(1, 0)),
+                Arrays.stream(restrictions).map(r -> new Restriction(r[0], r[1])))
+            .sorted(Comparator.comparing(Restriction::id))
+            .collect(Collectors.toList());
+    if (restrs.getLast().id() != n) {
+      restrs.add(new Restriction(n, Integer.MAX_VALUE));
     }
 
-    int[] heights = Arrays.stream(restrictions).mapToInt(r -> r[1]).toArray();
+    int[] heights = restrs.stream().mapToInt(Restriction::maxHeight).toArray();
     for (int i = 1; i < heights.length; ++i) {
       heights[i] =
-          Math.min(heights[i], heights[i - 1] + (restrictions[i][0] - restrictions[i - 1][0]));
+          Math.min(heights[i], heights[i - 1] + (restrs.get(i).id() - restrs.get(i - 1).id()));
     }
     for (int i = heights.length - 2; i >= 0; --i) {
       heights[i] =
-          Math.min(heights[i], heights[i + 1] + (restrictions[i + 1][0] - restrictions[i][0]));
+          Math.min(heights[i], heights[i + 1] + (restrs.get(i + 1).id() - restrs.get(i).id()));
     }
 
-    int result = Arrays.stream(heights).max().getAsInt();
-    for (int i = 0; i < heights.length - 1; ++i) {
-      int heightDiff = Math.abs(heights[i] - heights[i + 1]);
-      int distance = restrictions[i + 1][0] - restrictions[i][0];
-      int freeDistance = distance - heightDiff;
+    return Math.max(
+        Arrays.stream(heights).max().getAsInt(),
+        IntStream.range(0, heights.length - 1)
+            .map(
+                i -> {
+                  int heightDiff = Math.abs(heights[i] - heights[i + 1]);
+                  int distance = restrs.get(i + 1).id() - restrs.get(i).id();
+                  int freeDistance = distance - heightDiff;
 
-      result = Math.max(result, Math.max(heights[i], heights[i + 1]) + freeDistance / 2);
-    }
-
-    return result;
+                  return Math.max(heights[i], heights[i + 1]) + freeDistance / 2;
+                })
+            .max()
+            .getAsInt());
   }
 }
+
+record Restriction(int id, int maxHeight) {}
