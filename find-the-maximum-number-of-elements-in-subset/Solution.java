@@ -9,16 +9,15 @@ class Solution {
     }
 
     return valueToCount.keySet().stream()
-        .map(
+        .mapToInt(
             value -> {
               if (value == 1) {
-                return valueToCount.get(1) - 1 + valueToCount.get(1) % 2;
+                return valueToCount.get(1) - (1 - valueToCount.get(1) % 2);
               }
 
               int result = 1;
               for (long i = value;
-                  i <= Integer.MAX_VALUE
-                      && valueToCount.get((int) i) >= 2
+                  valueToCount.get((int) i) >= 2
                       && i * i <= Integer.MAX_VALUE
                       && valueToCount.containsKey((int) (i * i));
                   i *= i) {
@@ -27,7 +26,6 @@ class Solution {
 
               return result;
             })
-        .mapToInt(Integer::intValue)
         .max()
         .getAsInt();
   }
