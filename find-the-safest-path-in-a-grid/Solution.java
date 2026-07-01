@@ -14,7 +14,7 @@ class Solution {
 
     int result = -1;
     int lower = 0;
-    int upper = grid.size();
+    int upper = n;
     while (lower <= upper) {
       int middle = (lower + upper) / 2;
       if (search(distances, middle, new boolean[n][n], 0, 0)) {
