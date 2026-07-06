@@ -5,8 +5,8 @@ class Solution {
   public int removeCoveredIntervals(int[][] intervals) {
     Arrays.sort(
         intervals,
-        Comparator.comparing((int[] i) -> i[0])
-            .thenComparing(Comparator.comparing((int[] i) -> i[1]).reversed()));
+        Comparator.<int[], Integer>comparing(i -> i[0])
+            .thenComparing(Comparator.<int[], Integer>comparing(i -> i[1]).reversed()));
 
     int result = 0;
     int right = -1;
