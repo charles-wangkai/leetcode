@@ -63,12 +63,7 @@ class Solution {
       ++exponent;
     }
 
-    int subResult = computeDistance(parents, parents[fromIndex][exponent], toIndex);
-    if (subResult == -1) {
-      return -1;
-    }
-
-    return (1 << exponent) + subResult;
+    return (1 << exponent) + computeDistance(parents, parents[fromIndex][exponent], toIndex);
   }
 
   int computeExponent(int x) {
