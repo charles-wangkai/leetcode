@@ -5,6 +5,7 @@ class Solution {
   public List<List<Integer>> shiftGrid(int[][] grid, int k) {
     int m = grid.length;
     int n = grid[0].length;
+
     int[][] result = new int[m][n];
     for (int r = 0; r < m; ++r) {
       for (int c = 0; c < n; ++c) {
