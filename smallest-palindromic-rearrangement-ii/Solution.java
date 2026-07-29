@@ -36,9 +36,9 @@ class Solution {
             --counts[index];
 
             break;
-          } else {
-            k -= wayNum;
           }
+
+          k -= wayNum;
         }
 
         ++index;
