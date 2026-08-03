@@ -1,57 +1,29 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 class Solution {
-  Map<State, Score> cache;
-
   public String stoneGameIII(int[] stoneValue) {
-    cache = new HashMap<>();
-    Score score = search(stoneValue, 0, true);
+    int[] dp = new int[stoneValue.length + 1];
+    Arrays.fill(dp, Integer.MIN_VALUE);
+    dp[dp.length - 1] = 0;
 
-    if (score.alice() > score.bob()) {
+    for (int i = dp.length - 2; i >= 0; --i) {
+      int taken = stoneValue[i];
+      for (int j = 1; j <= 3 && i + j < dp.length; ++j) {
+        dp[i] = Math.max(dp[i], taken - dp[i + j]);
+
+        if (i + j != dp.length - 1) {
+          taken += stoneValue[i + j];
+        }
+      }
+    }
+
+    if (dp[0] > 0) {
       return "Alice";
     }
-    if (score.alice() < score.bob()) {
+    if (dp[0] < 0) {
       return "Bob";
     }
 
     return "Tie";
   }
-
-  Score search(int[] stoneValue, int index, boolean aliceOrBobTurn) {
-    if (index == stoneValue.length) {
-      return new Score(0, 0);
-    }
-
-    State state = new State(index, aliceOrBobTurn);
-    if (!cache.containsKey(state)) {
-      int aliceScore = Integer.MIN_VALUE;
-      int bobScore = Integer.MIN_VALUE;
-      int current = 0;
-      for (int i = 0; i < 3 && index + i < stoneValue.length; ++i) {
-        current += stoneValue[index + i];
-        Score subScore = search(stoneValue, index + i + 1, !aliceOrBobTurn);
-
-        if (aliceOrBobTurn) {
-          if (current + subScore.alice() > aliceScore) {
-            aliceScore = current + subScore.alice();
-            bobScore = subScore.bob();
-          }
-        } else {
-          if (current + subScore.bob() > bobScore) {
-            bobScore = current + subScore.bob();
-            aliceScore = subScore.alice();
-          }
-        }
-      }
-
-      cache.put(state, new Score(aliceScore, bobScore));
-    }
-
-    return cache.get(state);
-  }
 }
-
-record State(int index, boolean aliceOrBobTurn) {}
-
-record Score(int alice, int bob) {}
