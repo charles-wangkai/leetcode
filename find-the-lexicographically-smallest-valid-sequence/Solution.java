@@ -19,6 +19,9 @@ class Solution {
       result.add(index);
       ++index;
     }
+    if (index == word1.length()) {
+      return new int[0];
+    }
 
     boolean changed = word1.charAt(index) != word2.charAt(result.size());
     result.add(index);
