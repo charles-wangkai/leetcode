@@ -3,15 +3,12 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 class Solution {
-  Map<State, Integer> cache;
-
   public int stoneGameII(int[] piles) {
-    cache = new HashMap<>();
-
-    return computeMaxStoneNumForFirstPlayer(piles, 0, 1);
+    return computeMaxStoneNumForFirstPlayer(new HashMap<>(), piles, 0, 1);
   }
 
-  int computeMaxStoneNumForFirstPlayer(int[] piles, int beginIndex, int M) {
+  int computeMaxStoneNumForFirstPlayer(
+      Map<State, Integer> cache, int[] piles, int beginIndex, int M) {
     State state = new State(beginIndex, M);
     if (!cache.containsKey(state)) {
       int result = 0;
@@ -20,7 +17,9 @@ class Solution {
         result =
             Math.max(
                 result,
-                total - computeMaxStoneNumForFirstPlayer(piles, beginIndex + X, Math.max(M, X)));
+                total
+                    - computeMaxStoneNumForFirstPlayer(
+                        cache, piles, beginIndex + X, Math.max(M, X)));
       }
 
       cache.put(state, result);
