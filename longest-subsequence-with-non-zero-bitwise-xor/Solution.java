@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 class Solution {
   public int longestSubsequence(int[] nums) {
-    if (Arrays.stream(nums).reduce((acc, x) -> acc ^ x).getAsInt() != 0) {
+    if (Arrays.stream(nums).reduce(0, (acc, x) -> acc ^ x) != 0) {
       return nums.length;
     }
 
