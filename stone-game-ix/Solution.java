@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 class Solution {
   public boolean stoneGameIX(int[] stones) {
     int[] counts = new int[3];
@@ -7,64 +5,27 @@ class Solution {
       ++counts[stone % 3];
     }
 
-    return isWinByFirstOne(counts) || isWinByFirstTwo(counts);
+    return isAliceWin(counts, 1) || isAliceWin(counts, 2);
   }
 
-  boolean isWinByFirstOne(int[] counts) {
-    int[] rests = Arrays.copyOf(counts, counts.length);
-    if (rests[1] == 0) {
+  boolean isAliceWin(int[] counts, int firstChosen) {
+    int[] rests = counts.clone();
+    if (rests[firstChosen] == 0) {
       return false;
     }
-    --rests[1];
+    --rests[firstChosen];
 
-    boolean turn = rests[0] % 2 != 0;
+    boolean aliceTurn = rests[0] % 2 == 1;
     int total = rests[1] + rests[2];
     for (int i = 0; i < total; ++i) {
-      if (i % 2 == 0) {
-        if (rests[1] == 0) {
-          return !turn;
-        }
+      int target = (i % 2 == 0) ? firstChosen : (3 - firstChosen);
 
-        --rests[1];
-      } else {
-        if (rests[2] == 0) {
-          return !turn;
-        }
-
-        --rests[2];
+      if (rests[target] == 0) {
+        return !aliceTurn;
       }
+      --rests[target];
 
-      turn = !turn;
-    }
-
-    return false;
-  }
-
-  boolean isWinByFirstTwo(int[] counts) {
-    int[] rests = Arrays.copyOf(counts, counts.length);
-    if (rests[2] == 0) {
-      return false;
-    }
-    --rests[2];
-
-    boolean turn = rests[0] % 2 != 0;
-    int total = rests[1] + rests[2];
-    for (int i = 0; i < total; ++i) {
-      if (i % 2 == 0) {
-        if (rests[2] == 0) {
-          return !turn;
-        }
-
-        --rests[2];
-      } else {
-        if (rests[1] == 0) {
-          return !turn;
-        }
-
-        --rests[1];
-      }
-
-      turn = !turn;
+      aliceTurn ^= true;
     }
 
     return false;
