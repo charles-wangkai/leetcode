@@ -13,6 +13,7 @@ class Solution {
     for (int value : nums) {
       valueToCount.put(value, valueToCount.getOrDefault(value, 0) + 1);
     }
+
     if (k == 1) {
       return valueToCount.keySet().stream()
           .filter(value -> valueToCount.get(value) == 1)
