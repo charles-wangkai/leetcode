@@ -6,6 +6,7 @@ class Solution {
   public int[] resultArray(int[] nums) {
     List<Integer> values1 = new ArrayList<>();
     values1.add(nums[0]);
+
     List<Integer> values2 = new ArrayList<>();
     values2.add(nums[1]);
 
