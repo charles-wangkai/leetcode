@@ -1,3 +1,5 @@
+import java.util.stream.IntStream;
+
 class Solution {
   static final long LIMIT = 50_000_000_000L;
 
@@ -19,23 +21,22 @@ class Solution {
   }
 
   long computeLessEqualNum(int[] coins, long n) {
-    long result = 0;
-    for (int mask = 1; mask < 1 << coins.length; ++mask) {
-      long lcm = -1;
-      for (int i = 0; i < coins.length; ++i) {
-        if (((mask >> i) & 1) == 1) {
-          if (lcm == -1) {
-            lcm = coins[i];
-          } else {
-            lcm = lcm / gcd(lcm, coins[i]) * coins[i];
-          }
-        }
-      }
+    return IntStream.range(1, 1 << coins.length)
+        .mapToLong(
+            mask ->
+                ((Integer.bitCount(mask) % 2 == 1) ? 1 : -1)
+                    * (n
+                        / IntStream.range(0, coins.length)
+                            .filter(i -> ((mask >> i) & 1) == 1)
+                            .map(i -> coins[i])
+                            .asLongStream()
+                            .reduce(this::lcm)
+                            .getAsLong()))
+        .sum();
+  }
 
-      result += ((Integer.bitCount(mask) % 2 == 1) ? 1 : -1) * (n / lcm);
-    }
-
-    return result;
+  long lcm(long x, long y) {
+    return x / gcd(x, y) * y;
   }
 
   long gcd(long x, long y) {
