@@ -8,6 +8,6 @@ class Solution {
   }
 
   int computeDigitProduct(int n) {
-    return String.valueOf(n).chars().map(c -> c - '0').reduce((acc, x) -> acc * x).getAsInt();
+    return String.valueOf(n).chars().map(c -> c - '0').reduce(1, (acc, x) -> acc * x);
   }
 }
