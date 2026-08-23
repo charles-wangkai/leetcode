@@ -29,16 +29,12 @@ class Solution {
     }
 
     emptyCount2 -= emptyCount1;
-    if (emptyCount2 % 2 != 0) {
+    if (emptyCount2 % 2 == 1) {
       return true;
     }
 
     int half = emptyCount2 / 2;
 
-    return !canEqual(sum1 - sum2, half) || !canEqual(sum1 - sum2 - half * 9, half);
-  }
-
-  boolean canEqual(int diff, int emptyCount) {
-    return diff >= 0 && diff <= emptyCount * 9;
+    return sum1 - sum2 != half * 9;
   }
 }
