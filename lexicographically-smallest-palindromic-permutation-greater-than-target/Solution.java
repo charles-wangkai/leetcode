@@ -44,18 +44,19 @@ class Solution {
       int leftIndex,
       int rightIndex) {
     if (leftIndex >= rightIndex) {
-      candidates.add(new String(letters));
+      candidates.add(String.valueOf(letters));
 
       return;
     }
 
-    for (int i = target.charAt(leftIndex) - 'a'; i < counts.length; ++i) {
+    int begin = target.charAt(leftIndex) - 'a';
+    for (int i = begin; i < counts.length; ++i) {
       if (counts[i] != 0) {
         letters[leftIndex] = (char) (i + 'a');
         letters[rightIndex] = (char) (i + 'a');
         counts[i] -= 2;
 
-        if (i == target.charAt(leftIndex) - 'a') {
+        if (i == begin) {
           search(candidates, target, letters, counts, leftIndex + 1, rightIndex - 1);
         } else {
           int[] rests = counts.clone();
@@ -70,12 +71,12 @@ class Solution {
             rests[index] -= 2;
           }
 
-          candidates.add(new String(letters));
+          candidates.add(String.valueOf(letters));
         }
 
         counts[i] += 2;
 
-        if (i != target.charAt(leftIndex) - 'a') {
+        if (i != begin) {
           break;
         }
       }
