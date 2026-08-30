@@ -1,4 +1,4 @@
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.IntStream;
 
 class Solution {
@@ -7,16 +7,13 @@ class Solution {
       return 1;
     }
 
-    int minValue = Arrays.stream(nums).min().getAsInt();
-    int minIndex =
-        IntStream.range(0, nums.length).filter(i -> nums[i] == minValue).findAny().getAsInt();
+    int indexForMinValue =
+        IntStream.range(0, nums.length).boxed().min(Comparator.comparing(i -> nums[i])).get();
+    int indexForMaxValue =
+        IntStream.range(0, nums.length).boxed().max(Comparator.comparing(i -> nums[i])).get();
 
-    int maxValue = Arrays.stream(nums).max().getAsInt();
-    int maxIndex =
-        IntStream.range(0, nums.length).filter(i -> nums[i] == maxValue).findAny().getAsInt();
-
-    int leftIndex = Math.min(minIndex, maxIndex);
-    int rightIndex = Math.max(minIndex, maxIndex);
+    int leftIndex = Math.min(indexForMinValue, indexForMaxValue);
+    int rightIndex = Math.max(indexForMinValue, indexForMaxValue);
 
     return Math.min(
         Math.min(rightIndex + 1, nums.length - leftIndex),
