@@ -21,12 +21,10 @@ class Solution {
     int maxDistance = Integer.MIN_VALUE;
     int firstIndex = -1;
     int prevIndex = -1;
-    ListNode prev = null;
     int index = 0;
-    for (ListNode node = head; node != null && node.next != null; node = node.next) {
-      if (prev != null
-          && ((node.val > prev.val && node.val > node.next.val)
-              || (node.val < prev.val && node.val < node.next.val))) {
+    for (ListNode prev = head, node = head.next; node.next != null; prev = node, node = node.next) {
+      if ((node.val > prev.val && node.val > node.next.val)
+          || (node.val < prev.val && node.val < node.next.val)) {
         if (firstIndex == -1) {
           firstIndex = index;
         } else {
@@ -37,7 +35,6 @@ class Solution {
         prevIndex = index;
       }
 
-      prev = node;
       ++index;
     }
 
