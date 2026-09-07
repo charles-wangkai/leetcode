@@ -1,22 +1,57 @@
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Solution {
-	static final int MOD_DIVISOR = 1_000_000_007;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
 
-	public int distinctSubseqII(String S) {
-		Map<Character, Integer> endLetterToCount = new HashMap<>();
-		for (char letter : S.toCharArray()) {
-			endLetterToCount.put(letter, addMod(computeCountSum(endLetterToCount), 1));
-		}
-		return computeCountSum(endLetterToCount);
-	}
+  public int distinctSubseqII(String s) {
+    Map<Character, Integer> lastLetterToWayNum = new HashMap<>();
+    for (char letter : s.toCharArray()) {
+      lastLetterToWayNum.put(letter, MOD_INT.addMod(computeWayNumSum(lastLetterToWayNum), 1));
+    }
 
-	int computeCountSum(Map<Character, Integer> endLetterToCount) {
-		return endLetterToCount.values().stream().reduce(0, this::addMod);
-	}
+    return computeWayNumSum(lastLetterToWayNum);
+  }
 
-	int addMod(int x, int y) {
-		return (x + y) % MOD_DIVISOR;
-	}
+  int computeWayNumSum(Map<Character, Integer> lastLetterToWayNum) {
+    return lastLetterToWayNum.values().stream().reduce(0, MOD_INT::addMod);
+  }
+}
+
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
+  }
 }
