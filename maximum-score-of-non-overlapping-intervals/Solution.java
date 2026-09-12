@@ -1,11 +1,11 @@
 // https://leetcode.com/problems/maximum-score-of-non-overlapping-intervals/solutions/6232381/python-dp/
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 class Solution {
   public int[] maximumWeight(List<List<Integer>> intervals) {
@@ -16,9 +16,7 @@ class Solution {
             .mapToInt(Integer::intValue)
             .toArray();
 
-    return search(new HashMap<>(), intervals, sortedIndices, 0, 4).indices().stream()
-        .mapToInt(Integer::intValue)
-        .toArray();
+    return search(new HashMap<>(), intervals, sortedIndices, 0, 4).indices();
   }
 
   Outcome search(
@@ -28,7 +26,7 @@ class Solution {
       int index,
       int rest) {
     if (index == intervals.size() || rest == 0) {
-      return new Outcome(0, List.of());
+      return new Outcome(0, new int[0]);
     }
 
     State state = new State(index, rest);
@@ -41,11 +39,12 @@ class Solution {
       Outcome pickOutcome =
           new Outcome(
               intervals.get(sortedIndices[index]).get(2) + subOutcome.weightSum(),
-              Stream.concat(Stream.of(sortedIndices[index]), subOutcome.indices().stream())
+              IntStream.concat(
+                      IntStream.of(sortedIndices[index]), Arrays.stream(subOutcome.indices()))
                   .sorted()
-                  .toList());
+                  .toArray());
 
-      cache.put(state, combine(skipOutcome, pickOutcome));
+      cache.put(state, merge(skipOutcome, pickOutcome));
     }
 
     return cache.get(state);
@@ -68,21 +67,21 @@ class Solution {
     return result;
   }
 
-  Outcome combine(Outcome o1, Outcome o2) {
+  Outcome merge(Outcome o1, Outcome o2) {
     if (o1.weightSum() != o2.weightSum()) {
       return (o1.weightSum() > o2.weightSum()) ? o1 : o2;
     }
 
     for (int i = 0; ; ++i) {
-      if (i == o1.indices().size()) {
+      if (i == o1.indices().length) {
         return o1;
       }
-      if (i == o2.indices().size()) {
+      if (i == o2.indices().length) {
         return o2;
       }
 
-      if (!o1.indices().get(i).equals(o2.indices().get(i))) {
-        return (o1.indices().get(i) < o2.indices().get(i)) ? o1 : o2;
+      if (o1.indices()[i] != o2.indices()[i]) {
+        return (o1.indices()[i] < o2.indices()[i]) ? o1 : o2;
       }
     }
   }
@@ -90,4 +89,4 @@ class Solution {
 
 record State(int index, int rest) {}
 
-record Outcome(long weightSum, List<Integer> indices) {}
+record Outcome(long weightSum, int[] indices) {}
