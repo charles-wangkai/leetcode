@@ -1,52 +1,49 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 class Solution {
-    public int minSumOfLengths(int[] arr, int target) {
-        int n = arr.length;
+  public int minSumOfLengths(int[] arr, int target) {
+    int n = arr.length;
 
-        Map<Integer, Integer> leftSumToIndex = new HashMap<>();
-        leftSumToIndex.put(0, -1);
-        int leftSum = 0;
-        int leftMinLength = Integer.MAX_VALUE;
-        int[] leftMinLengths = new int[n];
-        for (int i = 0; i < n; ++i) {
-            leftSum += arr[i];
+    Map<Integer, Integer> leftSumToIndex = new HashMap<>();
+    leftSumToIndex.put(0, -1);
+    int leftSum = 0;
+    int[] leftMinLengths = new int[n];
+    for (int i = 0; i < n; ++i) {
+      leftSum += arr[i];
 
-            if (leftSumToIndex.containsKey(leftSum - target)) {
-                leftMinLength = Math.min(leftMinLength, i - leftSumToIndex.get(leftSum - target));
-            }
+      leftMinLengths[i] = (i == 0) ? Integer.MAX_VALUE : leftMinLengths[i - 1];
+      if (leftSumToIndex.containsKey(leftSum - target)) {
+        leftMinLengths[i] = Math.min(leftMinLengths[i], i - leftSumToIndex.get(leftSum - target));
+      }
 
-            leftMinLengths[i] = leftMinLength;
-
-            leftSumToIndex.put(leftSum, i);
-        }
-
-        Map<Integer, Integer> rightSumToIndex = new HashMap<>();
-        rightSumToIndex.put(0, n);
-        int rightSum = 0;
-        int rightMinLength = Integer.MAX_VALUE;
-        int[] rightMinLengths = new int[n];
-        for (int i = n - 1; i >= 0; --i) {
-            rightSum += arr[i];
-
-            if (rightSumToIndex.containsKey(rightSum - target)) {
-                rightMinLength = Math.min(rightMinLength, rightSumToIndex.get(rightSum - target) - i);
-            }
-
-            rightMinLengths[i] = rightMinLength;
-
-            rightSumToIndex.put(rightSum, i);
-        }
-
-        int result = -1;
-        for (int i = 0; i < n - 1; ++i) {
-            if (leftMinLengths[i] != Integer.MAX_VALUE && rightMinLengths[i + 1] != Integer.MAX_VALUE
-                    && (result == -1 || leftMinLengths[i] + rightMinLengths[i + 1] < result)) {
-                result = leftMinLengths[i] + rightMinLengths[i + 1];
-            }
-        }
-
-        return result;
+      leftSumToIndex.put(leftSum, i);
     }
+
+    Map<Integer, Integer> rightSumToIndex = new HashMap<>();
+    rightSumToIndex.put(0, n);
+    int rightSum = 0;
+    int[] rightMinLengths = new int[n];
+    for (int i = n - 1; i >= 0; --i) {
+      rightSum += arr[i];
+
+      rightMinLengths[i] = (i == n - 1) ? Integer.MAX_VALUE : rightMinLengths[i + 1];
+      if (rightSumToIndex.containsKey(rightSum - target)) {
+        rightMinLengths[i] =
+            Math.min(rightMinLengths[i], rightSumToIndex.get(rightSum - target) - i);
+      }
+
+      rightSumToIndex.put(rightSum, i);
+    }
+
+    return IntStream.range(0, n - 1)
+        .filter(
+            i ->
+                leftMinLengths[i] != Integer.MAX_VALUE
+                    && rightMinLengths[i + 1] != Integer.MAX_VALUE)
+        .map(i -> leftMinLengths[i] + rightMinLengths[i + 1])
+        .min()
+        .orElse(-1);
+  }
 }
