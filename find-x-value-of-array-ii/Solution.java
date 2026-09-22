@@ -5,8 +5,13 @@ class Solution {
     int[] result = new int[queries.length];
     SegTree segTree = new SegTree(nums, k);
     for (int i = 0; i < result.length; ++i) {
-      segTree.update(queries[i][0], queries[i][1]);
-      result[i] = segTree.query(queries[i][2], nums.length - 1).prefixProductNums()[queries[i][3]];
+      int index = queries[i][0];
+      int value = queries[i][1];
+      int start = queries[i][2];
+      int x = queries[i][3];
+
+      segTree.update(index, value);
+      result[i] = segTree.query(start, nums.length - 1).prefixProductNums()[x];
     }
 
     return result;
