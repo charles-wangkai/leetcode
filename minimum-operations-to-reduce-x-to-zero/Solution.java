@@ -1,25 +1,30 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 class Solution {
   public int minOperations(int[] nums, int x) {
-    Map<Integer, Integer> rightSumToLength = new HashMap<>();
-    rightSumToLength.put(0, 0);
-    int rightSum = 0;
-    for (int i = nums.length - 1; i >= 0; --i) {
-      rightSum += nums[i];
-      rightSumToLength.put(rightSum, nums.length - i);
+    if (Arrays.stream(nums).sum() < x) {
+      return -1;
     }
 
-    int result = rightSumToLength.getOrDefault(x, Integer.MAX_VALUE);
+    int minOperationNum = Integer.MAX_VALUE;
     int leftSum = 0;
-    for (int i = 0; i < nums.length; ++i) {
-      leftSum += nums[i];
-      if (rightSumToLength.containsKey(x - leftSum)) {
-        result = Math.min(result, i + 1 + rightSumToLength.get(x - leftSum));
+    int rightIndex = 0;
+    int rightSum = Arrays.stream(nums).sum();
+    for (int leftIndex = -1; leftIndex < nums.length; ++leftIndex) {
+      if (leftIndex != -1) {
+        leftSum += nums[leftIndex];
+      }
+
+      while (rightIndex != nums.length && leftSum + (rightSum - nums[rightIndex]) >= x) {
+        rightSum -= nums[rightIndex];
+        ++rightIndex;
+      }
+
+      if (leftSum + rightSum == x) {
+        minOperationNum = Math.min(minOperationNum, (leftIndex + 1) + (nums.length - rightIndex));
       }
     }
 
-    return (result > nums.length) ? -1 : result;
+    return (minOperationNum == Integer.MAX_VALUE) ? -1 : minOperationNum;
   }
 }
