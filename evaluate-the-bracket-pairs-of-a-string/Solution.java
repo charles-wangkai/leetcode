@@ -4,20 +4,20 @@ import java.util.stream.Collectors;
 
 class Solution {
   public String evaluate(String s, List<List<String>> knowledge) {
-    Map<String, String> map =
+    Map<String, String> knowledgeMap =
         knowledge.stream().collect(Collectors.toMap(e -> e.get(0), e -> e.get(1)));
 
     StringBuilder result = new StringBuilder();
     int index = 0;
     while (index != s.length()) {
-      char ch = s.charAt(index);
-      if (ch == '(') {
+      char c = s.charAt(index);
+      if (c == '(') {
         int endIndex = s.indexOf(')', index);
-        result.append(map.getOrDefault(s.substring(index + 1, endIndex), "?"));
+        result.append(knowledgeMap.getOrDefault(s.substring(index + 1, endIndex), "?"));
 
         index = endIndex + 1;
       } else {
-        result.append(ch);
+        result.append(c);
         ++index;
       }
     }
