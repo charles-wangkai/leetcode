@@ -1,26 +1,28 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+class Solution {
   public List<String> generateParenthesis(int n) {
-    List<String> result = new ArrayList<>();
-    search(result, new char[n + n], 0, n, n);
-    return result;
+    List<String> sequences = new ArrayList<>();
+    search(sequences, new char[n + n], 0, n, n);
+
+    return sequences;
   }
 
-  void search(List<String> result, char[] current, int index, int leftRemain, int rightRemain) {
-    if (leftRemain == 0 && rightRemain == 0) {
-      result.add(new String(current));
+  void search(List<String> result, char[] sequence, int index, int leftRest, int rightRest) {
+    if (leftRest == 0 && rightRest == 0) {
+      result.add(String.valueOf(sequence));
+
       return;
     }
 
-    if (leftRemain > 0) {
-      current[index] = '(';
-      search(result, current, index + 1, leftRemain - 1, rightRemain);
+    if (leftRest > 0) {
+      sequence[index] = '(';
+      search(result, sequence, index + 1, leftRest - 1, rightRest);
     }
-    if (rightRemain > leftRemain) {
-      current[index] = ')';
-      search(result, current, index + 1, leftRemain, rightRemain - 1);
+    if (rightRest > leftRest) {
+      sequence[index] = ')';
+      search(result, sequence, index + 1, leftRest, rightRest - 1);
     }
   }
 }
