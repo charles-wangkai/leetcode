@@ -4,9 +4,7 @@ class Solution {
     int leftCount = 0;
     int index = 0;
     while (index < s.length()) {
-      char current = s.charAt(index);
-
-      if (current == '(') {
+      if (s.charAt(index) == '(') {
         ++leftCount;
       } else {
         if (leftCount == 0) {
