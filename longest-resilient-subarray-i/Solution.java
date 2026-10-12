@@ -1,0 +1,59 @@
+import java.math.BigInteger;
+
+class Solution {
+  public int resilientSubarray(int[] nums, int k) {
+    ModInt modInt = new ModInt(k);
+
+    int result = -1;
+    for (int beginIndex = 0; beginIndex < nums.length; ++beginIndex) {
+      int sum = 0;
+      for (int endIndex = beginIndex;
+          endIndex < nums.length && modInt.mod(nums[endIndex]) == modInt.mod(nums[beginIndex]);
+          ++endIndex) {
+        sum = modInt.addMod(sum, nums[endIndex]);
+        if (sum == modInt.mod(nums[beginIndex])) {
+          result = Math.max(result, endIndex - beginIndex + 1);
+        }
+      }
+    }
+
+    return result;
+  }
+}
+
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
+
+  int addMod(int x, int y) {
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
+  }
+}
