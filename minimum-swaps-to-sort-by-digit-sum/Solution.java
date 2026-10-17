@@ -27,14 +27,14 @@ class Solution {
     boolean[] visited = new boolean[nums.length];
     for (int i = 0; i < nums.length; ++i) {
       if (!visited[i]) {
-        result += findLoop(nums, indexToTarget, visited, i) - 1;
+        result += findLoop(indexToTarget, visited, i) - 1;
       }
     }
 
     return result;
   }
 
-  int findLoop(int[] nums, Map<Integer, Integer> indexToTarget, boolean[] visited, int index) {
+  int findLoop(Map<Integer, Integer> indexToTarget, boolean[] visited, int index) {
     int result = 0;
     while (!visited[index]) {
       visited[index] = true;
