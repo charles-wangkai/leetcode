@@ -1,53 +1,48 @@
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class Solution {
-  int minTransactionNum;
-
+class Solution {
   public int minTransfers(int[][] transactions) {
-    Map<Integer, Integer> person2balance = new HashMap<>();
-
+    Map<Integer, Integer> personToBalance = new HashMap<>();
     for (int[] transaction : transactions) {
-      updateMap(person2balance, transaction[0], -transaction[2]);
-      updateMap(person2balance, transaction[1], transaction[2]);
+      updateMap(personToBalance, transaction[0], -transaction[2]);
+      updateMap(personToBalance, transaction[1], transaction[2]);
     }
 
-    List<Integer> balances = new ArrayList<>();
-    for (int balance : person2balance.values()) {
-      balances.add(balance);
-    }
-
-    minTransactionNum = Integer.MAX_VALUE;
-    search(balances, 0, 0);
-    return minTransactionNum;
+    return search(
+        personToBalance.values().stream()
+            .filter(balance -> balance != 0)
+            .mapToInt(Integer::intValue)
+            .toArray(),
+        0,
+        0);
   }
 
-  void updateMap(Map<Integer, Integer> map, int key, int delta) {
-    map.put(key, map.getOrDefault(key, 0) + delta);
-
-    if (map.get(key) == 0) {
-      map.remove(key);
-    }
-  }
-
-  void search(List<Integer> balances, int index, int transactionNum) {
-    if (index == balances.size()) {
-      minTransactionNum = Math.min(minTransactionNum, transactionNum);
-      return;
+  int search(int[] balances, int index, int transactionNum) {
+    if (index == balances.length) {
+      return transactionNum;
     }
 
-    if (balances.get(index) == 0) {
-      search(balances, index + 1, transactionNum);
+    if (balances[index] == 0) {
+      return search(balances, index + 1, transactionNum);
     }
 
-    for (int i = index + 1; i < balances.size(); i++) {
-      if (balances.get(index) * balances.get(i) < 0) {
-        balances.set(i, balances.get(i) + balances.get(index));
-        search(balances, index + 1, transactionNum + 1);
-        balances.set(i, balances.get(i) - balances.get(index));
+    int result = Integer.MAX_VALUE;
+    for (int i = index + 1; i < balances.length; ++i) {
+      if (balances[index] * balances[i] < 0) {
+        balances[i] += balances[index];
+
+        result = Math.min(result, search(balances, index + 1, transactionNum + 1));
+
+        balances[i] -= balances[index];
       }
     }
+
+    return result;
+  }
+
+  void updateMap(Map<Integer, Integer> personToBalance, int person, int delta) {
+    personToBalance.put(person, personToBalance.getOrDefault(person, 0) + delta);
+    personToBalance.remove(person, 0);
   }
 }
