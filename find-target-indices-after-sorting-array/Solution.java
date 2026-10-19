@@ -4,8 +4,8 @@ import java.util.stream.IntStream;
 
 class Solution {
   public List<Integer> targetIndices(int[] nums, int target) {
-    int[] sorted = Arrays.stream(nums).sorted().toArray();
+    Arrays.sort(nums);
 
-    return IntStream.range(0, nums.length).filter(i -> sorted[i] == target).boxed().toList();
+    return IntStream.range(0, nums.length).filter(i -> nums[i] == target).boxed().toList();
   }
 }
