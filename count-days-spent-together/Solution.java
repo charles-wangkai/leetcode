@@ -6,7 +6,7 @@ class Solution {
     int result = 0;
     for (int m = 1; m <= DAY_NUMS.length; ++m) {
       for (int d = 1; d <= DAY_NUMS[m - 1]; ++d) {
-        String date = String.format("%02d-%02d", m, d);
+        String date = "%02d-%02d".formatted(m, d);
         if (date.compareTo(arriveAlice) >= 0
             && date.compareTo(leaveAlice) <= 0
             && date.compareTo(arriveBob) >= 0
