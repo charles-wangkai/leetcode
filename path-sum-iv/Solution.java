@@ -1,39 +1,31 @@
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class Solution {
+class Solution {
   public int pathSum(int[] nums) {
-    Map<Integer, Integer> pos2value = new HashMap<>();
-    for (int num : nums) {
-      int pos = num / 10;
-      int value = num % 10;
+    Map<Integer, Integer> posToValue =
+        Arrays.stream(nums).boxed().collect(Collectors.toMap(num -> num / 10, num -> num % 10));
 
-      pos2value.put(pos, value);
-    }
-
-    int result = 0;
-    for (int num : nums) {
-      int pos = num / 10;
-
-      if (isLeaf(pos2value, pos)) {
-        result += computePathSum(pos2value, pos);
-      }
-    }
-    return result;
+    return Arrays.stream(nums)
+        .map(num -> num / 10)
+        .filter(pos -> isLeaf(posToValue, pos))
+        .map(pos -> computePathSum(posToValue, pos))
+        .sum();
   }
 
-  boolean isLeaf(Map<Integer, Integer> pos2value, int pos) {
+  boolean isLeaf(Map<Integer, Integer> posToValue, int pos) {
     int depth = pos / 10;
     int horizontal = pos % 10;
 
-    return !pos2value.containsKey((depth + 1) * 10 + horizontal * 2 - 1)
-        && !pos2value.containsKey((depth + 1) * 10 + horizontal * 2);
+    return !posToValue.containsKey((depth + 1) * 10 + horizontal * 2 - 1)
+        && !posToValue.containsKey((depth + 1) * 10 + horizontal * 2);
   }
 
-  int computePathSum(Map<Integer, Integer> pos2value, int pos) {
-    int pathSum = 0;
+  int computePathSum(Map<Integer, Integer> posToValue, int pos) {
+    int result = 0;
     while (true) {
-      pathSum += pos2value.get(pos);
+      result += posToValue.get(pos);
 
       int depth = pos / 10;
       if (depth == 1) {
@@ -43,6 +35,7 @@ public class Solution {
       int horizontal = pos % 10;
       pos = (depth - 1) * 10 + (horizontal + 1) / 2;
     }
-    return pathSum;
+
+    return result;
   }
 }
