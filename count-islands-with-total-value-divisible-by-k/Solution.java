@@ -10,7 +10,7 @@ class Solution {
     boolean[][] visited = new boolean[m][n];
     for (int r = 0; r < m; ++r) {
       for (int c = 0; c < n; ++c) {
-        if (grid[r][c] > 0 && !visited[r][c]) {
+        if (grid[r][c] != 0 && !visited[r][c]) {
           if (search(grid, visited, r, c) % k == 0) {
             ++result;
           }
@@ -35,7 +35,7 @@ class Solution {
           && adjR < m
           && adjC >= 0
           && adjC < n
-          && grid[adjR][adjC] > 0
+          && grid[adjR][adjC] != 0
           && !visited[adjR][adjC]) {
         result += search(grid, visited, adjR, adjC);
       }
