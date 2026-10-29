@@ -47,39 +47,6 @@ class Solution {
 
     return result;
   }
-
-  int findLca(int[] heights, int[][] parents, int node1, int node2) {
-    if (heights[node1] < heights[node2]) {
-      return findLca(heights, parents, node2, node1);
-    }
-
-    int diff = heights[node1] - heights[node2];
-    for (int i = 0; diff != 0; ++i) {
-      if (((diff >> i) & 1) == 1) {
-        node1 = parents[node1][i];
-
-        diff -= 1 << i;
-      }
-    }
-    if (node1 == node2) {
-      return node1;
-    }
-
-    while (true) {
-      int index = -1;
-      while (parents[node1][index + 1] != parents[node2][index + 1]) {
-        ++index;
-      }
-      if (index == -1) {
-        break;
-      }
-
-      node1 = parents[node1][index];
-      node2 = parents[node2][index];
-    }
-
-    return parents[node1][0];
-  }
 }
 
 class FenwickTree {
