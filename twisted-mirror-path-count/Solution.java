@@ -1,5 +1,7 @@
+import java.math.BigInteger;
+
 class Solution {
-  static final int MODULUS = 1_000_000_007;
+  static final ModInt MOD_INT = new ModInt(1_000_000_007);
 
   public int uniquePaths(int[][] grid) {
     int m = grid.length;
@@ -19,7 +21,7 @@ class Solution {
       return 1;
     }
 
-    int direction = (grid[r][c] == 1) ? (fromLeftOrUp ? 1 : 0) : 0;
+    int direction = (grid[r][c] == 1 && fromLeftOrUp) ? 1 : 0;
     if (cache[r][c][direction] == null) {
       int result;
       if (grid[r][c] == 1) {
@@ -28,7 +30,9 @@ class Solution {
                 ? search(grid, r + 1, c, false, cache)
                 : search(grid, r, c + 1, true, cache);
       } else {
-        result = addMod(search(grid, r + 1, c, false, cache), search(grid, r, c + 1, true, cache));
+        result =
+            MOD_INT.addMod(
+                search(grid, r + 1, c, false, cache), search(grid, r, c + 1, true, cache));
       }
 
       cache[r][c][direction] = result;
@@ -36,8 +40,41 @@ class Solution {
 
     return cache[r][c][direction];
   }
+}
+
+class ModInt {
+  int modulus;
+
+  ModInt(int modulus) {
+    this.modulus = modulus;
+  }
+
+  int mod(long x) {
+    return Math.floorMod(x, modulus);
+  }
+
+  int modInv(int x) {
+    return BigInteger.valueOf(x).modInverse(BigInteger.valueOf(modulus)).intValue();
+  }
 
   int addMod(int x, int y) {
-    return Math.floorMod(x + y, MODULUS);
+    return mod(x + y);
+  }
+
+  int multiplyMod(int x, int y) {
+    return mod((long) x * y);
+  }
+
+  int divideMod(int x, int y) {
+    return multiplyMod(x, modInv(y));
+  }
+
+  int powMod(int base, long exponent) {
+    if (exponent == 0) {
+      return 1;
+    }
+
+    return multiplyMod(
+        (exponent % 2 == 0) ? 1 : base, powMod(multiplyMod(base, base), exponent / 2));
   }
 }
