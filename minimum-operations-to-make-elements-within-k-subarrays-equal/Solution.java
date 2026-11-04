@@ -17,7 +17,7 @@ class Solution {
       if (i >= x) {
         for (int j = 0; j < k; ++j) {
           if (dp[i - x][j] != Long.MAX_VALUE) {
-            dp[i][j + 1] = Math.min(dp[i][j + 1], dp[i - x][j] + operationNums[i - 1]);
+            dp[i][j + 1] = Math.min(dp[i][j + 1], dp[i - x][j] + operationNums[i - x]);
           }
         }
       }
@@ -27,13 +27,13 @@ class Solution {
   }
 
   long[] buildOperationNums(int[] nums, int x) {
-    long[] result = new long[nums.length];
+    long[] result = new long[nums.length - x + 1];
     Window window = new Window();
-    for (int i = 0; i < result.length; ++i) {
+    for (int i = 0; i < nums.length; ++i) {
       window.add(nums[i]);
 
       if (i >= x - 1) {
-        result[i] = window.computeOperationNum();
+        result[i - x + 1] = window.computeOperationNum();
 
         window.remove(nums[i - x + 1]);
       }
@@ -86,6 +86,7 @@ class Half {
 
   void add(int value) {
     valueToCount.put(value, valueToCount.getOrDefault(value, 0) + 1);
+
     ++size;
     sum += value;
   }
