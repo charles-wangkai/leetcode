@@ -7,15 +7,16 @@ class Solution {
   public int[] assignTasks(int[] servers, int[] tasks) {
     PriorityQueue<Event> eventPq =
         new PriorityQueue<>(
-            Comparator.comparing((Event e) -> e.time)
-                .thenComparing(e -> e.start)
-                .thenComparing(e -> e.taskIndex));
+            Comparator.comparing(Event::time)
+                .thenComparing(Event::requestOrEnd)
+                .thenComparing(Event::taskIndex));
     for (int i = 0; i < tasks.length; ++i) {
       eventPq.offer(new Event(i, i, true));
     }
 
     PriorityQueue<Integer> serverPq =
-        new PriorityQueue<>(Comparator.comparing((Integer s) -> servers[s]).thenComparing(s -> s));
+        new PriorityQueue<>(
+            Comparator.<Integer, Integer>comparing(s -> servers[s]).thenComparing(s -> s));
     for (int i = 0; i < servers.length; ++i) {
       serverPq.offer(i);
     }
@@ -25,23 +26,23 @@ class Solution {
     int[] result = new int[tasks.length];
     while (!eventPq.isEmpty()) {
       Event head = eventPq.poll();
-      if (head.start) {
+      if (head.requestOrEnd()) {
         if (serverPq.isEmpty()) {
-          waitingTaskIndices.add(head.taskIndex);
+          waitingTaskIndices.add(head.taskIndex());
         } else {
-          result[head.taskIndex] = serverPq.poll();
+          result[head.taskIndex()] = serverPq.poll();
 
-          eventPq.offer(new Event(head.time + tasks[head.taskIndex], head.taskIndex, false));
+          eventPq.offer(new Event(head.time() + tasks[head.taskIndex()], head.taskIndex(), false));
         }
       } else {
-        int serverIndex = result[head.taskIndex];
+        int serverIndex = result[head.taskIndex()];
         serverPq.offer(serverIndex);
 
         if (!waitingTaskIndices.isEmpty()) {
           int taskIndex = waitingTaskIndices.first();
           waitingTaskIndices.remove(taskIndex);
 
-          eventPq.offer(new Event(head.time, taskIndex, true));
+          eventPq.offer(new Event(head.time(), taskIndex, true));
         }
       }
     }
@@ -50,14 +51,4 @@ class Solution {
   }
 }
 
-class Event {
-  long time;
-  int taskIndex;
-  boolean start;
-
-  Event(long time, int taskIndex, boolean start) {
-    this.time = time;
-    this.taskIndex = taskIndex;
-    this.start = start;
-  }
-}
+record Event(long time, int taskIndex, boolean requestOrEnd) {}
