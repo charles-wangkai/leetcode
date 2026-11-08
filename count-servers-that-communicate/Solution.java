@@ -1,4 +1,3 @@
-
 class Solution {
   public int countServers(int[][] grid) {
     int m = grid.length;
