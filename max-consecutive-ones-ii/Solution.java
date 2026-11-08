@@ -1,53 +1,27 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.IntStream;
 
-public class Solution {
+class Solution {
   public int findMaxConsecutiveOnes(int[] nums) {
-    if (nums.length == 0) {
-      return 0;
+    int[] leftZeroCounts = new int[nums.length];
+    for (int i = 0; i < leftZeroCounts.length; ++i) {
+      leftZeroCounts[i] = (nums[i] == 1) ? (1 + ((i == 0) ? 0 : leftZeroCounts[i - 1])) : 0;
     }
 
-    int maxOneNum = 1;
-
-    List<NumberAndCount> ncs = new ArrayList<>();
-    for (int num : nums) {
-      if (ncs.isEmpty() || num != ncs.get(0).number) {
-        ncs.add(0, new NumberAndCount(num, 1));
-      } else {
-        ncs.get(0).count++;
-      }
-
-      if (ncs.size() > 3) {
-        ncs.remove(ncs.size() - 1);
-      }
-
-      if (ncs.get(0).number == 1) {
-        maxOneNum = Math.max(maxOneNum, ncs.get(0).count);
-
-        if (ncs.size() > 1) {
-          maxOneNum = Math.max(maxOneNum, ncs.get(0).count + 1);
-        }
-
-        if (ncs.size() > 2 && ncs.get(1).count == 1) {
-          maxOneNum = Math.max(maxOneNum, ncs.get(0).count + 1 + ncs.get(2).count);
-        }
-      } else {
-        if (ncs.size() > 1) {
-          maxOneNum = Math.max(maxOneNum, ncs.get(1).count + 1);
-        }
-      }
+    int[] rightZeroCounts = new int[nums.length];
+    for (int i = rightZeroCounts.length - 1; i >= 0; --i) {
+      rightZeroCounts[i] =
+          (nums[i] == 1)
+              ? (1 + ((i == rightZeroCounts.length - 1) ? 0 : rightZeroCounts[i + 1]))
+              : 0;
     }
 
-    return maxOneNum;
-  }
-}
-
-class NumberAndCount {
-  int number;
-  int count;
-
-  NumberAndCount(int number, int count) {
-    this.number = number;
-    this.count = count;
+    return IntStream.range(0, nums.length)
+        .filter(i -> nums[i] == 0)
+        .map(i ->
+            ((i == 0) ? 0 : leftZeroCounts[i - 1])
+                + 1
+                + ((i == nums.length - 1) ? 0 : rightZeroCounts[i + 1]))
+        .max()
+        .orElse(nums.length);
   }
 }
