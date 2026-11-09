@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.PriorityQueue;
@@ -7,24 +8,25 @@ import java.util.stream.IntStream;
 
 class Solution {
   public List<Integer> busiestServers(int k, int[] arrival, int[] load) {
-    int[] counts = new int[k];
     NavigableSet<Integer> availables = new TreeSet<>();
     for (int i = 0; i < k; ++i) {
       availables.add(i);
     }
-    PriorityQueue<Element> elements =
-        new PriorityQueue<>((e1, e2) -> Integer.compare(e1.finishTime, e2.finishTime));
 
+    PriorityQueue<Event> events = new PriorityQueue<>(Comparator.comparing(Event::finishTime));
+
+    int[] counts = new int[k];
     for (int i = 0; i < arrival.length; ++i) {
-      while (!elements.isEmpty() && elements.peek().finishTime <= arrival[i]) {
-        availables.add(elements.poll().index);
+      while (!events.isEmpty() && events.peek().finishTime() <= arrival[i]) {
+        availables.add(events.poll().index());
       }
 
-      int available = findAvailable(availables, i % k);
-      if (available != -1) {
+      if (!availables.isEmpty()) {
+        int available = findAvailable(availables, i % k);
+
         ++counts[available];
         availables.remove(available);
-        elements.offer(new Element(available, arrival[i] + load[i]));
+        events.offer(new Event(available, arrival[i] + load[i]));
       }
     }
 
@@ -34,25 +36,10 @@ class Solution {
   }
 
   int findAvailable(NavigableSet<Integer> availables, int lower) {
-    if (availables.isEmpty()) {
-      return -1;
-    }
-
     Integer ceiling = availables.ceiling(lower);
-    if (ceiling != null) {
-      return ceiling;
-    }
 
-    return availables.first();
+    return (ceiling != null) ? ceiling : availables.first();
   }
 }
 
-class Element {
-  int index;
-  int finishTime;
-
-  Element(int index, int finishTime) {
-    this.index = index;
-    this.finishTime = finishTime;
-  }
-}
+record Event(int index, int finishTime) {}
