@@ -21,8 +21,8 @@ class Solution {
     }
 
     int index = 0;
-    while (index + 1 < pPath.size()
-        && index + 1 < qPath.size()
+    while (index != pPath.size() - 1
+        && index != qPath.size() - 1
         && pPath.get(index + 1) == qPath.get(index + 1)) {
       ++index;
     }
@@ -30,28 +30,28 @@ class Solution {
     return pPath.get(index);
   }
 
-  List<TreeNode> findPath(TreeNode target, List<TreeNode> path, TreeNode current) {
-    if (current == null) {
+  List<TreeNode> findPath(TreeNode target, List<TreeNode> path, TreeNode node) {
+    if (node == null) {
       return null;
     }
 
-    path.add(current);
+    path.add(node);
 
-    if (current == target) {
+    if (node == target) {
       return path;
     }
 
-    List<TreeNode> leftSubResult = findPath(target, path, current.left);
+    List<TreeNode> leftSubResult = findPath(target, path, node.left);
     if (leftSubResult != null) {
       return leftSubResult;
     }
 
-    List<TreeNode> rightSubResult = findPath(target, path, current.right);
+    List<TreeNode> rightSubResult = findPath(target, path, node.right);
     if (rightSubResult != null) {
       return rightSubResult;
     }
 
-    path.remove(path.size() - 1);
+    path.removeLast();
 
     return null;
   }
