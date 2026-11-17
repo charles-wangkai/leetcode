@@ -31,35 +31,23 @@ class Solution {
     }
 
     for (int centerLeftIndex = 0; centerLeftIndex < s.length(); ++centerLeftIndex) {
-      for (int size = 1; size <= s.length() - centerLeftIndex; ++size) {
-        int changeCount = 0;
-        for (int leftIndex = centerLeftIndex - size, rightIndex = centerLeftIndex + size * 2 - 1;
-            leftIndex >= 0 && rightIndex < s.length();
-            leftIndex -= size, rightIndex += size) {
-          for (int i = 0; i < size; ++i) {
-            if (s.charAt(leftIndex + i) != s.charAt(rightIndex - size + 1 + i)) {
-              ++changeCount;
+      for (int size = 1; size <= s.length(); ++size) {
+        for (int offset : new int[] {0, size}) {
+          int changeCount = 0;
+          for (int leftIndex = centerLeftIndex, rightIndex = centerLeftIndex + offset - 1;
+              leftIndex >= 0 && rightIndex < s.length();
+              leftIndex -= size, rightIndex += size) {
+            if (rightIndex - leftIndex + 1 > size) {
+              for (int i = 0; i < size; ++i) {
+                if (s.charAt(leftIndex + i) != s.charAt(rightIndex - size + 1 + i)) {
+                  ++changeCount;
+                }
+              }
+
+              changeCounts[leftIndex][rightIndex] =
+                  Math.min(changeCounts[leftIndex][rightIndex], changeCount);
             }
           }
-
-          changeCounts[leftIndex][rightIndex] =
-              Math.min(changeCounts[leftIndex][rightIndex], changeCount);
-        }
-      }
-
-      for (int size = 1; 2 * size <= s.length() - centerLeftIndex; ++size) {
-        int changeCount = 0;
-        for (int leftIndex = centerLeftIndex, rightIndex = centerLeftIndex + size * 2 - 1;
-            leftIndex >= 0 && rightIndex < s.length();
-            leftIndex -= size, rightIndex += size) {
-          for (int i = 0; i < size; ++i) {
-            if (s.charAt(leftIndex + i) != s.charAt(rightIndex - size + 1 + i)) {
-              ++changeCount;
-            }
-          }
-
-          changeCounts[leftIndex][rightIndex] =
-              Math.min(changeCounts[leftIndex][rightIndex], changeCount);
         }
       }
     }
