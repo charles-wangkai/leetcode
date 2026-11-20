@@ -17,7 +17,7 @@ class Solution {
       for (int j = 0; j < 2; ++j) {
         dp[i][j] = 1;
         for (int prevI = Math.max(0, i - 2); prevI <= i - 1; ++prevI) {
-          for (int prevJ = 0; prevJ <= 1; ++prevJ) {
+          for (int prevJ = 0; prevJ < 2; ++prevJ) {
             if (values[prevI] + prevJ + 1 == values[i] + j) {
               dp[i][j] = Math.max(dp[i][j], dp[prevI][prevJ] + 1);
             }
