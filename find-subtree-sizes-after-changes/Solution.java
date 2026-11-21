@@ -7,10 +7,8 @@ import java.util.Map;
 
 class Solution {
   public int[] findSubtreeSizes(int[] parent, String s) {
-    List<Integer>[] childLists = buildChildLists(parent);
-
-    int[] changedParents = parent.clone();
-    search1(changedParents, s, childLists, new HashMap<>(), 0);
+    int[] changedParents = parent;
+    search1(parent, s, buildChildLists(parent), new HashMap<>(), 0);
 
     int[] subtreeSizes = new int[parent.length];
     search2(subtreeSizes, buildChildLists(changedParents), 0);
