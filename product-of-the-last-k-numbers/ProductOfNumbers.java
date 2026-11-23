@@ -24,7 +24,7 @@ class ProductOfNumbers {
   }
 
   public int getProduct(int k) {
-    return getLast(prefixZeroNums, 1) == getLast(prefixZeroNums, k + 1)
+    return (getLast(prefixZeroNums, 1) == getLast(prefixZeroNums, k + 1))
         ? (getLast(prefixNonZeroProducts, 1) / getLast(prefixNonZeroProducts, k + 1))
         : 0;
   }
