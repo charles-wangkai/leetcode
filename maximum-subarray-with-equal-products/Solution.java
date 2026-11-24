@@ -6,24 +6,25 @@ class Solution {
         Arrays.stream(nums).reduce(this::lcm).getAsInt() * Arrays.stream(nums).max().getAsInt();
 
     int result = 0;
-    for (int i = 0; i < nums.length; ++i) {
-      int product = nums[i];
-      int l = nums[i];
-      int g = nums[i];
+    for (int beginIndex = 0; beginIndex < nums.length; ++beginIndex) {
+      int product = nums[beginIndex];
+      int l = nums[beginIndex];
+      int g = nums[beginIndex];
       if (product == l * g) {
         result = Math.max(result, 1);
       }
-      for (int j = i + 1; j < nums.length; ++j) {
-        product *= nums[j];
+
+      for (int endIndex = beginIndex + 1; endIndex < nums.length; ++endIndex) {
+        product *= nums[endIndex];
         if (product > maxProduct) {
           break;
         }
 
-        l = lcm(l, nums[j]);
-        g = gcd(g, nums[j]);
+        l = lcm(l, nums[endIndex]);
+        g = gcd(g, nums[endIndex]);
 
         if (product == l * g) {
-          result = Math.max(result, j - i + 1);
+          result = Math.max(result, endIndex - beginIndex + 1);
         }
       }
     }
