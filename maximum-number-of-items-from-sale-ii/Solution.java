@@ -19,7 +19,7 @@ class Solution {
 
     int result = 0;
     for (Element element : elements) {
-      int count = Math.min(element.count(), budget / element.price());
+      int count = Math.min(element.freeCount(), budget / element.price());
       result += 2 * count;
 
       budget -= element.price() * count;
@@ -36,7 +36,7 @@ class Solution {
       factorToCount.put(item[0], factorToCount.getOrDefault(item[0], 0) + 1);
     }
 
-    int[] factors = Arrays.stream(items).mapToInt(item -> item[0]).distinct().sorted().toArray();
+    int[] factors = factorToCount.keySet().stream().mapToInt(Integer::intValue).sorted().toArray();
     Map<Integer, Integer> factorToFreeCount = new HashMap<>();
     for (int factor : factors) {
       int freeCount = -1;
@@ -51,4 +51,4 @@ class Solution {
   }
 }
 
-record Element(int price, int count) {}
+record Element(int price, int freeCount) {}
